@@ -43,7 +43,7 @@ yields = {'Zbb':584.8,'Zudsg':881.61,'ttbar':135.7,'ZZ':44.04,'Sig':5.13}
 systematics: Nominal JER_up JER_down JES_up JES_down beff_up beff_down bmis_up bmis_down beff1_up beff1_down
 
 #!! --------------------------------------------------
-#!! Varibles definition for trainging and evaluation
+#!! Variables definition for trainging and evaluation
 #!! --------------------------------------------------
 [treeVarsICHEP]
 Nominal: H.mass H.pt HVdPhi V.mass V.pt H.dEta max(hJet_csv[0],hJet_csv[1]) min(hJet_csv[0],hJet_csv[1]) Sum$(aJet_pt>20.&abs(aJet_eta)<2.4) H.dR hJet_pt[0] hJet_pt[1] deltaPullAngle deltaPullAngle2

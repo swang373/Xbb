@@ -5,6 +5,8 @@ import time
 import os
 import shutil
 
+debugPrintOUts = True
+
 parser = OptionParser()
 parser.add_option("-T", "--tag", dest="tag", default="8TeV",
                       help="Tag to run the analysis with, example '8TeV' uses config8TeV and pathConfig8TeV to run the analysis")
@@ -43,15 +45,26 @@ en = opts.tag
 samplesList=opts.samples.split(",")
 timestamp = time.asctime().replace(' ','_').replace(':','-')
 
+if(debugPrintOUts): print 'samplesList',samplesList
+if(debugPrintOUts): print 'timestamp',timestamp
+
 # the list of the config is taken from the path config
 pathconfig = BetterConfigParser()
 pathconfig.read('%sconfig/paths'%(en))
 _configs = pathconfig.get('Configuration','List').split(" ")
 configs = [ '%sconfig/'%(en) + c for c in _configs  ]
 
+if(debugPrintOUts): print 'configs',configs
+if(debugPrintOUts): print 'opts.ftag',opts.ftag
+
 if not opts.ftag == '':
     tagDir = pathconfig.get('Directories','tagDir')
+    sys.exit()
+    if(debugPrintOUts): print 'tagDir',tagDir
     DirStruct={'tagDir':tagDir,'ftagdir':'%s/%s/'%(tagDir,opts.ftag),'logpath':'%s/%s/%s/'%(tagDir,opts.ftag,'Logs'),'plotpath':'%s/%s/%s/'%(tagDir,opts.ftag,'Plots'),'limitpath':'%s/%s/%s/'%(tagDir,opts.ftag,'Limits'),'confpath':'%s/%s/%s/'%(tagDir,opts.ftag,'config') }
+    
+    if(debugPrintOUts): print 'DirStruct',DirStruct
+
 
     for keys in ['tagDir','ftagdir','logpath','plotpath','limitpath','confpath']:
         try:
@@ -78,6 +91,7 @@ if not opts.ftag == '':
     for item in configs:
         shutil.copyfile(item,'%s/%s/%s'%(tagDir,opts.ftag,item.strip(en)))
 
+sys.exit()
 
 print configs
 config = BetterConfigParser()

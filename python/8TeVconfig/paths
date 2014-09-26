@@ -2,38 +2,46 @@
 #!! List of the config you want to use
 #!! The number of config has to be exaclty 7
 #!! The list only support spaces between configs
-List = paths general cuts training datacard plots lhe_weight
+List = paths general cuts training datacards plots lhe_weights
 
 [Directories]
 
 #!! just a variable
-Dname: finalPaper_v2.3
-#!! Working Directory
-Wdir: /shome/bortigno/
+Dname: afterLHCP
+#!! Working Directory, THIS MUST BE PERSONALIZED
+Wdir: /shome/perrozzi/CMSSW_5_2_4_patch4/src
+#samplepath = gsidcap://t3se01.psi.ch:22128//pnfs/psi.ch/cms/trivcat/store/HBB_EDMNtuple/V42/Mar13//env/sysAllSyst/HCPMVAout/
+#samplepath = gsidcap://t3se01.psi.ch:22128//pnfs/psi.ch/cms/trivcat/store/HBB_EDMNtuple/V42/Mar13//env/sysAllSyst//LHCPMVAout_v2.3.1/
 samplepath = gsidcap://t3se01.psi.ch:22128//pnfs/psi.ch/cms/trivcat/store/HBB_EDMNtuple/V42/Mar13/
 #!! tmp2.2.3 post-higgsreview
-t3Private = gsidcap://t3se01.psi.ch:22128//pnfs/psi.ch/cms/trivcat/store/user/bortigno/tmp2.3.0/
-scratch = /scratch/bortigno/
+#t3Private = gsidcap://t3se01.psi.ch:22128//pnfs/psi.ch/cms/trivcat/store/user/bortigno/tmp2.3.0/
+scratch = /scratch/perrozzi/
 
 #!! The directory with the code
-vhbbpath= <!Directories|Wdir!>/VHbbAnalysis/<!Directories|Dname!>/
+vhbbpath= <!Directories|Wdir!>/VHbb/
 #!! specifies the .cfg files with the Samples information
 samplesinfo: <!Directories|vhbbpath!>/python/8TeVconfig/samples_nosplit.cfg
 #!! where you want to store the logfiles from job submissions
-logpath= <!Directories|vhbbpath!>/LOG/
+logpath: <!Directories|Wdir!>/VHbb/afterLHCP//test_for_luca/Logs/
 
 #!! from which samples to plot and where to save the plots
 plottingSamples: <!Directories|MVAout!>
-plotpath: <!Directories|vhbbpath!>/Stacks_expertAllnominal_v2.3.0/
+plotpath: <!Directories|Wdir!>/VHbb/afterLHCP//test_for_luca/Plots/
 plot_dc_path: <!Directories|vhbbpath!>/Stacks_fromDC_Allnominal_v2.3.0/
 
+#!! basedir for tagged folder structure
+tagDir: <!Directories|Wdir!>/VHbb/<!Directories|Dname!>/
+
 #!! cahed files
-tmpSamples=<!Directories|t3Private!>/
+#tmpSamples=/shome/perrozzi/tmp/
+#tmpSamples = gsidcap://t3se01.psi.ch:22128//pnfs/psi.ch/cms/trivcat/store/user/nmohr/Mar13/env/sysAllSyst/LHCPMVAout_v3/skims/
+tmpSamples = <!Directories|dcSamples!>/skims/
 
 #!! from which samples to make the DCs and where to save the DCs
-dcSamples: <!Directories|MVAout!>
+dcSamples: <!Directories|samplepath!>/env/sysAllSyst/LHCPMVAout_v3/
+#dcSamples: <!Directories|samplepath!>/env/sysAllSyst/LHCPMVAout_test2/
 #limits: <!Directories|vhbbpath!>/Limit_expertAllnominal_controlRegions_pure_highlow/
-limits: <!Directories|vhbbpath!>/Limit_expertAllnominal/
+limits: <!Directories|Wdir!>/VHbb/afterLHCP//test_for_luca/Limits/
 
 #!! From where to take the raw samples and where to put the prepared trees:
 PREPin: <!Directories|samplepath!>
@@ -46,8 +54,9 @@ SYSin: <!Directories|samplepath!>/env/
 SYSout: <!Directories|samplepath!>/env/sysAllSyst/
 
 #!! On which samples to evaluate the MVA on and where to write the resulting trees:
-MVAin: <!Directories|SYSout!>/
-MVAout: <!Directories|MVAin!>/LHCPMVAout_v2.3.0/
+MVAin: <!Directories|SYSout!>/LHCPMVAout_Apr5/
+#MVAout: <!Directories|samplepath!>/env/sysAllSyst/LHCPMVAout_v2.3.0/
+MVAout: <!Directories|samplepath!>/env/sysAllSyst/LHCPMVAout_v3/
 
 #!! to fix corruption problem use scratch
 #MVAout: <!Directories|scratch!>/
