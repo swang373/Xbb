@@ -144,7 +144,8 @@ class TreeCache:
                 if any('No such' in line for line in lines):
                     print('File not found')
                     print(command)
-                checksum = lines[6].replace('\t- Checksum value:','')
+                checksum = lines[6].replace('- Checksum value:','')
+                checksum = checksum.strip()
                 #srmPath = 'srm://t3se01.psi.ch'
                 #command = 'gfal-sum %s ADLER32' %file.replace('gsidcap://t3se01.psi.ch:22128/','%s/'%srmPath)
                 #print(command)
@@ -160,7 +161,6 @@ class TreeCache:
             p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,shell=True)
             lines = p.stdout.readlines()
             checksum = lines[0]
-        print('AAAAAAA checksum',checksum)
         return checksum
     
     @staticmethod
