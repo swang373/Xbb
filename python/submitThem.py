@@ -59,7 +59,8 @@ if(debugPrintOUts): print 'opts.ftag',opts.ftag
 
 if not opts.ftag == '':
     tagDir = pathconfig.get('Directories','tagDir')
-    sys.exit()
+    # DEBUG PURPOSE ONLY        
+    # sys.exit()
     if(debugPrintOUts): print 'tagDir',tagDir
     DirStruct={'tagDir':tagDir,'ftagdir':'%s/%s/'%(tagDir,opts.ftag),'logpath':'%s/%s/%s/'%(tagDir,opts.ftag,'Logs'),'plotpath':'%s/%s/%s/'%(tagDir,opts.ftag,'Plots'),'limitpath':'%s/%s/%s/'%(tagDir,opts.ftag,'Limits'),'confpath':'%s/%s/%s/'%(tagDir,opts.ftag,'config') }
     
@@ -91,7 +92,8 @@ if not opts.ftag == '':
     for item in configs:
         shutil.copyfile(item,'%s/%s/%s'%(tagDir,opts.ftag,item.strip(en)))
 
-sys.exit()
+# DEBUG PURPOSE ONLY        
+# sys.exit()
 
 print configs
 config = BetterConfigParser()
@@ -131,9 +133,14 @@ def compile_macro(config,macro):
     if not os.path.exists(library):
         print '@INFO: Compiling ' + _macro
         scratchDir='/scratch/%s/'%(getpass.getuser())
-        shutil.copyfile(libDir+'/'+_macro,'/scratch/%s/%s'%(getpass.getuser(),_macro))
+        # shutil.copyfile(libDir+'/'+_macro,'/scratch/%s/%s'%(getpass.getuser(),_macro))
+        os.system("cp "+libDir+'/* /scratch/%s/'%(getpass.getuser())) # OTHERWISE WILL NOT COMPILE SINCE INCLUDES OTHER FILES!!!
         os.chdir(scratchDir)
-        ROOT.gROOT.ProcessLine('.L %s+'%(scratchDir+_macro))
+        ROOT.gROOT.ProcessLine('.L %s+'%(scratchDir+_macro)) # CRASHES WHILE COMPILING THE SECOND ONE...
+        # ROOT.gSystem.CompileMacro('%s'%(scratchDir+_macro)) # THIS AS WELL...
+        # print("gcc -shared -o "+library+" `root-config --glibs --libs --cflags` -fPIC "+scratchDir+_macro)
+        # os.system("gcc -shared -o "+library+" `root-config --glibs --libs --cflags` -fPIC "+scratchDir+_macro)
+
         shutil.copyfile('/scratch/%s/%s'%(getpass.getuser(),os.path.basename(library)),library)
     os.chdir(submitDir)
         

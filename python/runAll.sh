@@ -52,13 +52,13 @@ fi
 #Set the environment for the batch job execution
 #-------------------------------------------------
 cd $CMSSW_BASE/src/
-source /swshare/psit3/etc/profile.d/cms_ui_env.sh
-export SCRAM_ARCH="slc5_amd64_gcc462"
-source $VO_CMS_SW_DIR/cmsset_default.sh
-eval `scramv1 runtime -sh`
-#export LD_PRELOAD="libglobus_gssapi_gsi_gcc64pthr.so.0":${LD_PRELOAD}
-export LD_LIBRARY_PATH=/swshare/glite/globus/lib/:/swshare/glite/d-cache/dcap/lib64/:$LD_LIBRARY_PATH
-export LD_PRELOAD="libglobus_gssapi_gsi_gcc64pthr.so.0:${LD_PRELOAD}"
+# source /swshare/psit3/etc/profile.d/cms_ui_env.sh
+# export SCRAM_ARCH="slc5_amd64_gcc462"
+# source $VO_CMS_SW_DIR/cmsset_default.sh
+# eval `scramv1 runtime -sh`
+# #export LD_PRELOAD="libglobus_gssapi_gsi_gcc64pthr.so.0":${LD_PRELOAD}
+# export LD_LIBRARY_PATH=/swshare/glite/globus/lib/:/swshare/glite/d-cache/dcap/lib64/:$LD_LIBRARY_PATH
+# export LD_PRELOAD="libglobus_gssapi_gsi_gcc64pthr.so.0:${LD_PRELOAD}"
 mkdir $TMPDIR
 
 cd -   #back to the working dir
@@ -143,4 +143,4 @@ if [ $task = "mva_opt" ]; then
     ./train.py --name ${sample} --training ${job_id} --config ${energy}config/${configList} --setting ${additional_arg} --local False
 fi
 
-rm -rf $TMPDIR
+# rm -rf $TMPDIR

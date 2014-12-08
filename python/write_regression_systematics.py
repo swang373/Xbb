@@ -128,6 +128,7 @@ for job in info:
     
     
     print '\t - %s' %(job.name)
+    print('opening '+pathIN+'/'+job.prefix+job.identifier+'.root')
     input = ROOT.TFile.Open(pathIN+'/'+job.prefix+job.identifier+'.root','read')
     output = ROOT.TFile.Open(tmpDir+'/'+job.prefix+job.identifier+'.root','recreate')
 
