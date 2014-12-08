@@ -99,6 +99,19 @@ class TreeCache:
         return cuttedTree
 
     @staticmethod
+    def get_slc_version():
+        command = 'uname -a'
+        p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,shell=True)
+        lines = p.stdout.readlines()
+        line = lines[0].split()[2]
+        if 'el5' in line:
+            return 'SLC5'
+        elif 'el6' in line:
+            return 'SLC6'
+        else:
+            sys.exit(-1)
+
+    @staticmethod
     def get_scale(sample, config, lumi = None):
         anaTag=config.get('Analysis','tag')
         theScale = 0.
@@ -113,20 +126,33 @@ class TreeCache:
     @staticmethod
     def get_checksum(file):
         if 'gsidcap://t3se01.psi.ch:22128' in file:
-            srmPath = 'srm://t3se01.psi.ch:8443/srm/managerv2?SFN='
-            command = 'lcg-ls -b -D srmv2 -l %s' %file.replace('gsidcap://t3se01.psi.ch:22128/','%s/'%srmPath)
-            p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,shell=True)
-            lines = p.stdout.readlines()
-            if any('No such' in line for line in lines):
-                print('File not found')
+            if TreeCache.get_slc_version() == 'SLC5':
+                srmPath = 'srm://t3se01.psi.ch:8443/srm/managerv2?SFN='
+                command = 'lcg-ls -b -D srmv2 -l %s' %file.replace('gsidcap://t3se01.psi.ch:22128/','%s/'%srmPath)
+                p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,shell=True)
+                lines = p.stdout.readlines()
+                if any('No such' in line for line in lines):
+                    print('File not found')
+                    print(command)
+                line = lines[1].replace('\t* Checksum: ','')
+                checksum = line.replace(' (adler32)\n','')
+            elif TreeCache.get_slc_version() == 'SLC6':
+                srmPath = 'srm://t3se01.psi.ch'
+                command = 'gfal-sum %s ADLER32' %file.replace('gsidcap://t3se01.psi.ch:22128/','%s/'%srmPath)
                 print(command)
-            line = lines[1].replace('\t* Checksum: ','')
-            checksum = line.replace(' (adler32)\n','')
+                p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,shell=True)
+                lines = p.stdout.readlines()
+                if any('No such' in line for line in lines):
+                    print('File not found')
+                    print(command)
+                checksum = lines[0].split()[1]
+
         else:
             command = 'md5sumi %s' %file
             p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,shell=True)
             lines = p.stdout.readlines()
             checksum = lines[0]
+        print('AAAAAAA checksum',checksum)
         return checksum
     
     @staticmethod

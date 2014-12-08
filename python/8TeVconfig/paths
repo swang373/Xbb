@@ -9,22 +9,22 @@ List = paths general cuts training datacards plots lhe_weights
 #!! just a variable
 Dname: outdir_testSLC6
 #!! Working Directory, THIS MUST BE PERSONALIZED
-Wdir: /shome/perrozzi/CMSSW_5_3_19/src
-# samplepath = gsidcap://t3se01.psi.ch:22128//pnfs/psi.ch/cms/trivcat/store/HBB_EDMNtuple/V42/Mar13/
-samplepath = dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/HBB_EDMNtuple/V42/Mar13/
+Wdir: /shome/perrozzi/CMSSW_5_3_22_patch1/src
+samplepath = gsidcap://t3se01.psi.ch:22128//pnfs/psi.ch/cms/trivcat/store/HBB_EDMNtuple/V42/Mar13/
+# samplepath = dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/HBB_EDMNtuple/V42/Mar13/
 scratch = /scratch/perrozzi/
 
 #!! The directory with the code
-vhbbpath= <!Directories|Wdir!>/VHbb
+vhbbpath= <!Directories|Wdir!>/Xbb
 #!! specifies the .cfg files with the Samples information
 samplesinfo: <!Directories|vhbbpath!>/python/8TeVconfig/samples_nosplit.cfg
 #!! where you want to store the logfiles from job submissions
-logpath: /shome/perrozzi/CMSSW_5_3_19/src/VHbb/python/outdir_testSLC6//test_by_luca/Logs/
+logpath: <!Directories|Wdir!>/Xbb/python/outdir_testSLC6//test_by_luca/Logs/
 
 #!! from which samples to plot and where to save the plots
 # plottingSamples: <!Directories|MVAout!>
 plottingSamples: <!Directories|SYSout!>
-plotpath: /shome/perrozzi/CMSSW_5_3_19/src/VHbb/python/outdir_testSLC6//test_by_luca/Plots/
+plotpath: <!Directories|Wdir!>/Xbb/python/outdir_testSLC6//test_by_luca/Plots/
 plot_dc_path: <!Directories|vhbbpath!>/python/Stacks_fromDC_Allnominal_v2.3.0/
 
 #!! basedir for tagged folder structure
@@ -40,11 +40,12 @@ tmpSamples = <!Directories|SYSout!>/skims/
 dcSamples: <!Directories|samplepath!>/env/sysAllSyst/LHCPMVAout_v3/
 #dcSamples: <!Directories|samplepath!>/env/sysAllSyst/LHCPMVAout_test2/
 #limits: <!Directories|vhbbpath!>/python/Limit_expertAllnominal_controlRegions_pure_highlow/
-limits: /shome/perrozzi/CMSSW_5_3_19/src/VHbb/python/outdir_testSLC6//test_by_luca/Limits/
+limits: <!Directories|Wdir!>/Xbb/python/outdir_testSLC6//test_by_luca/Limits/
 
 #!! From where to take the raw samples and where to put the prepared trees:
 PREPin: <!Directories|samplepath!>
-PREPout: dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/user/perrozzi/test_for_luca/
+# PREPout: dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/user/perrozzi/test_for_luca/
+PREPout: gsidcap://t3se01.psi.ch:22128//pnfs/psi.ch/cms/trivcat/store/user/perrozzi/test_for_luca/
 #PREPout: <!Directories|scratch!>/
 
 #!! On which samples to apply the regression and write the sys and where to write the resulting trees:
