@@ -126,8 +126,8 @@ class TreeCache:
     @staticmethod
     def get_checksum(file):
         if 'gsidcap://t3se01.psi.ch:22128' in file:
+            srmPath = 'srm://t3se01.psi.ch:8443/srm/managerv2?SFN='
             if TreeCache.get_slc_version() == 'SLC5':
-                srmPath = 'srm://t3se01.psi.ch:8443/srm/managerv2?SFN='
                 command = 'lcg-ls -b -D srmv2 -l %s' %file.replace('gsidcap://t3se01.psi.ch:22128/','%s/'%srmPath)
                 p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,shell=True)
                 lines = p.stdout.readlines()
@@ -137,11 +137,10 @@ class TreeCache:
                 line = lines[1].replace('\t* Checksum: ','')
                 checksum = line.replace(' (adler32)\n','')
             elif TreeCache.get_slc_version() == 'SLC6':
-                srmPath = 'srm://t3se01.psi.ch:8443/srm/managerv2?SFN='
                 command = 'srmls -l %s' %file.replace('gsidcap://t3se01.psi.ch:22128/','%s/'%srmPath)
                 p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,shell=True)
                 lines = p.stdout.readlines()
-                if any('No such' in line for line in lines):
+                if any('does not exist' in line for line in lines):
                     print('File not found')
                     print(command)
                 checksum = lines[6].replace('- Checksum value:','')
@@ -167,9 +166,16 @@ class TreeCache:
     def file_exists(file):
         if 'gsidcap://t3se01.psi.ch:22128' in file:
             srmPath = 'srm://t3se01.psi.ch:8443/srm/managerv2?SFN='
-            command = 'lcg-ls %s' %file.replace('gsidcap://t3se01.psi.ch:22128/','%s/'%srmPath)
+            if TreeCache.get_slc_version() == 'SLC5':
+              command = 'lcg-ls %s' %file.replace('gsidcap://t3se01.psi.ch:22128/','%s/'%srmPath)
+              error_msg = 'No such file or directory'
+            elif TreeCache.get_slc_version() == 'SLC6':
+              command = 'srmls %s' %file.replace('gsidcap://t3se01.psi.ch:22128/','%s/'%srmPath)
+              error_msg = 'does not exists'
+              
             p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,shell=True)
             line = p.stdout.readline()
-            return not 'No such file or directory' in line
+            return not error_msg in line
+              
         else:
             return os.path.exists(file)
