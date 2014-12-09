@@ -136,6 +136,7 @@ def compile_macro(config,macro):
         # shutil.copyfile(libDir+'/'+_macro,'/scratch/%s/%s'%(getpass.getuser(),_macro))
         os.system("cp "+libDir+'/* /scratch/%s/'%(getpass.getuser())) # OTHERWISE WILL NOT COMPILE SINCE INCLUDES OTHER FILES!!!
         os.chdir(scratchDir)
+        print os.listdir(scratchDir)
         ROOT.gROOT.ProcessLine('.L %s+'%(scratchDir+_macro)) # CRASHES WHILE COMPILING THE SECOND ONE...
         # ROOT.gSystem.CompileMacro('%s'%(scratchDir+_macro)) # THIS AS WELL...
         # print("gcc -shared -o "+library+" `root-config --glibs --libs --cflags` -fPIC "+scratchDir+_macro)

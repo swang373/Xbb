@@ -13,6 +13,9 @@
 #
 #=====================================================================
 
+# fix for python escape sequence bug:
+export TERM=""
+
 #Input argument:
 sample=$1           # sample you want to run on. It has to match the naming in sample.info.
 energy=$2           # sqrt(s) you want to run
@@ -52,13 +55,13 @@ fi
 #Set the environment for the batch job execution
 #-------------------------------------------------
 cd $CMSSW_BASE/src/
-# source /swshare/psit3/etc/profile.d/cms_ui_env.sh
-# export SCRAM_ARCH="slc5_amd64_gcc462"
-# source $VO_CMS_SW_DIR/cmsset_default.sh
-# eval `scramv1 runtime -sh`
-# #export LD_PRELOAD="libglobus_gssapi_gsi_gcc64pthr.so.0":${LD_PRELOAD}
-# export LD_LIBRARY_PATH=/swshare/glite/globus/lib/:/swshare/glite/d-cache/dcap/lib64/:$LD_LIBRARY_PATH
-# export LD_PRELOAD="libglobus_gssapi_gsi_gcc64pthr.so.0:${LD_PRELOAD}"
+source /swshare/psit3/etc/profile.d/cms_ui_env.sh
+export SCRAM_ARCH="slc5_amd64_gcc462"
+source $VO_CMS_SW_DIR/cmsset_default.sh
+eval `scramv1 runtime -sh`
+#export LD_PRELOAD="libglobus_gssapi_gsi_gcc64pthr.so.0":${LD_PRELOAD}
+export LD_LIBRARY_PATH=/swshare/glite/globus/lib/:/swshare/glite/d-cache/dcap/lib64/:$LD_LIBRARY_PATH
+export LD_PRELOAD="libglobus_gssapi_gsi_gcc64pthr.so.0:${LD_PRELOAD}"
 mkdir $TMPDIR
 
 cd -   #back to the working dir
