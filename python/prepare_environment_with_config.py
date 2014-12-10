@@ -23,7 +23,10 @@ namelist=opts.names.split(',')
 pathIN = config.get('Directories','PREPin')
 pathOUT = config.get('Directories','PREPout')
 samplesinfo=config.get('Directories','samplesinfo')
-prefix=config.get('General','prefix')
+sampleconf = BetterConfigParser()
+sampleconf.read(samplesinfo)
+
+prefix=sampleconf.get('General','prefix')
 
 info = ParseInfo(samplesinfo,pathIN)
 
