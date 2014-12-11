@@ -25,7 +25,7 @@ parser.add_option("-C", "--config", dest="config", default=[], action="append",
 if opts.config =="":
         opts.config = "config"
 
-from myutils import BetterConfigParser, ParseInfo
+from myutils import BetterConfigParser, ParseInfo, TreeCache
 
 print opts.config
 config = BetterConfigParser()
@@ -757,9 +757,18 @@ for job in info:
     output.Close()
     print 'Close'
     targetStorage = pathOUT.replace('gsidcap://t3se01.psi.ch:22128/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')+'/'+job.prefix+job.identifier+'.root'
-    command = 'lcg-del -b -D srmv2 -l %s' %(targetStorage)
-    print(command)
-    subprocess.call([command], shell=True)
-    command = 'lcg-cp -b -D srmv2 file:///%s %s' %(tmpDir+'/'+job.prefix+job.identifier+'.root',targetStorage)
-    print(command)
-    subprocess.call([command], shell=True)
+    if TreeCache.get_slc_version() == 'SLC5':
+        command = 'lcg-del -b -D srmv2 -l %s' %(targetStorage)
+        print(command)
+        subprocess.call([command], shell=True)
+        command = 'lcg-cp -b -D srmv2 file:///%s %s' %(tmpDir+'/'+job.prefix+job.identifier+'.root',targetStorage)
+        print(command)
+        subprocess.call([command], shell=True)
+    else:
+        command = 'srmrm %s' %(targetStorage)
+        print(command)
+        subprocess.call([command], shell=True)
+        command = 'srmcp -2 -globus_tcp_port_range 20000,25000 file:///%s %s' %(tmpDir+'/'+job.prefix+job.identifier+'.root',targetStorage)
+        print(command)
+        subprocess.call([command], shell=True)
+
