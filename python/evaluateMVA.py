@@ -138,11 +138,19 @@ for job in samples:
     newtree.AutoSave()
     outfile.Close()
     targetStorage = OUTpath.replace('gsidcap://t3se01.psi.ch:22128/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')+'/'+job.prefix+job.identifier+'.root'
-    command = 'lcg-del -b -D srmv2 -l %s' %(targetStorage)
+    # if TreeCache.get_slc_version() == '111SLC5': # NOT WORKING !!! ALWAYS USE SRM
+        # command = 'lcg-del -b -D srmv2 -l %s' %(targetStorage)
+        # print(command)
+        # subprocess.call([command], shell=True)
+        # command = 'lcg-cp -b -D srmv2 file:///%s %s' %(tmpDir+'/'+job.prefix+job.identifier+'.root',targetStorage)
+        # print(command)
+        # subprocess.call([command], shell=True)
+    # else:
+    command = 'srmrm %s' %(targetStorage)
     print(command)
     subprocess.call([command], shell=True)
-    command = 'lcg-cp -b -D srmv2 file:///%s %s' %(tmpDir+'/'+job.prefix+job.identifier+'.root',targetStorage)
+    command = 'srmcp -2 -globus_tcp_port_range 20000,25000 file:///%s %s' %(tmpDir+'/'+job.prefix+job.identifier+'.root',targetStorage)
     print(command)
     subprocess.call([command], shell=True)
-                
+    
 print('\n')

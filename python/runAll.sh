@@ -102,10 +102,12 @@ echo ${configList}
 #------------------------------------
 
 if [ $task = "prep" ]; then
-    ./prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList}
+    # ./prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList}
+    ./prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.cfg #sometime I need this add: please check --config ${energy}config/samples_nosplit.cfg
 fi
 if [ $task = "trainReg" ]; then
-    ./trainRegression.py --config ${energy}config/${configList}
+    # ./trainRegression.py --config ${energy}config/${configList}
+    ./trainRegression.py --config ${energy}config/${configList} --config ${energy}config/regression
 fi
 if [ $task = "sys" ]; then
     ./write_regression_systematics.py --samples $sample --config ${energy}config/${configList}

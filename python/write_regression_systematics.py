@@ -757,7 +757,7 @@ for job in info:
     output.Close()
     print 'Close'
     targetStorage = pathOUT.replace('gsidcap://t3se01.psi.ch:22128/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')+'/'+job.prefix+job.identifier+'.root'
-    if TreeCache.get_slc_version() == 'SLC5':
+    if TreeCache.get_slc_version() == '111SLC5': # NOT WORKING !!! ALWAYS USE SRM
         command = 'lcg-del -b -D srmv2 -l %s' %(targetStorage)
         print(command)
         subprocess.call([command], shell=True)

@@ -5,7 +5,6 @@ import time
 import os
 import shutil
 
-debugPrintOUts = True
 
 parser = OptionParser()
 parser.add_option("-T", "--tag", dest="tag", default="8TeV",
@@ -22,6 +21,8 @@ parser.add_option("-N", "--number-of-events", dest="nevents_split", default=1000
                       help="Number of events per file when splitting.")
 parser.add_option("-P", "--philipp-love-progress-bars", dest="philipp_love_progress_bars", default=False,
                       help="If you share the love of Philipp...")
+parser.add_option("-V", "--verbose", dest="verbose", action="store_true", default=False,
+                      help="Activate verbose flag for debug printouts")
 
 (opts, args) = parser.parse_args(sys.argv)
 
@@ -29,6 +30,8 @@ import os,shutil,pickle,subprocess,ROOT,re
 ROOT.gROOT.SetBatch(True)
 from myutils import BetterConfigParser, Sample, ParseInfo, sample_parser
 import getpass
+
+debugPrintOUts = opts.verbose
 
 if opts.tag == "":
     print "Please provide tag to run the analysis with, example '-T 8TeV' uses config8TeV and pathConfig8TeV to run the analysis."
@@ -65,7 +68,6 @@ if not opts.ftag == '':
     DirStruct={'tagDir':tagDir,'ftagdir':'%s/%s/'%(tagDir,opts.ftag),'logpath':'%s/%s/%s/'%(tagDir,opts.ftag,'Logs'),'plotpath':'%s/%s/%s/'%(tagDir,opts.ftag,'Plots'),'limitpath':'%s/%s/%s/'%(tagDir,opts.ftag,'Limits'),'confpath':'%s/%s/%s/'%(tagDir,opts.ftag,'config') }
     
     if(debugPrintOUts): print 'DirStruct',DirStruct
-
 
     for keys in ['tagDir','ftagdir','logpath','plotpath','limitpath','confpath']:
         try:
@@ -219,10 +221,10 @@ elif opts.task == 'prep':
         info = ParseInfo(samplesinfo,path)
         for job in info:
             submit(job.name,repDict)
-
     else:
         for sample in samplesList:
             submit(sample,repDict)
+            
 elif opts.task == 'sys' or opts.task == 'syseval':
     path = config.get("Directories","SYSin")
     samplesinfo = config.get("Directories","samplesinfo")

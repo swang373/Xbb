@@ -7,11 +7,10 @@ List = paths general cuts training datacards plots lhe_weights
 [Directories]
 
 #!! just a variable
-Dname: outdir_testSLC6
+Dname: outdir_testmerge
 #!! Working Directory, THIS MUST BE PERSONALIZED
-Wdir: /shome/perrozzi/CMSSW_5_3_22_patch1/src
+Wdir: /shome/perrozzi/test_merge_code/CMSSW_5_3_22_patch1/src
 samplepath = gsidcap://t3se01.psi.ch:22128//pnfs/psi.ch/cms/trivcat/store/HBB_EDMNtuple/V42/Mar13/
-# samplepath = dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/HBB_EDMNtuple/V42/Mar13/
 scratch = /scratch/perrozzi/
 
 #!! The directory with the code
@@ -19,44 +18,36 @@ vhbbpath= <!Directories|Wdir!>/Xbb
 #!! specifies the .cfg files with the Samples information
 samplesinfo: <!Directories|vhbbpath!>/python/8TeVconfig/samples_nosplit.cfg
 #!! where you want to store the logfiles from job submissions
-logpath: <!Directories|Wdir!>/Xbb/python/outdir_testSLC6//test_by_luca/Logs/
+logpath: /shome/perrozzi/test_merge_code/CMSSW_5_3_22_patch1/src/Xbb/python/outdir_testmerge//test_merge7/Logs/
 
 #!! from which samples to plot and where to save the plots
 # plottingSamples: <!Directories|MVAout!>
 plottingSamples: <!Directories|SYSout!>
-plotpath: <!Directories|Wdir!>/Xbb/python/outdir_testSLC6//test_by_luca/Plots/
+plotpath: /shome/perrozzi/test_merge_code/CMSSW_5_3_22_patch1/src/Xbb/python/outdir_testmerge//test_merge7/Plots/
 plot_dc_path: <!Directories|vhbbpath!>/python/Stacks_fromDC_Allnominal_v2.3.0/
 
 #!! basedir for tagged folder structure
 tagDir: <!Directories|vhbbpath!>/python/<!Directories|Dname!>/
 
 #!! cahed files
-#tmpSamples=/shome/perrozzi/tmp/
-#tmpSamples = gsidcap://t3se01.psi.ch:22128//pnfs/psi.ch/cms/trivcat/store/user/nmohr/Mar13/env/sysAllSyst/LHCPMVAout_v3/skims/
-# tmpSamples = <!Directories|dcSamples!>/skims/
 tmpSamples = <!Directories|SYSout!>/skims/
 
 #!! from which samples to make the DCs and where to save the DCs
-dcSamples: <!Directories|samplepath!>/env/sysAllSyst/LHCPMVAout_v3/
-#dcSamples: <!Directories|samplepath!>/env/sysAllSyst/LHCPMVAout_test2/
-#limits: <!Directories|vhbbpath!>/python/Limit_expertAllnominal_controlRegions_pure_highlow/
-limits: <!Directories|Wdir!>/Xbb/python/outdir_testSLC6//test_by_luca/Limits/
+# dcSamples: <!Directories|samplepath!>/env/syst/LHCPMVAout_v3/
+dcSamples: <!Directories|MVAout!>
+limits: /shome/perrozzi/test_merge_code/CMSSW_5_3_22_patch1/src/Xbb/python/outdir_testmerge//test_merge7/Limits/
 
 #!! From where to take the raw samples and where to put the prepared trees:
 PREPin: <!Directories|samplepath!>
-# PREPout: dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/user/perrozzi/test_for_luca/
-PREPout: gsidcap://t3se01.psi.ch:22128//pnfs/psi.ch/cms/trivcat/store/user/perrozzi/test_for_luca/
-#PREPout: <!Directories|scratch!>/
+PREPout: gsidcap://t3se01.psi.ch:22128//pnfs/psi.ch/cms/trivcat/store/user/perrozzi/test_merge/
 
 #!! On which samples to apply the regression and write the sys and where to write the resulting trees:
 SYSin: <!Directories|PREPout!>/
-#SYSout: <!Directories|samplepath!>/env/sys/
-SYSout: <!Directories|PREPout!>/sysAllSyst/
+SYSout: <!Directories|PREPout!>/syst/
 
 #!! On which samples to evaluate the MVA on and where to write the resulting trees:
-MVAin: <!Directories|SYSout!>/LHCPMVAout_Apr5/
-#MVAout: <!Directories|samplepath!>/env/sysAllSyst/LHCPMVAout_v2.3.0/
-MVAout: <!Directories|samplepath!>/sysAllSyst/LHCPMVAout_v3/
+MVAin: <!Directories|SYSout!>
+MVAout: <!Directories|MVAin!>/MVAout/
 
 #!! to fix corruption problem use scratch
 #MVAout: <!Directories|scratch!>/
