@@ -44,6 +44,7 @@ class HistoMaker:
 
         # get all Histos at once
         CuttedTree = self.tc.get_tree(job,'1')
+        print 'CuttedTree.GetEntries()',CuttedTree.GetEntries()
         for options in self.optionsList:
             name=job.name
             if self.GroupDict is None:
@@ -65,7 +66,10 @@ class HistoMaker:
                 treeCut='%s'%(options['cut'])
 
             #options
-
+            print 'treeCut',treeCut
+            print 'weightF',weightF
+            
+            drawoption = ''
             if job.type != 'DATA':
                 if CuttedTree.GetEntries():
                     if 'RTight' in treeVar or 'RMed' in treeVar: 
@@ -92,6 +96,9 @@ class HistoMaker:
             else:
                 hTree = ROOT.TH1F('%s'%name,'%s'%name,nBins,xMin,xMax)
                 hTree.Sumw2()
+            print('%s>>%s(%s,%s,%s)' %(treeVar,name,nBins,xMin,xMax), drawoption, "goff,e")
+            print 'name',name
+            print 'hTree',hTree.GetName()
             if job.type != 'DATA':
                 if 'RTight' in treeVar or 'RMed' in treeVar:
                     if TrainFlag:

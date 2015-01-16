@@ -26,7 +26,11 @@ if opts.config =="":
 from myutils import BetterConfigParser, printc, ParseInfo, mvainfo, StackMaker, HistoMaker
 
 print opts.config
-opts.config.append('8TeVconfig/vhbbPlotDef.ini')
+vhbbPlotDef=opts.config[0].split('/')[0]+'/vhbbPlotDef.ini'
+# print 'vhbbPlotDef',vhbbPlotDef
+# sys.exit()
+opts.config.append(vhbbPlotDef)
+# opts.config.append('8TeVconfig/vhbbPlotDef.ini')
 config = BetterConfigParser()
 config.read(opts.config)
 TdrStyles.tdrStyle()

@@ -168,8 +168,7 @@ class ParseInfo:
 
     #bool
     def checkSplittedSampleName(self,filename):
-            print '### CHECKSPLITTEDSAMPLENAME ###'
-            print filename
+            print '### CHECKSPLITTEDSAMPLENAME ###',filename
             # if there is an underscore in the filename
             if ( filename.rfind('_') > 0. ) :
                     try:

@@ -29,7 +29,7 @@ if opts.config =="":
 
 from myutils import BetterConfigParser
 
-print opts.config
+print 'opts.config',opts.config
 config = BetterConfigParser()
 config.read(opts.config)
 prefix = config.get('LHEWeights','prefix')
@@ -44,14 +44,14 @@ for file in files:
         fileList.insert(0, new_entry)
     else:
         fileList.append(new_entry)
-print fileList
-print lheBin
+print 'fileList', fileList
+print 'lheBin',lheBin
 
 def get_weights(fileList,lheBin):    
     for file in fileList:
         #file.append( 1 )
         #continue
-        print file
+        print 'file', file
         infile = ROOT.TFile.Open(file[0],"READ")
         tree = infile.Get('tree')
         for bin in lheBin:
@@ -63,7 +63,7 @@ def get_weights(fileList,lheBin):
 
     CountIncl = fileList[0][3]
     xSecIncl = fileList[0][1]
-    print fileList
+    print 'fileList', fileList
     print 'Inclusive cross-section %.2f pb' %xSecIncl
 
     #total -> total numer of events in each lheBin
@@ -87,7 +87,7 @@ def get_weights(fileList,lheBin):
 
     weight_map = {}
     for bin in range(0, len(lheBin) ):
-        print '%s: %.2f' %(lheBin[bin], weight[bin])
+        print 'weight_map %s: %.2f' %(lheBin[bin], weight[bin])
         weight_map[lheBin[bin]] = weight[bin]
     return weight_map
 
@@ -148,8 +148,8 @@ def do_validation(fileList,inclusive,newpostfix):
 
     for file in fileList: 
         h_name=str(hashlib.sha224(file[0]).hexdigest())
-        print file[0]
-        print h_name
+        print 'file[0]', file[0]
+        print 'h_name', h_name
         tfile = ROOT.TFile.Open(file[0].replace('.root',newpostfix),"read")
         tree = tfile.Get("tree")
         h_tmp = ROOT.TH1F(h_name,h_name,300,0,300)
@@ -168,15 +168,19 @@ def do_validation(fileList,inclusive,newpostfix):
     ROOT.gPad.SetLogy()
     histo.Draw()
     histo1.Draw('SAME')
-    print histo.Integral(100,300)
-    print histo1.Integral(100,300)
+    print 'histo.Integral(100,300)', histo.Integral(100,300)
+    print 'histo1.Integral(100,300)',histo1.Integral(100,300)
     histo1.SetLineColor(ROOT.kRed)
     canvas.Print("validation_lheV_pt.pdf","pdf")
 
 if opts.weights:
     weight_map = get_weights(fileList,lheBin)
     config.set('LHEWeights', 'weights_per_bin', '%s' %weight_map)
-    f = open('8TeVconfig/lhe_weights', 'w')
+    
+    config_folder=opts.config[0].split('/')[0]
+    print 'addiSamples config_folder',config_folder
+    f = open(config_folder+'/lhe_weights', 'w')
+    # f = open('8TeVconfig/lhe_weights', 'w')
     for section in config.sections():
         if not section == 'LHEWeights':
             config.remove_section(section)

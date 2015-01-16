@@ -419,7 +419,7 @@ class StackMaker:
         TdrStyles.tdrStyle()
         histo_dict = HistoMaker.orderandadd([{self.typs[i]:self.histos[i]} for i in range(len(self.histos))],self.setup)
         #sort
-        print histo_dict
+        print 'histo_dict',histo_dict
         sig_histos=[]
         sub_histos=[histo_dict[key] for key in self.setup]
         self.typs=self.setup

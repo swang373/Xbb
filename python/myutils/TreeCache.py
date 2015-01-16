@@ -44,6 +44,7 @@ class TreeCache:
         self.__hashDict[theName] = theHash
         tmpSource = '%s/tmp_%s.root'%(self.__tmpPath,theHash)
         if self.__doCache and self.file_exists(tmpSource):
+            print('sample',theName,'skipped, filename=',tmpSource)
             return
         output = ROOT.TFile.Open(tmpSource,'create')
         input = ROOT.TFile.Open(source,'read')
