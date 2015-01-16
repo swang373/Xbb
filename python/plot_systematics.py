@@ -197,6 +197,7 @@ for mass in masses:
                     #c.Print(name)
                     name = outpath+'systPlot_'+Abin+'_M'+mass+'_'+channel+'_'+MC+syst+'.pdf'
                     c.Print(name)
+                    c.Print(name.replace('.pdf','.png'))
 
 
             input.Close()

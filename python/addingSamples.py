@@ -172,6 +172,7 @@ def do_validation(fileList,inclusive,newpostfix):
     print 'histo1.Integral(100,300)',histo1.Integral(100,300)
     histo1.SetLineColor(ROOT.kRed)
     canvas.Print("validation_lheV_pt.pdf","pdf")
+    canvas.Print("validation_lheV_pt.png","png")
 
 if opts.weights:
     weight_map = get_weights(fileList,lheBin)

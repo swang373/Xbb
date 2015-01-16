@@ -142,6 +142,7 @@ class StackMaker:
         l.Draw()
         name = '%s/comp_%s' %(self.plotDir,self.options['pdfName'])
         c.Print(name)
+        c.Print(name.replace('.pdf','.png'))
 
     def doPlot(self):
         TdrStyles.tdrStyle()
@@ -387,6 +388,7 @@ class StackMaker:
             os.makedirs(os.path.dirname(self.plotDir))
         name = '%s/%s' %(self.plotDir,self.options['pdfName'])
         c.Print(name)
+        c.Print(name.replace('.pdf','.png'))
         #print "DATA INTEGRAL: %s" %d1.Integral(d1.GetNbinsX()-2,d1.GetNbinsX()) 
         #fOut = ROOT.TFile.Open(name.replace('.pdf','.root'),'RECREATE')
         #for theHist in allStack.GetHists():
@@ -628,3 +630,4 @@ class StackMaker:
             os.makedirs(os.path.dirname(self.plotDir))
         name = '%s/%s' %(self.plotDir,self.options['pdfName'])
         c.Print(name)
+        c.Print(name.replace('.pdf','.png'))
