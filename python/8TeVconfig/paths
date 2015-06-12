@@ -7,23 +7,23 @@ List = paths general cuts training datacards plots lhe_weights
 [Directories]
 
 #!! just a variable
-Dname: outdir_testmerge
+Dname: outdir_test
 #!! Working Directory, THIS MUST BE PERSONALIZED
-Wdir: /shome/perrozzi/test_merge_code/CMSSW_5_3_22_patch1/src
-samplepath = gsidcap://t3se01.psi.ch:22128//pnfs/psi.ch/cms/trivcat/store/HBB_EDMNtuple/V42/Mar13/
-scratch = /scratch/perrozzi/
+Wdir: /shome/gaperrin/VHbb/CMSSW_5_3_22_patch1/src
+samplepath = dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/t3groups/ethz-higgs/run1
+scratch = /scratch/gaperrin/VHbb/
 
 #!! The directory with the code
 vhbbpath= <!Directories|Wdir!>/Xbb
 #!! specifies the .cfg files with the Samples information
 samplesinfo: <!Directories|vhbbpath!>/python/8TeVconfig/samples_nosplit.cfg
 #!! where you want to store the logfiles from job submissions
-logpath: /shome/perrozzi/test_merge_code/CMSSW_5_3_22_patch1/src/Xbb/python/outdir_testmerge//test_merge7/Logs/
+logpath: /shome/gaperrin/VHbb/CMSSW_5_3_22_patch1/src/Xbb/python/outdir_test//test_debug0/Logs/
 
 #!! from which samples to plot and where to save the plots
 # plottingSamples: <!Directories|MVAout!>
 plottingSamples: <!Directories|SYSout!>
-plotpath: /shome/perrozzi/test_merge_code/CMSSW_5_3_22_patch1/src/Xbb/python/outdir_testmerge//test_merge7/Plots/
+plotpath: /shome/gaperrin/VHbb/CMSSW_5_3_22_patch1/src/Xbb/python/outdir_test//test_debug0/Plots/
 plot_dc_path: <!Directories|vhbbpath!>/python/Stacks_fromDC_Allnominal_v2.3.0/
 
 #!! basedir for tagged folder structure
@@ -35,11 +35,12 @@ tmpSamples = <!Directories|SYSout!>/skims/
 #!! from which samples to make the DCs and where to save the DCs
 # dcSamples: <!Directories|samplepath!>/env/syst/LHCPMVAout_v3/
 dcSamples: <!Directories|MVAout!>
-limits: /shome/perrozzi/test_merge_code/CMSSW_5_3_22_patch1/src/Xbb/python/outdir_testmerge//test_merge7/Limits/
+limits: /shome/gaperrin/VHbb/CMSSW_5_3_22_patch1/src/Xbb/python/outdir_test//test_debug0/Limits/
 
 #!! From where to take the raw samples and where to put the prepared trees:
 PREPin: <!Directories|samplepath!>
-PREPout: gsidcap://t3se01.psi.ch:22128//pnfs/psi.ch/cms/trivcat/store/user/perrozzi/test_merge/
+#PREPout: gsidcap://t3se01.psi.ch:22128//pnfs/psi.ch/cms/trivcat/store/user/gaperrin/test_merge/VHbb_test/
+PREPout: dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/user/gaperrin/test_merge/VHbb_test/
 
 #!! On which samples to apply the regression and write the sys and where to write the resulting trees:
 SYSin: <!Directories|PREPout!>/
