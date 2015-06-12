@@ -1,4 +1,4 @@
-import ROOT 
+import ROOT,sys,os,subprocess
 from printcolor import printc
         
 def copytree(pathIN,pathOUT,prefix,newprefix,file,Aprefix,Acut):
@@ -8,8 +8,17 @@ def copytree(pathIN,pathOUT,prefix,newprefix,file,Aprefix,Acut):
     print "Output File : %s/%s%s%s.root" %(pathOUT,newprefix,Aprefix,file)
         
     input = ROOT.TFile.Open("%s/%s%s.root" %(pathIN,prefix,file),'read')
-    output = ROOT.TFile.Open("%s/%s%s%s.root" %(pathOUT,newprefix,Aprefix,file),'recreate')
+    print ("%s/%s%s%s.root" %(pathOUT,newprefix,Aprefix,file),'recreate')
+    del_protocol = pathOUT
+    del_protocol = del_protocol.replace('gsidcap://t3se01.psi.ch:22128/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
+    del_protocol = del_protocol.replace('dcap://t3se01.psi.ch:22125/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
+    del_protocol = del_protocol.replace('root://t3dcachedb03.psi.ch:1094/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
+    command = 'srmrm %s/%s%s%s.root' %(del_protocol,newprefix,Aprefix,file)
+    print(command)
+    subprocess.call([command], shell=True)    
+    output = ROOT.TFile.Open("%s/%s%s%s.root" %(pathOUT,newprefix,Aprefix,file),'create')
 
+    input.ls()
     input.cd()
     obj = ROOT.TObject
     for key in ROOT.gDirectory.GetListOfKeys():
