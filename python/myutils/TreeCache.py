@@ -194,20 +194,22 @@ class TreeCache:
     def file_exists(file):
         file_dummy = file
         srmPath = 'srm://t3se01.psi.ch:8443/srm/managerv2?SFN='
-        file_dummy = file_dummy.replace('root://t3dcachedb03.psi.ch:1094/',srmPath)
+        file_dummy = file_dummy.replace('root://t3dcachedb03.psi.ch:1094/','')
+        file_dummy = file_dummy.replace('srm://t3se01.psi.ch:8443/srm/managerv2?SFN=','')
         print('trying to check if exists:',file_dummy)
-        if 'gsidcap' or 'srm' in file_dummy:
-            if TreeCache.get_slc_version() == 'SLC5':
-              command = 'lcg-ls %s' %file_dummy.replace('gsidcap://t3se01.psi.ch:22128/','%s/'%srmPath)
-              error_msg = 'No such file or directory'
-            elif TreeCache.get_slc_version() == 'SLC6':
-              command = 'lcg-ls %s' %file_dummy.replace('gsidcap://t3se01.psi.ch:22128/','%s/'%srmPath)
-              print ('using command',command)
-              error_msg = 'does not exists'
+        # if 'gsidcap' or 'srm' in file_dummy:
+            # if TreeCache.get_slc_version() == 'SLC5':
+              # command = 'lcg-ls %s' %file_dummy.replace('gsidcap://t3se01.psi.ch:22128/','%s/'%srmPath)
+              # error_msg = 'No such file or directory'
+            # elif TreeCache.get_slc_version() == 'SLC6':
+              # command = 'lcg-ls %s' %file_dummy.replace('gsidcap://t3se01.psi.ch:22128/','%s/'%srmPath)
+              # # print ('using command',command)
+              # error_msg = 'does not exists'
               
-            p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,shell=True)
-            line = p.stdout.readline()
-            return not error_msg in line
+            # p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,shell=True)
+            # line = p.stdout.readline()
+            # return not error_msg in line
               
-        else:
-            return os.path.exists(file)
+        # else:
+        print('os.path.exists(',file_dummy,')',os.path.exists(file_dummy))
+        return os.path.exists(file_dummy)
