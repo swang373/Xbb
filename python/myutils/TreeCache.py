@@ -50,6 +50,7 @@ class TreeCache:
         theHash = hashlib.sha224('%s_s%s_%s' %(sample,checksum,self.minCut)).hexdigest()
         self.__hashDict[theName] = theHash
         tmpSource = '%s/tmp_%s.root'%(self.__tmpPath,theHash)
+        print ('self.__doCache',self.__doCache,'self.file_exists(tmpSource)',self.file_exists(tmpSource))
         if self.__doCache and self.file_exists(tmpSource):
             print('sample',theName,'skipped, filename=',tmpSource)
             return
@@ -195,12 +196,13 @@ class TreeCache:
         srmPath = 'srm://t3se01.psi.ch:8443/srm/managerv2?SFN='
         file_dummy = file_dummy.replace('root://t3dcachedb03.psi.ch:1094/',srmPath)
         print('trying to check if exists:',file_dummy)
-        if 'gsidcap://t3se01.psi.ch:22128' in file_dummy:
+        if 'gsidcap' or 'srm' in file_dummy:
             if TreeCache.get_slc_version() == 'SLC5':
               command = 'lcg-ls %s' %file_dummy.replace('gsidcap://t3se01.psi.ch:22128/','%s/'%srmPath)
               error_msg = 'No such file or directory'
             elif TreeCache.get_slc_version() == 'SLC6':
-              command = 'srmls %s' %file_dummy.replace('gsidcap://t3se01.psi.ch:22128/','%s/'%srmPath)
+              command = 'lcg-ls %s' %file_dummy.replace('gsidcap://t3se01.psi.ch:22128/','%s/'%srmPath)
+              print ('using command',command)
               error_msg = 'does not exists'
               
             p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,shell=True)
