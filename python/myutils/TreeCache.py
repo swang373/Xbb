@@ -27,6 +27,13 @@ class TreeCache:
         print('\n\t>>> Caching FILES <<<\n')
         self.__cache_samples()
     
+    def _mkdir_recursive(self, path):
+        sub_path = os.path.dirname(path)
+        if not os.path.exists(sub_path):
+            self._mkdir_recursive(sub_path)
+        if not os.path.exists(path):
+            os.mkdir(path)
+
     def __find_min_cut(self):
         effective_cuts = []
         for cut in self._cutList:
@@ -46,6 +53,7 @@ class TreeCache:
         if self.__doCache and self.file_exists(tmpSource):
             print('sample',theName,'skipped, filename=',tmpSource)
             return
+        print ('trying to create',tmpSource)
         output = ROOT.TFile.Open(tmpSource,'create')
         input = ROOT.TFile.Open(source,'read')
         output.cd()
@@ -183,13 +191,16 @@ class TreeCache:
     
     @staticmethod
     def file_exists(file):
-        if 'gsidcap://t3se01.psi.ch:22128' in file:
-            srmPath = 'srm://t3se01.psi.ch:8443/srm/managerv2?SFN='
+        file_dummy = file
+        srmPath = 'srm://t3se01.psi.ch:8443/srm/managerv2?SFN='
+        file_dummy = file_dummy.replace('root://t3dcachedb03.psi.ch:1094/',srmPath)
+        print('trying to check if exists:',file_dummy)
+        if 'gsidcap://t3se01.psi.ch:22128' in file_dummy:
             if TreeCache.get_slc_version() == 'SLC5':
-              command = 'lcg-ls %s' %file.replace('gsidcap://t3se01.psi.ch:22128/','%s/'%srmPath)
+              command = 'lcg-ls %s' %file_dummy.replace('gsidcap://t3se01.psi.ch:22128/','%s/'%srmPath)
               error_msg = 'No such file or directory'
             elif TreeCache.get_slc_version() == 'SLC6':
-              command = 'srmls %s' %file.replace('gsidcap://t3se01.psi.ch:22128/','%s/'%srmPath)
+              command = 'srmls %s' %file_dummy.replace('gsidcap://t3se01.psi.ch:22128/','%s/'%srmPath)
               error_msg = 'does not exists'
               
             p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,shell=True)
