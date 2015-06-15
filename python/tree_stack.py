@@ -54,7 +54,7 @@ info = ParseInfo(samplesinfo,path)
 #----------Histo from trees------------
 def doPlot():
     vars = (config.get(section, 'vars')).split(',')
-    print 'vars',vars
+    # print 'vars',vars
     data = config.get(section,'Datas')
     mc = eval(config.get('Plot_general','samples'))
 
@@ -74,8 +74,8 @@ def doPlot():
     for i in range(len(vars)):
         Stacks.append(StackMaker(config,vars[i],region,SignalRegion))
         options.append(Stacks[i].options)
-        print 'loop options',options
-    print 'options',options
+        # print 'loop options',options
+    # print 'options',options
 
     Plotter=HistoMaker(mcsamples+datasamples,path,config,options,GroupDict)
 

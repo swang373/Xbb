@@ -120,7 +120,7 @@ class TreeCache:
             cut += '& (%s)' %(sample.subcut)
         ROOT.gROOT.cd()
         cuttedTree=tree.CopyTree(cut)
-        cuttedTree.SetDirectory(0)
+        # cuttedTree.SetDirectory(0)
         input.Close()
         del input
         del tree
