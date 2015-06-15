@@ -22,7 +22,7 @@ logpath: /shome/gaperrin/VHbb/CMSSW_5_3_22_patch1/src/Xbb/python/outdir_test//te
 
 #!! from which samples to plot and where to save the plots
 # plottingSamples: <!Directories|MVAout!>
-plottingSamples: <!Directories|SYSout!>
+plottingSamples: <!Directories|PREPout!>
 plotpath: /shome/gaperrin/VHbb/CMSSW_5_3_22_patch1/src/Xbb/python/outdir_test//test_debug0/Plots/
 plot_dc_path: <!Directories|vhbbpath!>/python/Stacks_fromDC_Allnominal_v2.3.0/
 

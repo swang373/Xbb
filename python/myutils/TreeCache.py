@@ -12,6 +12,8 @@ class TreeCache:
             self._cutList.append('(%s)'%cut.replace(' ',''))
         try:
             self.__tmpPath = os.environ["TMPDIR"]
+	    print('The TMPDIR is ', os.environ["TMPDIR"])
+	    
         except KeyError:
             print("\x1b[32;5m %s \x1b[0m" %open('%s/data/vhbb.txt' %config.get('Directories','vhbbpath')).read())
             print("\x1b[31;5;1m\n\t>>> %s: Please set your TMPDIR and try again... <<<\n\x1b[0m" %os.getlogin())
@@ -45,15 +47,26 @@ class TreeCache:
     def __trim_tree(self, sample):
         theName = sample.name
         print('Reading sample <<<< %s' %sample)
+	print('debug 4ca')
         source = '%s/%s' %(self.path,sample.get_path)
+	print('debug 4cb')
         checksum = self.get_checksum(source)
+	print('debug 4cc')
         theHash = hashlib.sha224('%s_s%s_%s' %(sample,checksum,self.minCut)).hexdigest()
+	print('debug 4cd')
         self.__hashDict[theName] = theHash
+	print('debug 4ce')
         tmpSource = '%s/tmp_%s.root'%(self.__tmpPath,theHash)
+	print('debug 4cf')
+	print('the tmp source is ', tmpSource)
+
         print ('self.__doCache',self.__doCache,'self.file_exists(tmpSource)',self.file_exists(tmpSource))
+	print('debug 4cg')
         if self.__doCache and self.file_exists(tmpSource):
             print('sample',theName,'skipped, filename=',tmpSource)
+	    print('debug 4ch')
             return
+	print('debug 4ci')
         print ('trying to create',tmpSource)
         output = ROOT.TFile.Open(tmpSource,'create')
         input = ROOT.TFile.Open(source,'read')
@@ -192,7 +205,10 @@ class TreeCache:
     
     @staticmethod
     def file_exists(file):
+        print ('============================== will now check if the file exists')
+
         file_dummy = file
+	print ('file_dummy is ', file_dummy)
         srmPath = 'srm://t3se01.psi.ch:8443/srm/managerv2?SFN='
         file_dummy = file_dummy.replace('root://t3dcachedb03.psi.ch:1094/',srmPath)
         print('trying to check if exists:',file_dummy)

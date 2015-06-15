@@ -8,6 +8,7 @@ from HistoMaker import HistoMaker
 
 class StackMaker:
     def __init__(self, config, var,region,SignalRegion,setup=None):
+        print "DEBUG 3a"
         section='Plot:%s'%region
         self.var = var
         self.SignalRegion=SignalRegion
@@ -67,6 +68,7 @@ class StackMaker:
         else:
             self.doFit = False
 
+        print "DEBUG 3b"
         self.colorDict=eval(config.get('Plot_general','colorDict'))
         self.typLegendDict=eval(config.get('Plot_general','typLegendDict'))
         self.anaTag = config.get("Analysis","tag")
@@ -105,6 +107,7 @@ class StackMaker:
         #else:
             #addFlag2 = 'pp #rightarrow VH; H #rightarrow b#bar{b}'
         print self.setup
+        print "DEBUG 3c"
 
     @staticmethod
     def myText(txt="CMS Preliminary",ndcX=0,ndcY=0,size=0.8):

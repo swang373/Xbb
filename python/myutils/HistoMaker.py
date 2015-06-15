@@ -10,23 +10,30 @@ from copy import copy
 
 class HistoMaker:
     def __init__(self, samples, path, config, optionsList,GroupDict=None):
+        print 'Debug 4a'
         self.path = path
         self.config = config
         self.optionsList = optionsList
         self.nBins = optionsList[0]['nBins']
         self.lumi=0.
         self.cuts = []
+        print 'Debug 4b'
         for options in optionsList:
             self.cuts.append(options['cut'])
         #print self.cuts
         #self.tc = TreeCache(self.cuts,samples,path) 
+        print 'Debug 4c'
         self.tc = TreeCache(self.cuts,samples,path,config)
+        print 'Debug 4d'
         self._rebin = False
         self.mybinning = None
         self.GroupDict=GroupDict
         self.calc_rebin_flag = False
+        print 'Debug 4e'
         VHbbNameSpace=config.get('VHbbNameSpace','library')
+        print 'Debug 4f'
         ROOT.gSystem.Load(VHbbNameSpace)
+        print 'Debug 4g'
 
     def get_histos_from_tree(self,job,cutOverWrite=None):
         if self.lumi == 0: 
