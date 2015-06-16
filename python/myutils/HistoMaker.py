@@ -51,7 +51,9 @@ class HistoMaker:
 
         # get all Histos at once
         CuttedTree = self.tc.get_tree(job,'1')
-        print 'CuttedTree.GetEntries()',CuttedTree.GetEntries()
+        # print 'CuttedTree.GetEntries()',CuttedTree.GetEntries()
+        # print 'begin self.optionsList',self.optionsList
+        # print 'end self.optionsList'
         for options in self.optionsList:
             name=job.name
             if self.GroupDict is None:
@@ -60,6 +62,7 @@ class HistoMaker:
                 group=self.GroupDict[job.name]
             treeVar=options['var']
             name=options['name']
+            # print 'options[\'name\']',options['name']
             if self._rebin or self.calc_rebin_flag:
                 nBins = self.nBins
             else:
@@ -73,39 +76,48 @@ class HistoMaker:
                 treeCut='%s'%(options['cut'])
 
             #options
-            print 'treeCut',treeCut
-            print 'weightF',weightF
+            # print 'treeCut',treeCut
+            # print 'weightF',weightF
             
+            hTree = ROOT.TH1F('%s'%name,'%s'%name,nBins,xMin,xMax)
+            hTree.Sumw2()
+            print('hTree.name() 1 =',hTree.GetName())
             drawoption = ''
             if job.type != 'DATA':
-                if CuttedTree.GetEntries():
+                if CuttedTree and CuttedTree.GetEntries():
                     if 'RTight' in treeVar or 'RMed' in treeVar: 
                         drawoption = '(%s)*(%s & %s)'%(weightF,treeCut,BDT_add_cut)
                         #print drawoption
                     else: 
                         drawoption = '(%s)*(%s)'%(weightF,treeCut)
-                    CuttedTree.Draw('%s>>%s(%s,%s,%s)' %(treeVar,name,nBins,xMin,xMax), drawoption, "goff,e")
+                    CuttedTree.Draw('%s>>%s' %(treeVar,name), drawoption, "goff,e")
+                    print ('Draw: %s>>%s' %(treeVar,name), drawoption, "goff,e")
+                    print name
+                    print('hTree.name() 2 =',hTree.GetName())
                     full=True
                 else:
                     full=False
             elif job.type == 'DATA':
                 if options['blind']:
                     if treeVar == 'H.mass':
-                        CuttedTree.Draw('%s>>%s(%s,%s,%s)' %(treeVar,name,nBins,xMin,xMax),' (%(var)s <90. || %(var)s > 150.) & %(cut)s' %options, "goff,e")
+                        CuttedTree.Draw('%s>>%s' %(treeVar,name),' (%(var)s <90. || %(var)s > 150.) & %(cut)s' %options, "goff,e")
                     else:
-                        CuttedTree.Draw('%s>>%s(%s,%s,%s)' %(treeVar,name,nBins,xMin,xMax),'%(var)s < 0. & %(cut)s'%options, "goff,e")
+                        CuttedTree.Draw('%s>>%s' %(treeVar,name),'%(var)s < 0. & %(cut)s'%options, "goff,e")
 
                 else:
-                    CuttedTree.Draw('%s>>%s(%s,%s,%s)' %(treeVar,name,nBins,xMin,xMax),'%s' %treeCut, "goff,e")
+                    CuttedTree.Draw('%s>>%s' %(treeVar,name),'%s' %treeCut, "goff,e")
                 full = True
-            if full:
-                hTree = ROOT.gDirectory.Get(name)
-            else:
-                hTree = ROOT.TH1F('%s'%name,'%s'%name,nBins,xMin,xMax)
-                hTree.Sumw2()
-            print('%s>>%s(%s,%s,%s)' %(treeVar,name,nBins,xMin,xMax), drawoption, "goff,e")
-            print 'name',name
-            print 'hTree',hTree.GetName()
+            # if full:
+                # hTree = ROOT.gDirectory.Get(name)
+                # print('histo1',ROOT.gDirectory.Get(name))
+            # else:
+                # hTree = ROOT.TH1F('%s'%name,'%s'%name,nBins,xMin,xMax)
+                # hTree.Sumw2()
+                # print('histo2',ROOT.gDirectory.Get(name))
+            print('%s>>%s' %(treeVar,name), drawoption, "goff,e")
+            print 'name',hTree
+            # if full: print 'hTree',hTree.GetName()
+              
             if job.type != 'DATA':
                 if 'RTight' in treeVar or 'RMed' in treeVar:
                     if TrainFlag:
@@ -137,7 +149,7 @@ class HistoMaker:
                 #print 'not rebinning %s'%job.name 
                 gDict[group] = hTree
             hTreeList.append(gDict)
-        CuttedTree.IsA().Destructor(CuttedTree)
+        if CuttedTree: CuttedTree.IsA().Destructor(CuttedTree)
         del CuttedTree
         return hTreeList
        

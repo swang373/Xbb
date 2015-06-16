@@ -46,7 +46,9 @@ class StackMaker:
             self.xMax = eval(config.get(section,'max'))
         else:
             self.xMax = eval(config.get('plotDef:%s'%var,'max'))
+        print("self.xMax",self.xMax)
         self.name = config.get('plotDef:%s'%var,'relPath')
+        print("self.name",self.name)
         # self.mass = config.get(section,'Signal')
         if SignalRegion:
             self.mass = config.get(section,'Signal')
@@ -73,7 +75,9 @@ class StackMaker:
         self.typLegendDict=eval(config.get('Plot_general','typLegendDict'))
         self.anaTag = config.get("Analysis","tag")
         self.xAxis = config.get('plotDef:%s'%var,'xAxis')
-        self.options = {'var': self.name,'name':'','xAxis': self.xAxis, 'nBins': self.nBins, 'xMin': self.xMin, 'xMax': self.xMax,'pdfName': '%s_%s_%s.pdf'%(region,var,self.mass),'cut':cut,'mass': self.mass, 'data': data, 'blind': self.blind}
+        self.hname = self.name.replace('.','')
+        print ('self.hname',self.hname)
+        self.options = {'var': self.name,'name':self.hname,'xAxis': self.xAxis, 'nBins': self.nBins, 'xMin': self.xMin, 'xMax': self.xMax,'pdfName': '%s_%s_%s.pdf'%(region,var,self.mass),'cut':cut,'mass': self.mass, 'data': data, 'blind': self.blind}
         if config.has_option('Weights','weightF'):
             self.options['weight'] = config.get('Weights','weightF')
         else:

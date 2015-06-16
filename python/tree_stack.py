@@ -67,10 +67,11 @@ print 'info = ParseInfo(samplesinfo,path) is ', path
 print "DEBUG 2"
 #Get the selections and the samples
 def doPlot():
-    vars = (config.get(section, 'vars')).split(',')#get the variables vars in the control region
-    print 'vars',vars
-    data = config.get(section,'Datas')#Datas: Zee
-    mc = eval(config.get('Plot_general','samples'))#Loads all the bkg. see plots and general files
+
+    vars = (config.get(section, 'vars')).split(',')
+    # print 'vars',vars
+    data = config.get(section,'Datas')
+    mc = eval(config.get('Plot_general','samples'))
 
     SignalRegion = False
     if config.has_option(section,'Signal'):#Signal: <!Plot_general|plot_mass!>
@@ -89,8 +90,8 @@ def doPlot():
     for i in range(len(vars)):
         Stacks.append(StackMaker(config,vars[i],region,SignalRegion))
         options.append(Stacks[i].options)
-        #print 'loop options',options
-    #print 'options',options
+        # print 'loop options',options
+    # print 'options',options
 
     print "DEBUG 4"
     Plotter=HistoMaker(mcsamples+datasamples,path,config,options,GroupDict)
