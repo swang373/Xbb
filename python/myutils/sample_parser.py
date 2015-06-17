@@ -28,7 +28,9 @@ def check_correspondency(sample,list,config):
 
 
 class ParseInfo:
+    '''Class containing a list of Sample. Is filled during the prep stage.'''
     def __init__(self,samples_config,samples_path):
+      '''Methode filling a list of Sample "self._samplelist = []" contained in the class. "sample_path" contains the path where the samples are stored (PREPin). "samples_config" is the "samples_nosplit.cfg" file. Depending of the variable "run_on_files" defined in "samples_nosplit.cfg", the sample list are generated from the input folder (PREPin) or the list in "samples_nosplit.cfg" '''
         try:
             os.stat(samples_config)
         except:
@@ -50,6 +52,7 @@ class ParseInfo:
 
         self._samplelist = []
 
+        #!! Store the list of input samples in __fileslist. Reads them directly from the folder defined in PREPin  
         self.__fileslist=[]
         if T3:
             ls = os.popen("lcg-ls -b -D srmv2 -l srm://t3se01.psi.ch:8443/srm/managerv2?SFN="+t3_path)
@@ -64,11 +67,14 @@ class ParseInfo:
 
         print '@DEBUG: ' + str(self.__fileslist)
 
-        run_on_fileList = eval(config.get('Samples_running','run_on_fileList'))
+        run_on_fileList = eval(config.get('Samples_running','run_on_fileList'))#Evaluate run_on_fileList from samples_nosplit.cfg 
 
         if( not test_samples(run_on_fileList,self.__fileslist,config.sections()) ): # stop if it finds None as sample
                 sys.exit('@ERROR: Sample == None. Check RunOnFileList flag in section General, the sample_config of the sample directory.')
 
+        #!! Start to loop over the samples. If run_on_files list is true, use the sample from the PREPin folder (_listed_file). 
+	#!! Else use the sample from  samples_nosplit.cfg (_config_entry).
+        #!! The sample description from samples_nosplit.cfg are then applied.
         for _listed_file,_config_entry in map(None,self.__fileslist,config.sections()):
             if( run_on_fileList ): 
                 _sample = _listed_file
@@ -77,24 +83,26 @@ class ParseInfo:
                 _sample = _config_entry
                 self._list = config.sections()
 
-            sample = self.checkSplittedSample(_sample)
-            if not config.has_option(sample,'infile'): continue
+            sample = self.checkSplittedSample(_sample)#Check if is splitted and remove the _
+            if not config.has_option(sample,'infile'): continue #Check if the sample has the infile parameter. If not skipp 
             infile = _sample
             sampleName = config.get(sample,'sampleName')
             
-            check_correspondency(sample,self._list,config)                    
+            check_correspondency(sample,self._list,config)#Check if the sample exists, not fully understood yet                    
             
             #Initialize samplecalss element
             sampleType = config.get(sample,'sampleType')
             cut = config.get(sample, 'cut')
-            newsample = Sample(sampleName,sampleType)
 
+	    #fill the sample
+            newsample = Sample(sampleName,sampleType)
             newsample.addtreecut = cut
             newsample.identifier=infile
             newsample.weightexpression=weightexpression
             newsample.lumi=lumi
             newsample.prefix=newprefix
             
+	    #add and fills all the subsamples
             if eval(config.get(sample,'subsamples')):
                 subnames = eval((config.get(sample, 'subnames')))
                 subcuts = eval((config.get(sample, 'subcuts')))
@@ -121,7 +129,6 @@ class ParseInfo:
                     newsample.sf = eval((config.get(sample, 'SF')))
                 newsample.group = config.get(sample,'sampleGroup')
                 self._samplelist.append(newsample)
-
 
     def __iter__(self):
         for sample in self._samplelist:
