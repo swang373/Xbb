@@ -8,11 +8,11 @@ from copy import copy,deepcopy
 from math import sqrt
 ROOT.gROOT.SetBatch(True)
 
-#CONFIGURE
-#Read the configuration file. region corresponds to the sample and --configs lists the conf. files for a given energy
-#opts.config = ['8TeVconfig/paths', '8TeVconfig/general', '8TeVconfig/cuts', '8TeVconfig/training', '8TeVconfig/datacards', '8TeVconfig/plots', '8TeVconfig/lhe_weights']
-
 argv = sys.argv
+
+#Read the arguments. --region corresponds to the region to plot --configs to the lists of the config files for a given energy.
+#i.e. opts.config = ['8TeVconfig/paths', '8TeVconfig/general', '8TeVconfig/cuts', '8TeVconfig/training', '8TeVconfig/datacards', '8TeVconfig/plots', '8TeVconfig/lhe_weights'] when --config is 8TeV in runAll
+
 parser = OptionParser()
 parser.add_option("-R", "--region", dest="region", default="",
                       help="region to plot")
@@ -26,18 +26,16 @@ from myutils import BetterConfigParser, printc, ParseInfo, mvainfo, StackMaker, 
 
 print 'opts.config',opts.config
 
-vhbbPlotDef=opts.config[0].split('/')[0]+'/vhbbPlotDef.ini'#Takes the name 8TeVconfig/vhbbPlotDef.ini
-# print 'vhbbPlotDef',vhbbPlotDef
-# sys.exit()
+#adds the file vhbbPlotDef.ini to the config list
+vhbbPlotDef=opts.config[0].split('/')[0]+'/vhbbPlotDef.ini'
 opts.config.append(vhbbPlotDef)#adds it to the config list
-# opts.config.append('8TeVconfig/vhbbPlotDef.ini')
 
 config = BetterConfigParser()
 config.read(opts.config)
 
 #path = opts.path
 region = opts.region
-print 'The region is ', region#TTbar_fit_EE
+print 'The region is ', region
 
 # additional blinding cut:
 addBlindingCut = None
@@ -47,65 +45,56 @@ if config.has_option('Plot_general','addBlindingCut'):#contained in plots, cut o
 
 
 #get locations:
-print "DEBUG 1"
-Wdir=config.get('Directories','Wdir')
-samplesinfo=config.get('Directories','samplesinfo')
+Wdir=config.get('Directories','Wdir')# working direcoty containing the ouput
+samplesinfo=config.get('Directories','samplesinfo')# samples_nosplit.cfg
 
-path = config.get('Directories','plottingSamples')
+path = config.get('Directories','plottingSamples')# from which samples to plot
 
-section='Plot:%s'%region#Plot:TTbar_fit_EE
-print 'section is ', section #Plot:TTbar_fit_EE, correspond to the CR
+section='Plot:%s'%region
+print 'section is ', section 
 
-
-info = ParseInfo(samplesinfo,path)#root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/gaperrin/VHbb_test/
-
-print 'samplesinfo is ', samplesinfo
-print 'path is ', path
-print 'info = ParseInfo(samplesinfo,path) is ', path
+info = ParseInfo(samplesinfo,path) #creates a list of Samples by reading the info in samples_nosplit.cfg and the conentent of the path.
 
 #----------Histo from trees------------
-print "DEBUG 2"
 #Get the selections and the samples
 def doPlot():
 
-    vars = (config.get(section, 'vars')).split(',')
+    vars = (config.get(section, 'vars')).split(',')# get the variables to be ploted for all the regions
     # print 'vars',vars
-    data = config.get(section,'Datas')
-    mc = eval(config.get('Plot_general','samples'))
+    data = config.get(section,'Datas')# read the data corresponding to each CR (section)
+    mc = eval(config.get('Plot_general','samples'))# read the list of mc samples
+
+    print 'mc is', mc
 
     SignalRegion = False
     if config.has_option(section,'Signal'):#Signal: <!Plot_general|plot_mass!>
-        mc.append(config.get(section,'Signal'))
+        mc.append(config.get(section,'Signal'))# ?
         SignalRegion = True
             
-    datasamples = info.get_samples(data)
-    mcsamples = info.get_samples(mc)
+    datasamples = info.get_samples(data)#get the Sample "Data"
+    mcsamples = info.get_samples(mc)#get the Samples "sample"
 
-    GroupDict = eval(config.get('Plot_general','Group'))#lots of variables there
+    GroupDict = eval(config.get('Plot_general','Group'))#Contained in plots. Listed in general, under Group [Samples] group. This is a dictionnary that descriebes what samples should share the same color under the stack plot.
 
     #GETALL AT ONCE
-    print "DEBUG 3"
     options = []
     Stacks = []
-    for i in range(len(vars)):
-        Stacks.append(StackMaker(config,vars[i],region,SignalRegion))
+    for i in range(len(vars)):# loop over the list of variables to be ploted in each reagion
+        Stacks.append(StackMaker(config,vars[i],region,SignalRegion))# defined in myutils DoubleStackMaker. The StackMaker merge together all the informations necessary to perform the plot (plot region, variables, samples and signal region ). "options" contains the variables information, including the cuts. 
         options.append(Stacks[i].options)
-        # print 'loop options',options
-    # print 'options',options
 
-    print "DEBUG 4"
+    #Prepare cached files in the temporary (tmpSamples) folder.
     Plotter=HistoMaker(mcsamples+datasamples,path,config,options,GroupDict)
 
     #print '\nProducing Plot of %s\n'%vars[v]
+    #! Create lists of the histos for each Sample (each Sample containing one histogram for each variable )
     Lhistos = [[] for _ in range(0,len(vars))]
-    print "DEBUG 4.5"
     Ltyps = [[] for _ in range(0,len(vars))]
     Ldatas = [[] for _ in range(0,len(vars))]
     Ldatatyps = [[] for _ in range(0,len(vars))]
     Ldatanames = [[] for _ in range(0,len(vars))]
 
-    #Find out Lumi:
-    print "DEBUG 5"
+    #! Sums up the luminosity of the data:
     lumicounter=0.
     lumi=0.
     for job in datasamples:
@@ -119,10 +108,14 @@ def doPlot():
     mass = Stacks[0].mass
 
     print 'mcsamples',mcsamples
+
+    #! Get the histogram from Plotter
+    #! Get the mc histograms
     for job in mcsamples:
         print 'job.name',job.name
         #hTempList, typList = Plotter.get_histos_from_tree(job)
         if addBlindingCut:
+	    print 'there is a blinding cut'
             hDictList = Plotter.get_histos_from_tree(job,config.get('Cuts',region)+' & ' + addBlindingCut)
         else:
             print 'going to get_histos_from_tree'
@@ -130,18 +123,19 @@ def doPlot():
         if job.name == mass:
             print 'job.name', job.name
             Overlaylist= deepcopy([hDictList[v].values()[0] for v in range(0,len(vars))])
+	    #! add the variables list for each job (Samples)
         for v in range(0,len(vars)):
             Lhistos[v].append(hDictList[v].values()[0])
             Ltyps[v].append(hDictList[v].keys()[0])
 
     print 'datasamples',datasamples
-    print "DEBUG 6"
+    #! Get the data histograms
     for job in datasamples:
-        #hTemp, typ = Plotter.get_histos_from_tree(job)
         if addBlindingCut:
             dDictList = Plotter.get_histos_from_tree(job,config.get('Cuts',region)+' & ' + addBlindingCut)
         else:
             dDictList = Plotter.get_histos_from_tree(job)
+	    #! add the variables list for each job (Samples)
         for v in range(0,len(vars)):
             Ldatas[v].append(dDictList[v].values()[0])
             Ldatatyps[v].append(dDictList[v].keys()[0])
@@ -149,9 +143,11 @@ def doPlot():
 
     for v in range(0,len(vars)):
 
+        print "The number of variables is ", len(vars)
         histos = Lhistos[v]
         typs = Ltyps[v]
         Stacks[v].histos = Lhistos[v]
+	print 'The number of histogram is', len(Stacks[v].histos)
         Stacks[v].typs = Ltyps[v]
         Stacks[v].datas = Ldatas[v]
         Stacks[v].datatyps = Ldatatyps[v]
@@ -159,7 +155,7 @@ def doPlot():
         #if SignalRegion:
         #    Stacks[v].overlay = Overlaylist[v]
         Stacks[v].lumi = lumi
-        Stacks[v].doPlot()
+        Stacks[v].doPlot()#bug here
         Stacks[v].histos = Lhistos[v]
         Stacks[v].typs = Ltyps[v]
         Stacks[v].datas = Ldatas[v]

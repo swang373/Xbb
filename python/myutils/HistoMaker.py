@@ -10,50 +10,54 @@ from copy import copy
 
 class HistoMaker:
     def __init__(self, samples, path, config, optionsList,GroupDict=None):
-        print 'Debug 4a'
+        #samples: list of the samples, data and mc
+	#path: location of the samples used to perform the plot
+	#config: list of the configuration files
+	#optionsList: Dictionnary containing information on vars, including the cuts
+	#! Read arguments and initialise variables
+	print "The options are ", optionsList
         self.path = path
         self.config = config
         self.optionsList = optionsList
         self.nBins = optionsList[0]['nBins']
         self.lumi=0.
         self.cuts = []
-        print 'Debug 4b'
         for options in optionsList:
             self.cuts.append(options['cut'])
-        #print self.cuts
-        #self.tc = TreeCache(self.cuts,samples,path) 
-        print 'Debug 4c'
-        self.tc = TreeCache(self.cuts,samples,path,config)
-        print 'Debug 4d'
+        self.tc = TreeCache(self.cuts,samples,path,config)# created cached tree i.e. create new skimmed trees using the list of cuts
         self._rebin = False
         self.mybinning = None
         self.GroupDict=GroupDict
         self.calc_rebin_flag = False
-        print 'Debug 4e'
         VHbbNameSpace=config.get('VHbbNameSpace','library')
-        print 'Debug 4f'
         ROOT.gSystem.Load(VHbbNameSpace)
-        print 'Debug 4g'
 
     def get_histos_from_tree(self,job,cutOverWrite=None):
+        
+        print "Histomaker debug1"
+        '''Function that produce the trees from a HistoMaker'''
         if self.lumi == 0: 
             raise Exception("You're trying to plot with no lumi")
          
         hTreeList=[]
 
+        print "Histomaker debug2"
         #get the conversion rate in case of BDT plots
         TrainFlag = eval(self.config.get('Analysis','TrainFlag'))
         BDT_add_cut='EventForTraining == 0'
 
-
         plot_path = self.config.get('Directories','plotpath')
         addOverFlow=eval(self.config.get('Plot_general','addOverFlow'))
 
+        print "Histomaker debug3"
         # get all Histos at once
-        CuttedTree = self.tc.get_tree(job,'1')
+        CuttedTree = self.tc.get_tree(job,'1')# retrieve the cuted tree
         # print 'CuttedTree.GetEntries()',CuttedTree.GetEntries()
         # print 'begin self.optionsList',self.optionsList
         # print 'end self.optionsList'
+
+        print "Histomaker debug4"
+	#! start the loop over variables (descriebed in options) 
         for options in self.optionsList:
             name=job.name
             if self.GroupDict is None:
@@ -81,6 +85,7 @@ class HistoMaker:
             
             hTree = ROOT.TH1F('%s'%name,'%s'%name,nBins,xMin,xMax)
             hTree.Sumw2()
+            print "Histomaker debug5"
             print('hTree.name() 1 =',hTree.GetName())
             drawoption = ''
             if job.type != 'DATA':

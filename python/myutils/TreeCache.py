@@ -8,6 +8,7 @@ class TreeCache:
         ROOT.gROOT.SetBatch(True)
         self.path = path
         self._cutList = []
+	#! Make the cut lists from inputs
         for cut in cutList:
             self._cutList.append('(%s)'%cut.replace(' ',''))
         try:
@@ -24,7 +25,7 @@ class TreeCache:
             self.__tmpPath = config.get('Directories','tmpSamples')
         self.__hashDict = {}
         self.minCut = None
-        self.__find_min_cut()
+        self.__find_min_cut()# store the cut list as one string in minCut, using ROOT syntax (i.e. || to separate between each cut) 
         self.__sampleList = sampleList
         print('\n\t>>> Caching FILES <<<\n')
         self.__cache_samples()
@@ -45,37 +46,28 @@ class TreeCache:
         self.minCut = '||'.join(self._cutList)
 
     def __trim_tree(self, sample):
+        ''' Create temporary file for each sample '''
         theName = sample.name
         print('Reading sample <<<< %s' %sample)
-	print('debug 4ca')
         source = '%s/%s' %(self.path,sample.get_path)
-	print('debug 4cb')
         checksum = self.get_checksum(source)
-	print('debug 4cc')
         theHash = hashlib.sha224('%s_s%s_%s' %(sample,checksum,self.minCut)).hexdigest()
-	print('debug 4cd')
         self.__hashDict[theName] = theHash
-	print('debug 4ce')
         tmpSource = '%s/tmp_%s.root'%(self.__tmpPath,theHash)
-	print('debug 4cf')
 	print('the tmp source is ', tmpSource)
-
-        print ('self.__doCache',self.__doCache,'self.file_exists(tmpSource)',self.file_exists(tmpSource))
-	print('debug 4cg')
+        #print ('self.__doCache',self.__doCache,'self.file_exists(tmpSource)',self.file_exists(tmpSource))
+	print("==================================================================")
+	print ('theCut is ', self.minCut)
+	print("==================================================================")
         if self.__doCache and self.file_exists(tmpSource):
             print('sample',theName,'skipped, filename=',tmpSource)
-	    print('debug 4ch')
             return
-	print('debug 4ci')
         print ('trying to create',tmpSource)
+	#! read the tree from the input
         output = ROOT.TFile.Open(tmpSource,'create')
         input = ROOT.TFile.Open(source,'read')
         output.cd()
         tree = input.Get(sample.tree)
-        # CountWithPU = input.Get("CountWithPU")
-        # CountWithPU2011B = input.Get("CountWithPU2011B")
-        # sample.count_with_PU = CountWithPU.GetBinContent(1) 
-        # sample.count_with_PU2011B = CountWithPU2011B.GetBinContent(1) 
         try:
             CountWithPU = input.Get("CountWithPU")
             CountWithPU2011B = input.Get("CountWithPU2011B")

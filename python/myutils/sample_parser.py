@@ -20,6 +20,7 @@ def test_samples(run_on_fileList,__fileslist,config_sections):
                 else: return True
 
 def check_correspondency(sample,list,config):
+        '''Check the samples that are available in the PREPin directory and in the samples_nosplit file '''
         if any( sample in file for file in list ):
                 print '@INFO: Sample %s is present'%(config.get(sample,'sampleName'))
         else:
@@ -30,7 +31,7 @@ def check_correspondency(sample,list,config):
 class ParseInfo:
     '''Class containing a list of Sample. Is filled during the prep stage.'''
     def __init__(self,samples_config,samples_path):
-      '''Methode filling a list of Sample "self._samplelist = []" contained in the class. "sample_path" contains the path where the samples are stored (PREPin). "samples_config" is the "samples_nosplit.cfg" file. Depending of the variable "run_on_files" defined in "samples_nosplit.cfg", the sample list are generated from the input folder (PREPin) or the list in "samples_nosplit.cfg" '''
+	'''Methode filling a list of Sample "self._samplelist = []" contained in the class. "sample_path" contains the path where the samples are stored (PREPin). "samples_config" is the "samples_nosplit.cfg" file. Depending of the variable "run_on_files" defined in "samples_nosplit.cfg", the sample list are generated from the input folder (PREPin) or the list in "samples_nosplit.cfg" '''
         try:
             os.stat(samples_config)
         except:
@@ -40,6 +41,7 @@ class ParseInfo:
             T3 = True
             _,p2=samples_path.split('/pnfs/')
             t3_path = '/pnfs/'+p2.strip('\n')
+	    print 't3_path is ', t3_path
         else:
             T3 = False
 
@@ -56,18 +58,33 @@ class ParseInfo:
         self.__fileslist=[]
         if T3:
             ls = os.popen("lcg-ls -b -D srmv2 -l srm://t3se01.psi.ch:8443/srm/managerv2?SFN="+t3_path)
+            print 'The command ls is ', "lcg-ls -b -D srmv2 -l srm://t3se01.psi.ch:8443/srm/managerv2?SFN="+t3_path
+
         else:
             ls = os.popen("ls -l "+samples_path)
     
+	print 'will start the loop over the lines.'
+	print ls.read()
         for line in ls.readlines():
+		print 'loop over the lines'
                 if('.root' in line):
                         truncated_line = line[line.rfind('/')+1:]
                         _p = findnth(truncated_line,'.',2)
                         self.__fileslist.append(truncated_line[_p+1:truncated_line.rfind('.')])
+			print 'added a new line !'
 
         print '@DEBUG: ' + str(self.__fileslist)
 
+	#Deleteme: Do a loop to check on __fileslist
+	#Start the loop
+	for i in range(0,len(self.__fileslist)):
+	        print 'Is the ',i ,'th file None ? Answer:', (self.__fileslist[i] == None) 
+
+	#End Deleteme
+
         run_on_fileList = eval(config.get('Samples_running','run_on_fileList'))#Evaluate run_on_fileList from samples_nosplit.cfg 
+
+	print 'Is Sample None ? Answer: ', (self.__fileslist == None)
 
         if( not test_samples(run_on_fileList,self.__fileslist,config.sections()) ): # stop if it finds None as sample
                 sys.exit('@ERROR: Sample == None. Check RunOnFileList flag in section General, the sample_config of the sample directory.')
@@ -136,6 +153,7 @@ class ParseInfo:
                 yield sample
 
     def get_sample(self, samplename):
+        '''return the sample whose name matches the sample.name'''
         for sample in self._samplelist:
             if sample.name == samplename:
                 return sample
