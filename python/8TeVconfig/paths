@@ -5,7 +5,6 @@
 List = paths general cuts training datacards plots lhe_weights
 
 [Directories]
-
 #!! just a variable
 Dname: outdir_test
 #!! Working Directory, THIS MUST BE PERSONALIZED
@@ -22,14 +21,16 @@ logpath: /shome/gaperrin/VHbb/CMSSW_5_3_22_patch1/src/Xbb/python/outdir_test//te
 
 #!! from which samples to plot and where to save the plots
 # plottingSamples: <!Directories|MVAout!>
-plottingSamples: <!Directories|PREPout!>
+#plottingSamples: <!Directories|PREPout!>
+plottingSamples: root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/perrozzi/test_for_luca
+
 plotpath: /shome/gaperrin/VHbb/CMSSW_5_3_22_patch1/src/Xbb/python/outdir_test//test_debug0/Plots/
 plot_dc_path: <!Directories|vhbbpath!>/python/Stacks_fromDC_Allnominal_v2.3.0/
 
 #!! basedir for tagged folder structure
 tagDir: <!Directories|vhbbpath!>/python/<!Directories|Dname!>/
 
-#!! cahed files
+#!! cached files. Samples after the plot cuts have been applyied
 tmpSamples = <!Directories|SYSout!>/skims/
 
 #!! from which samples to make the DCs and where to save the DCs
