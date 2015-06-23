@@ -1,0 +1,53 @@
+[Plot_general]
+
+lumi = 1.
+
+#!! MC Samples to be used for the plotting. It also can be <!Samples|allBKG!>, where the header "Samples" is defined in general.
+samples: <!Samples|allBKG!>
+
+#!! Groups for adding samples together and for the legend {'sampleName':'sampleGroup',...}. it also can be <!Samples|Group!>
+Group: <!Samples|Group!>
+
+#!! Here the order and the groups that will go in the plots
+setup: WJets
+setupLog: WJets 
+
+#!! Colors dictionary and legend
+colorDict: {'WJets':401}
+typLegendDict: {'WJets':'W+Jet'}
+
+#!! Add overflow bin in the plots
+addOverFlow = False
+
+#!! List of regions to be submitted in case of bacth submission
+List: ZLight_HighPt_Zee,ZLight_HighPt_Zmm,ZLight_HighPt
+
+#!! Possibility to add an additional blinding cut for the plot
+#addBlindingCut = EVENT.run < 203002
+
+#!! Variables definition
+# leptons_var:vleptons_ptMax,vleptons_etaMax
+jet_var:Hmass
+
+#!! Additional global variables
+BDT_plot_blind: False
+BDT_plot_log: False
+plot_mass = ZH125
+Normalize = False
+
+#!! -----------------------
+#!! Plot regions definition
+#!! -----------------------
+
+#!! Plot name should match the cut name in the cuts config
+[Plot:WJets_test]
+#!! which data to compare to
+Datas: WJets100to200
+Normalize: <!Plot_general|Normalize!>
+vars: <!Plot_general|jet_var!>
+#Signal: <!Plot_general|plot_mass!>
+#!! log scale
+log: False
+#!! apply blinding cut
+blind: False
+
