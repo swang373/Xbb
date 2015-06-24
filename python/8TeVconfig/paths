@@ -24,7 +24,8 @@ logpath: /shome/perrozzi/for_gael/CMSSW_5_3_22_patch1/src/Xbb/python/outdir_test
 #!! from which samples to plot and where to save the plots
 # plottingSamples: <!Directories|MVAout!>
 # plottingSamples: <!Directories|SYSout!>
-plottingSamples: <!Directories|PREPout!>
+# plottingSamples: <!Directories|PREPout!>
+plottingSamples: root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/perrozzi/test_for_luca
 plotpath: /shome/perrozzi/for_gael/CMSSW_5_3_22_patch1/src/Xbb/python/outdir_test8tev//test_8tev/Plots/
 plot_dc_path: <!Directories|vhbbpath!>/python/Stacks_fromDC_Allnominal_v2.3.0/
 
@@ -32,7 +33,7 @@ plot_dc_path: <!Directories|vhbbpath!>/python/Stacks_fromDC_Allnominal_v2.3.0/
 tagDir: <!Directories|vhbbpath!>/python/<!Directories|Dname!>/
 
 #!! cahed files
-tmpSamples = <!Directories|SYSout!>/skims/
+tmpSamples = <!Directories|PREPout!>/skims/
 
 #!! from which samples to make the DCs and where to save the DCs
 # dcSamples: <!Directories|samplepath!>/env/syst/LHCPMVAout_v3/
