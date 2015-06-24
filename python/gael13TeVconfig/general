@@ -110,15 +110,17 @@ DrellYan: <!Samples|DYudsg!>,<!Samples|DYc!>,<!Samples|DY1b!>,<!Samples|DY2b!>
 DrellYan_nolhe: <!Samples|DYudsg_nolhe!>,<!Samples|DYc_nolhe!>,<!Samples|DY1b_nolhe!>,<!Samples|DY2b_nolhe!>
 
 allSIG: 'ZH110','ZH115','ZH120','ZH125','ZH130','ZH135'
-allBKG: <!Samples|DrellYan!>,<!Samples|Diboson!>,<!Samples|Top!>,<!Samples|s_Top!>
+#allBKG: <!Samples|DrellYan!>,<!Samples|Diboson!>,<!Samples|Top!>,<!Samples|s_Top!>
 allBKG_nolhe: <!Samples|DrellYan_nolhe!>,<!Samples|Diboson!>,<!Samples|Top!>,<!Samples|s_Top!>
 
-allBKG_ZZsplit: <!Samples|DrellYan!>,<!Samples|Diboson_split!>,<!Samples|Top!>,<!Samples|s_Top!>
+#allBKG_ZZsplit: <!Samples|DrellYan!>,<!Samples|Diboson_split!>,<!Samples|Top!>,<!Samples|s_Top!>
 #allBKG: <!Samples|Diboson!>,<!Samples|Top!>,<!Samples|s_Top!>
 BKG_VV_training: <!Samples|DrellYan!>,<!Samples|Top!>,<!Samples|s_Top!>,'WW','WZ'
 
-allBKG:'WJets100to200'
-Group: {'WJets100to200':'WJets'}
+#allBKG:'WJets100to200'
+allBKG:'ZllHbb' 'WJets100to200'
+Group: {'WJets100to200':'WJets','ZllHbb':'Z'}
+#Group: {'ZllHbb':'ZH'}
 
 [Weights]
 #5fb:

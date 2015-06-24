@@ -386,3 +386,5 @@ triggerMM = (triggerFlags[14]>0 || triggerFlags[21]>0 || triggerFlags[22]>0 || t
 #!! ---------------------
 
 WJets_test = V_pt > 50. 
+ZllHbb_test = V_pt > 50. 
+ZandW_test = V_pt > 50.
