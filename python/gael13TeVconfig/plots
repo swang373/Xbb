@@ -14,8 +14,8 @@ samples: <!Samples|allBKG!>
 Group: <!Samples|Group!>
 
 #!! Here the order and the groups that will go in the plots. This influence the MC
-setup: Z, WJets
-setupLog: Z, WJets
+setup: Z
+setupLog: Z
 #setup: WJets
 #setupLog: WJets 
 #setup: Z
