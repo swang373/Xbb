@@ -8,20 +8,20 @@ List = paths general cuts training datacards plots lhe_weight
 #!! just a variable
 Dname: outputheppy13TeV
 #!! Working Directory
-Wdir: /shome/perrozzi/for_gael/CMSSW_5_3_22_patch1/src
+Wdir: /shome/gaperrin/VHbb/CMSSW_5_3_22_patch1/src
 samplepath = dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/t3groups/ethz-higgs/run2/V11
-scratch = /scratch/perrozzi/VHbb/
+scratch = /scratch/gaperrin/VHbb/
 
 #!! The directory with the code
 vhbbpath= <!Directories|Wdir!>/Xbb
 #!! specifies the .cfg files with the Samples information
 samplesinfo: <!Directories|vhbbpath!>/python/gael13TeVconfig/samples_nosplit.cfg
 #!! where you want to store the logfiles from job submissions
-logpath: /shome/perrozzi/for_gael/CMSSW_5_3_22_patch1/src/Xbb/python/outputheppy13TeV//test_debug0/Logs/
+logpath: /shome/gaperrin/VHbb/CMSSW_5_3_22_patch1/src/Xbb/python/outdir_test/gael13TeV/test_debug0/Logs/
 
 #!! from which samples to plot and where to save the plots
 plottingSamples: <!Directories|PREPout!>
-plotpath: /shome/perrozzi/for_gael/CMSSW_5_3_22_patch1/src/Xbb/python/outputheppy13TeV//test_debug0/Plots/
+plotpath: /shome/gaperrin/VHbb/CMSSW_5_3_22_patch1/src/Xbb/python/outdir_test/gael13TeV/test_debug0/Plots/
 #plotpath: <!Directories|vhbbpath!>/Stacks_expertAllnominal_v0.0.0/
 #plot_dc_path: <!Directories|vhbbpath!>/Stacks_fromDC_Allnominal_v0.0.0/
 
@@ -34,7 +34,7 @@ tmpSamples = <!Directories|PREPout!>/skims/
 #!! from which samples to make the DCs and where to save the DCs
 dcSamples: <!Directories|MVAout!>/
 #limits: <!Directories|vhbbpath!>/Limit_expertAllnominal_controlRegions_pure_highlow/
-limits: /shome/perrozzi/for_gael/CMSSW_5_3_22_patch1/src/Xbb/python/outputheppy13TeV//test_debug0/Limits/
+limits: <!Directories|vhbbpath!>/Limit_expertAllnominal/
 
 #!! From where to take the raw samples and where to put the prepared trees:
 #PREPin: <!Directories|samplepath!> path for Wjet
