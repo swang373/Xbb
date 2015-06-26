@@ -8,10 +8,13 @@ class TreeCache:
         ROOT.gROOT.SetBatch(True)
         self.path = path
         self._cutList = []
+	#! Make the cut lists from inputs
         for cut in cutList:
             self._cutList.append('(%s)'%cut.replace(' ',''))
         try:
             self.__tmpPath = os.environ["TMPDIR"]
+	    print('The TMPDIR is ', os.environ["TMPDIR"])
+	    
         except KeyError:
             print("\x1b[32;5m %s \x1b[0m" %open('%s/data/vhbb.txt' %config.get('Directories','vhbbpath')).read())
             print("\x1b[31;5;1m\n\t>>> %s: Please set your TMPDIR and try again... <<<\n\x1b[0m" %os.getlogin())
@@ -22,7 +25,7 @@ class TreeCache:
             self.__tmpPath = config.get('Directories','tmpSamples')
         self.__hashDict = {}
         self.minCut = None
-        self.__find_min_cut()
+        self.__find_min_cut()# store the cut list as one string in minCut, using ROOT syntax (i.e. || to separate between each cut) 
         self.__sampleList = sampleList
         print('\n\t>>> Caching FILES <<<\n')
         self.__cache_samples()
@@ -43,6 +46,7 @@ class TreeCache:
         self.minCut = '||'.join(self._cutList)
 
     def __trim_tree(self, sample):
+        ''' Create temporary file for each sample '''
         theName = sample.name
         print('Reading sample <<<< %s' %sample)
         source = '%s/%s' %(self.path,sample.get_path)
@@ -50,19 +54,20 @@ class TreeCache:
         theHash = hashlib.sha224('%s_s%s_%s' %(sample,checksum,self.minCut)).hexdigest()
         self.__hashDict[theName] = theHash
         tmpSource = '%s/tmp_%s.root'%(self.__tmpPath,theHash)
-        print ('self.__doCache',self.__doCache,'self.file_exists(tmpSource)',self.file_exists(tmpSource))
+	print('the tmp source is ', tmpSource)
+        #print ('self.__doCache',self.__doCache,'self.file_exists(tmpSource)',self.file_exists(tmpSource))
+	print("==================================================================")
+	print ('theCut is ', self.minCut)
+	print("==================================================================")
         if self.__doCache and self.file_exists(tmpSource):
             print('sample',theName,'skipped, filename=',tmpSource)
             return
         print ('trying to create',tmpSource)
+	#! read the tree from the input
         output = ROOT.TFile.Open(tmpSource,'create')
         input = ROOT.TFile.Open(source,'read')
         output.cd()
         tree = input.Get(sample.tree)
-        # CountWithPU = input.Get("CountWithPU")
-        # CountWithPU2011B = input.Get("CountWithPU2011B")
-        # sample.count_with_PU = CountWithPU.GetBinContent(1) 
-        # sample.count_with_PU2011B = CountWithPU2011B.GetBinContent(1) 
         try:
             CountWithPU = input.Get("CountWithPU")
             CountWithPU2011B = input.Get("CountWithPU2011B")
@@ -192,7 +197,10 @@ class TreeCache:
     
     @staticmethod
     def file_exists(file):
+        print ('============================== will now check if the file exists')
+
         file_dummy = file
+	print ('file_dummy is ', file_dummy)
         srmPath = 'srm://t3se01.psi.ch:8443/srm/managerv2?SFN='
         file_dummy = file_dummy.replace('root://t3dcachedb03.psi.ch:1094/','')
         file_dummy = file_dummy.replace('srm://t3se01.psi.ch:8443/srm/managerv2?SFN=','')

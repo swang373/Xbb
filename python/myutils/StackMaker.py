@@ -149,18 +149,28 @@ class StackMaker:
         c.Print(name.replace('.pdf','.png'))
 
     def doPlot(self):
+        print 'doPlot debug1'
         TdrStyles.tdrStyle()
+        print 'doPlot debug12'
         histo_dict = HistoMaker.orderandadd([{self.typs[i]:self.histos[i]} for i in range(len(self.histos))],self.setup)
+	print "the number of histograms is ", len(self.histos)
+	print "the histogram dictionary is ", histo_dict
         #sort
         print histo_dict
+        print 'doPlot debug13'
+	for key in self.setup:
+	    print key
         self.histos=[histo_dict[key] for key in self.setup]
+        print 'doPlot debug14'
         self.typs=self.setup
     
+        print 'doPlot debug2'
         c = ROOT.TCanvas(self.var,'', 600, 600)
         c.SetFillStyle(4000)
         c.SetFrameFillStyle(1000)
         c.SetFrameFillColor(0)
 
+        print 'doPlot debug3'
         oben = ROOT.TPad('oben','oben',0,0.3 ,1.0,1.0)
         oben.SetBottomMargin(0)
         oben.SetFillStyle(4000)
@@ -173,9 +183,11 @@ class StackMaker:
         unten.SetFrameFillStyle(1000)
         unten.SetFrameFillColor(0)
 
+        print 'doPlot debug4'
         oben.Draw()
         unten.Draw()
 
+        print 'doPlot debug5'
         oben.cd()
         allStack = ROOT.THStack(self.var,'')     
         l = ROOT.TLegend(0.45, 0.6,0.75,0.92)
@@ -195,17 +207,19 @@ class StackMaker:
         MC_integral=0
         MC_entries=0
 
+        print 'doPlot debug6'
         for histo in self.histos:
             MC_integral+=histo.Integral()
         print "\033[1;32m\n\tMC integral = %s\033[1;m"%MC_integral
 
         #ORDER AND ADD TOGETHER
 
-        if not 'DYc' in self.typs: self.typLegendDict.update({'DYlight':self.typLegendDict['DYlc']})
+        #if not 'DYc' in self.typs: self.typLegendDict.update({'DYlight':self.typLegendDict['DYlc']})
         print self.typLegendDict
 
         k=len(self.histos)
     
+        print 'doPlot debug7'
         for j in range(0,k):
             #print histos[j].GetBinContent(1)
             i=k-j-1
@@ -213,6 +227,7 @@ class StackMaker:
             self.histos[i].SetLineColor(1)
             allStack.Add(self.histos[i])
 
+        print 'doPlot debug8'
         d1 = ROOT.TH1F('noData','noData',self.nBins,self.xMin,self.xMax)
         datatitle='Data'
         addFlag = ''
@@ -239,6 +254,7 @@ class StackMaker:
         if flow > 0:
             print "\033[1;31m\tU/O flow: %s\033[1;m"%flow
 
+        print 'doPlot debug9'
         if self.overlay and not isinstance(self.overlay,list):
             self.overlay = [self.overlay]
         if self.overlay:

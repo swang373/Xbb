@@ -8,12 +8,14 @@ from HistoMaker import HistoMaker
 
 class StackMaker:
     def __init__(self, config, var,region,SignalRegion,setup=None):
-        section='Plot:%s'%region
-        self.var = var
-        self.SignalRegion=SignalRegion
-        self.normalize = eval(config.get(section,'Normalize'))
-        self.log = eval(config.get(section,'log'))
-        if config.has_option('plotDef:%s'%var,'log') and not self.log:
+        section='Plot:%s'%region #CR region of the plot
+        self.var = var #variable to plot in the CR
+        self.SignalRegion=SignalRegion #signal region
+        self.normalize = eval(config.get(section,'Normalize'))# ?
+        self.log = eval(config.get(section,'log')) #?
+
+	#! Read parameters of the fit region and the variable. They are then stored in the StackMaker.
+        if config.has_option('plotDef:%s'%var,'log') and not self.log:# i.e. if self.log is False and plotDef option in vhbbPlotDef.ini exists
             self.log = eval(config.get('plotDef:%s'%var,'log'))
         self.blind = eval(config.get(section,'blind'))
         if setup is None:
@@ -23,6 +25,8 @@ class StackMaker:
             self.setup=self.setup.split(',')
         else:
             self.setup=setup
+	
+	#! Signal region
         if not SignalRegion: 
             if 'ZH' in self.setup:
                 self.setup.remove('ZH')
@@ -44,7 +48,7 @@ class StackMaker:
             self.xMax = eval(config.get(section,'max'))
         else:
             self.xMax = eval(config.get('plotDef:%s'%var,'max'))
-        self.name = config.get('plotDef:%s'%var,'relPath')
+        self.name = config.get('plotDef:%s'%var,'relPath')# name of the parameter as stored in the tree
         self.mass = config.get(section,'Signal')
         data = config.get(section,'Datas')
         if '<mass>' in self.name:
@@ -158,7 +162,6 @@ class StackMaker:
         unten1.SetFillStyle(4000)
         unten1.SetFrameFillStyle(1000)
         unten1.SetFrameFillColor(0)
-
 
         oben.Draw()
         unten.Draw()

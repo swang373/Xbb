@@ -26,6 +26,7 @@ additional_arg=$5   # needed for train optimisation. @TO FIX: it does not have a
 #-------------------------------------------------
 # Check the number of input arguments
 #-------------------------------------------------
+echo "RunAll DEBUG1"
 if [ $# -lt 3 ]
     then
     echo "ERROR: You passed " $# "arguments while the script needs at least 3 arguments."
@@ -39,6 +40,7 @@ fi
 #------------------------------------------------
 # get the log dir from the config and create it
 #------------------------------------------------
+echo "RunAll DEBUG2"
 logpath=`python << EOF 
 import os
 from myutils import BetterConfigParser
@@ -54,6 +56,7 @@ fi
 #-------------------------------------------------
 #Set the environment for the batch job execution
 #-------------------------------------------------
+echo "RunAll DEBUG3"
 cd $CMSSW_BASE/src/
 source /swshare/psit3/etc/profile.d/cms_ui_env.sh
 export SCRAM_ARCH="slc5_amd64_gcc462"
@@ -78,6 +81,7 @@ EOF`
 #----------------------------------------------
 # load from the paths the configs to be used
 #----------------------------------------------
+echo "RunAll DEBUG4"
 input_configs=`python << EOF 
 import os
 from myutils import BetterConfigParser
@@ -100,6 +104,7 @@ echo ${configList}
 #------------------------------------
 #Run the scripts
 #------------------------------------
+echo "RunAll DEBUG5"
 
 if [ $task = "prep" ]; then
     # ./prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList}
