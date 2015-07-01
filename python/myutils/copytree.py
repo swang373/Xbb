@@ -13,10 +13,15 @@ def copytree(pathIN,pathOUT,prefix,newprefix,file,Aprefix,Acut):
     del_protocol = del_protocol.replace('gsidcap://t3se01.psi.ch:22128/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
     del_protocol = del_protocol.replace('dcap://t3se01.psi.ch:22125/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
     del_protocol = del_protocol.replace('root://t3dcachedb03.psi.ch:1094/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
-    command = 'srmrm %s/%s%s%s.root' %(del_protocol,newprefix,Aprefix,file)
-    print(command)
-    subprocess.call([command], shell=True)    
+#    command = 'srmrm %s/%s%s%s.root' %(del_protocol,newprefix,Aprefix,file)
+    filepath = '%s/%s%s%s.root' %(del_protocol,newprefix,Aprefix,file)
+    if os.path.isfile(filepath): 
+        command = 'rm %s/%s%s%s.root' %(del_protocol,newprefix,Aprefix,file)
+        print(command)
+        subprocess.call([command], shell=True)
+    
     output = ROOT.TFile.Open("%s/%s%s%s.root" %(pathOUT,newprefix,Aprefix,file),'create')
+    print "Writing file:","%s/%s%s%s.root" %(pathOUT,newprefix,Aprefix,file)
 
     input.ls()
     input.cd()
