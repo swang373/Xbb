@@ -1,2 +1,9 @@
 Heppy ntuples V11 in Pisa:
 /gpfs/ddn/srm/cms/store/user/arizzi/VHBBHeppyV11/
+
+---------------------------
+
+Problem with:"uselocale" solved using 745ROOT5
+
+
+/scratch/sdonato/VHbb/ETH/CMSSW_5_3_22_patch1/src/Xbb/
