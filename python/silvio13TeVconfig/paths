@@ -8,11 +8,11 @@ List = paths general cuts training datacards plots lhe_weight
 #!! just a variable
 Dname: outputheppy13TeV
 #!! Working Directory
-Wdir= /scratch/sdonato/VHbb/ETH/CMSSW_5_3_22_patch1/src
-samplepath = /gpfs/ddn/srm/cms/store/user/arizzi/VHBBHeppyV11/
+Wdir= /home/sdonato/CMS/VHbbETH/
+samplepath = /home/sdonato/CMS/VHBBHeppyV11
 t3Private = <!Directories|vhbbpath!>/
 scratch = /scratch/sdonato/
-dirOut = /scratch/sdonato/VHbb/ETH/CMSSW_5_3_22_patch1/src/Xbb/
+dirOut = /home/sdonato/CMS/VHbbETH/Xbb/
 
 #!! The directory with the code
 vhbbpath= <!Directories|Wdir!>/Xbb
