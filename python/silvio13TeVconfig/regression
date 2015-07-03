@@ -7,22 +7,26 @@ signals = ZvvHbb
 options = !H:!V:NTrees=2000::BoostType=Grad:Shrinkage=0.1:SeparationType=RegressionVariance:UseBaggedGrad:GradBaggingFraction=0.7:nCuts=20:MaxDepth=3:NNodesMax=15:IgnoreNegWeights
 #options = !H:!V:NTrees=100::BoostType=Grad:Shrinkage=0.7:SeparationType=RegressionVariance:UseBaggedGrad:GradBaggingFraction=0.7:nCuts=20:MaxDepth=3:NNodesMax=5
 #
-#hJet_JECUnc
-#vars = hJet_pt VHbb::evalJERBias(hJet_ptRaw,hJet_genPt,hJet_eta) hJet_JECUnc VHbb::evalEt(hJet_pt,hJet_eta,hJet_phi,hJet_e) VHbb::evalMt(hJet_pt,hJet_eta,hJet_phi,hJet_e) hJet_ptLeadTrack max(0,(hJet_SoftLeptptRel*(hJet_SoftLeptIdlooseMu==1||hJet_SoftLeptId95==1))) max(0,(hJet_SoftLeptdR*(hJet_SoftLeptIdlooseMu==1||hJet_SoftLeptId95==1))) max(0,(hJet_SoftLeptPt*(hJet_SoftLeptIdlooseMu==1||hJet_SoftLeptId95==1))) hJet_cef hJet_nconstituents MET.et VHbb::deltaPhi(MET.phi,hJet_phi)
-# removing max(0,hJet_vtxPt) because missing from the testSample
+#hJCidx==hJCidx[hJCidx]
+#vars = Jet_pt[hJCidx] VHbb::evalJERBias(Jet_rawPt[hJCidx],Jet_mcPt[hJCidx],Jet_eta[hJCidx]) hJCidx==hJCidx[hJCidx] VHbb::evalEtFromPtEtaPhiM(Jet_pt[hJCidx],Jet_eta[hJCidx],Jet_phi[hJCidx],Jet_mass[hJCidx]) VHbb::evalMtFromPtEtaPhiM(Jet_pt[hJCidx],Jet_eta[hJCidx],Jet_phi[hJCidx],Jet_mass[hJCidx]) Jet_leadTrackPt[hJCidx] max(0,(Jet_leptonPtRel[hJCidx]*(abs(Jet_leptonPdgId)==13==1||456==456))) max(0,(Jet_leptonDeltaR[hJCidx]*(abs(Jet_leptonPdgId)==13==1||456==456))) max(0,(Jet_leptonPt[hJCidx]*(abs(Jet_leptonPdgId)==13==1||456==456))) Jet_chEmEF[hJCidx] Jet_mult[hJCidx] met_pt VHbb::deltaPhi(met_phi,Jet_phi[hJCidx])
+# removing max(0,Jet_vtxPt[hJCidx]) because missing from the testSample
 #changing METnoPU with MET becuase missing from the testSample 
 
 #for 13tev 
-vars = hJet_pt VHbb::evalJERBias(hJet_ptRaw,hJet_genPt,hJet_eta) hJet_JECUnc VHbb::evalEt(hJet_pt,hJet_eta,hJet_phi,hJet_e) VHbb::evalMt(hJet_pt,hJet_eta,hJet_phi,hJet_e) hJet_ptLeadTrack hJet_nconstituents MET.et VHbb::deltaPhi(MET.phi,hJet_phi) max(0,hJet_vtxMass) max(0,hJet_vtx3dL) max(0,hJet_vtx3deL)
+vars = Jet_pt[hJCidx] VHbb::evalJERBias(Jet_rawPt[hJCidx],Jet_mcPt[hJCidx],Jet_eta[hJCidx]) hJCidx==hJCidx[hJCidx] VHbb::evalEtFromPtEtaPhiM(Jet_pt[hJCidx],Jet_eta[hJCidx],Jet_phi[hJCidx],Jet_mass[hJCidx]) VHbb::evalMtFromPtEtaPhiM(Jet_pt[hJCidx],Jet_eta[hJCidx],Jet_phi[hJCidx],Jet_mass[hJCidx]) Jet_leadTrackPt[hJCidx] Jet_mult[hJCidx] met_pt VHbb::deltaPhi(met_phi,Jet_phi[hJCidx]) max(0,Jet_vtxMass[hJCidx]) max(0,Jet_vtx3DVal[hJCidx]) max(0,Jet_vtx3DSig[hJCidx])
 #variables with 0:
-#max(0,hJet_SoftLeptptRel) max(0,hJet_SoftLeptdR) max(0,hJet_SoftLeptPt) hJet_cef 
+#max(0,Jet_leptonPtRel[hJCidx]) max(0,Jet_leptonDeltaR[hJCidx]) max(0,Jet_leptonPt[hJCidx]) Jet_chEmEF[hJCidx] 
 
 
-#vars = hJet_pt hJet_JECUnc
-cut = abs(hJet_eta[0]) < 2.4 & abs(hJet_eta[1]) < 2.4 & hJet_genPt[0] > 0. & hJet_genPt[1] > 0. & hJet_csv[0] > 0. & hJet_csv[1] > 0. & hJet_chf[0] > 0. & hJet_chf[1] > 0.
+#vars = Jet_pt[hJCidx] hJCidx==hJCidx[hJCidx]
+cut = abs(Jet_eta[hJCidx][0]) < 2.4 & abs(Jet_eta[hJCidx][1]) < 2.4 & Jet_mcPt[hJCidx][0] > 0. & Jet_mcPt[hJCidx][1] > 0. & Jet_btagnew[hJCidx][0] > 0. & Jet_btagnew[hJCidx][1] > 0. & Jet_chHEF[hJCidx][0] > 0. & Jet_chHEF[hJCidx][1] > 0.
 
-trainCut = EVENT.event%8==0
-testCut = EVENT.event%8!=0 & EVENT.event%5==0
+trainCut = evt%8==0
+testCut = evt%8!=0 & evt%5==0
 weight = 1
 #weight = puWeight
-target = hJet_genPt
+target = Jet_mcPt[hJCidx]
+
+
+#### 456==456 was hJet_SoftLeptId95==1
+#### hJCidx==hJCidx was Jet_JECUnc[hJCidx]

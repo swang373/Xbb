@@ -24,6 +24,7 @@ job_id=$4           # needed for train optimisation. @TO FIX: it does not have a
 additional_arg=$5   # needed for train optimisation. @TO FIX: it does not have a unique meaning
 echo 
 echo 'Reading ./'${energy}'config'
+echo 'task'$task
 echo 
 
 #-------------------------------------------------
@@ -126,6 +127,7 @@ if [ $task = "syseval" ]; then
     ./evaluateMVA.py --discr $MVAList --samples $sample --config ${energy}config/${configList}
 fi
 if [ $task = "train" ]; then
+    echo ./train.py --training $sample --config ${energy}config/${configList} --local True
     ./train.py --training $sample --config ${energy}config/${configList} --local True
 fi
 if [ $task = "plot" ]; then

@@ -16,8 +16,8 @@ SF_TTbar = 1.
 #!! Samples subcuts associated to subnames
 DY_subcuts=['Jet_mcFlavour[hJCidx] != 5 & Jet_mcFlavour[hJCidx] != 4',
             'Jet_mcFlavour[hJCidx] == 4',
-            '(abs(Jet_mcFlavour[hJCidx][0]) != 5 & abs(Jet_mcFlavour[hJCidx][1]) == 5) | ((abs(Jet_mcFlavour[hJCidx][1]) != 5 & abs(Jet_mcFlavour[hJCidx][0]) == 5))',
-            'abs(Jet_mcFlavour[hJCidx][0]) == 5 & abs(Jet_mcFlavour[hJCidx][1]) == 5']
+            '(abs(Jet_mcFlavour[hJCidx[0]]) != 5 & abs(Jet_mcFlavour[hJCidx[1]]) == 5) | ((abs(Jet_mcFlavour[hJCidx[1]]) != 5 & abs(Jet_mcFlavour[hJCidx[0]]) == 5))',
+            'abs(Jet_mcFlavour[hJCidx[0]]) == 5 & abs(Jet_mcFlavour[hJCidx[1]]) == 5']
 DY_sampleGroup=['DYlight','DYc','DY1b','DY2b'] 
 #DY_subcuts = ['eventFlav != 5 & eventFlav != 4','eventFlav == 4','eventFlav == 5 & (Sum$(abs(Jet_mcFlavour[hJCidx])==5)+Sum$(abs(aJet_flavour)==5))<=1','eventFlav == 5 & (Sum$(abs(Jet_mcFlavour[hJCidx])==5)+Sum$(abs(aJet_flavour)==5))>1']
 
@@ -39,6 +39,31 @@ sampleGroup = ZvvHbb
 xSec = [5606]*4
 SF = 1
 cut = <!General|mcCut!>
+
+[test]
+infile = test
+sampleName = ZvvHbb
+sampleType = SIG
+subsamples = False
+subnames = ['ZvvHbb']
+;subcuts = <!General|DY_subcuts!>
+sampleGroup = ZvvHbb
+xSec = [5606]*4
+SF = 1
+cut = <!General|mcCut!>
+
+;[ZH_HToBB_ZToNuNu_M-125_13TeV_powheg-herwigpp_VHBB_HEPPY_V11_ZH_HToBB_ZToNuNu_M-125_13TeV_powheg-herwigpp__Phys14DR-AVE30BX50_tsg_PHYS14_ST_V1-v1_150408_085825]
+;infile = ZH_HToBB_ZToNuNu_M-125_13TeV_powheg-herwigpp_VHBB_HEPPY_V11_ZH_HToBB_ZToNuNu_M-125_13TeV_powheg-herwigpp__Phys14DR-AVE30BX50_tsg_PHYS14_ST_V1
+;sampleName = ZvvHbb
+;sampleType = SIG
+;subsamples = False
+;subnames = ['ZvvHbb']
+;;subcuts = <!General|DY_subcuts!>
+;sampleGroup = ZvvHbb
+;xSec = [5606]*4
+;SF = 1
+;cut = <!General|mcCut!>
+
 
 ;ZH_HToBB_ZToNuNu_M-125_13TeV_powheg-herwigpp_VHBB_HEPPY_V11_ZH_HToBB_ZToNuNu_M-125_13TeV_powheg-herwigpp__Phys14DR-PU40bx25_PHYS14_25_V1-v1_150408_085844.root
 

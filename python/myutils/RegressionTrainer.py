@@ -26,7 +26,12 @@ class RegressionTrainer():
         
     
     def train(self):
-        print "__samples=",__samples
+        print "AAAAAAAA"
+        print "__title=",self.__title
+        print "__signals=",self.__signals
+        print "__info=",self.__info
+        print "__samples=",self.__samples
+        
         signals = []
         signalsTest = []
         for job in self.__samples:

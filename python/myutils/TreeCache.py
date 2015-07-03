@@ -141,6 +141,7 @@ class TreeCache:
 
     @staticmethod
     def get_scale(sample, config, lumi = None):
+        print float(sample.lumi)
         anaTag=config.get('Analysis','tag')
         theScale = 0.
         if not lumi:
