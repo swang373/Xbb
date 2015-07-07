@@ -16,12 +16,12 @@ dictionary = {
     'hJet_vtxPt':			'Jet_vtxPt[hJCidx]',
     'hJet_nconstituents':	'Jet_mult[hJCidx]',
     'hJet_JECUnc':			'Jet_mass[hJCidx]',	##FIXME: in V12, Jet_JECUnc[hJCidx]
-    'hJet_csv':				'Jet_btagnew',
-    'hJet_csv_nominal':		'Jet_btagnew',	##FIXME
-    'hJet_csv_downBC':		'Jet_btagnew',	##FIXME
-    'hJet_csv_upBC':		'Jet_btagnew',	##FIXME
-    'hJet_csv_downL':		'Jet_btagnew',	##FIXME
-    'hJet_csv_upL':			'Jet_btagnew',	##FIXME
+    'hJet_csv':				'Jet_btagnew[hJCidx]',
+    'hJet_csv_nominal':		'Jet_btagnew[hJCidx]',	##FIXME
+    'hJet_csv_downBC':		'Jet_btagnew[hJCidx]',	##FIXME
+    'hJet_csv_upBC':		'Jet_btagnew[hJCidx]',	##FIXME
+    'hJet_csv_downL':		'Jet_btagnew[hJCidx]',	##FIXME
+    'hJet_csv_upL':			'Jet_btagnew[hJCidx]',	##FIXME
     
     'hJet_cef':				'Jet_chEmEF[hJCidx]',
     'hJet_chf':				'Jet_chHEF[hJCidx]',
@@ -32,6 +32,11 @@ dictionary = {
     'hJet_SoftLeptId95':	'1',	##FIXME
     'hJet_SoftLeptIdlooseMu':'1',	##FIXME
     
+    'aJet_pt':				'Jet_pt[aJCidx]',
+    'aJet_eta':				'Jet_eta[aJCidx]',
+    'aJet_phi':				'Jet_phi[aJCidx]',
+    'aJet_e':				'VHbb::GetEnergy(Jet_pt[aJCidx],Jet_eta[aJCidx],Jet_mass[aJCidx])',
+
     'METnoPU.et':			'met_pt',	##FIXME
     'METnoPU.phi':			'met_phi',	##FIXME
     'MET.et':				'met_pt',

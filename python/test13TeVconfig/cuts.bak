@@ -24,6 +24,7 @@ noAddJet = Sum$(aJet_pt > 20 & abs(aJet_eta) < 2.4) == 0
 max1AddJet = Sum$(aJet_pt > 20 & abs(aJet_eta) < 2.4) < 2.
 pullAngle = deltaPullAngle < 10. & deltaPullAngle2 < 10.
 rLoose = V_pt < 50
+myrTight = V_pt > 100.
 rTight = V_pt > 100.
 rTight2 = V_pt > 150.
 rTight_120 = V_pt > 120.
@@ -58,6 +59,7 @@ run_range = (EVENT.run < 207883 || EVENT.run > 208307)
 #!! -------------------------------------------
 #!! Preselections (combination of single cuts)
 #!! -------------------------------------------
+mypreselection = hJet_pt[0] > 20. & hJet_pt[1] > 20. & abs(hJet_eta[0]) < 2.4 & abs(hJet_eta[1]) < 2.4 & hbhe & hJet_puJetIdL[0] > 0. & hJet_puJetIdL[1] > 0.
 preselection = hJet_pt[0] > 20. & hJet_pt[1] > 20. & abs(hJet_eta[0]) < 2.4 & abs(hJet_eta[1]) < 2.4 & hbhe & hJet_puJetIdL[0] > 0. & hJet_puJetIdL[1] > 0. & <!ZHbb|run_range!>
 preselection_beforeReg = (hJet_pt[0]/hJet_regWeight[0]) > 20. & (hJet_pt[1]*hJet_regWeight[1]) > 20. & abs(hJet_eta[0]) < 2.4 & abs(hJet_eta[1]) < 2.4 & hbhe & hJet_puJetIdL[0] > 0. & hJet_puJetIdL[1] > 0.& <!ZHbb|run_range!>
 looseBTag = !(hJet_csv[0] > <!ZHbb|CSVL!> & hJet_csv[1] > <!ZHbb|CSVL!>) & (hJet_csv[0] > <!ZHbb|CSVL!> | hJet_csv[1] > <!ZHbb|CSVL!>)
@@ -94,6 +96,7 @@ mjjMedPt_opt = <!ZHbb|preselection!> & <!ZHbb|rMed2!> & <!ZHbb|ccBtag!> & <!ZHbb
 #!! ----------------
 #!! V_pt regions
 #!! ----------------
+MyRTight = <!ZHbb|mypreselection!> & <!ZHbb|maxBtag!> > <!ZHbb|CSVL!> & <!ZHbb|minBtag!> > <!ZHbb|CSVL!>  & <!ZHbb|myrTight!> & <!ZHbb|upperHMass!>
 RMed = <!ZHbb|preselection!> & <!ZHbb|maxBtag!> > <!ZHbb|CSVC!> & <!ZHbb|minBtag!> > <!ZHbb|CSVL!> & <!ZHbb|zWindow!> & <!ZHbb|pullAngle!> & <!ZHbb|rMed!> & <!ZHbb|looseHMass!>
 RTight = <!ZHbb|preselection!> & <!ZHbb|maxBtag!> > <!ZHbb|CSVL!> & <!ZHbb|minBtag!> > <!ZHbb|CSVL!> & <!ZHbb|zWindow!> & <!ZHbb|pullAngle!> & <!ZHbb|rTight!> & <!ZHbb|upperHMass!>
 RTightLooseBTag = <!ZHbb|30jets!> & <!ZHbb|preselection!> & <!ZHbb|zWindow!> & <!ZHbb|pullAngle!> & <!ZHbb|rTight!> & <!ZHbb|upperHMass!> & <!ZHbb|looseBTag!>

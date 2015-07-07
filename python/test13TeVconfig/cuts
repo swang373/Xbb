@@ -17,13 +17,14 @@ tcBtag = <!ZHbb|maxBtag!> > <!ZHbb|CSVT!> & <!ZHbb|minBtag!> > <!ZHbb|CSVC!>
 ccBtag = <!ZHbb|maxBtag!> > <!ZHbb|CSVC!> & <!ZHbb|minBtag!> > <!ZHbb|CSVC!>
 tlBtag = <!ZHbb|maxBtag!> > <!ZHbb|CSVT!> & <!ZHbb|minBtag!> > <!ZHbb|CSVL!>
 mcBtag = <!ZHbb|maxBtag!> > <!ZHbb|CSVM!> & <!ZHbb|minBtag!> > <!ZHbb|CSVC!>
-ntBtag = !(Jet_btagnew[0] > <!ZHbb|CSVT!> | Jet_btagnew[1] > <!ZHbb|CSVT!>)
-twoCSV0 = Jet_btagnew[0] > 0. & Jet_btagnew[1] > 0. 
+ntBtag = !(Jet_btagnew[hJCidx[0]] > <!ZHbb|CSVT!> | Jet_btagnew[hJCidx[1]] > <!ZHbb|CSVT!>)
+twoCSV0 = Jet_btagnew[hJCidx[0]] > 0. & Jet_btagnew[hJCidx[1]] > 0. 
 30jets = Jet_pt[hJCidx[0]] > 30. & Jet_pt[hJCidx[1]] > 30.
 noAddJet = Sum$(aJet_pt > 20 & abs(aJet_eta) < 2.4) == 0 
 max1AddJet = Sum$(aJet_pt > 20 & abs(aJet_eta) < 2.4) < 2.
-pullAngle = 0 < 10. & 0 < 10.
+pullAngle = 1 < 10. & 1 < 10.
 rLoose = V_pt < 50
+myrTight = V_pt > 100.
 rTight = V_pt > 100.
 rTight2 = V_pt > 150.
 rTight_120 = V_pt > 120.
@@ -58,9 +59,10 @@ run_range = (run < 207883 || run > 208307)
 #!! -------------------------------------------
 #!! Preselections (combination of single cuts)
 #!! -------------------------------------------
+mypreselection = Jet_pt[hJCidx[0]] > 20. & Jet_pt[hJCidx[1]] > 20. & abs(Jet_eta[hJCidx[0]]) < 2.4 & abs(Jet_eta[hJCidx[1]]) < 2.4 & Flag_HBHENoiseFilter & Jet_puId[hJCidx[0]] > 0. & Jet_puId[hJCidx[1]] > 0.
 preselection = Jet_pt[hJCidx[0]] > 20. & Jet_pt[hJCidx[1]] > 20. & abs(Jet_eta[hJCidx[0]]) < 2.4 & abs(Jet_eta[hJCidx[1]]) < 2.4 & Flag_HBHENoiseFilter & Jet_puId[hJCidx[0]] > 0. & Jet_puId[hJCidx[1]] > 0. & <!ZHbb|run_range!>
 preselection_beforeReg = (Jet_pt[hJCidx[0]]/hJet_regWeight[0]) > 20. & (Jet_pt[hJCidx[1]]*hJet_regWeight[1]) > 20. & abs(Jet_eta[hJCidx[0]]) < 2.4 & abs(Jet_eta[hJCidx[1]]) < 2.4 & Flag_HBHENoiseFilter & Jet_puId[hJCidx[0]] > 0. & Jet_puId[hJCidx[1]] > 0.& <!ZHbb|run_range!>
-looseBTag = !(Jet_btagnew[0] > <!ZHbb|CSVL!> & Jet_btagnew[1] > <!ZHbb|CSVL!>) & (Jet_btagnew[0] > <!ZHbb|CSVL!> | Jet_btagnew[1] > <!ZHbb|CSVL!>)
+looseBTag = !(Jet_btagnew[hJCidx[0]] > <!ZHbb|CSVL!> & Jet_btagnew[hJCidx[1]] > <!ZHbb|CSVL!>) & (Jet_btagnew[hJCidx[0]] > <!ZHbb|CSVL!> | Jet_btagnew[hJCidx[1]] > <!ZHbb|CSVL!>)
 vtx = Jet_vtx3DVal[hJCidx[0]] > 0. & Jet_vtxPt[hJCidx[0]] > 0.
 soft = (1[0]==1 || 1[0] == 1) & Jet_leptonDeltaR[hJCidx[0]] > 0.
 Mjj_selection = <!ZHbb|preselection!> & <!ZHbb|ccBtag!> & <!ZHbb|zWindow!> & met_pt < 60. & <!ZHbb|upperHMass!>
@@ -94,6 +96,7 @@ mjjMedPt_opt = <!ZHbb|preselection!> & <!ZHbb|rMed2!> & <!ZHbb|ccBtag!> & <!ZHbb
 #!! ----------------
 #!! V_pt regions
 #!! ----------------
+MyRTight = <!ZHbb|mypreselection!> & <!ZHbb|maxBtag!> > <!ZHbb|CSVL!> & <!ZHbb|minBtag!> > <!ZHbb|CSVL!>  & <!ZHbb|myrTight!> & <!ZHbb|upperHMass!>
 RMed = <!ZHbb|preselection!> & <!ZHbb|maxBtag!> > <!ZHbb|CSVC!> & <!ZHbb|minBtag!> > <!ZHbb|CSVL!> & <!ZHbb|zWindow!> & <!ZHbb|pullAngle!> & <!ZHbb|rMed!> & <!ZHbb|looseHMass!>
 RTight = <!ZHbb|preselection!> & <!ZHbb|maxBtag!> > <!ZHbb|CSVL!> & <!ZHbb|minBtag!> > <!ZHbb|CSVL!> & <!ZHbb|zWindow!> & <!ZHbb|pullAngle!> & <!ZHbb|rTight!> & <!ZHbb|upperHMass!>
 RTightLooseBTag = <!ZHbb|30jets!> & <!ZHbb|preselection!> & <!ZHbb|zWindow!> & <!ZHbb|pullAngle!> & <!ZHbb|rTight!> & <!ZHbb|upperHMass!> & <!ZHbb|looseBTag!>

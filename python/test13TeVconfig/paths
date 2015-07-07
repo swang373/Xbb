@@ -8,11 +8,12 @@ List = paths general cuts training datacards plots lhe_weight
 #!! just a variable
 Dname: outputheppy13TeV
 #!! Working Directory
-Wdir= /home/sdonato/CMS/VHbbETH/
-samplepath = /home/sdonato/CMS/VHBBHeppyV11
+Wdir= /scratch/sdonato/VHbb/ETH/CMSSW_7_4_5_ROOT5/src
+#samplepath = /gpfs/ddn/srm/cms/store/user/arizzi/VHBBHeppyV11/
+samplepath = /scratch/sdonato/VHbb/ETH/CMSSW_7_4_5_ROOT5/src/Xbb/python/samples/
 t3Private = <!Directories|vhbbpath!>/
 scratch = /scratch/sdonato/
-dirOut = /home/sdonato/CMS/VHbbETH/Xbb/
+dirOut = /scratch/sdonato/VHbb/ETH/CMSSW_7_4_5_ROOT5/src/Xbb/
 
 #!! The directory with the code
 vhbbpath= <!Directories|Wdir!>/Xbb
@@ -55,5 +56,6 @@ MVAout: <!Directories|MVAin!>/MVAout_v0.0.0/
 #MVAout: <!Directories|scratch!>/
 
 #!! On which samples to evaluate the MVAon and where to write the resulting trees:
-SPLITin: <!Directories|samplepath!>/env/sys/
+#SPLITin: <!Directories|samplepath!>/env/sys/
+SPLITin: <!Directories|samplepath!>/env/syst/
 SPLITout: <!Directories|SYSout!>/split/

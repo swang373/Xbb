@@ -7,6 +7,7 @@ class TreeCache:
     def __init__(self, cutList, sampleList, path, config):
         ROOT.gROOT.SetBatch(True)
         self.path = path
+        print("Init path",path," sampleList",sampleList)
         self._cutList = []
         for cut in cutList:
             self._cutList.append('(%s)'%cut.replace(' ',''))
@@ -102,6 +103,7 @@ class TreeCache:
 
     def get_tree(self, sample, cut):
         input = ROOT.TFile.Open('%s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]),'read')
+        print ('Opening %s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]))
         tree = input.Get(sample.tree)
         # CountWithPU = input.Get("CountWithPU")
         # CountWithPU2011B = input.Get("CountWithPU2011B")
@@ -141,15 +143,15 @@ class TreeCache:
 
     @staticmethod
     def get_scale(sample, config, lumi = None):
-        print float(sample.lumi)
+#        print float(sample.lumi)
         anaTag=config.get('Analysis','tag')
-        theScale = 0.
-        if not lumi:
-            lumi = float(sample.lumi)
-        if anaTag == '7TeV':
-            theScale = lumi*sample.xsec*sample.sf/(0.46502*sample.count_with_PU+0.53498*sample.count_with_PU2011B)
-        elif anaTag == '8TeV':
-            theScale = lumi*sample.xsec*sample.sf/(sample.count_with_PU)
+        theScale = 1. ##FIXME
+#        if not lumi:
+#            lumi = float(sample.lumi)
+#        if anaTag == '7TeV':
+#            theScale = lumi*sample.xsec*sample.sf/(0.46502*sample.count_with_PU+0.53498*sample.count_with_PU2011B)
+#        elif anaTag == '8TeV':
+#            theScale = lumi*sample.xsec*sample.sf/(sample.count_with_PU)
         return theScale
 
     @staticmethod

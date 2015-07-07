@@ -42,10 +42,10 @@ List_for_submitscript: RTight_ZH110_janAngularOnly,RTight_ZH115_janAngularOnly,R
 [testBDT]
 MVAtype: <!MVAGeneral|type!>
 MVAsettings: <!MVAGeneral|SettingsTT!>
-signals: ['ZvvHbb']
-backgrounds: ['test'] ## stupid! ##FIXME
+signals: ['ZH']
+backgrounds: ['QCDHT100'] ## stupid! ##FIXME
 treeVarSet: treeVarsICHEP
-treeCut: RTight
+treeCut: MyRTight
 
 
 [TT_HighPt_ZH125_nov]
