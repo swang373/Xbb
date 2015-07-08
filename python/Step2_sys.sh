@@ -20,5 +20,9 @@ bash runAll.sh QCDHT250 ZvvHbb13TeV sys >& log/logSysQCDHT250 &
 bash runAll.sh QCDHT500 ZvvHbb13TeV sys >& log/logSysQCDHT500 &
 bash runAll.sh QCDHT1000 ZvvHbb13TeV sys >& log/logSysQCDHT1000 &
 
+bash runAll.sh DataMET ZvvHbb13TeV sys >& log/logSysDataMET &
+
+bash runAll.sh TTMad ZvvHbb13TeV sys >& log/logSysTTMad &
+bash runAll.sh WJetsMad ZvvHbb13TeV sys >& log/logSysWJetsMad &
 
 
