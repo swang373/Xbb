@@ -23,7 +23,7 @@ addOverFlow = False
 List: ZLight_HighPt_Zee,ZLight_HighPt_Zmm,ZLight_HighPt
 
 #!! Possibility to add an additional blinding cut for the plot
-#addBlindingCut = run < 203002
+#addBlindingCut = EVENT.run < 203002
 
 #!! Variables definition
 leptons_var:vleptons_ptMax,vleptons_etaMax

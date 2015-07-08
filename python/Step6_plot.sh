@@ -1,3 +1,3 @@
-bash runAll.sh myPlot test13TeV plot
+bash runAll.sh myPlot ZvvHbb13 plot
 
 

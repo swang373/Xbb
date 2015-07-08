@@ -596,7 +596,7 @@ sampleName =Zee
 sampleType =DATA
 sampleGroup=DATA
 subsamples=False
-cut = (Vtype==1 & EVENT.json==1 & H.HiggsFlag==1) & (triggerFlags[5]>0 || triggerFlags[6]>0) & (run < 207883 || run > 208307)
+cut = (Vtype==1 & EVENT.json==1 & H.HiggsFlag==1) & (triggerFlags[5]>0 || triggerFlags[6]>0) & (EVENT.run < 207883 || EVENT.run > 208307)
 
 [DataZmm]
 infile = DataZmm
@@ -605,7 +605,7 @@ sampleName =Zmm
 sampleType =DATA
 sampleGroup=DATA
 subsamples=False
-cut = (Vtype==0 & EVENT.json==1 & H.HiggsFlag==1) & ( (run<193834 & (triggerFlags[22]>0 || triggerFlags[23]>0) ) || (run>=193834 & (triggerFlags[14]>0 ||triggerFlags[21]>0)) ) & (run < 207883 || run > 208307) 
+cut = (Vtype==0 & EVENT.json==1 & H.HiggsFlag==1) & ( (EVENT.run<193834 & (triggerFlags[22]>0 || triggerFlags[23]>0) ) || (EVENT.run>=193834 & (triggerFlags[14]>0 ||triggerFlags[21]>0)) ) & (EVENT.run < 207883 || EVENT.run > 208307) 
 
 
 #Zee before merging
@@ -617,4 +617,4 @@ sampleName =Zee_1
 sampleType =DATA
 sampleGroup=DATA
 subsamples=False
-cut = (run != 201191)
+cut = (EVENT.run != 201191)

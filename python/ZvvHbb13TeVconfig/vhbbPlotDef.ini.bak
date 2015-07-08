@@ -181,28 +181,28 @@ min = 0
 max = 4
 
 [plotDef:csv0]
-relPath = Jet_btagnew[hJidx[0]]
+relPath = hJet_csv[0]
 xAxis = jet 0 csv
 nBins = 20
 min = 0
 max = 1
  
 [plotDef:csv1]
-relPath = Jet_btagnew[hJidx[1]]
+relPath = hJet_csv[1]
 xAxis = jet 1 csv
 nBins = 20
 min = 0
 max = 1
 
 [plotDef:csvivf0]
-relPath = Jet_btagnew[hJidx]ivf[0]
+relPath = hJet_csvivf[0]
 xAxis = jet 0 csv ivf
 nBins = 20
 min = 0
 max = 1
  
 [plotDef:csvivf1]
-relPath = Jet_btagnew[hJidx]ivf[1]
+relPath = hJet_csvivf[1]
 xAxis = jet 1 csv ivf
 nBins = 20
 min = 0
@@ -223,14 +223,14 @@ min = 0
 max = 1
  
 [plotDef:AK7]
-relPath = 1AK7
-xAxis = 1AK7
+relPath = deltaPullAngleAK7
+xAxis = deltaPullAngleAK7
 nBins = 30
 min = -3.5
 max = 3.5
 
 [plotDef:Sum]
-relPath = Sum$(Jet_pt[aJidx]>20.&abs(Jet_eta[aJidx])<2.4)
+relPath = Sum$(aJet_pt>20.&abs(aJet_eta)<2.4)
 xAxis = number of additional jets
 nBins = 6
 min = 0
@@ -244,49 +244,49 @@ min = 0
 max = 4
 
 [plotDef:minCSV]
-relPath = min(Jet_btagnew[hJidx[0]],Jet_btagnew[hJidx[1]])
+relPath = min(hJet_csv[0],hJet_csv[1])
 xAxis = min CSV
 nBins = 25
 min = 0
 max = 1
 
 [plotDef:maxCSV]
-relPath = max(Jet_btagnew[hJidx[0]],Jet_btagnew[hJidx[1]])
+relPath = max(hJet_csv[0],hJet_csv[1])
 xAxis = max CSV
 nBins = 25
 min = 0
 max = 1
 
 [plotDef:minCSVnom]
-relPath = min(Jet_btagnew[hJidx[0]],Jet_btagnew[hJidx[1]])
+relPath = min(hJet_csv_nominal[0],hJet_csv_nominal[1])
 xAxis = nominal min CSV
 nBins = 25
 min = 0
 max = 1
 
 [plotDef:minCSVZnn]
-relPath = min(Jet_btagnew[hJidx[0]],Jet_btagnew[hJidx[1]])
+relPath = min(hJet_csv_nominal[0],hJet_csv_nominal[1])
 xAxis = CSV_{min}
 nBins = 11
 min = 0.23
 max = 1.0
 
 [plotDef:maxCSVnom]
-relPath = max(Jet_btagnew[hJidx[0]],Jet_btagnew[hJidx[1]])
+relPath = max(hJet_csv_nominal[0],hJet_csv_nominal[1])
 xAxis = nominal max CSV
 nBins = 25
 min = 0
 max = 1
 
 [plotDef:minCSVold]
-relPath = VHbb::minCSVold(run,Jet_btagnew[hJidx[0]],Jet_btagnew[hJidx[1]],Alt$(Jet_btagnew[hJidx]Old[0],-99),Alt$(Jet_btagnew[hJidx]Old[1],-99))
+relPath = VHbb::minCSVold(EVENT.run,hJet_csv[0],hJet_csv[1],Alt$(hJet_csvOld[0],-99),Alt$(hJet_csvOld[1],-99))
 xAxis = raw min CSV
 nBins = 25
 min = 0
 max = 1
 
 [plotDef:maxCSVold]
-relPath = VHbb::maxCSVold(run,Jet_btagnew[hJidx[0]],Jet_btagnew[hJidx[1]],Alt$(Jet_btagnew[hJidx]Old[0],-99),Alt$(Jet_btagnew[hJidx]Old[1],-99))
+relPath = VHbb::maxCSVold(EVENT.run,hJet_csv[0],hJet_csv[1],Alt$(hJet_csvOld[0],-99),Alt$(hJet_csvOld[1],-99))
 xAxis = raw max CSV
 nBins = 25
 min = 0
@@ -294,14 +294,14 @@ max = 1
 
 
 [plotDef:hJet0pt]
-relPath = Jet_pt[hJidx[0]]
+relPath = hJet_pt[0]
 xAxis = leading jet p_{T} [GeV]
 nBins = 25
 min = 0
 max = 400
 
 [plotDef:hJet1pt]
-relPath = Jet_pt[hJidx[1]]
+relPath = hJet_pt[1]
 xAxis = second jet p_{T} [GeV]
 nBins = 25
 min = 0
@@ -322,28 +322,28 @@ min = 0
 max = 400
 
 [plotDef:hJet0eta]
-relPath = Jet_eta[hJidx[0]]
+relPath = hJet_eta[0]
 xAxis = leading jet #eta
 nBins = 25
 min = -4.
 max = 4.
 
 [plotDef:hJet1eta]
-relPath = Jet_eta[hJidx[1]]
+relPath = hJet_eta[1]
 xAxis = second jet #eta
 nBins = 25
 min = -4.
 max = 4.
 
 [plotDef:PullAngle]
-relPath = 1
+relPath = deltaPullAngle
 xAxis = #Delta#theta
 nBins = 20
 min = -3.5
 max = 3.5
 
 [plotDef:PullAngle2]
-relPath = 1
+relPath = deltaPullAngle2
 xAxis = #Delta#theta
 nBins = 20
 min = -3.5
@@ -364,28 +364,28 @@ min = 0.
 max = 2.
 
 [plotDef:MET]
-relPath = met_pt
+relPath = MET.et
 xAxis = #slash{E}_{T} [GeV]
 nBins = 40
 min = 0
 max = 200
 
 [plotDef:METZnn]
-relPath = met_pt
+relPath = MET.et
 xAxis = E_{T}^{miss} [GeV]
 nBins = 12
 min = 170
 max = 350
 
 [plotDef:METnoPU]
-relPath = met_pt
+relPath = METnoPU.et
 xAxis = PU corrected #slash{E}_{T} [GeV]
 nBins = 40
 min = 0
 max = 200
 
 [plotDef:JECUnc]
-relPath = Jet_mass[hJidx[0]]
+relPath = hJet_JECUnc[0]
 xAxis = JEC uncertainty
 nBins = 25
 min = 0.
@@ -400,35 +400,35 @@ min = -0.5
 max = 24.5
 
 [plotDef:jPtRaw]
-relPath = VHbb::evalJERBias(Jet_rawPt[hJidx[0]],Jet_mcPt[hJidx[0]],Jet_eta[hJidx[0]])
+relPath = VHbb::evalJERBias(hJet_ptRaw[0],hJet_genPt[0],hJet_eta[0])
 xAxis = jet raw p_{T} [GeV]
 nBins = 30
 min = 20
 max = 320
 
 [plotDef:jPtRawAlt]
-relPath = Jet_rawPt[hJidx[0]]
+relPath = hJet_ptRaw[0]
 xAxis = alt jet raw p_{T} [GeV]
 nBins = 30
 min = 20
 max = 320
 
 [plotDef:deltaPtPtraw]
-relPath = (Jet_pt[hJidx[0]]-Jet_rawPt[hJidx[0]])/Jet_rawPt[hJidx[0]]
+relPath = (hJet_pt[0]-hJet_ptRaw[0])/hJet_ptRaw[0]
 xAxis = delta pt-ptraw
 nBins = 40
 min = -1
 max = 1
 
 [plotDef:jE]
-relPath = VHbb::GetEnergy(Jet_pt[hJidx[0]],Jet_eta[hJidx[0]],Jet_mass[hJidx[0]])
+relPath = hJet_e[0]
 xAxis = jet energy [GeV]
 nBins = 30
 min = 20
 max = 320
 
 [plotDef:jCef]
-relPath = Jet_chEmEF[hJidx[0]]
+relPath = hJet_cef[0]
 xAxis = charged electromagnetic fraction
 nBins = 25
 min = 0
@@ -436,7 +436,7 @@ max = 1
 log = True
 
 [plotDef:jChf]
-relPath = Jet_chHEF[hJidx[0]]
+relPath = hJet_chf[0]
 xAxis = charged hadron fraction
 nBins = 25
 min = 0
@@ -450,91 +450,91 @@ min = -0.5
 max = 70.5
 
 [plotDef:jNum]
-relPath = Jet_mult[hJidx[0]]
+relPath = hJet_nconstituents[0]
 xAxis = number of constituents
 nBins = 71
 min = -0.5
 max = 70.5
 
 [plotDef:jPtLeadTrack]
-relPath = Jet_leadTrackPt[hJidx[0]]
+relPath = hJet_ptLeadTrack[0]
 xAxis = jet p_{T} leading track [GeV]
 nBins = 20
 min = 0
 max = 100
 
 [plotDef:vtxPt]
-relPath = Jet_vtxPt[hJidx[0]]
+relPath = hJet_vtxPt[0]
 xAxis = first jet vertex p_{T} [GeV]
 nBins = 50
 min = 0
 max = 100
 
 [plotDef:vtxMass]
-relPath = Jet_vtxMass[hJidx[0]]
+relPath = hJet_vtxMass[0]
 xAxis = first jet vertex mass [GeV]
 nBins = 15
 min = 0
 max = 6
 
 [plotDef:vtx3dL]
-relPath = Jet_vtx3DVal[hJidx[0]]
+relPath = hJet_vtx3dL[0]
 xAxis = first jet vertex 3dL [cm]
 nBins = 50
 min = 0
 max = 5
 
 [plotDef:vtx3deL]
-relPath = Jet_vtx3DSig[hJidx[0]]
+relPath = hJet_vtx3deL[0]
 xAxis = first jet vertex 3dL #sigma [cm]
 nBins = 50
 min = 0
 max = 0.5
 
 [plotDef:vtxPt1]
-relPath = Jet_vtxPt[hJidx[1]]
+relPath = hJet_vtxPt[1]
 xAxis = second jet vertex p_{T} [GeV]
 nBins = 50
 min = 0
 max = 100
 
 [plotDef:vtxMass1]
-relPath = Jet_vtxMass[hJidx[1]]
+relPath = hJet_vtxMass[1]
 xAxis = second jet vertex mass [GeV]
 nBins = 15
 min = 0
 max = 6
 
 [plotDef:vtx3dL1]
-relPath = Jet_vtx3DVal[hJidx[1]]
+relPath = hJet_vtx3dL[1]
 xAxis = second jet vertex 3dL [cm]
 nBins = 50
 min = 0
 max = 5
 
 [plotDef:vtx3deL1]
-relPath = Jet_vtx3DSig[hJidx[1]]
+relPath = hJet_vtx3deL[1]
 xAxis = second jet vertex 3dL #sigma [cm]
 nBins = 50
 min = 0
 max = 0.5
 
 [plotDef:jSoftLeptPtRel]
-relPath = Jet_leptonPtRel[hJidx[0]]
+relPath = hJet_SoftLeptptRel[0]
 xAxis = jet soft lepton PtRel 
 nBins = 20
 min = 0.
 max = 20.
 
 [plotDef:jSoftLeptPt]
-relPath = Jet_leptonPt[hJidx[0]]
+relPath = hJet_SoftLeptPt[0]
 xAxis = jet soft lepton p_{T} [GeV] 
 nBins = 35
 min = 0
 max = 70
 
 [plotDef:jSoftLeptdR]
-relPath = Jet_leptonDeltaR[hJidx[0]]
+relPath = hJet_SoftLeptdR[0]
 xAxis = #Delta R (soft lepton, jet) 
 nBins = 20
 min = 0
@@ -548,7 +548,7 @@ min = 0.5
 max = 1.5
 
 [plotDef:dPhiJetMet]
-relPath = VHbb::deltaPhi(met_phi,Jet_phi[hJidx[0]])
+relPath = VHbb::deltaPhi(METnoPU.phi,hJet_phi[0])
 xAxis = #Delta #phi (#slash{E}_{T},j)
 nBins = 35
 min = -3.5
@@ -590,28 +590,28 @@ min = 0
 max = 300
 
 [plotDef:dR_hJet0_V]
-relPath = VHbb::deltaR(Jet_eta[hJidx[0]],Jet_phi[hJidx[0]],V.eta,V.phi)
+relPath = VHbb::deltaR(hJet_eta[0],hJet_phi[0],V.eta,V.phi)
 xAxis = #delta R(leading Jet, V)
 nBins = 25
 min = 0
 max = 5
 
 [plotDef:dR_hJet1_V]
-relPath = VHbb::deltaR(Jet_eta[hJidx[1]],Jet_phi[hJidx[1]],V.eta,V.phi)
+relPath = VHbb::deltaR(hJet_eta[1],hJet_phi[1],V.eta,V.phi)
 xAxis = #Delta R(following Jet, V)
 nBins = 25
 min = 0
 max = 5
 
 [plotDef:hJet0_V_etaDiff]
-relPath = abs(Jet_eta[hJidx[0]]-V.eta)
+relPath = abs(hJet_eta[0]-V.eta)
 xAxis = |#eta_{leading jet} - #eta_{V}|
 nBins = 25
 min = 0
 max = 4
 
 [plotDef:hJet1_V_etaDiff]
-relPath = abs(Jet_eta[hJidx[1]]-V.eta)
+relPath = abs(hJet_eta[1]-V.eta)
 xAxis = |#eta_{following jet} - #eta_{V}|
 nBins = 25
 min = 0
@@ -667,7 +667,7 @@ min = 0
 max = 2
 
 [plotDef:mpfCorr]
-relPath = VHbb::met_MPF(VHbb::metType1Et(METtype1corr.et,METtype1corr.phi,hJet_regWeight[0],hJet_regWeight[1],Jet_pt[hJidx[0]],Jet_eta[hJidx[0]],Jet_phi[hJidx[0]],VHbb::GetEnergy(Jet_pt[hJidx[0]],Jet_eta[hJidx[0]],Jet_mass[hJidx[0]]),Jet_pt[hJidx[1]],Jet_eta[hJidx[1]],Jet_phi[hJidx[1]],VHbb::GetEnergy(Jet_pt[hJidx[1]],Jet_eta[hJidx[1]],Jet_mass[hJidx[1]])),VHbb::metType1Phi(METtype1corr.et,METtype1corr.phi,hJet_regWeight[0],hJet_regWeight[1],Jet_pt[hJidx[0]],Jet_eta[hJidx[0]],Jet_phi[hJidx[0]],VHbb::GetEnergy(Jet_pt[hJidx[0]],Jet_eta[hJidx[0]],Jet_mass[hJidx[0]]),Jet_pt[hJidx[1]],Jet_eta[hJidx[1]],Jet_phi[hJidx[1]],VHbb::GetEnergy(Jet_pt[hJidx[1]],Jet_eta[hJidx[1]],Jet_mass[hJidx[1]])),V.pt,V.phi)
+relPath = VHbb::met_MPF(VHbb::metType1Et(METtype1corr.et,METtype1corr.phi,hJet_regWeight[0],hJet_regWeight[1],hJet_pt[0],hJet_eta[0],hJet_phi[0],hJet_e[0],hJet_pt[1],hJet_eta[1],hJet_phi[1],hJet_e[1]),VHbb::metType1Phi(METtype1corr.et,METtype1corr.phi,hJet_regWeight[0],hJet_regWeight[1],hJet_pt[0],hJet_eta[0],hJet_phi[0],hJet_e[0],hJet_pt[1],hJet_eta[1],hJet_phi[1],hJet_e[1]),V.pt,V.phi)
 xAxis = MPF
 nBins = 20
 min = 0

@@ -7,8 +7,8 @@ CSVT = 0.898
 CSVM = 0.679
 CSVC = 0.5
 CSVL = 0.244
-minBtag = min(Jet_btagnew[hJidx[0]],Jet_btagnew[hJidx[1]])
-maxBtag = max(Jet_btagnew[hJidx[0]],Jet_btagnew[hJidx[1]])
+minBtag = min(hJet_btagCSV[0],hJet_btagCSV[1])
+maxBtag = max(hJet_btagCSV[0],hJet_btagCSV[1])
 
 #!! --------------------------------
 #!! Single variable cuts
@@ -17,12 +17,12 @@ tcBtag = <!ZHbb|maxBtag!> > <!ZHbb|CSVT!> & <!ZHbb|minBtag!> > <!ZHbb|CSVC!>
 ccBtag = <!ZHbb|maxBtag!> > <!ZHbb|CSVC!> & <!ZHbb|minBtag!> > <!ZHbb|CSVC!>
 tlBtag = <!ZHbb|maxBtag!> > <!ZHbb|CSVT!> & <!ZHbb|minBtag!> > <!ZHbb|CSVL!>
 mcBtag = <!ZHbb|maxBtag!> > <!ZHbb|CSVM!> & <!ZHbb|minBtag!> > <!ZHbb|CSVC!>
-ntBtag = !(Jet_btagnew[hJidx[0]] > <!ZHbb|CSVT!> | Jet_btagnew[hJidx[1]] > <!ZHbb|CSVT!>)
-twoCSV0 = Jet_btagnew[hJidx[0]] > 0. & Jet_btagnew[hJidx[1]] > 0. 
-30jets = Jet_pt[hJidx[0]] > 30. & Jet_pt[hJidx[1]] > 30.
-noAddJet = Sum$(Jet_pt[aJidx] > 20 & abs(Jet_eta[aJidx]) < 2.4) == 0 
-max1AddJet = Sum$(Jet_pt[aJidx] > 20 & abs(Jet_eta[aJidx]) < 2.4) < 2.
-pullAngle = 1 < 10. & 1 < 10.
+ntBtag = !(hJet_csv[0] > <!ZHbb|CSVT!> | hJet_csv[1] > <!ZHbb|CSVT!>)
+twoCSV0 = hJet_csv[0] > 0. & hJet_csv[1] > 0. 
+30jets = hJet_pt[0] > 30. & hJet_pt[1] > 30.
+noAddJet = Sum$(aJet_pt > 20 & abs(aJet_eta) < 2.4) == 0 
+max1AddJet = Sum$(aJet_pt > 20 & abs(aJet_eta) < 2.4) < 2.
+pullAngle = deltaPullAngle < 10. & deltaPullAngle2 < 10.
 rLoose = V.pt < 50
 rTight = V.pt > 100.
 rTight2 = V.pt > 150.
@@ -53,17 +53,17 @@ rMed_240 = V.pt > 100. & V.pt < 150.
 rLow2 = V.pt > 50.& V.pt < 100.
 looseHMass = H.mass > 40. & H.mass < 250.
 looseHMass_beforeReg = HNoReg.mass > 40. & HNoReg.mass < 250.
-run_range = (run < 207883 || run > 208307)
+run_range = (EVENT.run < 207883 || EVENT.run > 208307)
 
 #!! -------------------------------------------
 #!! Preselections (combination of single cuts)
 #!! -------------------------------------------
-preselection = Jet_pt[hJidx[0]] > 20. & Jet_pt[hJidx[1]] > 20. & abs(Jet_eta[hJidx[0]]) < 2.4 & abs(Jet_eta[hJidx[1]]) < 2.4 & Flag_HBHENoiseFilter & Jet_puId[hJidx[0]] > 0. & Jet_puId[hJidx[1]] > 0. & <!ZHbb|run_range!>
-preselection_beforeReg = (Jet_pt[hJidx[0]]/hJet_regWeight[0]) > 20. & (Jet_pt[hJidx[1]]*hJet_regWeight[1]) > 20. & abs(Jet_eta[hJidx[0]]) < 2.4 & abs(Jet_eta[hJidx[1]]) < 2.4 & Flag_HBHENoiseFilter & Jet_puId[hJidx[0]] > 0. & Jet_puId[hJidx[1]] > 0.& <!ZHbb|run_range!>
-looseBTag = !(Jet_btagnew[hJidx[0]] > <!ZHbb|CSVL!> & Jet_btagnew[hJidx[1]] > <!ZHbb|CSVL!>) & (Jet_btagnew[hJidx[0]] > <!ZHbb|CSVL!> | Jet_btagnew[hJidx[1]] > <!ZHbb|CSVL!>)
-vtx = Jet_vtx3DVal[hJidx[0]] > 0. & Jet_vtxPt[hJidx[0]] > 0.
-soft = (1[0]==1 || 1[0] == 1) & Jet_leptonDeltaR[hJidx[0]] > 0.
-Mjj_selection = <!ZHbb|preselection!> & <!ZHbb|ccBtag!> & <!ZHbb|zWindow!> & met_pt < 60. & <!ZHbb|upperHMass!>
+preselection = hJet_pt[0] > 20. & hJet_pt[1] > 20. & abs(hJet_eta[0]) < 2.4 & abs(hJet_eta[1]) < 2.4 & hbhe & hJet_puJetIdL[0] > 0. & hJet_puJetIdL[1] > 0. & <!ZHbb|run_range!>
+preselection_beforeReg = (hJet_pt[0]/hJet_regWeight[0]) > 20. & (hJet_pt[1]*hJet_regWeight[1]) > 20. & abs(hJet_eta[0]) < 2.4 & abs(hJet_eta[1]) < 2.4 & hbhe & hJet_puJetIdL[0] > 0. & hJet_puJetIdL[1] > 0.& <!ZHbb|run_range!>
+looseBTag = !(hJet_csv[0] > <!ZHbb|CSVL!> & hJet_csv[1] > <!ZHbb|CSVL!>) & (hJet_csv[0] > <!ZHbb|CSVL!> | hJet_csv[1] > <!ZHbb|CSVL!>)
+vtx = hJet_vtx3dL[0] > 0. & hJet_vtxPt[0] > 0.
+soft = (hJet_SoftLeptIdlooseMu[0]==1 || hJet_SoftLeptId95[0] == 1) & hJet_SoftLeptdR[0] > 0.
+Mjj_selection = <!ZHbb|preselection!> & <!ZHbb|ccBtag!> & <!ZHbb|zWindow!> & MET.et < 60. & <!ZHbb|upperHMass!>
 
 #!! ----------------------------------------
 #!! Electron muon splitting
@@ -167,7 +167,7 @@ RMed_TTbarOpen_fit_MM = <!Cuts|RMed_TTbarOpen_fit!> & <!ZHmmbb|addCuts!>
 #!! Control regions
 #!! -------------------------
 #!!Standard control regions
-TTbar_unbiased = <!ZHbb|zMassSafety!> & <!ZHbb|preselection!> & met_pt > 60. & <!ZHbb|zVeto!> & <!ZHbb|pullAngle!> & <!ZHbb|upperHMass!>
+TTbar_unbiased = <!ZHbb|zMassSafety!> & <!ZHbb|preselection!> & MET.et > 60. & <!ZHbb|zVeto!> & <!ZHbb|pullAngle!> & <!ZHbb|upperHMass!>
 ZLight= <!ZHbb|preselection!> & <!ZHbb|noAddJet!> & <!ZHbb|zWindow!> & <!ZHbb|ntBtag!> & <!ZHbb|upperHMass!> & <!ZHbb|twoCSV0!> & <!ZHbb|dPhiVH!> & <!ZHbb|maxBtag!> > <!ZHbb|CSVL!> & V.pt > 50.
 TTbar = <!ZHbb|preselection!> & <!ZHbb|upperHMass!> & <!ZHbb|tcBtag!> & <!ZHbb|zVeto!> & H.pt > 100.
 Zbb = <!ZHbb|preselection!> & <!ZHbb|vetoHMass!> & <!ZHbb|upperHMass!> & <!ZHbb|zWindow!> & <!ZHbb|tcBtag!> & <!ZHbb|max1AddJet!> & <!ZHbb|dPhiVH!> 
@@ -181,8 +181,8 @@ ZLight_HighPt_beforeReg = <!Cuts|ZLight_beforeReg!> & <!ZHbb|rTight!>
 TTbar_HighPt = <!Cuts|TTbar!> & <!ZHbb|rTight!>
 Zbb_HighPt = <!Cuts|Zbb!> & <!ZHbb|rTight!>
 ZPeak = <!ZHbb|preselection!> & <!ZHbb|zWindow!> & <!ZHbb|upperHMass!> & <!ZHbb|twoCSV0!> & <!ZHbb|maxBtag!> > <!ZHbb|CSVL!> 
-ZPeak_Zee = <!ZHbb|zWindow!> & <!ZHeebb|addCuts!> & Jet_pt[hJidx[0]] > 20. & Jet_pt[hJidx[1]] > 20.
-ZPeak_Zmm = <!ZHbb|zWindow!> & <!ZHmmbb|addCuts!> & Jet_pt[hJidx[0]] > 20. & Jet_pt[hJidx[1]] > 20.
+ZPeak_Zee = <!ZHbb|zWindow!> & <!ZHeebb|addCuts!> & hJet_pt[0] > 20. & hJet_pt[1] > 20.
+ZPeak_Zmm = <!ZHbb|zWindow!> & <!ZHmmbb|addCuts!> & hJet_pt[0] > 20. & hJet_pt[1] > 20.
 ZLight_LowPt = <!Cuts|ZLight!> & <!ZHbb|rMed!> & H.mass > 50.
 ZLight_LowPt_beforeReg = <!Cuts|ZLight_beforeReg!> & <!ZHbb|rMed!> & HNoReg.mass > 50.
 TTbar_LowPt = <!Cuts|TTbar!> & <!ZHbb|rMed!>
@@ -289,9 +289,9 @@ RTight_Z1b_SV_MM = <!Cuts|RTight_Z1b_SV!> & <!ZHmmbb|addCuts!>
 #!! --------------------------
 #!! VV regions
 #!! --------------------------
-ZZll = <!ZHbb|zWindow!> & Jet_pt[hJidx[0]] > 40. & Jet_pt[hJidx[1]] > 20. & <!ZHbb|preselection!> & <!ZHbb|tcBtag!> & met_pt < 45.
-ZZll_Zee = <!ZHeebb|addCuts!> & <!ZHbb|zWindow!> & Jet_pt[hJidx[0]] > 40. & Jet_pt[hJidx[1]] > 20. & <!ZHbb|preselection!> & <!ZHbb|tcBtag!> & met_pt < 45.
-ZZll_Zmm = <!ZHmmbb|addCuts!> & <!ZHbb|zWindow!> & Jet_pt[hJidx[0]] > 40. & Jet_pt[hJidx[1]] > 20. & <!ZHbb|preselection!> & <!ZHbb|tcBtag!> & met_pt < 45.
+ZZll = <!ZHbb|zWindow!> & hJet_pt[0] > 40. & hJet_pt[1] > 20. & <!ZHbb|preselection!> & <!ZHbb|tcBtag!> & MET.et < 45.
+ZZll_Zee = <!ZHeebb|addCuts!> & <!ZHbb|zWindow!> & hJet_pt[0] > 40. & hJet_pt[1] > 20. & <!ZHbb|preselection!> & <!ZHbb|tcBtag!> & MET.et < 45.
+ZZll_Zmm = <!ZHmmbb|addCuts!> & <!ZHbb|zWindow!> & hJet_pt[0] > 40. & hJet_pt[1] > 20. & <!ZHbb|preselection!> & <!ZHbb|tcBtag!> & MET.et < 45.
 
 #!! ---------------------
 #!! Mjj
@@ -317,10 +317,10 @@ Zbb_Zmm_fatH = <!Cuts|Zbb_fatH!> & <!ZHmmbb|addCuts!>
 #!! --------------
 #!! ATLAS Mjj 
 #!! --------------
-ATLAS_preselection = Jet_pt[hJidx[0]] > 45. & Jet_pt[hJidx[1]] > 20. & abs(Jet_eta[hJidx[0]]) < 2.4 & abs(Jet_eta[hJidx[1]]) < 2.4 & Flag_HBHENoiseFilter & Jet_puId[hJidx[0]] > 0. & Jet_puId[hJidx[1]] > 0.
+ATLAS_preselection = hJet_pt[0] > 45. & hJet_pt[1] > 20. & abs(hJet_eta[0]) < 2.4 & abs(hJet_eta[1]) < 2.4 & hbhe & hJet_puJetIdL[0] > 0. & hJet_puJetIdL[1] > 0.
 ATLAS_zWindow = V.mass > 83. & V.mass < 99
-ATLAS_Mjj = <!Cuts|ATLAS_preselection!> & <!ZHbb|ccBtag!> & met_pt < 60. & <!Cuts|ATLAS_zWindow!>
-#ATLAS_Mjj = <!Cuts|ATLAS_preselection!> & <!ZHbb|ccBtag!> & met_pt < 60. & <!Cuts|ATLAS_zWindow!> & <!ZHbb|dPhiVH!>
+ATLAS_Mjj = <!Cuts|ATLAS_preselection!> & <!ZHbb|ccBtag!> & MET.et < 60. & <!Cuts|ATLAS_zWindow!>
+#ATLAS_Mjj = <!Cuts|ATLAS_preselection!> & <!ZHbb|ccBtag!> & MET.et < 60. & <!Cuts|ATLAS_zWindow!> & <!ZHbb|dPhiVH!>
 
 ATLAS_Mjj_pt50 =     <!Cuts|ATLAS_Mjj!>               & V.pt <= 50.
 ATLAS_Mjj_pt50100 =  <!Cuts|ATLAS_Mjj!> & V.pt > 50.  & V.pt <= 100.
@@ -361,7 +361,7 @@ ATLAS_Mjj_pt200_Zmm =    <!Cuts|ATLAS_Mjj_pt200!>    & <!ZHmmbb|addCuts!>
 #!! ------------
 #!! new Mjj 
 #!! ------------
-Mjj_selection: <!ZHbb|preselection!> & <!ZHbb|mcBtag!> & <!ZHbb|zWindow!> & met_pt < 60. & <!ZHbb|looseHMass!>
+Mjj_selection: <!ZHbb|preselection!> & <!ZHbb|mcBtag!> & <!ZHbb|zWindow!> & MET.et < 60. & <!ZHbb|looseHMass!>
 #Mjj_pt70 = <!Cuts|Mjj_selection!> & V.pt <= 70. & H.dR > 1.2
 #Mjj_pt70150 = <!Cuts|Mjj_selection!> & V.pt > 70.  & V.pt <= 150.
 #Mjj_pt150 = <!Cuts|Mjj_selection!> & V.pt > 150. & H.dR < 1.6
