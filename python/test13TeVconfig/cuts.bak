@@ -82,7 +82,7 @@ addCuts = Vtype==0
 
 #!! Test with heppy ntuple
 dy_test = <!ZHbb|zWindow!>
-
+myPlot = Vtype>0
 
 #!! -------------
 #!! Mjj

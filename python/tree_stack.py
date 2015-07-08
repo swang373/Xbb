@@ -129,6 +129,13 @@ def doPlot():
 
     for v in range(0,len(vars)):
 
+        print "Ltyps[v]:",Ltyps[v]
+        print "Lhistos[v]:",Lhistos[v]
+        print "Ldatas[v]:",Ldatas[v]
+        print "Ldatatyps[v]:",Ldatatyps[v]
+        print "Ldatanames[v]:",Ldatanames[v]
+        print "lumi:",lumi
+
         histos = Lhistos[v]
         typs = Ltyps[v]
         Stacks[v].histos = Lhistos[v]

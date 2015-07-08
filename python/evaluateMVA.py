@@ -146,10 +146,12 @@ for job in samples:
         # print(command)
         # subprocess.call([command], shell=True)
     # else:
-    command = 'srmrm %s' %(targetStorage)
+#    command = 'srmrm %s' %(targetStorage)
+    command = 'rm %s' %(targetStorage)
     print(command)
     subprocess.call([command], shell=True)
-    command = 'srmcp -2 -globus_tcp_port_range 20000,25000 file:///%s %s' %(tmpDir+'/'+job.prefix+job.identifier+'.root',targetStorage)
+#    command = 'srmcp -2 -globus_tcp_port_range 20000,25000 file:///%s %s' %(tmpDir+'/'+job.prefix+job.identifier+'.root',targetStorage)
+    command = 'cp %s %s' %(tmpDir+'/'+job.prefix+job.identifier+'.root',targetStorage)
     print(command)
     subprocess.call([command], shell=True)
     

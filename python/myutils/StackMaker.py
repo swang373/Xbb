@@ -70,6 +70,7 @@ class StackMaker:
             self.doFit = False
 
         self.colorDict=eval(config.get('Plot_general','colorDict'))
+        print "self.colorDict:", self.colorDict
         self.typLegendDict=eval(config.get('Plot_general','typLegendDict'))
         self.anaTag = config.get("Analysis","tag")
         self.xAxis = config.get('plotDef:%s'%var,'xAxis')
@@ -150,9 +151,14 @@ class StackMaker:
 
     def doPlot(self):
         TdrStyles.tdrStyle()
+        print "self.typs",self.typs
+        print "self.histos",self.histos
+        print "self.setup",self.setup
         histo_dict = HistoMaker.orderandadd([{self.typs[i]:self.histos[i]} for i in range(len(self.histos))],self.setup)
         #sort
-        print histo_dict
+        
+        print "histo_dict",histo_dict
+        
         self.histos=[histo_dict[key] for key in self.setup]
         self.typs=self.setup
     

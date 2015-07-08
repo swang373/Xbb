@@ -1,6 +1,6 @@
 [TrainRegression]
 name = Oct8_13TeV
-signals = ZH
+signals = ZvvHbb
 #signals = ZH110,ZH115,ZH120,ZH125,ZH130,ZH135
 #signals = ZH125
 options = !H:!V:NTrees=2000::BoostType=Grad:Shrinkage=0.1:SeparationType=RegressionVariance:UseBaggedGrad:GradBaggingFraction=0.7:nCuts=20:MaxDepth=3:NNodesMax=15
@@ -29,7 +29,7 @@ vars = Jet_pt[hJCidx] VHbb::evalJERBias(Jet_rawPt[hJCidx],Jet_mcPt[hJCidx],Jet_e
 
 
 #vars = Jet_pt[hJCidx] Jet_mass[hJCidx]
-cut = abs(Jet_eta[hJCidx[0]]) < 2.4 & abs(Jet_eta[hJCidx[1]]) < 2.4 & Jet_mcPt[hJCidx[0]] > 0. & Jet_mcPt[hJCidx[1]] > 0. & Jet_btagnew[0] > 0. & Jet_btagnew[1] > 0. & Jet_chHEF[hJCidx[0]] > 0. & Jet_chHEF[hJCidx[1]] > 0.
+cut = abs(Jet_eta[hJCidx[0]]) < 2.4 & abs(Jet_eta[hJCidx[1]]) < 2.4 & Jet_mcPt[hJCidx[0]] > 0. & Jet_mcPt[hJCidx[1]] > 0. & Jet_btagnew[hJCidx[0]] > 0. & Jet_btagnew[hJCidx[1]] > 0. & Jet_chHEF[hJCidx[0]] > 0. & Jet_chHEF[hJCidx[1]] > 0.
 
 trainCut = evt%8==0
 testCut = evt%8!=0 & evt%5==0

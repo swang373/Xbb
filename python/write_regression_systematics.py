@@ -395,7 +395,6 @@ for job in info:
         
     for entry in range(0,nEntries):
             tree.GetEntry(entry)
-            print "tree.hJidx[0]=",tree.hJidx[0],"tree.hJidx[1]=",tree.hJidx[1]," tree.Jet_pt[0]=",tree.Jet_pt[0]
 
             if job.type != 'DATA':
                 EventForTraining[0]=int(not TFlag.EvalInstance())
@@ -420,17 +419,16 @@ for job in info:
             Jet_pt1 = tree.Jet_pt[1]
             Jet_eta0 = tree.Jet_eta[0]
             Jet_eta1 = tree.Jet_eta[1]
-            print "tree.hJidx[0]=",tree.hJidx[0],"tree.hJidx[1]=",tree.hJidx[1]," tree.Jet_pt[0]=",tree.Jet_pt[0]
-            Jet_mcPt0 = tree.Jet_mcPt[tree.hJidx[0]]
-            Jet_mcPt1 = tree.Jet_mcPt[tree.hJidx[1]]
+            Jet_mcPt0 = tree.Jet_mcPt[tree.hJCidx[0]]
+            Jet_mcPt1 = tree.Jet_mcPt[tree.hJCidx[1]]
             Jet_rawPt0 = tree.Jet_rawPt[0]
             Jet_rawPt1 = tree.Jet_rawPt[1]
             Jet_mass0 = tree.Jet_mass[0]
             Jet_mass1 = tree.Jet_mass[1]
             Jet_phi0 = tree.Jet_phi[0]
             Jet_phi1 = tree.Jet_phi[1]
-            Jet_mass0 = tree.Jet_mass[tree.hJidx[0]]
-            Jet_mass1 = tree.Jet_mass[tree.hJidx[1]]
+            Jet_mass0 = tree.Jet_mass[tree.hJCidx[0]]
+            Jet_mass1 = tree.Jet_mass[tree.hJCidx[1]]
             #Filterjets
             #if fatHiggsFlag:
             #    fathFilterJets_pt0 = tree.fathFilterJets_pt[0]
@@ -639,11 +637,11 @@ for job in info:
                     Jet_etarray[1][0] = hJ1.Et()
                     for key in regVars:
                         var = regDict[key]
-                        if key == 'Jet_pt' or key == 'Jet_e' or key == 'Jet_pt' or key == 'Jet_mass' or key == 'Jet_rawPt' or key =='VHbb::evalEtFromPtEtaPhiM(Jet_pt,Jet_eta,Jet_phi,Jet_mass)' or key =='VHbb::evalMtFromPtEtaPhiM(Jet_pt,Jet_eta,Jet_phi,Jet_mass)' or key == 'VHbb::evalJERBias(Jet_rawPt,Jet_mcPt[hJidx],Jet_eta)':
+                        if key == 'Jet_pt' or key == 'Jet_e' or key == 'Jet_pt' or key == 'Jet_mass' or key == 'Jet_rawPt' or key =='VHbb::evalEtFromPtEtaPhiM(Jet_pt,Jet_eta,Jet_phi,Jet_mass)' or key =='VHbb::evalMtFromPtEtaPhiM(Jet_pt,Jet_eta,Jet_phi,Jet_mass)' or key == 'VHbb::evalJERBias(Jet_rawPt,Jet_mcPt[hJCidx],Jet_eta)':
                             if key == 'Jet_rawPt':
                                 Jet_rawPtArray[0][0] = Jet_rawPt0*corrRes0*rPt0/Jet_pt0
                                 Jet_rawPtArray[1][0] = Jet_rawPt1*rPt1/Jet_pt1
-                            elif key == 'VHbb::evalJERBias(Jet_rawPt,Jet_mcPt[hJidx],Jet_eta)':
+                            elif key == 'VHbb::evalJERBias(Jet_rawPt,Jet_mcPt[hJCidx],Jet_eta)':
                                 theVars0[key][0] = Jet_rawPt0*corrRes0*rPt0/Jet_pt0
                                 theVars1[key][0] = Jet_rawPt1*rPt1/Jet_pt1
                             elif key == 'Jet_pt' or key == 'Jet_pt':
@@ -702,11 +700,11 @@ for job in info:
                     Jet_etarray[1][0] = hJ1.Et()
                     for key in regVars:
                         var = regDict[key]
-                        if key == 'Jet_pt' or key == 'Jet_e' or key == 'Jet_pt' or key == 'Jet_mass' or key == 'Jet_rawPt' or key =='VHbb::evalEtFromPtEtaPhiM(Jet_pt,Jet_eta,Jet_phi,Jet_mass)' or key =='VHbb::evalMtFromPtEtaPhiM(Jet_pt,Jet_eta,Jet_phi,Jet_mass)' or key == 'VHbb::evalJERBias(Jet_rawPt,Jet_mcPt[hJidx],Jet_eta)':
+                        if key == 'Jet_pt' or key == 'Jet_e' or key == 'Jet_pt' or key == 'Jet_mass' or key == 'Jet_rawPt' or key =='VHbb::evalEtFromPtEtaPhiM(Jet_pt,Jet_eta,Jet_phi,Jet_mass)' or key =='VHbb::evalMtFromPtEtaPhiM(Jet_pt,Jet_eta,Jet_phi,Jet_mass)' or key == 'VHbb::evalJERBias(Jet_rawPt,Jet_mcPt[hJCidx],Jet_eta)':
                             if key == 'Jet_rawPt':
                                 Jet_rawPtArray[0][0] = Jet_rawPt0*(1+variation*Jet_mass0)
                                 Jet_rawPtArray[1][0] = Jet_rawPt1*(1+variation*Jet_mass1)
-                            elif key == 'VHbb::evalJERBias(Jet_rawPt,Jet_mcPt[hJidx],Jet_eta)':
+                            elif key == 'VHbb::evalJERBias(Jet_rawPt,Jet_mcPt[hJCidx],Jet_eta)':
                                 theVars0[key][0] = Jet_rawPt0*(1+variation*Jet_mass0)
                                 theVars1[key][0] = Jet_rawPt1*(1+variation*Jet_mass1)
                             elif var == 'Jet_pt' or var == 'Jet_pt[0]' or var == 'Jet_pt[1]' :

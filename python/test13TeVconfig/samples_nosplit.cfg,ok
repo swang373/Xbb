@@ -53,9 +53,9 @@ cut = <!General|mcCut!>
 [WJetsToLNu_HT-100to200_Tune4C_13TeV-madgraph-tauola__Phys14DR-PU20bx25_PHYS14_25_V1]
 infile = WJetsToLNu_HT-100to200_Tune4C_13TeV-madgraph-tauola__Phys14DR-PU20bx25_PHYS14_25_V1
 sampleName = WJetsHT100
-sampleType = DATA
+sampleType = BKG
 subsamples = False
-sampleGroup = DATA
+sampleGroup = WJets
 xSec = [5606]
 SF = 1
 cut = <!General|mcCut!>

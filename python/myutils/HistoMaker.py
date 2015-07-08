@@ -20,6 +20,7 @@ class HistoMaker:
             self.cuts.append(options['cut'])
         #print self.cuts
         #self.tc = TreeCache(self.cuts,samples,path) 
+        print "Cuts:",self.cuts
         self.tc = TreeCache(self.cuts,samples,path,config)
         self._rebin = False
         self.mybinning = None
@@ -45,7 +46,7 @@ class HistoMaker:
         # get all Histos at once
         CuttedTree = self.tc.get_tree(job,'1')
         # print 'CuttedTree.GetEntries()',CuttedTree.GetEntries()
-        # print 'begin self.optionsList',self.optionsList
+        print 'begin self.optionsList',self.optionsList
         # print 'end self.optionsList'
         for options in self.optionsList:
             name=job.name
@@ -233,6 +234,8 @@ class HistoMaker:
     @staticmethod
     def orderandadd(histo_dicts,setup):
         ordered_histo_dict = {}
+        print "orderandadd-setup",setup
+        print "orderandadd-histo_dicts",histo_dicts
         for sample in setup:
             nSample = 0
             for histo_dict in histo_dicts:
@@ -243,6 +246,7 @@ class HistoMaker:
                         printc('magenta','','\t--> added %s to %s'%(sample,sample))
                         ordered_histo_dict[sample].Add(histo_dict[sample])
                     nSample += 1
+        print "orderandadd-ordered_histo_dict",ordered_histo_dict
         del histo_dicts
         return ordered_histo_dict 
 

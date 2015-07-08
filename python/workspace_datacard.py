@@ -328,6 +328,7 @@ final_histos = {}
 
 print '\n\t--> Ordering and Adding Histos\n'
 
+print 'workspace_datacard-all_samples:',all_samples
 #NOMINAL:
 final_histos['nominal'] = HistoMaker.orderandadd([all_histos['%s'%job][0] for job in all_samples],setup) 
 
@@ -512,6 +513,8 @@ for DCtype in ['WS','TH']:
     f.write('\n')
     # datacard yields
     f.write('rate')
+    print "workspace_datacard-setup: ", setup
+    print "workspace_datacard-final_histos: ", final_histos
     for c in setup: 
         f.write('\t%s'%final_histos['nominal'][c].Integral())
     f.write('\n')

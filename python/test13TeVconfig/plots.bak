@@ -3,19 +3,23 @@
 lumi = 18940.
 
 #!! Samples to be used for plotting. it also can be <!Samples|allBKG!>
-samples:'Zudsg','Zcc','Z1b','Z2b'
+#samples:'Zudsg','Zcc','Z1b','Z2b'
+samples:'ZH','ZJets','ZJetsHT100'
 
 #!! Groups for adding samples together and for the legend {'sampleName':'sampleGroup',...}. it also can be <!Samples|Group!>
 # Group: {'Zudsg':'DYlight','Zcc':'DYc','Z1b':'DY1b','Z2b':'DY2b'}
 Group: <!Samples|Group!>
 
 #!! Here the order and the groups that will go in the plots
-setup: DY2b,DY1b,DYlight
-setupLog: DY2b,DY1b,DYlight
+#setup: DY2b,DY1b,DYlight
+#setupLog: DY2b,DY1b,DYlight
+setup: ZH,ZJetsHT100
+setupLog: ZH,ZJetsHT100
 
 #!! Colors dictionary and legend
 colorDict: {'DYlight':401,'DYc':402,'DY2b':5,'DY1b':41,'TT':596,'ST':840,'VVlight':922,'VVb':920,'ZZb':18,'WZb':18,'ZH':2,'DYlc':401,'':1}
-typLegendDict: {'DYlight':'Z+udscg','DYc':'Z + c#bar{c}','DYlc':'Z+udscg','DY2b':'Z + b#bar{b}','DY1b':'Z + b','Wlight':'W+udscg','W1b':'W + b','W2b':'W + b#bar{b}','TT':'t#bar{t}','ST':'Single top','VV':'VV','VVlight':'VV(udscg)','VVb':'VZ(b#bar{b})','ZH':'ZH','WH':'VH(b#bar{b}) 125','VH':'VH','QCD':'QCD','Overlay':'VH(b#bar{b}) 125','':''}
+typLegendDict: {'DYlight':'Z+udscg','DYc':'Z + c#bar{c}','DYlc':'Z+udscg','DY2b':'Z + b#bar{b}','DY1b':'Z + b','Wlight':'W+udscg','W1b':'W + b','W2b':'W + b#bar{b}','TT':'t#bar{t}','ST':'Single top','VV':'VV','VVlight':'VV(udscg)','VVb':'VZ(b#bar{b})','ZH':'ZH','WH':'VH(b#bar{b}) 125','VH':'VH','QCD':'QCD','Overlay':'VH(b#bar{b}) 125','ZJets':'Z + jets'}
+
 
 #!! Add overflow bin in the plots
 addOverFlow = False
@@ -41,6 +45,20 @@ Normalize = False
 #!! -----------------------
 
 #!! Plot name should match the cut name in the cuts config
+[Plot:myPlot]
+#!! which data to compare to
+Datas: ZH
+Normalize: <!Plot_general|Normalize!>
+#vars: <!Plot_general|jet_var!>
+vars: Hmass
+#Signal: <!Plot_general|plot_mass!>
+#!! log scale
+log: False
+#!! apply blinding cut
+blind: True
+cut: Vtype>0
+
+
 [Plot:dy_test]
 #!! which data to compare to
 Datas: Zee

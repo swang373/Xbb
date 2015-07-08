@@ -20,8 +20,8 @@ mcBtag = <!ZHbb|maxBtag!> > <!ZHbb|CSVM!> & <!ZHbb|minBtag!> > <!ZHbb|CSVC!>
 ntBtag = !(Jet_btagnew[hJCidx[0]] > <!ZHbb|CSVT!> | Jet_btagnew[hJCidx[1]] > <!ZHbb|CSVT!>)
 twoCSV0 = Jet_btagnew[hJCidx[0]] > 0. & Jet_btagnew[hJCidx[1]] > 0. 
 30jets = Jet_pt[hJCidx[0]] > 30. & Jet_pt[hJCidx[1]] > 30.
-noAddJet = Sum$(aJet_pt > 20 & abs(aJet_eta) < 2.4) == 0 
-max1AddJet = Sum$(aJet_pt > 20 & abs(aJet_eta) < 2.4) < 2.
+noAddJet = Sum$(Jet_pt[aJCidx] > 20 & abs(Jet_eta[aJCidx]) < 2.4) == 0 
+max1AddJet = Sum$(Jet_pt[aJCidx] > 20 & abs(Jet_eta[aJCidx]) < 2.4) < 2.
 pullAngle = 1 < 10. & 1 < 10.
 rLoose = V_pt < 50
 myrTight = V_pt > 100.
@@ -82,7 +82,7 @@ addCuts = Vtype==0
 
 #!! Test with heppy ntuple
 dy_test = <!ZHbb|zWindow!>
-
+myPlot = Vtype>0
 
 #!! -------------
 #!! Mjj

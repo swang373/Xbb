@@ -18,6 +18,10 @@ dictionary = {
     'hJet_JECUnc':			'Jet_mass[hJCidx]',	##FIXME: in V12, Jet_JECUnc[hJCidx]
     'hJet_csv':				'Jet_btagnew[hJCidx]',
     'hJet_csv_nominal':		'Jet_btagnew[hJCidx]',	##FIXME
+    'hJet_csv_downBC4p':		'Jet_btagnew[hJCidx]',	##FIXME
+    'hJet_csv_upBC4p':		'Jet_btagnew[hJCidx]',	##FIXME
+    'hJet_csv_downL4p':		'Jet_btagnew[hJCidx]',	##FIXME
+    'hJet_csv_upL4p':			'Jet_btagnew[hJCidx]',	##FIXME
     'hJet_csv_downBC':		'Jet_btagnew[hJCidx]',	##FIXME
     'hJet_csv_upBC':		'Jet_btagnew[hJCidx]',	##FIXME
     'hJet_csv_downL':		'Jet_btagnew[hJCidx]',	##FIXME
@@ -75,11 +79,22 @@ dictionary = {
     'VHbb::GetEnergy(Jet_pt[hJCidx],Jet_eta[hJCidx],Jet_mass[hJCidx])[0]':'VHbb::GetEnergy(Jet_pt[hJCidx[0]],Jet_eta[hJCidx[0]],Jet_mass[hJCidx[0]])',
     'VHbb::GetEnergy(Jet_pt[hJCidx],Jet_eta[hJCidx],Jet_mass[hJCidx])[1]':'VHbb::GetEnergy(Jet_pt[hJCidx[1]],Jet_eta[hJCidx[1]],Jet_mass[hJCidx[1]])',
 
+    'VHbb::evalEt(Jet_pt[aJCidx],Jet_eta[aJCidx],Jet_phi[aJCidx],VHbb::GetEnergy(Jet_pt[aJCidx],Jet_eta[aJCidx],Jet_mass[aJCidx]))':				'VHbb::evalEtFromPtEtaPhiM(Jet_pt[aJCidx],Jet_eta[aJCidx],Jet_phi[aJCidx],Jet_mass[aJCidx])',
+    'VHbb::evalMt(Jet_pt[aJCidx],Jet_eta[aJCidx],Jet_phi[aJCidx],VHbb::GetEnergy(Jet_pt[aJCidx],Jet_eta[aJCidx],Jet_mass[aJCidx]))':				'VHbb::evalMtFromPtEtaPhiM(Jet_pt[aJCidx],Jet_eta[aJCidx],Jet_phi[aJCidx],Jet_mass[aJCidx])',
+    'VHbb::GetEnergy(Jet_pt[aJCidx],Jet_eta[aJCidx],Jet_mass[aJCidx])t0':'jetEt0',
+    'VHbb::GetEnergy(Jet_pt[aJCidx],Jet_eta[aJCidx],Jet_mass[aJCidx])t1':'jetEt1',
+    
+    'VHbb::GetEnergy(Jet_pt[aJCidx],Jet_eta[aJCidx],Jet_mass[aJCidx])[0]':'VHbb::GetEnergy(Jet_pt[aJCidx[0]],Jet_eta[aJCidx[0]],Jet_mass[aJCidx[0]])',
+    'VHbb::GetEnergy(Jet_pt[aJCidx],Jet_eta[aJCidx],Jet_mass[aJCidx])[1]':'VHbb::GetEnergy(Jet_pt[aJCidx[1]],Jet_eta[aJCidx[1]],Jet_mass[aJCidx[1]])',
+    
+    'Jet_btagnew[hJCidx]4p':'Jet_btagnew[hJCidx]',
 }
 
-doAtBegin = ['hJet_ptRaw','hJet_eta','hJet_ptLeadTrack','hJet_csv_downBC','hJet_csv_upBC','hJet_csv_downL','hJet_csv_upL']
-doAtEnd = ['hJCidx]0','hJCidx]1','hJCidx][0]','hJCidx][1]','hJCidx][2]','VHbb::evalEt(Jet_pt[hJCidx],Jet_eta[hJCidx],Jet_phi[hJCidx],VHbb::GetEnergy(Jet_pt[hJCidx],Jet_eta[hJCidx],Jet_mass[hJCidx]))','VHbb::evalMt(Jet_pt[hJCidx],Jet_eta[hJCidx],Jet_phi[hJCidx],VHbb::GetEnergy(Jet_pt[hJCidx],Jet_eta[hJCidx],Jet_mass[hJCidx]))','VHbb::GetEnergy(Jet_pt[hJCidx],Jet_eta[hJCidx],Jet_mass[hJCidx])t0','VHbb::GetEnergy(Jet_pt[hJCidx],Jet_eta[hJCidx],Jet_mass[hJCidx])t1','tree.Jet_mcPt[hJCidx','VHbb::GetEnergy(Jet_pt[hJCidx],Jet_eta[hJCidx],Jet_mass[hJCidx])[0]','VHbb::GetEnergy(Jet_pt[hJCidx],Jet_eta[hJCidx],Jet_mass[hJCidx])[1]']
+doAtBegin = ['hJet_ptRaw','hJet_eta','hJet_ptLeadTrack','hJet_csv_downBC','hJet_csv_upBC','hJet_csv_downL','hJet_csv_upL','aJet_ptRaw','aJet_eta','aJet_ptLeadTrack','aJet_csv_downBC','aJet_csv_upBC','aJet_csv_downL','aJet_csv_upL']
+doAtEnd = ['hJCidx]0','hJCidx]1','hJCidx][0]','hJCidx][1]','hJCidx][2]','VHbb::evalEt(Jet_pt[hJCidx],Jet_eta[hJCidx],Jet_phi[hJCidx],VHbb::GetEnergy(Jet_pt[hJCidx],Jet_eta[hJCidx],Jet_mass[hJCidx]))','VHbb::evalMt(Jet_pt[hJCidx],Jet_eta[hJCidx],Jet_phi[hJCidx],VHbb::GetEnergy(Jet_pt[hJCidx],Jet_eta[hJCidx],Jet_mass[hJCidx]))','VHbb::GetEnergy(Jet_pt[hJCidx],Jet_eta[hJCidx],Jet_mass[hJCidx])t0','VHbb::GetEnergy(Jet_pt[hJCidx],Jet_eta[hJCidx],Jet_mass[hJCidx])t1','tree.Jet_mcPt[hJCidx','VHbb::GetEnergy(Jet_pt[hJCidx],Jet_eta[hJCidx],Jet_mass[hJCidx])[0]','VHbb::GetEnergy(Jet_pt[hJCidx],Jet_eta[hJCidx],Jet_mass[hJCidx])[1]','aJCidx]0','aJCidx]1','aJCidx][0]','aJCidx][1]','aJCidx][2]','VHbb::evalEt(Jet_pt[aJCidx],Jet_eta[aJCidx],Jet_phi[aJCidx],VHbb::GetEnergy(Jet_pt[aJCidx],Jet_eta[aJCidx],Jet_mass[aJCidx]))','VHbb::evalMt(Jet_pt[aJCidx],Jet_eta[aJCidx],Jet_phi[aJCidx],VHbb::GetEnergy(Jet_pt[aJCidx],Jet_eta[aJCidx],Jet_mass[aJCidx]))','VHbb::GetEnergy(Jet_pt[aJCidx],Jet_eta[aJCidx],Jet_mass[aJCidx])t0','VHbb::GetEnergy(Jet_pt[aJCidx],Jet_eta[aJCidx],Jet_mass[aJCidx])t1','tree.Jet_mcPt[aJCidx','VHbb::GetEnergy(Jet_pt[aJCidx],Jet_eta[aJCidx],Jet_mass[aJCidx])[0]','VHbb::GetEnergy(Jet_pt[aJCidx],Jet_eta[aJCidx],Jet_mass[aJCidx])[1]'
+]
 
+#Jet_btagnew[hJCidx]4p[0]
 #print doAtBegin+dictionary.keys()+doAtEnd
 
 argv = sys.argv
