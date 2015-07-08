@@ -20,5 +20,7 @@ bash runAll.sh QCDHT250 ZvvHbb13TeV prep >& log/logPrepQCDHT250 &
 bash runAll.sh QCDHT500 ZvvHbb13TeV prep >& log/logPrepQCDHT500 &
 bash runAll.sh QCDHT1000 ZvvHbb13TeV prep >& log/logPrepQCDHT1000 &
 
+bash runAll.sh DataMET ZvvHbb13TeV prep >& log/logPrepDataMET &
+
 
 
