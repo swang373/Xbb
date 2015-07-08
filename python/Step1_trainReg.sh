@@ -1,2 +1,2 @@
 setenv TMPDIR /tmp
-bash runAll.sh ZH ZvvHbb13 trainReg >& log/logTrainRegZH &
+bash runAll.sh ZH ZvvHbb13TeV trainReg >& log/logTrainRegZH &
