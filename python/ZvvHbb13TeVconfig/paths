@@ -18,7 +18,7 @@ scratch = /scratch/sdonato/
 #!! The directory with the code
 vhbbpath= <!Directories|Wdir!>/Xbb
 #!! specifies the .cfg files with the Samples information
-samplesinfo: <!Directories|vhbbpath!>/python/ZvvHbb13TeV/samples_nosplit.cfg
+samplesinfo: <!Directories|vhbbpath!>/python/ZvvHbb13TeVconfig/samples_nosplit.cfg
 #!! where you want to store the logfiles from job submissions
 logpath=<!Directories|vhbbpath!>/LOG/
 
