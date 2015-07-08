@@ -41,6 +41,7 @@ class RegressionTrainer():
         
         sWeight = 1.
         fnameOutput='training_Reg_%s.root' %(self.__title)
+        print "Opening ",fnameOutput
         output = ROOT.TFile.Open(fnameOutput, "RECREATE")
 
         factory = ROOT.TMVA.Factory('MVA', output, '!V:!Silent:!Color:!DrawProgressBar:Transformations=I:AnalysisType=Regression')

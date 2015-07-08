@@ -185,8 +185,8 @@ for job in info:
           
     #Regression branches
     applyRegression = True
-    Jet_pt = array('f',[0]*2)
-    Jet_mass = array('f',[0]*2)
+    hJet_pt = array('f',[0]*2)
+    hJet_mass = array('f',[0]*2)
     newtree.Branch( 'H', H , 'HiggsFlag/I:mass/F:pt/F:eta/F:phi/F:dR/F:dPhi/F:dEta/F' )
     newtree.Branch( 'HNoReg', HNoReg , 'HiggsFlag/I:mass/F:pt/F:eta/F:phi/F:dR/F:dPhi/F:dEta/F' )
     #FatHReg = array('f',[0]*2)
@@ -203,12 +203,12 @@ for job in info:
     fMETphi = ROOT.TTreeFormula("METphi",'met_phi',tree)
     fHVMass = ROOT.TTreeFormula("HVMass",'VHbb::HV_mass(H_pt,H_eta,H_phi,H_mass,V_pt,V_eta,V_phi,V_mass)',tree)
     hJet_MtArray = [array('f',[0]),array('f',[0])]
-    Jet_etarray = [array('f',[0]),array('f',[0])]
+    hJet_etarray = [array('f',[0]),array('f',[0])]
     hJet_MET_dPhi = array('f',[0]*2)
     hJet_regWeight = array('f',[0]*2)
     fathFilterJets_regWeight = array('f',[0]*2)
     hJet_MET_dPhiArray = [array('f',[0]),array('f',[0])]
-    Jet_rawPtArray = [array('f',[0]),array('f',[0])]
+    hJet_rawPtArray = [array('f',[0]),array('f',[0])]
     newtree.Branch('hJet_MET_dPhi',hJet_MET_dPhi,'hJet_MET_dPhi[2]/F')
     newtree.Branch('hJet_regWeight',hJet_regWeight,'hJet_regWeight[2]/F')
     readerJet0 = ROOT.TMVA.Reader("!Color:!Silent" )
@@ -217,11 +217,13 @@ for job in info:
     theForms = {}
     theVars0 = {}
     theVars1 = {}
-    def addVarsToReader(reader,regDict,regVars,theVars,theForms,i,hJet_MET_dPhiArray,METet,rho,hJet_MtArray,Jet_etarray,Jet_rawPtArray):
+    def addVarsToReader(reader,regDict,regVars,theVars,theForms,i,hJet_MET_dPhiArray,METet,rho,hJet_MtArray,hJet_etarray,hJet_rawPtArray):
+#        print "regDict: ",regDict
+#        print "regVars: ",regVars
         for key in regVars:
             var = regDict[key]
             theVars[key] = array( 'f', [ 0 ] )
-            if var == 'Jet_MET_dPhi':
+            if var == 'hJet_MET_dPhi':
                 print 'Adding var: %s with %s to readerJet%.0f' %(key,var,i)
                 reader.AddVariable( key, hJet_MET_dPhiArray[i] )
             elif var == 'METet':
@@ -230,23 +232,23 @@ for job in info:
             elif var == 'rho':
                 print 'Adding var: %s with %s to readerJet%.0f' %(key,var,i)
                 reader.AddVariable( key, rho )
-            elif var == 'Jet_mt':
+            elif var == 'hJet_mt':
                 print 'Adding var: %s with %s to readerJet%.0f' %(key,var,i)
                 reader.AddVariable( key, hJet_MtArray[i] )
-            elif var == 'Jet_et':
+            elif var == 'hJet_et':
                 print 'Adding var: %s with %s to readerJet%.0f' %(key,var,i)
-                reader.AddVariable( key, Jet_etarray[i] )
-            elif var == 'Jet_rawPt':
+                reader.AddVariable( key, hJet_etarray[i] )
+            elif var == 'hJet_rawPt':
                 print 'Adding var: %s with %s to readerJet%.0f' %(key,var,i)
-                reader.AddVariable( key, Jet_rawPtArray[i] )
+                reader.AddVariable( key, hJet_rawPtArray[i] )
             else:
                 reader.AddVariable(key,theVars[key])
                 formula = regDict[key].replace("[0]","[%.0f]" %i)
                 print 'Adding var: %s with %s to readerJet%.0f' %(key,formula,i)
                 theForms['form_reg_%s_%.0f'%(key,i)] = ROOT.TTreeFormula("form_reg_%s_%.0f"%(key,i),'%s' %(formula),tree)
         return 
-    addVarsToReader(readerJet0,regDict,regVars,theVars0,theForms,0,hJet_MET_dPhiArray,METet,rho,hJet_MtArray,Jet_etarray,Jet_rawPtArray)    
-    addVarsToReader(readerJet1,regDict,regVars,theVars1,theForms,1,hJet_MET_dPhiArray,METet,rho,hJet_MtArray,Jet_etarray,Jet_rawPtArray)    
+    addVarsToReader(readerJet0,regDict,regVars,theVars0,theForms,0,hJet_MET_dPhiArray,METet,rho,hJet_MtArray,hJet_etarray,hJet_rawPtArray)    
+    addVarsToReader(readerJet1,regDict,regVars,theVars1,theForms,1,hJet_MET_dPhiArray,METet,rho,hJet_MtArray,hJet_etarray,hJet_rawPtArray)    
     readerJet0.BookMVA( "jet0Regression", regWeight )
     readerJet1.BookMVA( "jet1Regression", regWeight )
     
@@ -255,8 +257,8 @@ for job in info:
     #theFormsFJ = {}
     #theVars0FJ = {}
     #theVars1FJ = {}
-    #addVarsToReader(readerFJ0,regDictFilterJets,regVarsFilterJets,theVars0FJ,theFormsFJ,0,hJet_MET_dPhiArray,METet,rho,hJet_MtArray,Jet_etarray,Jet_rawPtArray)    
-    #addVarsToReader(readerFJ1,regDictFilterJets,regVarsFilterJets,theVars1FJ,theFormsFJ,1,hJet_MET_dPhiArray,METet,rho,hJet_MtArray,Jet_etarray,Jet_rawPtArray)    
+    #addVarsToReader(readerFJ0,regDictFilterJets,regVarsFilterJets,theVars0FJ,theFormsFJ,0,hJet_MET_dPhiArray,METet,rho,hJet_MtArray,hJet_etarray,hJet_rawPtArray)    
+    #addVarsToReader(readerFJ1,regDictFilterJets,regVarsFilterJets,theVars1FJ,theFormsFJ,1,hJet_MET_dPhiArray,METet,rho,hJet_MtArray,hJet_etarray,hJet_rawPtArray)    
     #readerFJ0.BookMVA( "jet0RegressionFJ", regWeightFilterJets )
     #readerFJ1.BookMVA( "jet1RegressionFJ", regWeightFilterJets )
     
@@ -277,8 +279,8 @@ for job in info:
     newtree.Branch('angleZZS',angleZZS,'angleZZS/F')
     kinLikeRatio = array('f',[0]*len(AngLikeBkgs))
     newtree.Branch('kinLikeRatio',kinLikeRatio,'%s/F' %(':'.join(AngLikeBkgs)))
-    fAngleHB = ROOT.TTreeFormula("fAngleHB",'abs(VHbb::ANGLEHB(Jet_pt[0],Jet_eta[0],Jet_phi[0],Jet_mass[0],Jet_pt[1],Jet_eta[1],Jet_phi[1],Jet_mass[1]))',newtree)
-    fAngleLZ = ROOT.TTreeFormula("fAngleLZ",'abs(VHbb::ANGLELZ(vLeptons_pt[0],vLeptons_eta[0],vLeptons_phi[0],vLeptons_mass[0],vLeptons_pt[1],vLeptons_eta[1],vLeptons_phi[1],vLeptons_mass[1]))',newtree)
+    fAngleHB = ROOT.TTreeFormula("fAngleHB",'abs(VHbb::ANGLEHB(Jet_pt[hJidx[0]],Jet_eta[hJidx[0]],Jet_phi[hJidx[0]],Jet_mass[hJidx[0]],Jet_pt[hJidx[1]],Jet_eta[hJidx[1]],Jet_phi[hJidx[1]],Jet_mass[hJidx[1]]))',newtree)
+    fAngleLZ = ROOT.TTreeFormula("fAngleLZ",'abs(VHbb::ANGLELZ(vLeptons_pt[hJidx[0]],vLeptons_eta[hJidx[0]],vLeptons_phi[hJidx[0]],vLeptons_mass[hJidx[0]],vLeptons_pt[hJidx[1]],vLeptons_eta[hJidx[1]],vLeptons_phi[hJidx[1]],vLeptons_mass[hJidx[1]]))',newtree)
     fAngleZZS = ROOT.TTreeFormula("fAngleZZS",'abs(VHbb::ANGLELZ(H_pt,H.eta,H_phi,H_pt,V_pt,V_eta,V_phi,V_mass))',newtree)
     fVpt = ROOT.TTreeFormula("fVpt",'V_pt',tree)
     fVeta = ROOT.TTreeFormula("fVeta",'V_eta',tree)
@@ -311,28 +313,28 @@ for job in info:
         
     if job.type != 'DATA':
         #CSV branches
-        Jet_hadronFlavour = array('f',[0]*2)
-        Jet_btagnew = array('f',[0]*2)
-        Jet_btagnewOld = array('f',[0]*2)
-        Jet_btagnewUp = array('f',[0]*2)
-        Jet_btagnewDown = array('f',[0]*2)
-        Jet_btagnewFUp = array('f',[0]*2)
-        Jet_btagnewFDown = array('f',[0]*2)
-        newtree.Branch('Jet_btagnewOld',Jet_btagnewOld,'Jet_btagnewOld[2]/F')
-        newtree.Branch('Jet_btagnewUp',Jet_btagnewUp,'Jet_btagnewUp[2]/F')
-        newtree.Branch('Jet_btagnewDown',Jet_btagnewDown,'Jet_btagnewDown[2]/F')
-        newtree.Branch('Jet_btagnewFUp',Jet_btagnewFUp,'Jet_btagnewFUp[2]/F')
-        newtree.Branch('Jet_btagnewFDown',Jet_btagnewFDown,'Jet_btagnewFDown[2]/F')
+        hJet_hadronFlavour = array('f',[0]*2)
+        hJet_btagnew = array('f',[0]*2)
+        hJet_btagnewOld = array('f',[0]*2)
+        hJet_btagnewUp = array('f',[0]*2)
+        hJet_btagnewDown = array('f',[0]*2)
+        hJet_btagnewFUp = array('f',[0]*2)
+        hJet_btagnewFDown = array('f',[0]*2)
+        newtree.Branch('hJet_btagnewOld',hJet_btagnewOld,'hJet_btagnewOld[2]/F')
+        newtree.Branch('hJet_btagnewUp',hJet_btagnewUp,'hJet_btagnewUp[2]/F')
+        newtree.Branch('hJet_btagnewDown',hJet_btagnewDown,'hJet_btagnewDown[2]/F')
+        newtree.Branch('hJet_btagnewFUp',hJet_btagnewFUp,'hJet_btagnewFUp[2]/F')
+        newtree.Branch('hJet_btagnewFDown',hJet_btagnewFDown,'hJet_btagnewFDown[2]/F')
         
         #JER branches
-        Jet_pt_JER_up = array('f',[0]*2)
-        newtree.Branch('Jet_pt_JER_up',Jet_pt_JER_up,'Jet_pt_JER_up[2]/F')
-        Jet_pt_JER_down = array('f',[0]*2)
-        newtree.Branch('Jet_pt_JER_down',Jet_pt_JER_down,'Jet_pt_JER_down[2]/F')
-        Jet_mass_JER_up = array('f',[0]*2)
-        newtree.Branch('Jet_mass_JER_up',Jet_mass_JER_up,'Jet_mass_JER_up[2]/F')
-        Jet_mass_JER_down = array('f',[0]*2)
-        newtree.Branch('Jet_mass_JER_down',Jet_mass_JER_down,'Jet_mass_JER_down[2]/F')
+        hJet_pt_JER_up = array('f',[0]*2)
+        newtree.Branch('hJet_pt_JER_up',hJet_pt_JER_up,'hJet_pt_JER_up[2]/F')
+        hJet_pt_JER_down = array('f',[0]*2)
+        newtree.Branch('hJet_pt_JER_down',hJet_pt_JER_down,'hJet_pt_JER_down[2]/F')
+        hJet_mass_JER_up = array('f',[0]*2)
+        newtree.Branch('hJet_mass_JER_up',hJet_mass_JER_up,'hJet_mass_JER_up[2]/F')
+        hJet_mass_JER_down = array('f',[0]*2)
+        newtree.Branch('hJet_mass_JER_down',hJet_mass_JER_down,'hJet_mass_JER_down[2]/F')
         H_JER = array('f',[0]*4)
         newtree.Branch('H_JER',H_JER,'mass_up:mass_down:pt_up:pt_down/F')
         HVMass_JER_up = array('f',[0])
@@ -349,14 +351,14 @@ for job in info:
         newtree.Branch('angleZZS_JER_down',angleZZS_JER_down,'angleZZS_JER_down/F')
         
         #JES branches
-        Jet_pt_JES_up = array('f',[0]*2)
-        newtree.Branch('Jet_pt_JES_up',Jet_pt_JES_up,'Jet_pt_JES_up[2]/F')
-        Jet_pt_JES_down = array('f',[0]*2)
-        newtree.Branch('Jet_pt_JES_down',Jet_pt_JES_down,'Jet_pt_JES_down[2]/F')
-        Jet_mass_JES_up = array('f',[0]*2)
-        newtree.Branch('Jet_mass_JES_up',Jet_mass_JES_up,'Jet_mass_JES_up[2]/F')
-        Jet_mass_JES_down = array('f',[0]*2)
-        newtree.Branch('Jet_mass_JES_down',Jet_mass_JES_down,'Jet_mass_JES_down[2]/F')
+        hJet_pt_JES_up = array('f',[0]*2)
+        newtree.Branch('hJet_pt_JES_up',hJet_pt_JES_up,'hJet_pt_JES_up[2]/F')
+        hJet_pt_JES_down = array('f',[0]*2)
+        newtree.Branch('hJet_pt_JES_down',hJet_pt_JES_down,'hJet_pt_JES_down[2]/F')
+        hJet_mass_JES_up = array('f',[0]*2)
+        newtree.Branch('hJet_mass_JES_up',hJet_mass_JES_up,'hJet_mass_JES_up[2]/F')
+        hJet_mass_JES_down = array('f',[0]*2)
+        newtree.Branch('hJet_mass_JES_down',hJet_mass_JES_down,'hJet_mass_JES_down[2]/F')
         H_JES = array('f',[0]*4)
         newtree.Branch('H_JES',H_JES,'mass_up:mass_down:pt_up:pt_down/F')
         HVMass_JES_up = array('f',[0])
@@ -373,10 +375,10 @@ for job in info:
         newtree.Branch('angleZZS_JES_down',angleZZS_JES_down,'angleZZS_JES_down/F')
     
         #Formulas for syst in angular
-        fAngleHB_JER_up = ROOT.TTreeFormula("fAngleHB_JER_up",'abs(VHbb::ANGLEHBWithM(Jet_pt_JER_up[0],Jet_eta[0],Jet_phi[0],Jet_mass_JER_up[0],Jet_pt_JER_up[1],Jet_eta[1],Jet_phi[1],Jet_mass_JER_up[1]))',newtree)
-        fAngleHB_JER_down = ROOT.TTreeFormula("fAngleHB_JER_down",'abs(VHbb::ANGLEHBWithM(Jet_pt_JER_down[0],Jet_eta[0],Jet_phi[0],Jet_mass_JER_down[0],Jet_pt_JER_down[1],Jet_eta[1],Jet_phi[1],Jet_mass_JER_down[1]))',newtree)
-        fAngleHB_JES_up = ROOT.TTreeFormula("fAngleHB_JES_up",'abs(VHbb::ANGLEHBWithM(Jet_pt_JES_up[0],Jet_eta[0],Jet_phi[0],Jet_mass_JES_up[0],Jet_pt_JES_up[1],Jet_eta[1],Jet_phi[1],Jet_mass_JES_up[1]))',newtree)
-        fAngleHB_JES_down = ROOT.TTreeFormula("fAngleHB_JES_down",'abs(VHbb::ANGLEHBWithM(Jet_pt_JES_down[0],Jet_eta[0],Jet_phi[0],Jet_mass_JES_down[0],Jet_pt_JES_down[1],Jet_eta[1],Jet_phi[1],Jet_mass_JES_down[1]))',newtree)
+        fAngleHB_JER_up = ROOT.TTreeFormula("fAngleHB_JER_up",'abs(VHbb::ANGLEHBWithM(hJet_pt_JER_up[0],Jet_eta[hJidx[0]],Jet_phi[hJidx[0]],hJet_mass_JER_up[0],hJet_pt_JER_up[1],Jet_eta[hJidx[1]],Jet_phi[hJidx[1]],hJet_mass_JER_up[1]))',newtree)
+        fAngleHB_JER_down = ROOT.TTreeFormula("fAngleHB_JER_down",'abs(VHbb::ANGLEHBWithM(hJet_pt_JER_down[0],Jet_eta[hJidx[0]],Jet_phi[hJidx[0]],hJet_mass_JER_down[0],hJet_pt_JER_down[1],Jet_eta[hJidx[1]],Jet_phi[hJidx[1]],hJet_mass_JER_down[1]))',newtree)
+        fAngleHB_JES_up = ROOT.TTreeFormula("fAngleHB_JES_up",'abs(VHbb::ANGLEHBWithM(hJet_pt_JES_up[0],Jet_eta[hJidx[0]],Jet_phi[hJidx[0]],hJet_mass_JES_up[0],hJet_pt_JES_up[1],Jet_eta[hJidx[1]],Jet_phi[hJidx[1]],hJet_mass_JES_up[1]))',newtree)
+        fAngleHB_JES_down = ROOT.TTreeFormula("fAngleHB_JES_down",'abs(VHbb::ANGLEHBWithM(hJet_pt_JES_down[0],Jet_eta[hJidx[0]],Jet_phi[hJidx[0]],hJet_mass_JES_down[0],hJet_pt_JES_down[1],Jet_eta[hJidx[1]],Jet_phi[hJidx[1]],hJet_mass_JES_down[1]))',newtree)
         fAngleZZS_JER_up = ROOT.TTreeFormula("fAngleZZS_JER_Up",'abs(VHbb::ANGLELZ(H_JER.pt_up,H.eta,H_phi,H_JER.pt_up,V_pt,V_eta,V_phi,V_mass))',newtree)
         fAngleZZS_JER_down = ROOT.TTreeFormula("fAngleZZS_JER_Down",'abs(VHbb::ANGLELZ(H_JER.pt_down,H.eta,H_phi,H_JER.pt_down,V_pt,V_eta,V_phi,V_mass))',newtree)
         fAngleZZS_JES_up = ROOT.TTreeFormula("fAngleZZS_JES_Up",'abs(VHbb::ANGLELZ(H_JER.pt_up,H.eta,H_phi,H_JER.pt_up,V_pt,V_eta,V_phi,V_mass))',newtree)
@@ -413,58 +415,62 @@ for job in info:
 
             #get
             vect.SetPtEtaPhiM(fVpt.EvalInstance(),fVeta.EvalInstance(),fVphi.EvalInstance(),fVmass.EvalInstance())
-            Jet_pt = tree.Jet_pt
-            Jet_mass = tree.Jet_mass
-            Jet_pt0 = tree.Jet_pt[0]
-            Jet_pt1 = tree.Jet_pt[1]
-            Jet_eta0 = tree.Jet_eta[0]
-            Jet_eta1 = tree.Jet_eta[1]
-            Jet_mcPt0 = tree.Jet_mcPt[tree.hJCidx[0]]
-            Jet_mcPt1 = tree.Jet_mcPt[tree.hJCidx[1]]
-            Jet_rawPt0 = tree.Jet_rawPt[0]
-            Jet_rawPt1 = tree.Jet_rawPt[1]
-            Jet_mass0 = tree.Jet_mass[0]
-            Jet_mass1 = tree.Jet_mass[1]
-            Jet_phi0 = tree.Jet_phi[0]
-            Jet_phi1 = tree.Jet_phi[1]
-            Jet_mass0 = tree.Jet_mass[tree.hJCidx[0]]
-            Jet_mass1 = tree.Jet_mass[tree.hJCidx[1]]
+            print tree.Jet_pt
+            print tree.hJidx
+#            hJet_pt = tree.Jet_pt[tree.hJidx]
+#            hJet_mass = tree.Jet_mass[tree.hJidx]
+            hJet_pt0 = tree.Jet_pt[tree.hJidx[0]]
+            hJet_pt1 = tree.Jet_pt[tree.hJidx[1]]
+            hJet_pt = [hJet_pt0,hJet_pt1]
+            hJet_mass0 = tree.Jet_mass[tree.hJidx[0]]
+            hJet_mass1 = tree.Jet_mass[tree.hJidx[1]]
+            hJet_mass = [hJet_mass0,hJet_mass1]
+            hJet_eta0 = tree.Jet_eta[tree.hJidx[0]]
+            hJet_eta1 = tree.Jet_eta[tree.hJidx[1]]
+            hJet_mcPt0 = tree.Jet_mcPt[tree.hJCidx[0]]
+            hJet_mcPt1 = tree.Jet_mcPt[tree.hJCidx[1]]
+            hJet_rawPt0 = tree.Jet_rawPt[tree.hJidx[0]]
+            hJet_rawPt1 = tree.Jet_rawPt[tree.hJidx[1]]
+            hJet_phi0 = tree.Jet_phi[tree.hJidx[0]]
+            hJet_phi1 = tree.Jet_phi[tree.hJidx[1]]
+            hJet_mass0 = tree.Jet_mass[tree.hJidx[0]]
+            hJet_mass1 = tree.Jet_mass[tree.hJidx[1]]
             #Filterjets
             #if fatHiggsFlag:
-            #    fathFilterJets_pt0 = tree.fathFilterJets_pt[0]
-            #    fathFilterJets_pt1 = tree.fathFilterJets_pt[1]
-            #    fathFilterJets_eta0 = tree.fathFilterJets_eta[0]
-            #    fathFilterJets_eta1 = tree.fathFilterJets_eta[1]
-            #    fathFilterJets_phi0 = tree.fathFilterJets_phi[0]
-            #    fathFilterJets_phi1 = tree.fathFilterJets_phi[1]
-            #    fathFilterJets_e0 = tree.fathFilterJets_e[0]
-            #    fathFilterJets_e1 = tree.fathFilterJets_e[1]
+            #    fathFilterJets_pt0 = tree.fathFilterJets_pt[tree.hJidx[0]]
+            #    fathFilterJets_pt1 = tree.fathFilterJets_pt[tree.hJidx[1]]
+            #    fathFilterJets_eta0 = tree.fathFilterJets_eta[tree.hJidx[0]]
+            #    fathFilterJets_eta1 = tree.fathFilterJets_eta[tree.hJidx[1]]
+            #    fathFilterJets_phi0 = tree.fathFilterJets_phi[tree.hJidx[0]]
+            #    fathFilterJets_phi1 = tree.fathFilterJets_phi[tree.hJidx[1]]
+            #    fathFilterJets_e0 = tree.fathFilterJets_e[tree.hJidx[0]]
+            #    fathFilterJets_e1 = tree.fathFilterJets_e[tree.hJidx[1]]
 
             Event[0]=fEvent.EvalInstance()
             METet[0]=fMETet.EvalInstance()
             rho[0]=frho.EvalInstance()
             METphi[0]=fMETphi.EvalInstance()
             for key, value in regDict.items():
-                if not (value == 'Jet_MET_dPhi' or value == 'METet' or value == "rho" or value == "Jet_et" or value == 'Jet_mt' or value == 'Jet_rawPt'):
+                if not (value == 'hJet_MET_dPhi' or value == 'METet' or value == "rho" or value == "hJet_et" or value == 'hJet_mt' or value == 'hJet_rawPt'):
                     theVars0[key][0] = theForms["form_reg_%s_0" %(key)].EvalInstance()
                     theVars1[key][0] = theForms["form_reg_%s_1" %(key)].EvalInstance()
             #for key, value in regDictFilterJets.items():
-            #    if not (value == 'Jet_MET_dPhi' or value == 'METet' or value == "rho" or value == "Jet_et" or value == 'Jet_mt' or value == 'Jet_rawPt'):
+            #    if not (value == 'hJet_MET_dPhi' or value == 'METet' or value == "rho" or value == "hJet_et" or value == 'hJet_mt' or value == 'hJet_rawPt'):
             #        theVars0FJ[key][0] = theFormsFJ["form_reg_%s_0" %(key)].EvalInstance()
             #        theVars1FJ[key][0] = theFormsFJ["form_reg_%s_1" %(key)].EvalInstance()
-            hJet_MET_dPhi[0] = deltaPhi(METphi[0],Jet_phi0)
-            hJet_MET_dPhi[1] = deltaPhi(METphi[0],Jet_phi1)
-            hJet_MET_dPhiArray[0][0] = deltaPhi(METphi[0],Jet_phi0)
-            hJet_MET_dPhiArray[1][0] = deltaPhi(METphi[0],Jet_phi1)
+            hJet_MET_dPhi[0] = deltaPhi(METphi[0],hJet_phi0)
+            hJet_MET_dPhi[1] = deltaPhi(METphi[0],hJet_phi1)
+            hJet_MET_dPhiArray[0][0] = deltaPhi(METphi[0],hJet_phi0)
+            hJet_MET_dPhiArray[1][0] = deltaPhi(METphi[0],hJet_phi1)
             if not job.type == 'DATA':
-                corrRes0 = corrPt(Jet_pt0,Jet_eta0,Jet_mcPt0)
-                corrRes1 = corrPt(Jet_pt1,Jet_eta1,Jet_mcPt1)
-                Jet_rawPt0 *= corrRes0
-                Jet_rawPt1 *= corrRes1
-            Jet_rawPtArray[0][0] = Jet_rawPt0
-            Jet_rawPtArray[1][0] = Jet_rawPt1
-            hJ0.SetPtEtaPhiM(Jet_pt0,Jet_eta0,Jet_phi0,Jet_mass0)
-            hJ1.SetPtEtaPhiM(Jet_pt1,Jet_eta1,Jet_phi1,Jet_mass1)
+                corrRes0 = corrPt(hJet_pt0,hJet_eta0,hJet_mcPt0)
+                corrRes1 = corrPt(hJet_pt1,hJet_eta1,hJet_mcPt1)
+                hJet_rawPt0 *= corrRes0
+                hJet_rawPt1 *= corrRes1
+            hJet_rawPtArray[0][0] = hJet_rawPt0
+            hJet_rawPtArray[1][0] = hJet_rawPt1
+            hJ0.SetPtEtaPhiM(hJet_pt0,hJet_eta0,hJet_phi0,hJet_mass0)
+            hJ1.SetPtEtaPhiM(hJet_pt1,hJet_eta1,hJet_phi1,hJet_mass1)
             jetEt0 = hJ0.Et()
             jetEt1 = hJ1.Et()
             hJet_mt0 = hJ0.Mt()
@@ -482,27 +488,76 @@ for job in info:
                 HNoReg.dEta = abs(hJ0.Eta()-hJ1.Eta())
                 hJet_MtArray[0][0] = hJ0.Mt()
                 hJet_MtArray[1][0] = hJ1.Mt()
-                Jet_etarray[0][0] = hJ0.Et()
-                Jet_etarray[1][0] = hJ1.Et()
+                hJet_etarray[0][0] = hJ0.Et()
+                hJet_etarray[1][0] = hJ1.Et()
+                
+                print "tree.hJidx[0]", tree.hJidx[0]
+                print "tree.hJidx[1]", tree.hJidx[1]
+                print "v1", tree.Jet_pt[tree.hJidx[0]]
+#                print "v2", VHbb::evalJERBias(hJet_rawPt[hJidx[0]],hJet_mcPt[hJidx[0]],hJet_eta[hJidx[0]])
+                print "v3", tree.Jet_mass[tree.hJidx[0]]
+#                print "v4", VHbb::evalEtFromPtEtaPhiM(hJet_pt[hJidx],hJet_eta[hJidx],hJet_phi[hJidx],hJet_mass[hJidx]) with VHbb::evalEt(hJet_pt[hJidx[0]],hJet_eta[hJidx[0]],hJet_phi[hJidx[0]],VHbb::GetEnergy(hJet_pt[hJidx[0]],hJet_eta[hJidx[0]],hJet_mass[hJidx[0]]))
+#                print "v5", VHbb::evalMtFromPtEtaPhiM(hJet_pt[hJidx],hJet_eta[hJidx],hJet_phi[hJidx],hJet_mass[hJidx]) with VHbb::evalMt(hJet_pt[hJidx[0]],hJet_eta[hJidx[0]],hJet_phi[hJidx[0]],VHbb::GetEnergy(hJet_pt[hJidx[0]],hJet_eta[hJidx[0]],hJet_mass[hJidx[0]]))
+                print "v6", tree.Jet_leadTrackPt[tree.hJidx[0]]
+                print "v7", max(0,(tree.Jet_leptonPtRel[tree.hJidx[0]]))
+                print "v8", max(0,(tree.Jet_leptonDeltaR[tree.hJidx[0]]))
+                print "v9", max(0,(tree.Jet_leptonPt[tree.hJidx[0]]))
+                print "v10", tree.Jet_chEmEF[tree.hJidx[0]]
+                print "v11", tree.Jet_mult[tree.hJidx[0]]
+                print "v12", max(0,tree.Jet_vtxPt[tree.hJidx[0]])
+                print "v13", max(0,tree.Jet_vtxMass[tree.hJidx[0]])
+                print "v14", max(0,tree.Jet_vtx3DVal[tree.hJidx[0]])
+                print "v15", max(0,tree.Jet_vtx3DSig[tree.hJidx[0]])
+                
+                print "w1", tree.Jet_pt[tree.hJidx[1]]
+#                print "w2", VHbb::evalJERBias(hJet_rawPt[hJidx[1]],hJet_mcPt[hJidx[1]],hJet_eta[hJidx[1]])
+                print "w3", tree.Jet_mass[tree.hJidx[1]]
+#                print "w4", VHbb::evalEtFromPtEtaPhiM(hJet_pt[hJidx],hJet_eta[hJidx],hJet_phi[hJidx],hJet_mass[hJidx]) with VHbb::evalEt(hJet_pt[hJidx[1]],hJet_eta[hJidx[1]],hJet_phi[hJidx[1]],VHbb::GetEnergy(hJet_pt[hJidx[1]],hJet_eta[hJidx[1]],hJet_mass[hJidx[1]]))
+#                print "w5", VHbb::evalMtFromPtEtaPhiM(hJet_pt[hJidx],hJet_eta[hJidx],hJet_phi[hJidx],hJet_mass[hJidx]) with VHbb::evalMt(hJet_pt[hJidx[1]],hJet_eta[hJidx[1]],hJet_phi[hJidx[1]],VHbb::GetEnergy(hJet_pt[hJidx[1]],hJet_eta[hJidx[1]],hJet_mass[hJidx[1]]))
+                print "w6", tree.Jet_leadTrackPt[tree.hJidx[1]]
+                print "w7", max(0,(tree.Jet_leptonPtRel[tree.hJidx[1]]))
+                print "w8", max(0,(tree.Jet_leptonDeltaR[tree.hJidx[1]]))
+                print "w9", max(0,(tree.Jet_leptonPt[tree.hJidx[1]]))
+                print "w10", tree.Jet_chEmEF[tree.hJidx[1]]
+                print "w11", tree.Jet_mult[tree.hJidx[1]]
+                print "w12", max(0,tree.Jet_vtxPt[tree.hJidx[1]])
+                print "w13", max(0,tree.Jet_vtxMass[tree.hJidx[1]])
+                print "w14", max(0,tree.Jet_vtx3DVal[tree.hJidx[1]])
+                print "w15", max(0,tree.Jet_vtx3DSig[tree.hJidx[1]])
+
                 rPt0 = max(0.0001,readerJet0.EvaluateRegression( "jet0Regression" )[0])
                 rPt1 = max(0.0001,readerJet1.EvaluateRegression( "jet1Regression" )[0])
-                hJet_regWeight[0] = rPt0/Jet_pt0
-                hJet_regWeight[1] = rPt1/Jet_pt1
+                print 'Event %.0f' %(Event[0])
+                print "rPt0: ",rPt0
+                print "rPt1: ",rPt1
+                print "jetEt0: ",jetEt0
+                print "jetEt1: ",jetEt1
+                print "hJet_pt0: ",hJet_pt0
+                print "hJet_pt1: ",hJet_pt1
+                hJet_regWeight[0] = rPt0/hJet_pt0
+                hJet_regWeight[1] = rPt1/hJet_pt1
+                print "hJet_regWeight[0]: ",hJet_regWeight[0]
+                print "hJet_regWeight[1]: ",hJet_regWeight[1]
+                print "hJet_etarray[0]: ",hJet_etarray[0]
+                print "hJet_etarray[1]: ",hJet_etarray[1]
+                print "hJet_rawPtArray[0]: ",hJet_rawPtArray[0]
+                print "hJet_rawPtArray[1]: ",hJet_rawPtArray[1]
                 ##FIXME##########################################################################
-                rmass0 = Jet_mass0*hJet_regWeight[0]
-                rmass1 = Jet_mass1*hJet_regWeight[1]
-                rE0 = Jet_mass0*hJet_regWeight[0]
-                hJ0.SetPtEtaPhiM(rPt0,Jet_eta0,Jet_phi0,rmass0)
-                hJ1.SetPtEtaPhiM(rPt1,Jet_eta1,Jet_phi1,rmass1)
+                rmass0 = hJet_mass0*hJet_regWeight[0]
+                rmass1 = hJet_mass1*hJet_regWeight[1]
+                rE0 = hJ0.E()*hJet_regWeight[0]
+                rE1 = hJ0.E()*hJet_regWeight[1]
+                hJ0.SetPtEtaPhiE(rPt0,hJet_eta0,hJet_phi0,rE0)
+                hJ1.SetPtEtaPhiE(rPt1,hJet_eta1,hJet_phi1,rE1)
                 #######################
-                #hJ0.SetPtEtaPhiE(rPt0,Jet_eta0,Jet_phi0,rE0)
-                #hJ1.SetPtEtaPhiE(rPt1,Jet_eta1,Jet_phi1,rE1)
+                #hJ0.SetPtEtaPhiE(rPt0,hJet_eta0,hJet_phi0,rE0)
+                #hJ1.SetPtEtaPhiE(rPt1,hJet_eta1,hJet_phi1,rE1)
                 #print '###new####'
                 #print 'First regression %s' %rPt0
-                tree.Jet_pt[0] = rPt0
-                tree.Jet_pt[1] = rPt1
-                tree.Jet_mass[0] = rmass0
-                tree.Jet_mass[1] = rmass1
+                tree.Jet_pt[tree.hJidx[0]] = rPt0
+                tree.Jet_pt[tree.hJidx[1]] = rPt1
+                tree.Jet_mass[tree.hJidx[0]] = rmass0
+                tree.Jet_mass[tree.hJidx[1]] = rmass1
                 H.HiggsFlag = 1
                 H.mass = (hJ0+hJ1).M()
                 H_pt = (hJ0+hJ1).Pt()
@@ -517,17 +572,17 @@ for job in info:
                     print 'MET %.2f' %(METet[0])
                     print 'rho %.2f' %(rho[0])
                     for key, value in regDict.items():
-                        if not (value == 'Jet_MET_dPhi' or value == 'METet' or value == "rho" or value == "Jet_et" or value == 'Jet_mt' or value == 'Jet_rawPt'):
+                        if not (value == 'hJet_MET_dPhi' or value == 'METet' or value == "rho" or value == "hJet_et" or value == 'hJet_mt' or value == 'hJet_rawPt'):
                             print '%s 0: %.2f'%(key, theVars0[key][0])
                             print '%s 1: %.2f'%(key, theVars1[key][0])
                     for i in range(2):
                         print 'dPhi %.0f %.2f' %(i,hJet_MET_dPhiArray[i][0])
                     for i in range(2):
-                        print 'ptRaw %.0f %.2f' %(i,Jet_rawPtArray[i][0])
+                        print 'ptRaw %.0f %.2f' %(i,hJet_rawPtArray[i][0])
                     for i in range(2):
                         print 'Mt %.0f %.2f' %(i,hJet_MtArray[i][0])
                     for i in range(2):
-                        print 'Et %.0f %.2f' %(i,Jet_etarray[i][0])
+                        print 'Et %.0f %.2f' %(i,hJet_etarray[i][0])
                     print 'corr 0 %.2f' %(hJet_regWeight[0])
                     print 'corr 1 %.2f' %(hJet_regWeight[1])
                     print 'rPt0 %.2f' %(rPt0)
@@ -535,6 +590,9 @@ for job in info:
                     print 'rE0 %.2f' %(rE0)
                     print 'rE1 %.2f' %(rE1)
                     print 'Mass %.2f' %(H.mass)
+                    
+                    print 'hJet_pt0: ',hJet_pt0
+                    print 'hJet_pt1: ',hJet_pt1
                 #if fatHiggsFlag:
                     #hFJ0.SetPtEtaPhiE(fathFilterJets_pt0,fathFilterJets_eta0,fathFilterJets_phi0,fathFilterJets_e0)
                     #hFJ1.SetPtEtaPhiE(fathFilterJets_pt1,fathFilterJets_eta1,fathFilterJets_phi1,fathFilterJets_e1)
@@ -592,24 +650,24 @@ for job in info:
                 pt = float(tree.Jet_pt[i])
                 eta = float(tree.Jet_eta[i])
                 csv = float(tree.Jet_btagnew[i])
-                Jet_btagnewOld[i] = csv 
+                hJet_btagnewOld[i] = csv 
                 if anaTag == '7TeV':
                     tree.Jet_btagnew[i] = corrCSV(btagNom,csv,flavour)
-                    Jet_btagnewDown[i] = corrCSV(btagDown,csv,flavour)
-                    Jet_btagnewUp[i] = corrCSV(btagUp,csv,flavour) 
-                    Jet_btagnewFDown[i] = corrCSV(btagFDown,csv,flavour)
-                    Jet_btagnewFUp[i] = corrCSV(btagFUp,csv,flavour)
+                    hJet_btagnewDown[i] = corrCSV(btagDown,csv,flavour)
+                    hJet_btagnewUp[i] = corrCSV(btagUp,csv,flavour) 
+                    hJet_btagnewFDown[i] = corrCSV(btagFDown,csv,flavour)
+                    hJet_btagnewFUp[i] = corrCSV(btagFUp,csv,flavour)
                 else:
                     #tree.Jet_btagnew[i] = btagNom.reshape(eta,pt,csv,flavour)
-                    #Jet_btagnewDown[i] = btagDown.reshape(eta,pt,csv,flavour)
-                    #Jet_btagnewUp[i] = btagUp.reshape(eta,pt,csv,flavour) 
-                    #Jet_btagnewFDown[i] = btagFDown.reshape(eta,pt,csv,flavour)
-                    #Jet_btagnewFUp[i] = btagFUp.reshape(eta,pt,csv,flavour)
+                    #hJet_btagnewDown[i] = btagDown.reshape(eta,pt,csv,flavour)
+                    #hJet_btagnewUp[i] = btagUp.reshape(eta,pt,csv,flavour) 
+                    #hJet_btagnewFDown[i] = btagFDown.reshape(eta,pt,csv,flavour)
+                    #hJet_btagnewFUp[i] = btagFUp.reshape(eta,pt,csv,flavour)
                     tree.Jet_btagnew[i] = tree.Jet_btagnew[i]
-                    Jet_btagnewDown[i] = tree.Jet_btagnew[i]
-                    Jet_btagnewUp[i] = tree.Jet_btagnew[i]
-                    Jet_btagnewFDown[i] = tree.Jet_btagnew[i]
-                    Jet_btagnewFUp[i] = tree.Jet_btagnew[i]
+                    hJet_btagnewDown[i] = tree.Jet_btagnew[i]
+                    hJet_btagnewUp[i] = tree.Jet_btagnew[i]
+                    hJet_btagnewFDown[i] = tree.Jet_btagnew[i]
+                    hJet_btagnewFUp[i] = tree.Jet_btagnew[i]
 
             for updown in ['up','down']:
                 #JER
@@ -620,62 +678,62 @@ for job in info:
                     inner = -0.06
                     outer = -0.1
                 #Calculate
-                if abs(Jet_eta0)<1.1: res0 = inner
+                if abs(hJet_eta0)<1.1: res0 = inner
                 else: res0 = outer
-                if abs(Jet_eta1)<1.1: res1 = inner
+                if abs(hJet_eta1)<1.1: res1 = inner
                 else: res1 = outer
-                rPt0 = Jet_pt0 + (Jet_pt0-Jet_mcPt0)*res0
-                rPt1 = Jet_pt1 + (Jet_pt1-Jet_mcPt1)*res1
-                rE0 = Jet_mass0*rPt0/Jet_pt0
-                rE1 = Jet_mass1*rPt1/Jet_pt1
+                rPt0 = hJet_pt0 + (hJet_pt0-hJet_mcPt0)*res0
+                rPt1 = hJet_pt1 + (hJet_pt1-hJet_mcPt1)*res1
+                rE0 = hJet_mass0*rPt0/hJet_pt0
+                rE1 = hJet_mass1*rPt1/hJet_pt1
                 if applyRegression:
-                    hJ0.SetPtEtaPhiE(rPt0,Jet_eta0,Jet_phi0,rE0)
-                    hJ1.SetPtEtaPhiE(rPt1,Jet_eta1,Jet_phi1,rE1)
+                    hJ0.SetPtEtaPhiE(rPt0,hJet_eta0,hJet_phi0,rE0)
+                    hJ1.SetPtEtaPhiE(rPt1,hJet_eta1,hJet_phi1,rE1)
                     hJet_MtArray[0][0] = hJ0.Mt()
                     hJet_MtArray[1][0] = hJ1.Mt()
-                    Jet_etarray[0][0] = hJ0.Et()
-                    Jet_etarray[1][0] = hJ1.Et()
+                    hJet_etarray[0][0] = hJ0.Et()
+                    hJet_etarray[1][0] = hJ1.Et()
                     for key in regVars:
                         var = regDict[key]
-                        if key == 'Jet_pt' or key == 'Jet_e' or key == 'Jet_pt' or key == 'Jet_mass' or key == 'Jet_rawPt' or key =='VHbb::evalEtFromPtEtaPhiM(Jet_pt,Jet_eta,Jet_phi,Jet_mass)' or key =='VHbb::evalMtFromPtEtaPhiM(Jet_pt,Jet_eta,Jet_phi,Jet_mass)' or key == 'VHbb::evalJERBias(Jet_rawPt,Jet_mcPt[hJCidx],Jet_eta)':
-                            if key == 'Jet_rawPt':
-                                Jet_rawPtArray[0][0] = Jet_rawPt0*corrRes0*rPt0/Jet_pt0
-                                Jet_rawPtArray[1][0] = Jet_rawPt1*rPt1/Jet_pt1
-                            elif key == 'VHbb::evalJERBias(Jet_rawPt,Jet_mcPt[hJCidx],Jet_eta)':
-                                theVars0[key][0] = Jet_rawPt0*corrRes0*rPt0/Jet_pt0
-                                theVars1[key][0] = Jet_rawPt1*rPt1/Jet_pt1
-                            elif key == 'Jet_pt' or key == 'Jet_pt':
+                        if key == 'hJet_pt' or key == 'hJet_e' or key == 'hJet_pt' or key == 'hJet_mass' or key == 'hJet_rawPt' or key =='VHbb::evalEtFromPtEtaPhiM(hJet_pt,hJet_eta,hJet_phi,hJet_mass)' or key =='VHbb::evalMtFromPtEtaPhiM(hJet_pt,hJet_eta,hJet_phi,hJet_mass)' or key == 'VHbb::evalJERBias(hJet_rawPt,hJet_mcPt[hJCidx],hJet_eta)':
+                            if key == 'hJet_rawPt':
+                                hJet_rawPtArray[0][0] = hJet_rawPt0*corrRes0*rPt0/hJet_pt0
+                                hJet_rawPtArray[1][0] = hJet_rawPt1*rPt1/hJet_pt1
+                            elif key == 'VHbb::evalJERBias(hJet_rawPt,hJet_mcPt[hJCidx],hJet_eta)':
+                                theVars0[key][0] = hJet_rawPt0*corrRes0*rPt0/hJet_pt0
+                                theVars1[key][0] = hJet_rawPt1*rPt1/hJet_pt1
+                            elif key == 'hJet_pt' or key == 'hJet_pt':
                                 theVars0[key][0] = rPt0
                                 theVars1[key][0] = rPt1
-                            elif key == 'Jet_e' or key == 'Jet_mass':
+                            elif key == 'hJet_e' or key == 'hJet_mass':
                                 theVars0[key][0] = rE0
                                 theVars1[key][0] = rE1
-                            elif key == 'VHbb::evalEtFromPtEtaPhiM(Jet_pt,Jet_eta,Jet_phi,Jet_mass)':
+                            elif key == 'VHbb::evalEtFromPtEtaPhiM(hJet_pt,hJet_eta,hJet_phi,hJet_mass)':
                                 theVars0[key][0] = hJ0.Et()
                                 theVars1[key][0] = hJ1.Et()
-                            elif key == 'VHbb::evalMtFromPtEtaPhiM(Jet_pt,Jet_eta,Jet_phi,Jet_mass)':
+                            elif key == 'VHbb::evalMtFromPtEtaPhiM(hJet_pt,hJet_eta,hJet_phi,hJet_mass)':
                                 theVars0[key][0] = hJ0.Mt()
                                 theVars1[key][0] = hJ1.Mt()
                     rPt0 = max(0.0001,readerJet0.EvaluateRegression( "jet0Regression" )[0])
                     rPt1 = max(0.0001,readerJet1.EvaluateRegression( "jet1Regression" )[0])
-                    rE0 = Jet_mass0*rPt0/Jet_pt0
-                    rE1 = Jet_mass1*rPt1/Jet_pt1
-                hJ0.SetPtEtaPhiE(rPt0,Jet_eta0,Jet_phi0,rE0)
-                hJ1.SetPtEtaPhiE(rPt1,Jet_eta1,Jet_phi1,rE1)
+                    rE0 = hJet_mass0*rPt0/hJet_pt0
+                    rE1 = hJet_mass1*rPt1/hJet_pt1
+                hJ0.SetPtEtaPhiE(rPt0,hJet_eta0,hJet_phi0,rE0)
+                hJ1.SetPtEtaPhiE(rPt1,hJet_eta1,hJet_phi1,rE1)
                 #Set
                 if updown == 'up':
-                    Jet_pt_JER_up[0]=rPt0
-                    Jet_pt_JER_up[1]=rPt1
-                    Jet_mass_JER_up[0]=rE0
-                    Jet_mass_JER_up[1]=rE1
+                    hJet_pt_JER_up[0]=rPt0
+                    hJet_pt_JER_up[1]=rPt1
+                    hJet_mass_JER_up[0]=rE0
+                    hJet_mass_JER_up[1]=rE1
                     H_JER[0]=(hJ0+hJ1).M()
                     H_JER[2]=(hJ0+hJ1).Pt()
                     HVMass_JER_up[0] = (hJ0+hJ1+vect).M()
                 if updown == 'down':
-                    Jet_pt_JER_down[0]=rPt0
-                    Jet_pt_JER_down[1]=rPt1
-                    Jet_mass_JER_down[0]=rE0
-                    Jet_mass_JER_down[1]=rE1
+                    hJet_pt_JER_down[0]=rPt0
+                    hJet_pt_JER_down[1]=rPt1
+                    hJet_mass_JER_down[0]=rE0
+                    hJet_mass_JER_down[1]=rE1
                     H_JER[1]=(hJ0+hJ1).M()
                     H_JER[3]=(hJ0+hJ1).Pt()
                     HVMass_JER_down[0] = (hJ0+hJ1+vect).M()
@@ -686,63 +744,64 @@ for job in info:
                 if updown == 'down':
                     variation=-1
                 #calculate
-                rPt0 = Jet_pt0*(1+variation*Jet_mass0)
-                rPt1 = Jet_pt1*(1+variation*Jet_mass1)
-                rE0 = Jet_mass0*(1+variation*Jet_mass0)
-                rE1 = Jet_mass1*(1+variation*Jet_mass1)
+                rPt0 = hJet_pt0*(1+variation*hJet_mass0)
+                rPt1 = hJet_pt1*(1+variation*hJet_mass1)
+                rE0 = hJet_mass0*(1+variation*hJet_mass0)
+                rE1 = hJet_mass1*(1+variation*hJet_mass1)
                 #print 'res %s: %s' %(updown,rPt0)
                 if applyRegression:
-                    hJ0.SetPtEtaPhiE(rPt0,Jet_eta0,Jet_phi0,rE0)
-                    hJ1.SetPtEtaPhiE(rPt1,Jet_eta1,Jet_phi1,rE1)
+                    hJ0.SetPtEtaPhiE(rPt0,hJet_eta0,hJet_phi0,rE0)
+                    hJ1.SetPtEtaPhiE(rPt1,hJet_eta1,hJet_phi1,rE1)
                     hJet_MtArray[0][0] = hJ0.Mt()
                     hJet_MtArray[1][0] = hJ1.Mt()
-                    Jet_etarray[0][0] = hJ0.Et()
-                    Jet_etarray[1][0] = hJ1.Et()
+                    hJet_etarray[0][0] = hJ0.Et()
+                    hJet_etarray[1][0] = hJ1.Et()
                     for key in regVars:
+#                        print "regDict: ",regDict
                         var = regDict[key]
-                        if key == 'Jet_pt' or key == 'Jet_e' or key == 'Jet_pt' or key == 'Jet_mass' or key == 'Jet_rawPt' or key =='VHbb::evalEtFromPtEtaPhiM(Jet_pt,Jet_eta,Jet_phi,Jet_mass)' or key =='VHbb::evalMtFromPtEtaPhiM(Jet_pt,Jet_eta,Jet_phi,Jet_mass)' or key == 'VHbb::evalJERBias(Jet_rawPt,Jet_mcPt[hJCidx],Jet_eta)':
-                            if key == 'Jet_rawPt':
-                                Jet_rawPtArray[0][0] = Jet_rawPt0*(1+variation*Jet_mass0)
-                                Jet_rawPtArray[1][0] = Jet_rawPt1*(1+variation*Jet_mass1)
-                            elif key == 'VHbb::evalJERBias(Jet_rawPt,Jet_mcPt[hJCidx],Jet_eta)':
-                                theVars0[key][0] = Jet_rawPt0*(1+variation*Jet_mass0)
-                                theVars1[key][0] = Jet_rawPt1*(1+variation*Jet_mass1)
-                            elif var == 'Jet_pt' or var == 'Jet_pt[0]' or var == 'Jet_pt[1]' :
+                        if key == 'hJet_pt' or key == 'hJet_e' or key == 'hJet_pt' or key == 'hJet_mass' or key == 'hJet_rawPt' or key =='VHbb::evalEtFromPtEtaPhiM(hJet_pt,hJet_eta,hJet_phi,hJet_mass)' or key =='VHbb::evalMtFromPtEtaPhiM(hJet_pt,hJet_eta,hJet_phi,hJet_mass)' or key == 'VHbb::evalJERBias(hJet_rawPt,hJet_mcPt[hJCidx],hJet_eta)':
+                            if key == 'hJet_rawPt':
+                                hJet_rawPtArray[0][0] = hJet_rawPt0*(1+variation*hJet_mass0)
+                                hJet_rawPtArray[1][0] = hJet_rawPt1*(1+variation*hJet_mass1)
+                            elif key == 'VHbb::evalJERBias(hJet_rawPt,hJet_mcPt[hJCidx],hJet_eta)':
+                                theVars0[key][0] = hJet_rawPt0*(1+variation*hJet_mass0)
+                                theVars1[key][0] = hJet_rawPt1*(1+variation*hJet_mass1)
+                            elif var == 'hJet_pt' or var == 'hJet_pt[0]' or var == 'hJet_pt[1]' :
                                 theVars0[key][0] = rPt0
                                 theVars1[key][0] = rPt1
-                            elif var == 'Jet_e' or var == 'Jet_mass':
+                            elif var == 'hJet_e' or var == 'hJet_mass':
                                 theVars0[key][0] = rE0
                                 theVars1[key][0] = rE1
-                            elif var == 'Jet_mass':
+                            elif var == 'hJet_mass':
                                 theVars0[key][0] = rE0
                                 theVars1[key][0] = rE1
-                            elif key == 'VHbb::evalEtFromPtEtaPhiM(Jet_pt,Jet_eta,Jet_phi,Jet_mass)':
+                            elif key == 'VHbb::evalEtFromPtEtaPhiM(hJet_pt,hJet_eta,hJet_phi,hJet_mass)':
                                 theVars0[key][0] = hJ0.Et()
                                 theVars1[key][0] = hJ1.Et()
-                            elif key == 'VHbb::evalMtFromPtEtaPhiM(Jet_pt,Jet_eta,Jet_phi,Jet_mass)':
+                            elif key == 'VHbb::evalMtFromPtEtaPhiM(hJet_pt,hJet_eta,hJet_phi,hJet_mass)':
                                 theVars0[key][0] = hJ0.Mt()
                                 theVars1[key][0] = hJ1.Mt()
                     rPt0 = max(0.0001,readerJet0.EvaluateRegression( "jet0Regression" )[0])
                     rPt1 = max(0.0001,readerJet1.EvaluateRegression( "jet1Regression" )[0])
                     #print 'JES reg: %s' %rPt0
-                    rE0 = Jet_mass0*rPt0/Jet_pt0
-                    rE1 = Jet_mass1*rPt1/Jet_pt1
-                hJ0.SetPtEtaPhiE(rPt0,Jet_eta0,Jet_phi0,rE0)
-                hJ1.SetPtEtaPhiE(rPt1,Jet_eta1,Jet_phi1,rE1)
+                    rE0 = hJet_mass0*rPt0/hJet_pt0
+                    rE1 = hJet_mass1*rPt1/hJet_pt1
+                hJ0.SetPtEtaPhiE(rPt0,hJet_eta0,hJet_phi0,rE0)
+                hJ1.SetPtEtaPhiE(rPt1,hJet_eta1,hJet_phi1,rE1)
                 #Fill
                 if updown == 'up':
-                    Jet_pt_JES_up[0]=rPt0
-                    Jet_pt_JES_up[1]=rPt1
-                    Jet_mass_JES_up[0]=rE0
-                    Jet_mass_JES_up[1]=rE1
+                    hJet_pt_JES_up[0]=rPt0
+                    hJet_pt_JES_up[1]=rPt1
+                    hJet_mass_JES_up[0]=rE0
+                    hJet_mass_JES_up[1]=rE1
                     H_JES[0]=(hJ0+hJ1).M()
                     H_JES[2]=(hJ0+hJ1).Pt()
                     HVMass_JES_up[0] = (hJ0+hJ1+vect).M()
                 if updown == 'down':
-                    Jet_pt_JES_down[0]=rPt0
-                    Jet_pt_JES_down[1]=rPt1
-                    Jet_mass_JES_down[0]=rE0
-                    Jet_mass_JES_down[1]=rE1
+                    hJet_pt_JES_down[0]=rPt0
+                    hJet_pt_JES_down[1]=rPt1
+                    hJet_mass_JES_down[0]=rE0
+                    hJet_mass_JES_down[1]=rE1
                     H_JES[1]=(hJ0+hJ1).M()
                     H_JES[3]=(hJ0+hJ1).Pt()
                     HVMass_JES_down[0] = (hJ0+hJ1+vect).M()
