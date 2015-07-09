@@ -29,7 +29,7 @@ DY_sampleGroup=['DYlight','DYc','DY1b','DY2b']
 run_on_fileList=False
 
 ;############### Signal ############################
-[ZH_HToBB_ZToNuNu_M-125_13TeV_powheg-herwigpp__Phys14DR-AVE30BX50_tsg_PHYS14_ST_V1]
+[ZH_HToBB_ZToNuNu_M-125_13TeV_powheg-herwigpp__Phys14DR-PU40bx25_PHYS14_25_V1]
 infile = ZH_HToBB_ZToNuNu_M-125_13TeV_powheg-herwigpp__Phys14DR-AVE30BX50_tsg_PHYS14_ST_V1
 sampleName = ZH
 sampleType = SIG

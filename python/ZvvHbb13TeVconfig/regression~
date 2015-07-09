@@ -4,7 +4,7 @@ signals = ZH
 #signals = ZH110,ZH115,ZH120,ZH125,ZH130,ZH135
 #signals = ZH125
 #options = !H:!V:NTrees=2000::BoostType=Grad:Shrinkage=0.1:SeparationType=RegressionVariance:UseBaggedGrad:GradBaggingFraction=0.7:nCuts=20:MaxDepth=3:NNodesMax=15:IgnoreNegWeightsInTraining
-options = H:V
+options = H:V:NTrees=200:MinNodeSize=0.2%
 #options = !H:!V:NTrees=100::BoostType=Grad:Shrinkage=0.7:SeparationType=RegressionVariance:UseBaggedGrad:GradBaggingFraction=0.7:nCuts=20:MaxDepth=3:NNodesMax=5
 #
 #Jet_mass[hJidx]

@@ -9,11 +9,11 @@ List = paths general cuts training datacard plots lhe_weight
 Dname: heppy_13TeV
 #!! Working Directory
 #Wdir= /shome/perrozzi/test_merge_code/CMSSW_5_3_22_patch1/src
-Wdir= /home/sdonato/VHbbETH/
+Wdir= /scratch/sdonato/VHbb/ETH/CMSSW_7_4_5_ROOT5/src/
 #samplepath = gsidcap://t3se01.psi.ch:22128//pnfs/psi.ch/cms/trivcat/store/HBB_EDMNtuple/heppyV1/
-samplepath = /home/sdonato/VHbbETH/Xbb/python/samples/
+samplepath = /scratch/sdonato/VHbb/ETH/CMSSW_7_4_5_ROOT5/src/Xbb/python/samples/
 t3Private = <!Directories|vhbbpath!>/
-scratch = /home/sdonato/VHbbETH/
+scratch = /scratch/sdonato/
 
 #!! The directory with the code
 vhbbpath= <!Directories|Wdir!>/Xbb
@@ -41,7 +41,7 @@ limits: <!Directories|vhbbpath!>/Limit_expertAllnominal/
 #!! From where to take the raw samples and where to put the prepared trees:
 PREPin: <!Directories|samplepath!>
 #PREPout: gsidcap://t3se01.psi.ch:22128//pnfs/psi.ch/cms/trivcat/store/user/perrozzi/HBB_Ntuple/heppyV1/env
-PREPout: /home/sdonato/VHbbETH/Xbb/env/
+PREPout: /scratch/sdonato/VHbb/ETH/CMSSW_7_4_5_ROOT5/src/Xbb/env/
 #PREPout: <!Directories|scratch!>/
 
 #!! On which samples to apply the regression and write the sys and where to write the resulting trees:
