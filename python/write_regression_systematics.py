@@ -187,7 +187,7 @@ for job in info:
     #Regression branches
     applyRegression = True
     hJet_pt = array('f',[0]*2)
-    hJet_mass = array('f',[0]*2)
+#    hJet_mass = array('f',[0]*2)
     newtree.Branch( 'H', H , 'HiggsFlag/I:mass/F:pt/F:eta/F:phi/F:dR/F:dPhi/F:dEta/F' )
     newtree.Branch( 'HNoReg', HNoReg , 'HiggsFlag/I:mass/F:pt/F:eta/F:phi/F:dR/F:dPhi/F:dEta/F' )
     #FatHReg = array('f',[0]*2)
@@ -244,6 +244,7 @@ for job in info:
                 reader.AddVariable( key, hJet_rawPtArray[i] )
             else:
                 reader.AddVariable(key,theVars[key])
+#                reader.AddVariable(key,theVars[key],"",'F')
                 formula = regDict[key].replace("[0]","[%.0f]" %i)
                 print 'Adding var: %s with %s to readerJet%.0f' %(key,formula,i)
                 theForms['form_reg_%s_%.0f'%(key,i)] = ROOT.TTreeFormula("form_reg_%s_%.0f"%(key,i),'%s' %(formula),tree)
@@ -360,6 +361,16 @@ for job in info:
         hJet_ptMc = array('f',[0]*2)
         newtree.Branch('hJet_ptMc',hJet_ptMc,'hJet_ptMc[2]/F')
 
+        hJet_mass = array('f',[0]*2)
+        newtree.Branch('hJet_mass',hJet_mass,'hJet_mass[2]/F')
+
+        hJet_eta = array('f',[0]*2)
+        newtree.Branch('hJet_eta',hJet_eta,'hJet_eta[2]/F')
+
+        hJet_phi = array('f',[0]*2)
+        newtree.Branch('hJet_phi',hJet_phi,'hJet_phi[2]/F')
+
+
         #JES branches
         hJet_pt_JES_up = array('f',[0]*2)
         newtree.Branch('hJet_pt_JES_up',hJet_pt_JES_up,'hJet_pt_JES_up[2]/F')
@@ -405,8 +416,8 @@ for job in info:
         #iter=0
         
         
-#    for entry in range(0,nEntries):
-    for entry in range(0,1000):
+#    for entry in range(0,100):
+    for entry in range(0,nEntries):
             tree.GetEntry(entry)
 
             if job.type != 'DATA':
@@ -437,15 +448,14 @@ for job in info:
             hJet_pt = [hJet_pt0,hJet_pt1]
             hJet_mass0 = tree.Jet_mass[tree.hJidx[0]]
             hJet_mass1 = tree.Jet_mass[tree.hJidx[1]]
-            hJet_mass = [hJet_mass0,hJet_mass1]
-            hJet_eta0 = tree.Jet_eta[tree.hJidx[0]]
-            hJet_eta1 = tree.Jet_eta[tree.hJidx[1]]
             hJet_mcPt0 = tree.Jet_mcPt[tree.hJidx[0]]
             hJet_mcPt1 = tree.Jet_mcPt[tree.hJidx[1]]
             hJet_rawPt0 = tree.Jet_rawPt[tree.hJidx[0]]
             hJet_rawPt1 = tree.Jet_rawPt[tree.hJidx[1]]
             hJet_phi0 = tree.Jet_phi[tree.hJidx[0]]
             hJet_phi1 = tree.Jet_phi[tree.hJidx[1]]
+            hJet_eta0 = tree.Jet_eta[tree.hJidx[0]]
+            hJet_eta1 = tree.Jet_eta[tree.hJidx[1]]
             hJet_mass0 = tree.Jet_mass[tree.hJidx[0]]
             hJet_mass1 = tree.Jet_mass[tree.hJidx[1]]
 
@@ -453,6 +463,13 @@ for job in info:
             hJet_ptOld[1] = tree.Jet_pt[tree.hJidx[1]]
             hJet_ptMc[0] = tree.Jet_mcPt[tree.hJidx[0]]
             hJet_ptMc[1] = tree.Jet_mcPt[tree.hJidx[1]]
+            hJet_phi[0] = tree.Jet_phi[tree.hJidx[0]]
+            hJet_phi[1] = tree.Jet_phi[tree.hJidx[1]]
+            hJet_eta[0] = tree.Jet_eta[tree.hJidx[0]]
+            hJet_eta[1] = tree.Jet_eta[tree.hJidx[1]]
+            hJet_mass[0] = tree.Jet_mass[tree.hJidx[0]]
+            hJet_mass[1] = tree.Jet_mass[tree.hJidx[1]]
+
 
             #Filterjets
             #if fatHiggsFlag:
@@ -546,14 +563,14 @@ for job in info:
                 rPt0 = max(0.0001,readerJet0.EvaluateRegression( "jet0Regression" )[0])
                 rPt1 = max(0.0001,readerJet1.EvaluateRegression( "jet1Regression" )[0])
                 
-                print "hJidx0-hJidx1",tree.hJidx[0],tree.hJidx[1]
-                print "rPt0-rPt1",rPt0,rPt1
-                print "hJet_pt0-hJet_pt1",tree.Jet_pt[tree.hJidx[0]],tree.Jet_pt[tree.hJidx[1]]
-                print "Jet_pt0-1-2",tree.Jet_pt[0],tree.Jet_pt[1],
-                if tree.nJet>2:
-                    print tree.Jet_pt[2]
-                else:
-                    print
+#                print "hJidx0-hJidx1",tree.hJidx[0],tree.hJidx[1]
+#                print "rPt0-rPt1",rPt0,rPt1
+#                print "hJet_pt0-hJet_pt1",tree.Jet_pt[tree.hJidx[0]],tree.Jet_pt[tree.hJidx[1]]
+#                print "Jet_pt0-1-2",tree.Jet_pt[0],tree.Jet_pt[1],
+#                if tree.nJet>2:
+#                    print tree.Jet_pt[2]
+#                else:
+#                    print
 #                print 'Event %.0f' %(Event[0])
 #                print "rPt0: ",rPt0
 #                print "rPt1: ",rPt1
@@ -584,10 +601,10 @@ for job in info:
                 #hJ1.SetPtEtaPhiE(rPt1,hJet_eta1,hJet_phi1,rE1)
                 #print '###new####'
                 #print 'First regression %s' %rPt0
-                tree.Jet_pt[tree.hJidx[0]] = rPt0
-                tree.Jet_pt[tree.hJidx[1]] = rPt1
-                tree.Jet_mass[tree.hJidx[0]] = rmass0
-                tree.Jet_mass[tree.hJidx[1]] = rmass1
+#                tree.Jet_pt[tree.hJidx[0]] = rPt0
+#                tree.Jet_pt[tree.hJidx[1]] = rPt1
+#                tree.Jet_mass[tree.hJidx[0]] = rmass0
+#                tree.Jet_mass[tree.hJidx[1]] = rmass1
                 H.HiggsFlag = 1
                 H.mass = (hJ0+hJ1).M()
                 H.pt = (hJ0+hJ1).Pt()
@@ -694,7 +711,7 @@ for job in info:
                     #hJet_btagnewUp[i] = btagUp.reshape(eta,pt,csv,flavour) 
                     #hJet_btagnewFDown[i] = btagFDown.reshape(eta,pt,csv,flavour)
                     #hJet_btagnewFUp[i] = btagFUp.reshape(eta,pt,csv,flavour)
-                    tree.Jet_btagnew[i] = tree.Jet_btagnew[i]
+#                    tree.Jet_btagnew[i] = tree.Jet_btagnew[i]
                     hJet_btagnewDown[i] = tree.Jet_btagnew[i]
                     hJet_btagnewUp[i] = tree.Jet_btagnew[i]
                     hJet_btagnewFDown[i] = tree.Jet_btagnew[i]
@@ -846,6 +863,13 @@ for job in info:
             angleZZS_JER_down[0]=fAngleZZS_JER_down.EvalInstance()
             angleZZS_JES_up[0]=fAngleZZS_JES_up.EvalInstance()
             angleZZS_JES_down[0]=fAngleZZS_JES_down.EvalInstance()
+
+            print "hJet_eta[0]",hJet_eta[0] 
+            print "hJet_eta[1]",hJet_eta[1] 
+            print "hJet_phi[0]",hJet_phi[0] 
+            print "hJet_phi[1]",hJet_phi[1] 
+            print "hJet_mass[0]",hJet_mass[0] 
+            print "hJet_mass[1]",hJet_mass[1] 
             
             newtree.Fill()
                    

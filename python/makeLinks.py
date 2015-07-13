@@ -9,7 +9,7 @@ import os
 from os import listdir, mkdir
 from os.path import isfile, join
 mypath = '/gpfs/ddn/srm/cms/store/user/arizzi/VHBBHeppyV11/'
-output = '/scratch/sdonato/VHbb/ETH/CMSSW_7_4_5_ROOT5/src/Xbb/python/samples'
+output = '/scratch/sdonato/VHbb/ETH/CMSSW_7_1_5/src/Xbb/python/samples'
 try:
     mkdir(output)
 except:

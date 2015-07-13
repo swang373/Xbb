@@ -57,6 +57,7 @@ class TreeCache:
             return
         print ('trying to create',tmpSource)
         output = ROOT.TFile.Open(tmpSource,'create')
+        print ('reading',source)
         input = ROOT.TFile.Open(source,'read')
         output.cd()
         tree = input.Get(sample.tree)
