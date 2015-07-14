@@ -1,0 +1,72 @@
+[Plot_general]
+
+lumi = 1.
+
+#!!!_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*
+# MC stuff
+#!!!_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*
+
+#!! MC Samples to be used for the plotting. It also can be <!Samples|allBKG!>, where the header "Samples" is defined in general.
+samples: <!Samples|allBKG!>
+#samples: 'ZllHbb'
+
+#!! Groups for adding samples together and for the legend {'sampleName':'sampleGroup',...}. it also can be <!Samples|Group!>
+Group: <!Samples|Group!>
+
+#!! Here the order and the groups that will go in the plots. This influence the MC
+setup: Z,WJets
+setupLog: Z,WJets
+
+#!! Colors dictionary and legend
+colorDict: {'WJets':401,'Z':596}
+typLegendDict: {'WJets':'W+Jet','Z':'Z + Higgs'}
+
+#!! Add overflow bin in the plots
+addOverFlow = False
+
+#!! List of regions to be submitted in case of bacth submission
+List: ZLight_HighPt_Zee,ZLight_HighPt_Zmm,ZLight_HighPt
+
+#!! Possibility to add an additional blinding cut for the plot
+#addBlindingCut = EVENT.run < 203002
+
+#!! Variables definition
+# leptons_var:vleptons_ptMax,vleptons_etaMax
+jet_var:Hmass
+
+#!! Additional global variables
+BDT_plot_blind: False
+BDT_plot_log: False
+plot_mass = ZH125
+Normalize = False
+
+#!!!_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*
+# Plot regions
+#!!!_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*
+
+##!! Plot name should match the cut name in the cuts config
+#[Plot:WJets_test]
+##!! which data to compare to
+#Datas: WJets100to200
+#Normalize: <!Plot_general|Normalize!>
+#vars: <!Plot_general|jet_var!>
+##Signal: <!Plot_general|plot_mass!>
+##!! log scale
+#log: False
+##!! apply blinding cut
+#blind: False
+#
+#[Plot:ZllHbb_test]
+#Datas: ZllHbb
+#Normalize: <!Plot_general|Normalize!>
+#vars: <!Plot_general|jet_var!>
+#log: False
+#blind: False
+#
+#[Plot:ZandW_test]
+#Datas: ZllHbb WJets100to200
+#Normalize: <!Plot_general|Normalize!>
+#vars: <!Plot_general|jet_var!>
+#log: False
+#blind: False
+
