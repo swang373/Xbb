@@ -58,7 +58,6 @@ class ParseInfo:
         self.__fileslist=[]
         # print 'T3',T3,'samples_path',samples_path,'t3_path',t3_path
         if T3:
-            # ls = os.popen("lcg-ls -b -D srmv2 -l srm://t3se01.psi.ch:8443/srm/managerv2?SFN="+t3_path)
             ls = os.popen("ls "+t3_path)
         else:
             ls = os.popen("ls "+samples_path)
@@ -100,9 +99,8 @@ class ParseInfo:
                 _sample = _config_entry
                 self._list = config.sections()
 
-            sample = self.checkSplittedSample(_sample)
-            print 'sample',sample
-            if not config.has_option(sample,'infile'): continue
+            sample = self.checkSplittedSample(_sample)#Check if is splitted and remove the _
+            if not config.has_option(sample,'infile'): continue #Check if the sample has the infile parameter. If not skipp 
             infile = _sample
             sampleName = config.get(sample,'sampleName')
             

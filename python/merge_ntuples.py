@@ -2,9 +2,9 @@
 import sys,os,shutil,ROOT
 
 # TO BE CUSTOMIZED
-outdir = '/scratch/perrozzi/VHbb13TeVntuples/'
+outdir = '/scratch/perrozzi/VHbb13TeVntuples/V11/'
 
-filelist = '/shome/perrozzi/test_merge_code/CMSSW_5_3_22_patch1/src/Xbb/python/heppy13TeVconfig/filelist.log'
+filelist = '/shome/perrozzi/for_gael/CMSSW_5_3_22_patch1/src/Xbb/python/ntuple_filelist_V11.log'
 
 if not os.path.exists(outdir+'/merged'):
     os.makedirs(outdir+'/merged')
