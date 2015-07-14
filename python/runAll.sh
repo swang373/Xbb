@@ -50,7 +50,7 @@ print config.get('Directories','logpath')
 EOF`
 if [ ! -d $logpath ]
     then
-    mkdir $logpath
+    mkdir -p $logpath
 fi
 
 #-------------------------------------------------
