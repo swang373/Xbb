@@ -9,13 +9,13 @@ List = paths general cuts training datacards plots lhe_weight
 Dname: outputheppy13TeV
 #!! Working Directory
 Wdir: /shome/gaperrin/VHbb/CMSSW_5_3_22_patch1/src
-samplepath = dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/t3groups/ethz-higgs/run2/V11
+samplepath = dcap://t3se01.psi.ch:22125/pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/V12beta
 scratch = /scratch/gaperrin/VHbb/
 
 #!! The directory with the code
 vhbbpath= <!Directories|Wdir!>/Xbb
 #!! specifies the .cfg files with the Samples information
-samplesinfo: <!Directories|vhbbpath!>/python/gael13TeVconfig/samples_nosplit.cfg
+samplesinfo: <!Directories|vhbbpath!>/python/spring15_13TeVconfig/samples_nosplit.cfg
 #!! where you want to store the logfiles from job submissions
 logpath: /shome/gaperrin/VHbb/CMSSW_5_3_22_patch1/src/Xbb/python/outdir_test/gael13TeV/test_debug0/Logs/
 
