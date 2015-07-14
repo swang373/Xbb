@@ -14,12 +14,14 @@ samples: <!Samples|allBKG!>
 Group: <!Samples|Group!>
 
 #!! Here the order and the groups that will go in the plots. This influence the MC
-setup: Z,WJets
-setupLog: Z,WJets
+setup: Z_
+#setup: Z,WJets
+#setupLog: Z,WJets
 
 #!! Colors dictionary and legend
-colorDict: {'WJets':401,'Z':596}
-typLegendDict: {'WJets':'W+Jet','Z':'Z + Higgs'}
+#colorDict: {'WJets':401,'Z':596}
+colorDict: {'Z_':401}
+typLegendDict: {'Z_':'DYLL'}
 
 #!! Add overflow bin in the plots
 addOverFlow = False
@@ -43,6 +45,19 @@ Normalize = False
 #!!!_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*
 # Plot regions
 #!!!_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*
+
+
+##!! Plot name should match the cut name in the cuts config
+[Plot:Zregion]
+##!! which data to compare to
+Datas: DYLL
+Normalize: <!Plot_general|Normalize!>
+vars: <!Plot_general|jet_var!>
+#Signal: <!Plot_general|plot_mass!>
+#!! log scale
+log: False
+#!! apply blinding cut
+blind: False
 
 ##!! Plot name should match the cut name in the cuts config
 #[Plot:WJets_test]

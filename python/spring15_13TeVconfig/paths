@@ -17,11 +17,13 @@ vhbbpath= <!Directories|Wdir!>/Xbb
 #!! specifies the .cfg files with the Samples information
 samplesinfo: <!Directories|vhbbpath!>/python/spring15_13TeVconfig/samples_nosplit.cfg
 #!! where you want to store the logfiles from job submissions
+#logpath: /shome/gaperrin/VHbb/CMSSW_7_4_7/src/Xbb/python/outputheppy13TeV/spring15_13TeV/Logs/
 logpath: /shome/gaperrin/VHbb/CMSSW_7_4_7/src/Xbb/python/outputheppy13TeV//spring15_13TeV/Logs/
 
 #!! from which samples to plot and where to save the plots
 plottingSamples: <!Directories|PREPout!>
-plotpath: /shome/gaperrin/VHbb/CMSSW_7_4_7/src/Xbb/python/outputheppy13TeV/spring15_13TeV/Plots/
+#plotpath: /shome/gaperrin/VHbb/CMSSW_7_4_7/src/Xbb/python/outputheppy13TeV/spring15_13TeV/Plots/
+plotpath: /shome/gaperrin/VHbb/CMSSW_7_4_7/src/Xbb/python/outputheppy13TeV//spring15_13TeV/Plots/
 
 #!! basedir for tagged folder structure
 tagDir: <!Directories|vhbbpath!>/python/<!Directories|Dname!>/
@@ -32,12 +34,14 @@ tmpSamples = <!Directories|PREPout!>/skims/
 #!! from which samples to make the DCs and where to save the DCs
 dcSamples: <!Directories|MVAout!>/
 #limits: <!Directories|vhbbpath!>/Limit_expertAllnominal_controlRegions_pure_highlow/
-limits: /shome/gaperrin/VHbb/CMSSW_7_4_7/src/Xbb/python/outputheppy13TeV/spring15_13TeV/Limits/
+#limits: /shome/gaperrin/VHbb/CMSSW_7_4_7/src/Xbb/python/outputheppy13TeV//spring15_13TeV/Limits/
+limits: /shome/gaperrin/VHbb/CMSSW_7_4_7/src/Xbb/python/outputheppy13TeV//spring15_13TeV/Limits/
 
 #!! From where to take the raw samples and where to put the prepared trees:
 #PREPin: <!Directories|samplepath!> path for Wjet
 PREPin: dcap://t3se01.psi.ch:22125/pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/V12beta
 PREPout: root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/gaperrin/VHbb_test/spring15_13TeV
+
 #PREPout: <!Directories|scratch!>/
 
 #!! On which samples to apply the regression and write the sys and where to write the resulting trees:
@@ -54,3 +58,4 @@ MVAout: <!Directories|MVAin!>/MVAout_v0.0.0/
 #!! On which samples to evaluate the MVAon and where to write the resulting trees:
 SPLITin: <!Directories|samplepath!>/env/sys/
 SPLITout: <!Directories|SYSout!>/split/
+

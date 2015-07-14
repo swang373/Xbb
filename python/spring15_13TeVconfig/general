@@ -117,10 +117,10 @@ allBKG_nolhe: <!Samples|DrellYan_nolhe!>,<!Samples|Diboson!>,<!Samples|Top!>,<!S
 #allBKG: <!Samples|Diboson!>,<!Samples|Top!>,<!Samples|s_Top!>
 BKG_VV_training: <!Samples|DrellYan!>,<!Samples|Top!>,<!Samples|s_Top!>,'WW','WZ'
 
-#allBKG:'WJets100to200'
 #allBKG:'DYLL' 'WJets100to200'
+allBKG:'Z_' 
 #Group: {'WJets100to200':'WJets','ZllHbb':'Z'}
-#Group: {'ZllHbb':'ZH'}
+Group: {'DYLL':'Z_'}
 
 [Weights]
 #5fb:
