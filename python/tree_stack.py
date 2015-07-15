@@ -26,6 +26,8 @@ from myutils import BetterConfigParser, printc, ParseInfo, mvainfo, StackMaker, 
 
 print 'opts.config',opts.config
 
+print 'tree_stack_1'
+
 #adds the file vhbbPlotDef.ini to the config list
 vhbbPlotDef=opts.config[0].split('/')[0]+'/vhbbPlotDef.ini'
 opts.config.append(vhbbPlotDef)#adds it to the config list
@@ -45,6 +47,7 @@ if config.has_option('Plot_general','addBlindingCut'):#contained in plots, cut o
 
 
 #get locations:
+print 'tree_stack_2'
 Wdir=config.get('Directories','Wdir')# working direcoty containing the ouput
 samplesinfo=config.get('Directories','samplesinfo')# samples_nosplit.cfg
 
@@ -54,10 +57,12 @@ section='Plot:%s'%region
 print 'section is ', section 
 
 info = ParseInfo(samplesinfo,path) #creates a list of Samples by reading the info in samples_nosplit.cfg and the conentent of the path.
+print 'tree_stack3'
 
 #----------Histo from trees------------
 #Get the selections and the samples
 def doPlot():
+    print 'DOPLOT1'
 
     vars = (config.get(section, 'vars')).split(',')# get the variables to be ploted for all the regions
     # print 'vars',vars
@@ -77,6 +82,7 @@ def doPlot():
     GroupDict = eval(config.get('Plot_general','Group'))#Contained in plots. Listed in general, under Group [Samples] group. This is a dictionnary that descriebes what samples should share the same color under the stack plot.
 
     #GETALL AT ONCE
+    print 'DOPLOT2'
     options = []
     Stacks = []
     for i in range(len(vars)):# loop over the list of variables to be ploted in each reagion
@@ -87,6 +93,7 @@ def doPlot():
     Plotter=HistoMaker(mcsamples+datasamples,path,config,options,GroupDict)
 
     #print '\nProducing Plot of %s\n'%vars[v]
+    print 'DOPLOT3'
     #! Create lists of the histos for each Sample (each Sample containing one histogram for each variable )
     Lhistos = [[] for _ in range(0,len(vars))]
     Ltyps = [[] for _ in range(0,len(vars))]
@@ -95,6 +102,7 @@ def doPlot():
     Ldatanames = [[] for _ in range(0,len(vars))]
 
     #! Sums up the luminosity of the data:
+    print 'DOPLOT4'
     lumicounter=0.
     lumi=0.
     for job in datasamples:
@@ -111,6 +119,7 @@ def doPlot():
 
     #! Get the histogram from Plotter
     #! Get the mc histograms
+    print 'DOPLOT5'
     for job in mcsamples:
         print 'job.name',job.name
         #hTempList, typList = Plotter.get_histos_from_tree(job)
@@ -130,17 +139,25 @@ def doPlot():
 
     print 'datasamples',datasamples
     #! Get the data histograms
+    print 'DOPLOT6'
     for job in datasamples:
+        print 'DOPLOT6.0'
         if addBlindingCut:
+            print 'DOPLOT6.05'
             dDictList = Plotter.get_histos_from_tree(job,config.get('Cuts',region)+' & ' + addBlindingCut)
+            print 'DOPLOT6.1'
         else:
+            print 'DOPLOT6.15'
             dDictList = Plotter.get_histos_from_tree(job)
+            print 'DOPLOT6.2'
 	    #! add the variables list for each job (Samples)
         for v in range(0,len(vars)):
+            print 'DOPLOT6.3'
             Ldatas[v].append(dDictList[v].values()[0])
             Ldatatyps[v].append(dDictList[v].keys()[0])
             Ldatanames[v].append(job.name)
 
+    print 'DOPLOT7'
     for v in range(0,len(vars)):
 
         print "The number of variables is ", len(vars)
@@ -165,6 +182,8 @@ def doPlot():
         Stacks[v].options['pdfName'] = Stacks[v].options['pdfName'].replace('.pdf','_norm.pdf')
         Stacks[v].doPlot()
         print 'i am done!\n'
+    print 'DOPLOT END'
 #----------------------------------------------------
 doPlot()
+print 'tree_stack4'
 sys.exit(0)

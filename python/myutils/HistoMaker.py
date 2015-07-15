@@ -34,14 +34,14 @@ class HistoMaker:
 
     def get_histos_from_tree(self,job,cutOverWrite=None):
         
-        print "Histomaker debug1"
+        print "get_histo_from_tree_debug1"
         '''Function that produce the trees from a HistoMaker'''
         if self.lumi == 0: 
             raise Exception("You're trying to plot with no lumi")
          
         hTreeList=[]
 
-        print "Histomaker debug2"
+        print "get_histo_from_tree_debug2"
         #get the conversion rate in case of BDT plots
         TrainFlag = eval(self.config.get('Analysis','TrainFlag'))
         BDT_add_cut='EventForTraining == 0'
@@ -49,14 +49,15 @@ class HistoMaker:
         plot_path = self.config.get('Directories','plotpath')
         addOverFlow=eval(self.config.get('Plot_general','addOverFlow'))
 
-        print "Histomaker debug3"
+        print "get_histo_from_tree_debug3"
         # get all Histos at once
+	print "The tree in the job is ", job.tree
         CuttedTree = self.tc.get_tree(job,'1')# retrieve the cuted tree
         # print 'CuttedTree.GetEntries()',CuttedTree.GetEntries()
         # print 'begin self.optionsList',self.optionsList
         # print 'end self.optionsList'
 
-        print "Histomaker debug4"
+        print "get_histo_from_tree_debug4"
 	#! start the loop over variables (descriebed in options) 
         for options in self.optionsList:
             name=job.name
