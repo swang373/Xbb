@@ -127,9 +127,7 @@ class TreeCache:
             self.__trim_tree(job)
 
     def get_tree(self, sample, cut):
-        print('get_tree1')
-	_tmp = 'get_tree: the temp sample is '+ '%s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name])
-	#_tmp = _tmp.replace('root://t3dcachedb03.psi.ch:1094/','dcap://t3se01.psi.ch:22125/')
+        print('input file %s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]))
         input = ROOT.TFile.Open('%s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]),'read')
         #input = ROOT.TFile.Open(_tmp,'read')
 	print('get_tree: the temp sample is ', _tmp)
@@ -154,7 +152,7 @@ class TreeCache:
             cut += '& (%s)' %(sample.subcut)
 	    print('cut is', cut)
         ROOT.gROOT.cd()
-        print('get_tree5')
+        print('getting the tree after applying cuts')
         cuttedTree=tree.CopyTree(cut)
         print('get_tree6')
         # cuttedTree.SetDirectory(0)
