@@ -127,6 +127,7 @@ class TreeCache:
             self.__trim_tree(job)
 
     def get_tree(self, sample, cut):
+        print('input file %s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]))
         input = ROOT.TFile.Open('%s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]),'read')
         tree = input.Get(sample.tree)
         # CountWithPU = input.Get("CountWithPU")
@@ -145,6 +146,7 @@ class TreeCache:
         if sample.subsample:
             cut += '& (%s)' %(sample.subcut)
         ROOT.gROOT.cd()
+        print('getting the tree after applying cuts')
         cuttedTree=tree.CopyTree(cut)
         # cuttedTree.SetDirectory(0)
         input.Close()
