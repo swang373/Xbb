@@ -344,6 +344,8 @@ class StackMaker:
         if self.addFlag2:
             tAddFlag2 = self.myText(self.addFlag2,0.17,0.73)
 
+        print 'doPlot debug10'
+
         unten.cd()
         ROOT.gPad.SetTicks(1,1)
 
@@ -354,9 +356,11 @@ class StackMaker:
         l2.SetFillStyle(4000)
         l2.SetTextSize(0.075)
         l2.SetNColumns(2)
+        print 'doPlot debug11'
 
 
         ratio, error = getRatio(d1,allMC,self.xMin,self.xMax,"",self.maxRatioUncert)
+        print 'doPlot debug11.5'
         ksScore = d1.KolmogorovTest( allMC )
         chiScore = d1.Chi2Test( allMC , "UWCHI2/NDF")
         print ksScore
@@ -376,6 +380,7 @@ class StackMaker:
             allMC.Fit(fitMC,"R")
 
 
+        print 'doPlot debug12'
         if not self.AddErrors == None:
             self.AddErrors.SetLineColor(1)
             self.AddErrors.SetFillColor(5)
@@ -395,6 +400,7 @@ class StackMaker:
         m_one_line = ROOT.TLine(self.xMin,1,self.xMax,1)
         m_one_line.SetLineStyle(ROOT.kSolid)
         m_one_line.Draw("Same")
+        print 'doPlot debug13'
 
         if not self.blind:
             #tKsChi = self.myText("#chi_{#nu}^{2} = %.3f K_{s} = %.3f"%(chiScore,ksScore),0.17,0.9,1.5)
@@ -435,6 +441,7 @@ class StackMaker:
         #d1.Write()
         #fOut.Close()
         self.doCompPlot(allStack,l)
+        print 'doPlot debug end'
 
     def doSubPlot(self,signal):
         

@@ -127,8 +127,14 @@ class TreeCache:
             self.__trim_tree(job)
 
     def get_tree(self, sample, cut):
+        print('get_tree1')
+	_tmp = 'get_tree: the temp sample is '+ '%s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name])
+	#_tmp = _tmp.replace('root://t3dcachedb03.psi.ch:1094/','dcap://t3se01.psi.ch:22125/')
         input = ROOT.TFile.Open('%s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]),'read')
+        #input = ROOT.TFile.Open(_tmp,'read')
+	print('get_tree: the temp sample is ', _tmp)
         tree = input.Get(sample.tree)
+	#print('The name of the tree is ', tree.GetName())
         # CountWithPU = input.Get("CountWithPU")
         # CountWithPU2011B = input.Get("CountWithPU2011B")
         # sample.count_with_PU = CountWithPU.GetBinContent(1) 
@@ -138,18 +144,24 @@ class TreeCache:
             CountWithPU2011B = input.Get("CountWithPU2011B")
             sample.count_with_PU = CountWithPU.GetBinContent(1) 
             sample.count_with_PU2011B = CountWithPU2011B.GetBinContent(1) 
+            print('get_tree2')
         except:
             print('WARNING: No Count with PU histograms available. Using 1.')
             sample.count_with_PU = 1.
             sample.count_with_PU2011B = 1.
+            print('get_tree4')
         if sample.subsample:
             cut += '& (%s)' %(sample.subcut)
+	    print('cut is', cut)
         ROOT.gROOT.cd()
+        print('get_tree5')
         cuttedTree=tree.CopyTree(cut)
+        print('get_tree6')
         # cuttedTree.SetDirectory(0)
         input.Close()
         del input
         del tree
+        print('get_tree7')
         return cuttedTree
 
     @staticmethod
