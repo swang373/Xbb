@@ -27,7 +27,7 @@ typLegendDict: {'Z_':'DYLL'}
 addOverFlow = False
 
 #!! List of regions to be submitted in case of bacth submission
-List: ZLight_HighPt_Zee,ZLight_HighPt_Zmm,ZLight_HighPt
+List: Zregion
 
 #!! Possibility to add an additional blinding cut for the plot
 #addBlindingCut = EVENT.run < 203002
