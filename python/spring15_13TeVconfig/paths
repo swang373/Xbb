@@ -27,7 +27,7 @@ plotpath: /shome/gaperrin/VHbb/CMSSW_7_4_3/src/Xbb/python/outputheppy13TeV//spri
 tagDir: <!Directories|vhbbpath!>/python/<!Directories|Dname!>/
 
 #!! cached files
-tmpSamples = <!Directories|PREPout!>/skims/
+tmpSamples = <!Directories|PREPout!>/skims2/
 #tmpSamples = root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/gaperrin/VHbb_test/spring15_13TeV/skims/
 
 
