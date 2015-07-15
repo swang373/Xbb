@@ -34,16 +34,16 @@ def copytree(pathIN,pathOUT,prefix,newprefix,file,Aprefix,Acut):
     my_user = os.popen("whoami").read().strip('\n').strip('\r')+'/'
     if my_user in mkdir_command3:
       print 'mkdir_command3',mkdir_command3
-      subprocess.call([mkdir_command3], shell=True)# delete the files already created ?     
+      subprocess.call(['srmmkdir '+mkdir_command3], shell=True)# delete the files already created ?     
     if my_user in mkdir_command2:
       print 'mkdir_command2',mkdir_command2
-      subprocess.call([mkdir_command2], shell=True)# delete the files already created ?     
+      subprocess.call(['srmmkdir '+mkdir_command2], shell=True)# delete the files already created ?     
     if my_user in mkdir_command1:
       print 'mkdir_command1',mkdir_command1
-      subprocess.call([mkdir_command1], shell=True)# delete the files already created ?     
+      subprocess.call(['srmmkdir '+mkdir_command1], shell=True)# delete the files already created ?     
     if my_user in mkdir_command:
       print 'mkdir_command',mkdir_command
-      subprocess.call([mkdir_command], shell=True)# delete the files already created ?     
+      subprocess.call(['srmmkdir '+mkdir_command], shell=True)# delete the files already created ?     
     
     command = 'srmrm %s/%s%s%s.root' %(del_protocol,newprefix,Aprefix,file)# command to delete previous files ?
     print(command)
