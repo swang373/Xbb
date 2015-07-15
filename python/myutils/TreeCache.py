@@ -130,7 +130,6 @@ class TreeCache:
         print('input file %s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]))
         input = ROOT.TFile.Open('%s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]),'read')
         #input = ROOT.TFile.Open(_tmp,'read')
-	print('get_tree: the temp sample is ', _tmp)
         tree = input.Get(sample.tree)
 	#print('The name of the tree is ', tree.GetName())
         # CountWithPU = input.Get("CountWithPU")
