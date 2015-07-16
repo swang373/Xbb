@@ -15,8 +15,8 @@ Group: <!Samples|Group!>
 
 #!! Here the order and the groups that will go in the plots. This influence the MC
 setup: Z_,TT,W,WZ,Hbb,ZZ
-#setup: Z,WJets
-#setupLog: Z,WJets
+setupLog: Hbb,W,WZ,ZZ,TT,Z_
+#setup: TT,W,WZ,Hbb,ZZ
 
 #!! Colors dictionary and legend
 #colorDict: {'WJets':401,'Z':596}
@@ -69,7 +69,7 @@ Normalize: <!Plot_general|Normalize!>
 vars: <!Plot_general|jet_var!>
 #Signal: <!Plot_general|plot_mass!>
 #!! log scale
-log: False
+log: True 
 #!! apply blinding cut
 blind: False
 
