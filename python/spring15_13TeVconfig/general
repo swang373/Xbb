@@ -118,9 +118,10 @@ allBKG_nolhe: <!Samples|DrellYan_nolhe!>,<!Samples|Diboson!>,<!Samples|Top!>,<!S
 BKG_VV_training: <!Samples|DrellYan!>,<!Samples|Top!>,<!Samples|s_Top!>,'WW','WZ'
 
 #allBKG:'DYLL' 'WJets100to200'
-allBKG:'DYLL' 
+allBKG:'DYLL', 'TTJets', 'WJets', 'WZ', 'ZHbb', 'ZZ'
 #Group: {'WJets100to200':'WJets','ZllHbb':'Z'}
-Group: {'DYLL':'Z_'}
+Group: {'DYLL':'Z_','TTJets':'TT','WJets':'W','WZ':'WZ','ZHbb':'Hbb','ZZ':'ZZ'}
+Datas: DYLL TTJets WJets WZ ZHbb ZZ
 
 [Weights]
 #5fb:

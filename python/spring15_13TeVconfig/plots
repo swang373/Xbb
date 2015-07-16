@@ -14,14 +14,16 @@ samples: <!Samples|allBKG!>
 Group: <!Samples|Group!>
 
 #!! Here the order and the groups that will go in the plots. This influence the MC
-setup: Z_
+setup: Z_,TT,W,WZ,Hbb,ZZ
 #setup: Z,WJets
 #setupLog: Z,WJets
 
 #!! Colors dictionary and legend
 #colorDict: {'WJets':401,'Z':596}
-colorDict: {'Z_':401}
-typLegendDict: {'Z_':'DYLL'}
+colorDict: {'Z_':401,'TT':402,'W':5,'WZ':41,'Hbb':596,'ZZ':840}
+typLegendDict: {'Z_':'DYmumu','TT':'TTJets','W':'WJets','WZ':'WZ','Hbb':'Hbb','ZZ':'ZZ'}
+#colorDict: {'Z_':401}
+#typLegendDict: {'Z_':'DYLL'}
 
 #!! Add overflow bin in the plots
 addOverFlow = False
@@ -34,7 +36,7 @@ List: Zregion
 
 #!! Variables definition
 # leptons_var:vleptons_ptMax,vleptons_etaMax
-jet_var:Hmass
+jet_var: Hmass,Vpt,Hpt
 
 #!! Additional global variables
 BDT_plot_blind: False
@@ -47,10 +49,22 @@ Normalize = False
 #!!!_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*
 
 
-##!! Plot name should match the cut name in the cuts config
+##!! Dummy region to test code
 [Plot:Zregion]
 ##!! which data to compare to
 Datas: DYLL
+Normalize: <!Plot_general|Normalize!>
+vars: <!Plot_general|jet_var!>
+#Signal: <!Plot_general|plot_mass!>
+#!! log scale
+log: False
+#!! apply blinding cut
+blind: False
+
+##!! Plot name should match the cut name in the cuts config
+[Plot:AllSamples]
+##!! which data to compare to
+Datas: DYLL TTJets WJets WZ ZHbb ZZ
 Normalize: <!Plot_general|Normalize!>
 vars: <!Plot_general|jet_var!>
 #Signal: <!Plot_general|plot_mass!>
