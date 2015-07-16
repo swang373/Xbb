@@ -29,7 +29,7 @@ typLegendDict: {'Z_':'DYmumu','TT':'TTJets','W':'WJets','WZ':'WZ','Hbb':'Hbb','Z
 addOverFlow = False
 
 #!! List of regions to be submitted in case of bacth submission
-List: Zregion
+List: AllSamples
 
 #!! Possibility to add an additional blinding cut for the plot
 #addBlindingCut = EVENT.run < 203002
