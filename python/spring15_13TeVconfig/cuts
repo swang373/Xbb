@@ -385,5 +385,6 @@ triggerMM = (triggerFlags[14]>0 || triggerFlags[21]>0 || triggerFlags[22]>0 || t
 #!! Tests
 #!! ---------------------
 
-Zregion = V_pt > 50.
 AllSamples = V_pt > 0.
+#VPt100 = (V_pt > 100 & H_pt > 100 & abs(V_phi - H_phi) < 2.9)
+VPt100 = (V_pt > 100 & H_pt > 100 )
