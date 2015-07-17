@@ -73,7 +73,8 @@ class StackMaker:
         self.typLegendDict=eval(config.get('Plot_general','typLegendDict'))
         self.anaTag = config.get("Analysis","tag")
         self.xAxis = config.get('plotDef:%s'%var,'xAxis')
-        self.hname = self.name.replace('.','')
+        # self.hname = self.name.replace('.','')
+        self.hname = var
         print ('self.hname',self.hname)
         self.options = {'var': self.name,'name':self.hname,'xAxis': self.xAxis, 'nBins': self.nBins, 'xMin': self.xMin, 'xMax': self.xMax,'pdfName': '%s_%s_%s.pdf'%(region,var,self.mass),'cut':cut,'mass': self.mass, 'data': data, 'blind': self.blind}
         if config.has_option('Weights','weightF'):
