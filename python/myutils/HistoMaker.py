@@ -29,6 +29,8 @@ class HistoMaker:
         self.mybinning = None
         self.GroupDict=GroupDict
         self.calc_rebin_flag = False
+        print('current directory while compiling external macro',os.getcwd())
+        ROOT.gSystem.CompileMacro("../plugins/VH_pt.C")
         VHbbNameSpace=config.get('VHbbNameSpace','library')
         ROOT.gSystem.Load(VHbbNameSpace)
 
