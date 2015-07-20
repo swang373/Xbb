@@ -133,7 +133,7 @@ Datas: DYLL TTJets WJets WZ ZHbb ZZ
 #weightF: (puWeight*weightTrig2012*lheWeight)
 # weightF: (puWeight*weightTrig2012*lheWeight*weightSignalQCD*VHbb::ewkAtlas8TeVZllH(genH_pt,genZ.pt)*VHbb::ptWeightDY(lheV_pt)*VHbb::mueEff(Vtype,vLepton_eta[0],vLepton_eta[1],vLepton_pt[0],vLepton_pt[1]))
 # weightF: (puWeight*VHbb::ewkAtlas8TeVZllH(GenHiggsBoson_pt,GenVbosons_pt)*VHbb::ptWeightDY(lheV_pt)*VHbb::mueEff(Vtype,vLepton_eta[0],vLepton_eta[1],vLepton_pt[0],vLepton_pt[1]))
-weightF: (puWeight*genWeight/TMath::Abs(genWeight))
+weightF: (puWeight*genWeight)
 
 weightF_sys_UP: (puWeightP*weightTrig2012*lheWeight*weightSignalQCD*VHbb::ewkAtlas8TeVZllH(genH_pt,genZ.pt)*VHbb::ptWeightDY(lheV_pt)*VHbb::mueEff(Vtype,vLepton_eta[0],vLepton_eta[1],vLepton_pt[0],vLepton_pt[1]))
 weightF_sys_DOWN: (puWeightM*weightTrig2012*lheWeight*weightSignalQCD*VHbb::ewkAtlas8TeVZllH(genH_pt,genZ.pt)*VHbb::ptWeightDY(lheV_pt)*VHbb::mueEff(Vtype,vLepton_eta[0],vLepton_eta[1],vLepton_pt[0],vLepton_pt[1]))
