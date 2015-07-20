@@ -11,11 +11,11 @@ from copy import copy
 class HistoMaker:
     def __init__(self, samples, path, config, optionsList,GroupDict=None):
         #samples: list of the samples, data and mc
-	#path: location of the samples used to perform the plot
-	#config: list of the configuration files
-	#optionsList: Dictionnary containing information on vars, including the cuts
-	#! Read arguments and initialise variables
-	print "The options are ", optionsList
+        #path: location of the samples used to perform the plot
+        #config: list of the configuration files
+        #optionsList: Dictionnary containing information on vars, including the cuts
+        #! Read arguments and initialise variables
+        print "The options are ", optionsList
         self.path = path
         self.config = config
         self.optionsList = optionsList
@@ -51,14 +51,14 @@ class HistoMaker:
 
         print "get_histo_from_tree_debug3"
         # get all Histos at once
-	print "The tree in the job is ", job.tree
+        print "The tree in the job is ", job.tree
         CuttedTree = self.tc.get_tree(job,'1')# retrieve the cuted tree
         # print 'CuttedTree.GetEntries()',CuttedTree.GetEntries()
         # print 'begin self.optionsList',self.optionsList
         # print 'end self.optionsList'
 
         print "get_histo_from_tree_debug4"
-	#! start the loop over variables (descriebed in options) 
+        #! start the loop over variables (descriebed in options) 
         for options in self.optionsList:
             name=job.name
             if self.GroupDict is None:
@@ -81,13 +81,14 @@ class HistoMaker:
                 treeCut='%s'%(options['cut'])
 
             #options
-            # print 'treeCut',treeCut
-            # print 'weightF',weightF
+            print 'treeCut',treeCut
+            print 'weightF',weightF
             
             hTree = ROOT.TH1F('%s'%name,'%s'%name,nBins,xMin,xMax)
             hTree.Sumw2()
             print "Histomaker debug5"
             print('hTree.name() 1 =',hTree.GetName())
+            print('treeVar 1 =',treeVar)
             drawoption = ''
             if job.type != 'DATA':
                 if CuttedTree and CuttedTree.GetEntries():
