@@ -30,7 +30,7 @@ addOverFlow = False
 
 #!! List of regions to be submitted in case of bacth submission
 #List: VPt100 
-List: Zlight 
+List: Zb 
 
 #!! Possibility to add an additional blinding cut for the plot
 #addBlindingCut = EVENT.run < 203002
@@ -76,6 +76,18 @@ blind: False
 
 ##!! Plot name should match the cut name in the cuts config
 [Plot:Zlight]
+##!! which data to compare to
+Datas: DYLL TTJets WJets WZ ZHbb ZZ
+Normalize: <!Plot_general|Normalize!>
+vars: <!Plot_general|jet_var!>
+#Signal: <!Plot_general|plot_mass!>
+#!! log scale
+log: True 
+#!! apply blinding cut
+blind: False
+
+##!! Plot name should match the cut name in the cuts config
+[Plot:Zb]
 ##!! which data to compare to
 Datas: DYLL TTJets WJets WZ ZHbb ZZ
 Normalize: <!Plot_general|Normalize!>
