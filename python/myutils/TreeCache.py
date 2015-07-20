@@ -54,11 +54,11 @@ class TreeCache:
         theHash = hashlib.sha224('%s_s%s_%s' %(sample,checksum,self.minCut)).hexdigest()
         self.__hashDict[theName] = theHash
         tmpSource = '%s/tmp_%s.root'%(self.__tmpPath,theHash)
-	print('the tmp source is ', tmpSource)
+        print('the tmp source is ', tmpSource)
         #print ('self.__doCache',self.__doCache,'self.file_exists(tmpSource)',self.file_exists(tmpSource))
-	print("==================================================================")
-	print ('theCut is ', self.minCut)
-	print("==================================================================")
+        print("==================================================================")
+        print ('theCut is ', self.minCut)
+        print("==================================================================")
         if self.__doCache and self.file_exists(tmpSource):
             print('sample',theName,'skipped, filename=',tmpSource)
             return
@@ -84,20 +84,24 @@ class TreeCache:
           print ('mkdir_command',mkdir_command)
           subprocess.call(['srmmkdir '+mkdir_command], shell=True)# delete the files already created ?     
 
-      #! read the tree from the input
+        #! read the tree from the input
         output = ROOT.TFile.Open(tmpSource,'create')
         input = ROOT.TFile.Open(source,'read')
         output.cd()
         tree = input.Get(sample.tree)
         try:
-            CountWithPU = input.Get("CountWithPU")
-            CountWithPU2011B = input.Get("CountWithPU2011B")
-            sample.count_with_PU = CountWithPU.GetBinContent(1) 
-            sample.count_with_PU2011B = CountWithPU2011B.GetBinContent(1)
+            CountPos = input.Get("CountPosWeight")
+            CountNeg = input.Get("CountNegWeight")
+            sample.count = CountPos.GetBinContent(1) - CountPos.GetBinContent(1)
+            # CountWithPU = input.Get("CountWithPU")
+            # CountWithPU2011B = input.Get("CountWithPU2011B")
+            # sample.count_with_PU = CountWithPU.GetBinContent(1) 
+            # sample.count_with_PU2011B = CountWithPU2011B.GetBinContent(1)
         except:
-            print('WARNING: No Count with PU histograms available. Using 1.')
-            sample.count_with_PU = 1.
-            sample.count_with_PU2011B = 1.
+            print('WARNING: No Count histograms available. Using 1.')
+            sample.count = 1.
+            # sample.count_with_PU = 1.
+            # sample.count_with_PU2011B = 1.
         input.cd()
         obj = ROOT.TObject
         for key in ROOT.gDirectory.GetListOfKeys():
@@ -131,25 +135,30 @@ class TreeCache:
         input = ROOT.TFile.Open('%s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]),'read')
         #input = ROOT.TFile.Open(_tmp,'read')
         tree = input.Get(sample.tree)
-	#print('The name of the tree is ', tree.GetName())
+        #print('The name of the tree is ', tree.GetName())
         # CountWithPU = input.Get("CountWithPU")
         # CountWithPU2011B = input.Get("CountWithPU2011B")
         # sample.count_with_PU = CountWithPU.GetBinContent(1) 
         # sample.count_with_PU2011B = CountWithPU2011B.GetBinContent(1) 
         try:
-            CountWithPU = input.Get("CountWithPU")
-            CountWithPU2011B = input.Get("CountWithPU2011B")
-            sample.count_with_PU = CountWithPU.GetBinContent(1) 
-            sample.count_with_PU2011B = CountWithPU2011B.GetBinContent(1) 
+            CountPos = input.Get("CountPosWeight")
+            CountNeg = input.Get("CountNegWeight")
+            sample.count = CountPos.GetBinContent(1) - CountNeg.GetBinContent(1)
+            print('CountPos',CountPos.GetBinContent(1),'CountNeg',CountNeg.GetBinContent(1),'sample.count',sample.count)
+            # CountWithPU = input.Get("CountWithPU")
+            # CountWithPU2011B = input.Get("CountWithPU2011B")
+            # sample.count_with_PU = CountWithPU.GetBinContent(1) 
+            # sample.count_with_PU2011B = CountWithPU2011B.GetBinContent(1)
             print('get_tree2')
         except:
-            print('WARNING: No Count with PU histograms available. Using 1.')
-            sample.count_with_PU = 1.
-            sample.count_with_PU2011B = 1.
+            print('WARNING: No Count histograms available. Using 1.')
+            sample.count = 1.
+            # sample.count_with_PU = 1.
+            # sample.count_with_PU2011B = 1.
             print('get_tree4')
         if sample.subsample:
             cut += '& (%s)' %(sample.subcut)
-	    print('cut is', cut)
+        print('cut is', cut)
         ROOT.gROOT.cd()
         print('getting the tree after applying cuts')
         cuttedTree=tree.CopyTree(cut)
@@ -181,9 +190,11 @@ class TreeCache:
         if not lumi:
             lumi = float(sample.lumi)
         if anaTag == '7TeV':
-            theScale = lumi*sample.xsec*sample.sf/(0.46502*sample.count_with_PU+0.53498*sample.count_with_PU2011B)
-        elif anaTag == '8TeV':
-            theScale = lumi*sample.xsec*sample.sf/(sample.count_with_PU)
+            # theScale = lumi*sample.xsec*sample.sf/(0.46502*sample.count_with_PU+0.53498*sample.count_with_PU2011B)
+            theScale = lumi*sample.xsec*sample.sf/(0.46502*sample.count+0.53498*sample.count)
+        # elif anaTag == '8TeV':
+        else:
+            theScale = lumi*sample.xsec*sample.sf/(sample.count)
         return theScale
 
     @staticmethod
@@ -230,7 +241,7 @@ class TreeCache:
         print ('============================== will now check if the file exists')
 
         file_dummy = file
-	print ('file_dummy is ', file_dummy)
+        print ('file_dummy is ', file_dummy)
         srmPath = 'srm://t3se01.psi.ch:8443/srm/managerv2?SFN='
         file_dummy = file_dummy.replace('root://t3dcachedb03.psi.ch:1094/','')
         file_dummy = file_dummy.replace('srm://t3se01.psi.ch:8443/srm/managerv2?SFN=','')
