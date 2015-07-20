@@ -36,10 +36,7 @@ List: VPt100
 
 #!! Variables definition
 # leptons_var:vleptons_ptMax,vleptons_etaMax
-#jet_var: HjCSV0_CSV,Hmass,Vpt,Hpt,CSV,HV_Dphi,Hpt,HCSVmass,HCSVpt,HCSVeta
-#to test if nJets works
-jet_var: njets
-#jet_var: Rbb 
+jet_var: HjCSV0_CSV,Hmass,Vpt,Hpt,CSV,HV_Dphi,Hpt,HCSVmass,HCSVpt,HCSVeta,Rbb
 
 #!! Additional global variables
 BDT_plot_blind: False

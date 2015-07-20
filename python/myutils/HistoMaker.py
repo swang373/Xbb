@@ -31,7 +31,6 @@ class HistoMaker:
         self.calc_rebin_flag = False
         print('current directory while compiling external macro',os.getcwd())
         ROOT.gSystem.CompileMacro("../plugins/VH_pt.C")
-        ROOT.gSystem.CompileMacro("../plugins/nJets.C")
         ROOT.gSystem.CompileMacro("../plugins/DeltaR.C")
         VHbbNameSpace=config.get('VHbbNameSpace','library')
         ROOT.gSystem.Load(VHbbNameSpace)
