@@ -29,14 +29,16 @@ typLegendDict: {'Z_':'DYmumu','TT':'TTJets','W':'WJets','WZ':'WZ','Hbb':'Hbb','Z
 addOverFlow = False
 
 #!! List of regions to be submitted in case of bacth submission
-List: VPt100 
+#List: VPt100 
+List: Zlight 
 
 #!! Possibility to add an additional blinding cut for the plot
 #addBlindingCut = EVENT.run < 203002
 
 #!! Variables definition
 # leptons_var:vleptons_ptMax,vleptons_etaMax
-jet_var: HjCSV0_CSV,HjCSV1_CSV,Vpt,Veta,Vphi,Vm,HV_Dphi,HCSVmass,HCSVpt,HCSVeta,Rbb,VHpt,nAddJets,MET
+#jet_var: HjCSV0_CSV,HjCSV1_CSV,Vpt,Veta,Vphi,Vm,HV_Dphi,HCSVmass,HCSVpt,HCSVeta,Rbb,VHpt,nAddJets,MET
+jet_var: HjCSV0_CSV,HjCSV1_CSV,Vpt
 
 #!! Additional global variables
 BDT_plot_blind: False
@@ -62,6 +64,18 @@ blind: False
 
 ##!! Plot name should match the cut name in the cuts config
 [Plot:VPt100]
+##!! which data to compare to
+Datas: DYLL TTJets WJets WZ ZHbb ZZ
+Normalize: <!Plot_general|Normalize!>
+vars: <!Plot_general|jet_var!>
+#Signal: <!Plot_general|plot_mass!>
+#!! log scale
+log: True 
+#!! apply blinding cut
+blind: False
+
+##!! Plot name should match the cut name in the cuts config
+[Plot:Zlight]
 ##!! which data to compare to
 Datas: DYLL TTJets WJets WZ ZHbb ZZ
 Normalize: <!Plot_general|Normalize!>
