@@ -1,6 +1,6 @@
 #include "TLorentzVector.h"
 
-double DeltaR(double v1_pt,double v1_eta,double v1_phi,double v1_mass, double v2_pt,double v2_eta,double v2_phi,double v2_mass){
+double SimpleDeltaR(double v1_pt,double v1_eta,double v1_phi,double v1_mass, double v2_pt,double v2_eta,double v2_phi,double v2_mass){
 
   TLorentzVector v1,v2;
   
@@ -9,6 +9,6 @@ double DeltaR(double v1_pt,double v1_eta,double v1_phi,double v1_mass, double v2
 
   return v1.DeltaR(v2);
 
-  }
+}
 
 

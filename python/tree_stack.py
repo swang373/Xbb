@@ -45,6 +45,10 @@ if config.has_option('Plot_general','addBlindingCut'):#contained in plots, cut o
     addBlindingCut = config.get('Plot_general','addBlindingCut')
     print 'adding add. blinding cut'
 
+# compile external macros to compute variables on the fly
+print('current directory while compiling external macro',os.getcwd())
+ROOT.gSystem.CompileMacro("../plugins/VH_pt.C")
+ROOT.gSystem.CompileMacro("../plugins/SimpleDeltaR.C")
 
 #get locations:
 print 'tree_stack_2'
