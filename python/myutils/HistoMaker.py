@@ -29,9 +29,6 @@ class HistoMaker:
         self.mybinning = None
         self.GroupDict=GroupDict
         self.calc_rebin_flag = False
-        print('current directory while compiling external macro',os.getcwd())
-        ROOT.gSystem.CompileMacro("../plugins/VH_pt.C")
-        ROOT.gSystem.CompileMacro("../plugins/DeltaR.C")
         VHbbNameSpace=config.get('VHbbNameSpace','library')
         ROOT.gSystem.Load(VHbbNameSpace)
 
@@ -100,8 +97,8 @@ class HistoMaker:
                         #print drawoption
                     else: 
                         drawoption = '(%s)*(%s)'%(weightF,treeCut)
-                    CuttedTree.Draw('%s>>%s' %(treeVar,name), drawoption, "goff,e")
                     print ('Draw: %s>>%s' %(treeVar,name), drawoption, "goff,e")
+                    CuttedTree.Draw('%s>>%s' %(treeVar,name), drawoption, "goff,e")
                     print name
                     print('hTree.name() 2 =',hTree.GetName())
                     full=True
