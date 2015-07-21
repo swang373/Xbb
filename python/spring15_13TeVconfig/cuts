@@ -388,9 +388,18 @@ triggerMM = (triggerFlags[14]>0 || triggerFlags[21]>0 || triggerFlags[22]>0 || t
 AllSamples = V_pt > 0.
 #VPt100 = (V_pt > 100 & H_pt > 100 & abs(V_phi - H_phi) < 2.9)
 VPt100 = (V_pt > 100 & H_pt > 100 )
-Zlight = (V_pt > 100 & H_pt > 100 & max(Jet_btagCSV[hJCidx[0]],Jet_btagCSV[hJCidx[1]]) < 0.898 & min(Jet_btagCSV[hJCidx[0]],Jet_btagCSV[hJCidx[1]]) > 0 & naJCidx < 1 & abs(V_phi-H_phi) > 2.9) 
-Zb = ((HCSV_mass < 90 || HCSV_mass > 145) & max(Jet_btagCSV[hJCidx[0]],Jet_btagCSV[hJCidx[1]]) > 0.898 & min(Jet_btagCSV[hJCidx[0]],Jet_btagCSV[hJCidx[1]]) > 0.5 & naJCidx < 2 & abs(V_phi-H_phi) > 2.9)
-ttbar = (HCSV_pt > 100 & (V_mass < 75 || V_mass > 120) & max(Jet_btagCSV[hJCidx[0]],Jet_btagCSV[hJCidx[1]]) > 0.898 & min(Jet_btagCSV[hJCidx[0]],Jet_btagCSV[hJCidx[1]]) > 0.5 )
 
-   
+CRZlight = (V_pt > 100 & H_pt > 100 & max(Jet_btagCSV[hJCidx[0]],Jet_btagCSV[hJCidx[1]]) < 0.898 & min(Jet_btagCSV[hJCidx[0]],Jet_btagCSV[hJCidx[1]]) > 0 & naJCidx < 1 & abs(V_phi-H_phi) > 2.9) 
+CRZb = ((HCSV_mass < 90 || HCSV_mass > 145) & max(Jet_btagCSV[hJCidx[0]],Jet_btagCSV[hJCidx[1]]) > 0.898 & min(Jet_btagCSV[hJCidx[0]],Jet_btagCSV[hJCidx[1]]) > 0.5 & naJCidx < 2 & abs(V_phi-H_phi) > 2.9)
+CRttbar = (HCSV_pt > 100 & (V_mass < 75 || V_mass > 120) & max(Jet_btagCSV[hJCidx[0]],Jet_btagCSV[hJCidx[1]]) > 0.898 & min(Jet_btagCSV[hJCidx[0]],Jet_btagCSV[hJCidx[1]]) > 0.5 )
+
+SigMVAlowpt = (V_pt < 100 & V_pt > 50 & V_mass > 75 & V_mass < 105 & HCSV_mass > 40 & HCSV_mass < 250 & max(Jet_btagCSV[hJCidx[0]],Jet_btagCSV[hJCidx[1]]) > 0.244 & min(Jet_btagCSV[hJCidx[0]],Jet_btagCSV[hJCidx[1]]) > 0.244)
+SigMVAhighpt = (V_pt > 100 & V_mass > 75 & V_mass < 105 & HCSV_mass < 250 & max(Jet_btagCSV[hJCidx[0]],Jet_btagCSV[hJCidx[1]]) > 0.5 & min(Jet_btagCSV[hJCidx[0]],Jet_btagCSV[hJCidx[1]]) > 0.244)
+
+SigMlowpt = (V_pt < 100 & V_pt > 50 & V_mass > 75 & V_mass < 105 & HCSV_mass > 40 & HCSV_mass < 250 & max(Jet_btagCSV[hJCidx[0]],Jet_btagCSV[hJCidx[1]]) > 0.679 & min(Jet_btagCSV[hJCidx[0]],Jet_btagCSV[hJCidx[1]]) > 0.5 & met_pt < 60)
+SigMmedpt = (V_pt < 150 & V_pt > 100 & V_mass > 75 & V_mass < 105 & HCSV_mass > 40 & HCSV_mass < 250 & max(Jet_btagCSV[hJCidx[0]],Jet_btagCSV[hJCidx[1]]) > 0.679 & min(Jet_btagCSV[hJCidx[0]],Jet_btagCSV[hJCidx[1]]) > 0.5 & met_pt < 60)
+SigMhighpt = (V_pt > 150 & V_mass > 75 & V_mass < 105 & HCSV_mass > 40 & HCSV_mass < 250 & max(Jet_btagCSV[hJCidx[0]],Jet_btagCSV[hJCidx[1]]) > 0.679 & min(Jet_btagCSV[hJCidx[0]],Jet_btagCSV[hJCidx[1]]) > 0.5 & met_pt < 60 & DeltaR(Jet_pt[hJCidx[0]], Jet_eta[hJCidx[0]], Jet_phi[hjcidx[0]], Jet_mass[hjcidx[0]], Jet_pt[hJCidx[1]], Jet_eta[hJCidx[1]], Jet_phi[hjcidx[1]], Jet_mass[hjcidx[1]]) < 1.6)
+
+SFZjets = (HCSV_pt > 50 & V_mass > 75 & V_mass < 105 & (HCSV_mass < 80 || HCSV_mass > 150) & HCSV_mass < 250 & HCSV_mass < 250 & max(Jet_btagCSV[hJCidx[0]],Jet_btagCSV[hJCidx[1]]) > 0.244 & min(Jet_btagCSV[hJCidx[0]],Jet_btagCSV[hJCidx[1]]) > 0.244)
+SFZttbar = (HCSV_pt > 50 & HCSV_pt < 100 & (V_mass < 75 || V_mass > 105) & (HCSV_mass < 80 || HCSV_mass > 150) & HCSV_mass < 250 & HCSV_mass < 250 & max(Jet_btagCSV[hJCidx[0]],Jet_btagCSV[hJCidx[1]]) > 0.244 & min(Jet_btagCSV[hJCidx[0]],Jet_btagCSV[hJCidx[1]]) > 0.244)
 
