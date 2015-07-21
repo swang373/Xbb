@@ -42,7 +42,7 @@ List: SigMmedpt
 #jet_var: HjCSV0_CSV,HjCSV1_CSV,Vpt,Veta,Vphi,Vm,HV_Dphi,HCSVmass,HCSVpt,HCSVeta,Rbb,VHpt,nAddJets,MET
 #jet_var: HjCSV0_CSV,HjCSV1_CSV,Vpt
 #jet_var: HjCSV0_pt,HjCSV1_pt
-jet_var: Etabb
+jet_var: HjCSV0_pt,HjCSV1_pt
 #!! Additional global variables
 BDT_plot_blind: False
 BDT_plot_log: False
