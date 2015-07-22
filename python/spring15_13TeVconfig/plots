@@ -25,7 +25,7 @@ setupLog: Hbb,ggH
 #typLegendDict: {'Z_':'DYmumu','TT':'TTJets','WZ':'WZ','Hbb':'Hbb','ZZ':'ZZ','ggH':'ggVH'}
 #For ggVHbb-VHbb comparison
 colorDict: {'Hbb':596,'ggH':635}
-typLegendDict: {'Hbb':'Hbb','ggH':'ggVH'}
+typLegendDict: {'Hbb':'ZHbb','ggH':'ggZH'}
 
 #!! Add overflow bin in the plots
 addOverFlow = False
