@@ -17,11 +17,11 @@ vhbbpath= <!Directories|Wdir!>/Xbb
 #!! specifies the .cfg files with the Samples information
 samplesinfo: <!Directories|vhbbpath!>/python/spring15_13TeVconfig/samples_nosplit.cfg
 #!! where you want to store the logfiles from job submissions
-logpath: /shome/gaperrin/VHbb/CMSSW_7_4_3/src/Xbb/python/outputheppy13TeV//spring15_V5_VHGH_Vpt100_plot1/Logs/
+logpath: /shome/gaperrin/VHbb/CMSSW_7_4_3/src/Xbb/python/outputheppy13TeV//spring15_V5_TESTCRZlight/Logs/
 
 #!! from which samples to plot and where to save the plots
 plottingSamples: <!Directories|PREPout!>
-plotpath: /shome/gaperrin/VHbb/CMSSW_7_4_3/src/Xbb/python/outputheppy13TeV//spring15_V5_VHGH_Vpt100_plot1/Plots/
+plotpath: /shome/gaperrin/VHbb/CMSSW_7_4_3/src/Xbb/python/outputheppy13TeV//spring15_V5_TESTCRZlight/Plots/
 
 #!! basedir for tagged folder structure
 tagDir: <!Directories|vhbbpath!>/python/<!Directories|Dname!>/
@@ -34,7 +34,7 @@ tmpSamples = <!Directories|PREPout!>/skimsggHVHbb/
 #!! from which samples to make the DCs and where to save the DCs
 dcSamples: <!Directories|MVAout!>/
 #limits: <!Directories|vhbbpath!>/Limit_expertAllnominal_controlRegions_pure_highlow/
-limits: /shome/gaperrin/VHbb/CMSSW_7_4_3/src/Xbb/python/outputheppy13TeV//spring15_V5_VHGH_Vpt100_plot1/Limits/
+limits: /shome/gaperrin/VHbb/CMSSW_7_4_3/src/Xbb/python/outputheppy13TeV//spring15_V5_TESTCRZlight/Limits/
 
 #!! From where to take the raw samples and where to put the prepared trees:
 #PREPin: <!Directories|samplepath!> path for Wjet

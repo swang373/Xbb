@@ -388,6 +388,7 @@ triggerMM = (triggerFlags[14]>0 || triggerFlags[21]>0 || triggerFlags[22]>0 || t
 AllSamples = V_pt > 0.
 #VPt100 = (V_pt > 100 & H_pt > 100 & abs(V_phi - H_phi) < 2.9)
 VPt100 = (V_pt > 100)
+TESTRegion = ( V_pt > 100 & H_pt > 100 & max(Jet_btagCSV[hJCidx[0]],Jet_btagCSV[hJCidx[1]]) < 0.898 & min(Jet_btagCSV[hJCidx[0]],Jet_btagCSV[hJCidx[1]]) > 0 & naJCidx < 1)
 
 CRZlight = (V_pt > 100 & H_pt > 100 & max(Jet_btagCSV[hJCidx[0]],Jet_btagCSV[hJCidx[1]]) < 0.898 & min(Jet_btagCSV[hJCidx[0]],Jet_btagCSV[hJCidx[1]]) > 0 & naJCidx < 1 & abs(V_phi-H_phi) > 2.9) 
 CRZb = ((HCSV_mass < 90 || HCSV_mass > 145) & max(Jet_btagCSV[hJCidx[0]],Jet_btagCSV[hJCidx[1]]) > 0.898 & min(Jet_btagCSV[hJCidx[0]],Jet_btagCSV[hJCidx[1]]) > 0.5 & naJCidx < 2 & abs(V_phi-H_phi) > 2.9)

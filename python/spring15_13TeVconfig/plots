@@ -14,18 +14,18 @@ samples: <!Samples|allBKG!>
 Group: <!Samples|Group!>
 
 #!! Here the order and the groups that will go in the plots. This influence the MC
-#setup: Z_,TT,WZ,Hbb,ZZ,ggH
-#setupLog: Z_,TT,WZ,hbb,ZZ,ggH
+setup: Z_,TT,WZ,Hbb,ZZ,ggH
+setupLog: Z_,TT,WZ,Hbb,ZZ,ggH
 #For ggVHbb-VHbb comparison
-setup: Hbb,ggH
-setupLog: Hbb,ggH
+#setup: Hbb,ggH
+#setupLog: Hbb,ggH
 
 #!! Colors dictionary and legend
-#colorDict: {'Z_':401,'TT':402,'WZ':41,'Hbb':596,'ZZ':840,'ggH':635}
-#typLegendDict: {'Z_':'DYmumu','TT':'TTJets','WZ':'WZ','Hbb':'Hbb','ZZ':'ZZ','ggH':'ggVH'}
+colorDict: {'Z_':401,'TT':402,'WZ':41,'Hbb':596,'ZZ':840,'ggH':635}
+typLegendDict: {'Z_':'DYmumu','TT':'TTJets','WZ':'WZ','Hbb':'Hbb','ZZ':'ZZ','ggH':'ggVH'}
 #For ggVHbb-VHbb comparison
-colorDict: {'Hbb':596,'ggH':635}
-typLegendDict: {'Hbb':'ZHbb','ggH':'ggZH'}
+#colorDict: {'Hbb':596,'ggH':635}
+#typLegendDict: {'Hbb':'ZHbb','ggH':'ggZH'}
 
 #!! Add overflow bin in the plots
 addOverFlow = False
@@ -36,7 +36,8 @@ addOverFlow = False
 #List: SigMhighpt
 #List: SigMmedpt
 #List: CRZlight,CRZb,CRttbar,SigMVAlowpt,SigMVAhighpt,SigMlowpt,SigMmedpt,SigMhighpt,SFZjets,SFZttbar
-List: VPt100
+List: CRZlight
+#TESTRegion
 
 #!! Possibility to add an additional blinding cut for the plot
 #addBlindingCut = EVENT.run < 203002
@@ -77,6 +78,20 @@ blind: False
 #Datas: DYLL TTJets WJets WZ ZHbb ZZ
 #for ggH-VHbb comparison
 Datas: ZHbb ggH
+Normalize: <!Plot_general|Normalize!>
+vars: <!Plot_general|jet_var!>
+#Signal: <!Plot_general|plot_mass!>
+#!! log scale
+log: True 
+#!! apply blinding cut
+blind: False
+
+##!! Plot name should match the cut name in the cuts config
+[Plot:TESTRegion]
+##!! which data to compare to
+Datas: DYLL TTJets WJets WZ ZHbb ZZ
+#for ggH-VHbb comparison
+#Datas: ZHbb ggH
 Normalize: <!Plot_general|Normalize!>
 vars: <!Plot_general|jet_var!>
 #Signal: <!Plot_general|plot_mass!>
