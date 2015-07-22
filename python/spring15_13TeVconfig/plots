@@ -14,16 +14,18 @@ samples: <!Samples|allBKG!>
 Group: <!Samples|Group!>
 
 #!! Here the order and the groups that will go in the plots. This influence the MC
-setup: Z_,TT,WZ,Hbb,ZZ,ggH
-#setupLog: Hbb,W,WZ,ZZ,TT,Z_
-setupLog: Z_,TT,WZ,Hbb,ZZ,ggH
+#setup: Z_,TT,WZ,Hbb,ZZ,ggH
+#setupLog: Z_,TT,WZ,hbb,ZZ,ggH
+#For ggVHbb-VHbb comparison
+setup: Hbb,ggH
+setupLog: Hbb,ggH
 
 #!! Colors dictionary and legend
-#colorDict: {'WJets':401,'Z':596}
-colorDict: {'Z_':401,'TT':402,'WZ':41,'Hbb':596,'ZZ':840,'ggH':635}
-typLegendDict: {'Z_':'DYmumu','TT':'TTJets','WZ':'WZ','Hbb':'Hbb','ZZ':'ZZ','ggH':'ggVH'}
-#colorDict: {'Z_':401}
-#typLegendDict: {'Z_':'DYLL'}
+#colorDict: {'Z_':401,'TT':402,'WZ':41,'Hbb':596,'ZZ':840,'ggH':635}
+#typLegendDict: {'Z_':'DYmumu','TT':'TTJets','WZ':'WZ','Hbb':'Hbb','ZZ':'ZZ','ggH':'ggVH'}
+#For ggVHbb-VHbb comparison
+colorDict: {'Hbb':596,'ggH':635}
+typLegendDict: {'Hbb':'Hbb','ggH':'ggVH'}
 
 #!! Add overflow bin in the plots
 addOverFlow = False
@@ -33,7 +35,8 @@ addOverFlow = False
 #List: SFZjets,SFZttbar
 #List: SigMhighpt
 #List: SigMmedpt
-List: CRZlight,CRZb,CRttbar,SigMVAlowpt,SigMVAhighpt,SigMlowpt,SigMmedpt,SigMhighpt,SFZjets,SFZttbar
+#List: CRZlight,CRZb,CRttbar,SigMVAlowpt,SigMVAhighpt,SigMlowpt,SigMmedpt,SigMhighpt,SFZjets,SFZttbar
+List: VPt100
 
 #!! Possibility to add an additional blinding cut for the plot
 #addBlindingCut = EVENT.run < 203002
@@ -71,7 +74,9 @@ blind: False
 ##!! Plot name should match the cut name in the cuts config
 [Plot:VPt100]
 ##!! which data to compare to
-Datas: DYLL TTJets WJets WZ ZHbb ZZ
+#Datas: DYLL TTJets WJets WZ ZHbb ZZ
+#for ggH-VHbb comparison
+Datas: ZHbb ggH
 Normalize: <!Plot_general|Normalize!>
 vars: <!Plot_general|jet_var!>
 #Signal: <!Plot_general|plot_mass!>
@@ -87,9 +92,9 @@ blind: False
 ##!! Plot name should match the cut name in the cuts config
 [Plot:CRZlight]
 ##!! which data to compare to
-Datas: DYLL TTJets WZ ZHbb ZZ ggH
+#Datas: DYLL TTJets WZ ZHbb ZZ ggH
 #for ggH-VHbb comparison
-#Datas: ZHbb ggH
+Datas: ZHbb ggH
 Normalize: <!Plot_general|Normalize!>
 vars: <!Plot_general|jet_var!>
 #Signal: <!Plot_general|plot_mass!>
@@ -101,9 +106,9 @@ blind: False
 ##!! Plot name should match the cut name in the cuts config
 [Plot:CRZb]
 ##!! which data to compare to
-Datas: DYLL TTJets WZ ZHbb ZZ ggH
+#Datas: DYLL TTJets WZ ZHbb ZZ ggH
 #for ggH-VHbb comparison
-#Datas: ZHbb ggH
+Datas: ZHbb ggH
 Normalize: <!Plot_general|Normalize!>
 vars: <!Plot_general|jet_var!>
 #Signal: <!Plot_general|plot_mass!>
@@ -115,9 +120,9 @@ blind: False
 ##!! Plot name should match the cut name in the cuts config
 [Plot:CRttbar]
 ##!! which data to compare to
-Datas: DYLL TTJets WZ ZHbb ZZ ggH
+#Datas: DYLL TTJets WZ ZHbb ZZ ggH
 #for ggH-VHbb comparison
-#Datas: ZHbb ggH
+Datas: ZHbb ggH
 Normalize: <!Plot_general|Normalize!>
 vars: <!Plot_general|jet_var!>
 #Signal: <!Plot_general|plot_mass!>
@@ -133,9 +138,9 @@ blind: False
 ##!! Plot name should match the cut name in the cuts config
 [Plot:SigMVAlowpt]
 ##!! which data to compare to
-Datas: DYLL TTJets WZ ZHbb ZZ ggH
+#Datas: DYLL TTJets WZ ZHbb ZZ ggH
 #for ggH-VHbb comparison
-#Datas: ZHbb ggH
+Datas: ZHbb ggH
 Normalize: <!Plot_general|Normalize!>
 vars: <!Plot_general|jet_var!>
 #Signal: <!Plot_general|plot_mass!>
@@ -147,9 +152,9 @@ blind: False
 ##!! Plot name should match the cut name in the cuts config
 [Plot:SigMVAhighpt]
 ##!! which data to compare to
-Datas: DYLL TTJets WZ ZHbb ZZ ggH
+#Datas: DYLL TTJets WZ ZHbb ZZ ggH
 #for ggH-VHbb comparison
-#Datas: ZHbb ggH
+Datas: ZHbb ggH
 Normalize: <!Plot_general|Normalize!>
 vars: <!Plot_general|jet_var!>
 #Signal: <!Plot_general|plot_mass!>
@@ -165,9 +170,9 @@ blind: False
 ##!! Plot name should match the cut name in the cuts config
 [Plot:SigMlowpt]
 ##!! which data to compare to
-Datas: DYLL TTJets WZ ZHbb ZZ ggH
+#Datas: DYLL TTJets WZ ZHbb ZZ ggH
 #for ggH-VHbb comparison
-#Datas: ZHbb ggH
+Datas: ZHbb ggH
 Normalize: <!Plot_general|Normalize!>
 vars: <!Plot_general|jet_var!>
 #Signal: <!Plot_general|plot_mass!>
@@ -179,9 +184,9 @@ blind: False
 ##!! Plot name should match the cut name in the cuts config
 [Plot:SigMmedpt]
 ##!! which data to compare to
-Datas: DYLL TTJets WZ ZHbb ZZ ggH
+#Datas: DYLL TTJets WZ ZHbb ZZ ggH
 #for ggH-VHbb comparison
-#Datas: ZHbb ggH
+Datas: ZHbb ggH
 Normalize: <!Plot_general|Normalize!>
 vars: <!Plot_general|jet_var!>
 #Signal: <!Plot_general|plot_mass!>
@@ -193,9 +198,9 @@ blind: False
 ##!! Plot name should match the cut name in the cuts config
 [Plot:SigMhighpt]
 ##!! which data to compare to
-Datas: DYLL TTJets WZ ZHbb ZZ ggH
+#Datas: DYLL TTJets WZ ZHbb ZZ ggH
 #for ggH-VHbb comparison
-#Datas: ZHbb ggH
+Datas: ZHbb ggH
 Normalize: <!Plot_general|Normalize!>
 vars: <!Plot_general|jet_var!>
 #Signal: <!Plot_general|plot_mass!>
@@ -211,9 +216,9 @@ blind: False
 ##!! Plot name should match the cut name in the cuts config
 [Plot:SFZjets]
 ##!! which data to compare to
-Datas: DYLL TTJets WZ ZHbb ZZ ggH
+#Datas: DYLL TTJets WZ ZHbb ZZ ggH
 #for ggH-VHbb comparison
-#Datas: ZHbb ggH
+Datas: ZHbb ggH
 Normalize: <!Plot_general|Normalize!>
 vars: <!Plot_general|jet_var!>
 #Signal: <!Plot_general|plot_mass!>
@@ -225,9 +230,9 @@ blind: False
 ##!! Plot name should match the cut name in the cuts config
 [Plot:SFZttbar]
 ##!! which data to compare to
-Datas: DYLL TTJets WZ ZHbb ZZ ggH
+#Datas: DYLL TTJets WZ ZHbb ZZ ggH
 #for ggH-VHbb comparison
-#Datas: ZHbb ggH
+Datas: ZHbb ggH
 Normalize: <!Plot_general|Normalize!>
 vars: <!Plot_general|jet_var!>
 #Signal: <!Plot_general|plot_mass!>
