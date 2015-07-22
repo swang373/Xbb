@@ -35,8 +35,8 @@ addOverFlow = False
 #List: SFZjets,SFZttbar
 #List: SigMhighpt
 #List: SigMmedpt
-#List: CRZlight,CRZb,CRttbar,SigMVAlowpt,SigMVAhighpt,SigMlowpt,SigMmedpt,SigMhighpt,SFZjets,SFZttbar
-List: CRZlight
+List: CRZlight,CRZb,CRttbar,SigMVAlowpt,SigMVAhighpt,SigMlowpt,SigMmedpt,SigMhighpt,SFZjets,SFZttbar
+# List: CRZlight
 #TESTRegion
 
 #!! Possibility to add an additional blinding cut for the plot
