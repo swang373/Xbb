@@ -50,6 +50,8 @@ print('current directory while compiling external macro',os.getcwd())
 ROOT.gSystem.CompileMacro("../plugins/VH_pt.C")
 ROOT.gSystem.CompileMacro("../plugins/SimpleDeltaR.C")
 ROOT.gSystem.CompileMacro("../plugins/HJetPt.C")
+ROOT.gSystem.CompileMacro("../plugins/OtherJets.C")
+ROOT.gSystem.CompileMacro("../plugins/VHj_Pt.C")
 
 #get locations:
 print 'tree_stack_2'
