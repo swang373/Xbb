@@ -206,21 +206,25 @@ void VHF_Pt(){
     H.SetPtEtaPhiM(H_pt,H_eta,H_phi,H_mass);
     VH = V+H;
 
-    if(V_pt > 100) h_VH->Fill(VH.Pt());
+    if(V_pt > 100){
+      h_VH->Fill(VH.Pt());
 
-    for(unsigned int k = 0; k < PhiCut.size(); ++k){
+      for(unsigned int k = 0; k < PhiCut.size(); ++k){
 
-      for(unsigned int l = 0; l < VHPtCut.size(); ++l){
+        for(unsigned int l = 0; l < VHPtCut.size(); ++l){
 
-        double VHj_add = VHj_Pt( V_pt, V_eta, V_phi, V_mass, H_pt, H_eta, H_phi, H_mass, 
-                                OtherJets( Jet_pt,  Jet_eta,  Jet_phi,  Jet_mass, Jet_puId, Jet_id, Jet_aJCidx, Jet_hJCidx),
-                                PhiCut[k], VHPtCut[l]
-                                );
+          double VHj_add = VHj_Pt( V_pt, V_eta, V_phi, V_mass, H_pt, H_eta, H_phi, H_mass, 
+                                  OtherJets( Jet_pt,  Jet_eta,  Jet_phi,  Jet_mass, Jet_puId, Jet_id, Jet_aJCidx, Jet_hJCidx),
+                                  PhiCut[k], VHPtCut[l]
+                                  );
 
-        if(V_pt > 100){
-          hist[k][l]->Fill(VHj_add);
-          if(VHj_add > 0){ VHj[k][l]+= VHj_add; ++nsuccess[k][l];}
-          else{ ++noISR[k][l];}
+          if(VHj_add > 0){
+            hist[k][l]->Fill(VHj_add);
+            VHj[k][l]+= VHj_add; 
+            ++nsuccess[k][l];
+          }else{ 
+            ++noISR[k][l];
+          }
         }
       }
     }
@@ -243,6 +247,12 @@ void VHF_Pt(){
       hist[k][l]->Draw();
       h_VH->Draw("same");
       // c[k][l]->SaveAs(Form("ISR_phi%i_Pt%i.pdf",k,l));
+      
+      TLegend* leg = new TLegend(0.2, 0.2, .8, .8);
+
+      leg->AddEntry(h_VH, "VH p_{T}", "l");
+      // leg->AddEntry(hist[k][l], "VHj p_{T} for \Delta\Phi_{VH,j}<\Pi- VH p_{T} > ", "l");
+
       c[k][l]->Write();
 
       cout<<"The VHj_Pt mean for PhiCut: "<<k<<" and VHPtCut "<<l<<" is "<<VHj[k][l]/nsuccess[k][l]<<endl;
