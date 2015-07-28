@@ -88,12 +88,16 @@ double VHj_Pt(double V_pt, double V_eta, double V_phi, double V_mass, double H_p
 
 void VHF_Pt(){
   
+  // gStyle->SetOptStat(0);
+  
   //_*_*_*_*_*
   //Read Input
   //_*_*_*_*_*
 
   // TString _f_in ="VHBB_HEPPY_U12_ZH_HToBB_ZToLL_M125_13TeV_amcatnloFXFX_madspin_pythia8__RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1.root";
   TString _f_in ="dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/t3groups/ethz-higgs/run2/V12/VHBB_HEPPY_V12_ZH_HToBB_ZToLL_M125_13TeV_powheg_pythia8__RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1.root";
+  // TString _f_in ="dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/t3groups/ethz-higgs/run2/V12/VHBB_HEPPY_V12_TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8__RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2.root";
+  // TString _f_in ="dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/t3groups/ethz-higgs/run2/V12/VHBB_HEPPY_V12_DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8__RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v3.root";
   TString _f_out ="";
   TFile* f = TFile::Open(_f_in);
   TTree* t = (TTree*) f->Get("tree");
@@ -109,6 +113,7 @@ void VHF_Pt(){
   vector<double> PhiCut(_PhiCut, _PhiCut+11);
   vector<double> VHPtCut(_VHPtCut, _VHPtCut+7);
   vector<vector<TH1D*> > hist;
+  vector<vector<TH1D*> > hist_diff;
   vector<vector<TCanvas*> > c;
 
   vector<vector<double> > VHj;//VHj_Pt. To be computed in each event
@@ -120,6 +125,7 @@ void VHF_Pt(){
   for(unsigned int i = 0; i < PhiCut.size(); ++i){
 
     vector<TH1D*>  _hist;
+    vector<TH1D*>  _histdiff;
     vector<TCanvas*>  _c;
     vector<double> _VHj;
     vector<Int_t> _nsuccess;
@@ -131,6 +137,8 @@ void VHF_Pt(){
       _hist.push_back(h);
       TCanvas* c1 = new TCanvas(Form("c_phi%i_Pt%i",i,k),Form("c_phi%i_Pt%i",i,k));
       _c.push_back(c1);
+      TH1D* hdiff = new TH1D(Form("hdiff_phi%i_Pt%i",i,k),Form("hdiff_phi%i_Pt%i",i,k),200, -200, 200);
+      _histdiff.push_back(hdiff);
 
       _VHj.push_back(0);
       _nsuccess.push_back(0);
@@ -138,6 +146,7 @@ void VHF_Pt(){
     }		
 
     hist.push_back(_hist);
+    hist_diff.push_back(_histdiff);
     c.push_back(_c);
     VHj.push_back(_VHj);
     nsuccess.push_back(_nsuccess);
@@ -192,7 +201,7 @@ void VHF_Pt(){
   //_*_*_*_*_*_*_*_*
   
   // double nentries = t->GetEntries();
-  double nentries = 5e4;
+  double nentries = 1e4;
   
   for(Int_t i = 0; i < nentries; ++i){
     
@@ -220,10 +229,13 @@ void VHF_Pt(){
 
           if(VHj_add > 0){
             hist[k][l]->Fill(VHj_add);
+            hist_diff[k][l]->Fill(VHj_add-VH.Pt());
             VHj[k][l]+= VHj_add; 
             ++nsuccess[k][l];
           }else{ 
+            hist[k][l]->Fill(VH.Pt());
             ++noISR[k][l];
+            hist_diff[k][l]->Fill(0);
           }
         }
       }
@@ -248,13 +260,15 @@ void VHF_Pt(){
       h_VH->Draw("same");
       // c[k][l]->SaveAs(Form("ISR_phi%i_Pt%i.pdf",k,l));
       
-      TLegend* leg = new TLegend(0.2, 0.2, .8, .8);
+      TLegend* leg = new TLegend(0.5, 0.7, 0.9, 0.9);
 
       leg->AddEntry(h_VH, "VH p_{T}", "l");
-      // leg->AddEntry(hist[k][l], "VHj p_{T} for \Delta\Phi_{VH,j}<\Pi- VH p_{T} > ", "l");
+      leg->AddEntry(hist[k][l], Form("VHj p_{T} for #Delta#Phi_{VH,j}<#Pi-%.1f VH p_{T} > %.1f",_PhiCut[k],_VHPtCut[l]), "l");
+      leg->Draw();
 
       c[k][l]->Write();
 
+      hist_diff[k][l]->Write();
       cout<<"The VHj_Pt mean for PhiCut: "<<k<<" and VHPtCut "<<l<<" is "<<VHj[k][l]/nsuccess[k][l]<<endl;
 
     }
