@@ -39,8 +39,7 @@ vector<TLorentzVector> OtherJets(Float_t Jet_pt[15], Float_t Jet_eta[15], Float_
   return OtherJets;
 }
 
-double VHj_Pt(double V_pt, double V_eta, double V_phi, double V_mass, double H_pt, double H_eta, double H_phi, double H_mass, 
-              vector<TLorentzVector> O_Jets, double PhiCut, double VHPtCut){
+double VHj_Pt(double V_pt, double V_eta, double V_phi, double V_mass, double H_pt, double H_eta, double H_phi, double H_mass, vector<TLorentzVector> O_Jets, double PhiCut, double VHPtCut, bool keep = false){
 
   //Build the V, H, V+H vector
   TLorentzVector V, H,VH, VHj;
@@ -49,11 +48,15 @@ double VHj_Pt(double V_pt, double V_eta, double V_phi, double V_mass, double H_p
   VH = V+H;
 
   //Apply VHPt Cut
-  if(VH.Pt() < VHPtCut){
+  if(VH.Pt() < VHPtCut && keep == false){
 
     return -1;
 
     //Passes VHPt cut
+  }else if(VH.Pt() < VHPtCut && keep == true){
+
+    return VH.Pt();
+
   }else{
 
     double maxpt = 0;
@@ -72,7 +75,8 @@ double VHj_Pt(double V_pt, double V_eta, double V_phi, double V_mass, double H_p
     }
 
     //No ISR Jets found
-    if(ISRidx == -1) return -1;
+    if(ISRidx == -1 && keep == true) return VH.Pt();
+    else if(ISRidx == -1 && keep == false) return -1;
 
     VHj = VH + O_Jets[ISRidx];
 
@@ -102,12 +106,12 @@ void VHF_Pt(){
   //ISR-tag Parameters
   //_*_*_*_*_*_*_*_*_*
   
-  double _PhiCut[11] = { 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2};
+  double _PhiCut[11] = { 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3, 1.4, 1.5};
   // double _VHPtCut[7] = { 0, 5, 10, 15, 20, 25, 30};
-  double _VHPtCut[7] = { 0, 10, 20, 30, 40, 50, 60};
+  double _VHPtCut[10] = { 0, 10, 20, 30, 40, 50, 60, 80, 90, 100};
   
   vector<double> PhiCut(_PhiCut, _PhiCut+11);
-  vector<double> VHPtCut(_VHPtCut, _VHPtCut+7);
+  vector<double> VHPtCut(_VHPtCut, _VHPtCut+10);
   vector<vector<TH1D*> > hist;
   vector<vector<TCanvas*> > c;
 
@@ -192,7 +196,7 @@ void VHF_Pt(){
   //_*_*_*_*_*_*_*_*
   
   // double nentries = t->GetEntries();
-  double nentries = 5e4;
+  double nentries = 1e5;
   
   for(Int_t i = 0; i < nentries; ++i){
     
@@ -212,14 +216,15 @@ void VHF_Pt(){
 
       for(unsigned int l = 0; l < VHPtCut.size(); ++l){
 
-        double VHj_add = VHj_Pt( V_pt, V_eta, V_phi, V_mass, H_pt, H_eta, H_phi, H_mass, 
-                                OtherJets( Jet_pt,  Jet_eta,  Jet_phi,  Jet_mass, Jet_puId, Jet_id, Jet_aJCidx, Jet_hJCidx),
-                                PhiCut[k], VHPtCut[l]
-                                );
+        double VHj_add = VHj_Pt( V_pt, V_eta, V_phi, V_mass, H_pt, H_eta, H_phi, H_mass, OtherJets( Jet_pt,  Jet_eta,  Jet_phi,  Jet_mass, Jet_puId, Jet_id, Jet_aJCidx, Jet_hJCidx), PhiCut[k], VHPtCut[l], true);
+	
 
         if(V_pt > 100){
-          hist[k][l]->Fill(VHj_add);
-          if(VHj_add > 0){ VHj[k][l]+= VHj_add; ++nsuccess[k][l];}
+          if(VHj_add > 0){ 
+            hist[k][l]->Fill(VHj_add);
+	    VHj[k][l]+= VHj_add; 
+	    ++nsuccess[k][l];
+	  }
           else{ ++noISR[k][l];}
         }
       }
@@ -232,7 +237,7 @@ void VHF_Pt(){
   
   h_VH->Scale(1./h_VH->Integral(h_VH->FindBin(1.5),h_VH->FindBin(199.5)));
 
-  TFile *fout = new TFile("results.root","RECREATE");
+  TFile *fout = new TFile("results_keep.root","RECREATE");
   
   for(unsigned int k = 0; k < PhiCut.size(); ++k){
     for(unsigned int l = 0; l < VHPtCut.size(); ++l){
@@ -245,7 +250,7 @@ void VHF_Pt(){
       // c[k][l]->SaveAs(Form("ISR_phi%i_Pt%i.pdf",k,l));
       c[k][l]->Write();
 
-      cout<<"The VHj_Pt mean for PhiCut: "<<k<<" and VHPtCut "<<l<<" is "<<VHj[k][l]/nsuccess[k][l]<<endl;
+      cout<<"(keep) The VHj_Pt mean for PhiCut: "<<k<<" and VHPtCut "<<l<<" is "<<VHj[k][l]/nsuccess[k][l]<<endl;
 
     }
   }
