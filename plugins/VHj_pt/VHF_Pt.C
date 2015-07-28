@@ -15,7 +15,7 @@
 
 vector<TLorentzVector> OtherJets(Float_t Jet_pt[15], Float_t Jet_eta[15], Float_t Jet_phi[15], Float_t Jet_mass[15], Int_t Jet_puId[15], Int_t Jet_id[15], Int_t aJCidx[8], Int_t hJCidx[2]){
 
-  //Create a TLorentzVector of the jets other than the two b-jets. 
+  //Create a TLorentzVector of the jets other than the two Higgs candidate b-jets. 
 
   vector<TLorentzVector> OtherJets;
 
@@ -62,7 +62,8 @@ double VHj_Pt(double V_pt, double V_eta, double V_phi, double V_mass, double H_p
     //Apply phi cut and keep ISR candiate only
     for(unsigned int i = 0; i < O_Jets.size(); ++i){
 
-      if( abs(O_Jets[i].Phi() - VH.Phi())  < M_PI - PhiCut ) continue;
+      // if( abs(O_Jets[i].Phi() - VH.Phi())  < M_PI - PhiCut ) continue;
+      if( abs(O_Jets[i].DeltaPhi(VH)) < TMath::Pi() - PhiCut ) continue;
       if( O_Jets[i].Pt() < maxpt ) continue;
       if( O_Jets[i].Pt() == 0 && O_Jets[i].Eta() == 0 && O_Jets[i].Phi() == 0 && O_Jets[i].Phi()) continue;
       maxpt = O_Jets[i].Pt();
@@ -91,9 +92,10 @@ void VHF_Pt(){
   //Read Input
   //_*_*_*_*_*
 
-  TString _f_in ="VHBB_HEPPY_U12_ZH_HToBB_ZToLL_M125_13TeV_amcatnloFXFX_madspin_pythia8__RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1.root";
+  // TString _f_in ="VHBB_HEPPY_U12_ZH_HToBB_ZToLL_M125_13TeV_amcatnloFXFX_madspin_pythia8__RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1.root";
+  TString _f_in ="dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/t3groups/ethz-higgs/run2/V12/VHBB_HEPPY_V12_ZH_HToBB_ZToLL_M125_13TeV_powheg_pythia8__RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1.root";
   TString _f_out ="";
-  TFile* f = TFile::Open(_f_in, "read");
+  TFile* f = TFile::Open(_f_in);
   TTree* t = (TTree*) f->Get("tree");
 
   //_*_*_*_*_*_*_*_*_*
@@ -101,7 +103,8 @@ void VHF_Pt(){
   //_*_*_*_*_*_*_*_*_*
   
   double _PhiCut[11] = { 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2};
-  double _VHPtCut[7] = { 0, 5, 10, 15, 20, 25, 30};
+  // double _VHPtCut[7] = { 0, 5, 10, 15, 20, 25, 30};
+  double _VHPtCut[7] = { 0, 10, 20, 30, 40, 50, 60};
   
   vector<double> PhiCut(_PhiCut, _PhiCut+11);
   vector<double> VHPtCut(_VHPtCut, _VHPtCut+7);
@@ -188,8 +191,12 @@ void VHF_Pt(){
   //Perform the loop
   //_*_*_*_*_*_*_*_*
   
+  // double nentries = t->GetEntries();
+  double nentries = 5e4;
   
-  for(Int_t i = 0; i < t->GetEntries(); ++i){
+  for(Int_t i = 0; i < nentries; ++i){
+    
+    if(i%10000==0) cout << "event " << i << "/" << nentries << endl;
 
     t->GetEntry(i);
 
@@ -225,19 +232,24 @@ void VHF_Pt(){
   
   h_VH->Scale(1./h_VH->Integral(h_VH->FindBin(1.5),h_VH->FindBin(199.5)));
 
+  TFile *fout = new TFile("results.root","RECREATE");
+  
   for(unsigned int k = 0; k < PhiCut.size(); ++k){
     for(unsigned int l = 0; l < VHPtCut.size(); ++l){
 
       hist[k][l]->Scale(1./hist[k][l]->Integral(hist[k][l]->FindBin(0.5),hist[k][l]->FindBin(199.5)));
       c[k][l]->cd();
+      hist[k][l]->SetLineColor(2);
       hist[k][l]->Draw();
       h_VH->Draw("same");
-      h_VH->SetLineColor(2);
-      c[k][l]->SaveAs(Form("ISR_phi%i_Pt%i.pdf",k,l));
+      // c[k][l]->SaveAs(Form("ISR_phi%i_Pt%i.pdf",k,l));
+      c[k][l]->Write();
 
-      cout<<"The VHj_Pt mean for PhiCut: "<<k<<" and VHPtCut "<<l<<" is"<<VHj[k][l]/nsuccess[k][l]<<endl;
+      cout<<"The VHj_Pt mean for PhiCut: "<<k<<" and VHPtCut "<<l<<" is "<<VHj[k][l]/nsuccess[k][l]<<endl;
 
     }
   }
+  fout->Write();
+  fout->Close();
 
 }
