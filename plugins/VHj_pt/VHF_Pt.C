@@ -3,6 +3,7 @@
 #include "TTree.h"
 #include "TFile.h"
 #include "TH1D.h"
+#include "TH2D.h"
 #include "TLorentzVector.h"
 #include "TCanvas.h"
 
@@ -20,8 +21,6 @@ vector<TLorentzVector> OtherJets(Float_t Jet_pt[15], Float_t Jet_eta[15], Float_
     TLorentzVector Ojet;
     if(Jet_pt[i]>30 && abs(Jet_eta[i])<4.5 && Jet_puId[i]>0 && Jet_id[i]>0 && aJCidx[i] != (hJCidx[0]) && (aJCidx[i] != (hJCidx[1]))){
       Ojet.SetPtEtaPhiM( Jet_pt[i], Jet_eta[i], Jet_phi[i], Jet_mass[i]);
-    }else{
-      Ojet.SetPtEtaPhiM( 0, 0, 0, 0);
     }
     OtherJets.push_back(Ojet);
   }
@@ -40,8 +39,8 @@ vector<TLorentzVector> Sis(Float_t Sis_pt[3], Float_t Sis_eta[3], Float_t Sis_ph
 }
 
 double VHj_Pt(double V_pt, double V_eta, double V_phi, double V_mass, double H_pt, double H_eta, double H_phi, double H_mass, vector<TLorentzVector> O_Jets, double PhiCut, double VHPtCut, bool keep = false){
-
   //Calculates the VHj_Pt taking as parameter the Phi and Pt cut. If keep == false, -1 is returned when no V_pt value is found. Otherwise VH.Pt() without the ISR jet is returned
+
   //Build the V, H, V+H vector
   TLorentzVector V, H,VH, VHj;
   V.SetPtEtaPhiM(V_pt,V_eta,V_phi,V_mass);
@@ -49,11 +48,9 @@ double VHj_Pt(double V_pt, double V_eta, double V_phi, double V_mass, double H_p
   VH = V+H;
   //Apply VHPt Cut
   if(VH.Pt() < VHPtCut && keep == false){
-    //cout<<"smaller1"<<endl;
     return -1;
     //Passes VHPt cut
   }else if(VH.Pt() < VHPtCut && keep == true){
-    //cout<<"smaller1"<<endl;
     return VH.Pt();
   }else{
     double maxpt = 0;
@@ -82,7 +79,6 @@ double EffSisISR(double V_pt, double V_eta, double V_phi, double V_mass, double 
   VH = V+H;
   //Apply VHPt Cut
   if(VH.Pt() < VHPtCut){
-    //cout<<"smaller2"<<endl;
     return -1;
     //Passes VHPt cut
   }else{
@@ -100,11 +96,11 @@ double EffSisISR(double V_pt, double V_eta, double V_phi, double V_mass, double 
     if(ISRidx == -1) {return -1;}
     else{
       double dR = 99999;
-	for(unsigned int i = 0; i < Sis.size(); ++i){
-	  if(Sis[i].Pt() == 0 && Sis[i].Eta() == 0 && Sis[i].Phi() == 0) continue;
-	  if(Sis[i].DeltaR(O_Jets[ISRidx]) > dR) continue;
-	  dR = Sis[i].DeltaR(O_Jets[ISRidx]);
-	}
+      for(unsigned int i = 0; i < Sis.size(); ++i){
+	if(Sis[i].Pt() == 0 && Sis[i].Eta() == 0 && Sis[i].Phi() == 0) continue;
+	if(Sis[i].DeltaR(O_Jets[ISRidx]) > dR) continue;
+	dR = Sis[i].DeltaR(O_Jets[ISRidx]);
+      }
       if(dR < 0.3){
 	return 1;
       }else{
@@ -119,7 +115,7 @@ double EffSisISR(double V_pt, double V_eta, double V_phi, double V_mass, double 
 //_*_*
 
 void VHF_Pt(){
-  
+
   //_*_*_*_*_*
   //Read Input
   //_*_*_*_*_*
@@ -132,20 +128,32 @@ void VHF_Pt(){
   //_*_*_*_*_*_*_*_*_*
   //ISR-tag Parameters
   //_*_*_*_*_*_*_*_*_*
-  
+
   double _PhiCut[14] = { 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3, 1.4, 1.5};
   double _VHPtCut[10] = { 0, 10, 20, 30, 40, 50, 60, 80, 90, 100};
-  
+  //double _PhiCut[2] = { 0.2, 0.3};
+  //double _VHPtCut[2] = { 0, 10};
+  bool keep = true;
+
   vector<double> PhiCut(_PhiCut, _PhiCut+14);
   vector<double> VHPtCut(_VHPtCut, _VHPtCut+10);
   vector<vector<TH1D*> > hist;
   vector<vector<TCanvas*> > c;
+  vector<vector<TCanvas*> > cVHj;
+  vector<vector<TCanvas*> > ceff;
 
   vector<vector<double> > VHj;//VHj_Pt. To be computed in each event
   vector<vector<double> > eff;//Sister-ISR efficiency. To be computed at each event
   vector<vector<Int_t> > nsuccess;//count the # of times vhj_pt is filler to a > 0 value
   vector<vector<Int_t> > nsuccess2;
   vector<vector<Int_t> > noISR;//count the # of times no ISR has been found
+
+  //TH2D* hVHj = new TH2D("hVHj", "h_VHj", PhiCut.size(), 0, PhiCut[PhiCut.size()-1], VHPtCut.size(), 0, VHPtCut[VHPtCut.size()-1]);
+  //TH2D* heff = new TH2D("heff", "heff", PhiCut.size(), 0, PhiCut[PhiCut.size()-1], VHPtCut.size(), 0, VHPtCut[VHPtCut.size()-1]);
+  cout<<"Hello"<<endl;
+  TH2D* hVHj = new TH2D("hVHj", "h_VHj", PhiCut.size()+1, _PhiCut, VHPtCut.size()+1, _VHPtCut);
+  cout<<"Hello2"<<endl;
+  TH2D* heff = new TH2D("heff", "heff",  PhiCut.size()+1, _PhiCut, VHPtCut.size()+1, _VHPtCut);
 
   //Simple h_VH histogram without the ISR jet 
   TH1D* h_VH = new TH1D("h_VH","h_VH",200,0,200);
@@ -158,6 +166,8 @@ void VHF_Pt(){
 
     vector<TH1D*>  _hist;
     vector<TCanvas*>  _c;
+    vector<TCanvas*>  _cVHj;
+    vector<TCanvas*>  _ceff;
     vector<double> _VHj;
     vector<double> _eff;
     vector<Int_t> _nsuccess;
@@ -169,7 +179,11 @@ void VHF_Pt(){
       TH1D* h = new TH1D(Form("h_phi%i_Pt%i",i,k),Form("h_phi%i_Pt%i",i,k),200, 0, 200);
       _hist.push_back(h);
       TCanvas* c1 = new TCanvas(Form("c_phi%i_Pt%i",i,k),Form("c_phi%i_Pt%i",i,k));
+      TCanvas* cVHj1 = new TCanvas(Form("cVHj_phi%i_Pt%i",i,k),Form("cVHj_phi%i_Pt%i",i,k));
+      TCanvas* ceff1 = new TCanvas(Form("ceff_phi%i_Pt%i",i,k),Form("ceff_phi%i_Pt%i",i,k));
       _c.push_back(c1);
+      _cVHj.push_back(cVHj1);
+      _ceff.push_back(ceff1);
 
       _VHj.push_back(0);
       _eff.push_back(0);
@@ -180,6 +194,8 @@ void VHF_Pt(){
 
     hist.push_back(_hist);
     c.push_back(_c);
+    cVHj.push_back(_cVHj);
+    ceff.push_back(_ceff);
     VHj.push_back(_VHj);
     eff.push_back(_eff);
     nsuccess.push_back(_nsuccess);
@@ -187,11 +203,11 @@ void VHF_Pt(){
     noISR.push_back(_noISR);
 
   }
-  
+
   //_*_*_*_*_*_*_*_*_*_*
   //Get Branch Variables
   //_*_*_*_*_*_*_*_*_*_*
-  
+
   Float_t Jet_pt[15];
   Float_t Jet_eta[15];
   Float_t Jet_phi[15];
@@ -237,7 +253,7 @@ void VHF_Pt(){
   //_*_*_*_*_*_*_*_*
   //Perform the loop
   //_*_*_*_*_*_*_*_*
-  
+
   // double nentries = t->GetEntries();
   double nentries = 1e4;
   for(Int_t i = 0; i < nentries; ++i){
@@ -248,18 +264,21 @@ void VHF_Pt(){
     V.SetPtEtaPhiM(V_pt,V_eta,V_phi,V_mass);
     H.SetPtEtaPhiM(H_pt,H_eta,H_phi,H_mass);
     VH = V+H;
-    if(V_pt > 100) h_VH->Fill(VH.Pt());
-    for(unsigned int k = 0; k < PhiCut.size(); ++k){
-      for(unsigned int l = 0; l < VHPtCut.size(); ++l){
-	if(V_pt > 100){
-	//VHj minimisation
-	double VHj_add = VHj_Pt(V_pt, V_eta, V_phi, V_mass, H_pt, H_eta, H_phi, H_mass, OtherJets( Jet_pt,  Jet_eta,  Jet_phi,  Jet_mass, Jet_puId, Jet_id, Jet_aJCidx, Jet_hJCidx), PhiCut[k], VHPtCut[l], true);
-	  if(VHj_add > 0){ 
+    if(V_pt > 100){
+      for(unsigned int k = 0; k < PhiCut.size(); ++k){
+	for(unsigned int l = 0; l < VHPtCut.size(); ++l){
+	  h_VH->Fill(VH.Pt());
+	  //VHj minimisation
+	  double VHj_add = VHj_Pt(V_pt, V_eta, V_phi, V_mass, H_pt, H_eta, H_phi, H_mass, OtherJets( Jet_pt,  Jet_eta,  Jet_phi,  Jet_mass, Jet_puId, Jet_id, Jet_aJCidx, Jet_hJCidx), PhiCut[k], VHPtCut[l], keep);
+	  if(keep){ 
 	    hist[k][l]->Fill(VHj_add);
 	    VHj[k][l]+= VHj_add; 
 	    ++nsuccess[k][l];
-	  }
-	  else{ ++noISR[k][l];}
+	  }else if(VHj_add != -1 && (!keep)){ 
+	    hist[k][l]->Fill(VHj_add);
+	    VHj[k][l]+= VHj_add; 
+	    ++nsuccess[k][l];
+	  }else if(VHj_add = -1 && (!keep)){ ++noISR[k][l];}
 	  //Sister optimisation
 	  double num =  EffSisISR(V_pt, V_eta, V_phi, V_mass, H_pt, H_eta, H_phi, H_mass, OtherJets( Jet_pt,  Jet_eta,  Jet_phi,  Jet_mass, Jet_puId, Jet_id, Jet_aJCidx, Jet_hJCidx), Sis(Sis_pt, Sis_eta, Sis_phi, Sis_mass), PhiCut[k], VHPtCut[l]);
 	  //cout<<"num is"<<num<<endl;
@@ -271,6 +290,7 @@ void VHF_Pt(){
       }
     }
   }
+
 
   //_*_*_*_*_*_*_*_
   //Save the histos
@@ -286,8 +306,20 @@ void VHF_Pt(){
       h_VH->Draw("same");
       // c[k][l]->SaveAs(Form("ISR_phi%i_Pt%i.pdf",k,l));
       c[k][l]->Write();
-      cout<<"(keep) The VHj_Pt mean for PhiCut: "<<k<<" and VHPtCut "<<l<<" is "<<VHj[k][l]/nsuccess[k][l]<<endl;
-      cout<<"The Sister-ISR efficiency for PhiCut: "<<k<<" and VHPtCut "<<l<<" is "<<eff[k][l]/nsuccess2[k][l]<<endl;
+      //cout<<"(keep) The VHj_Pt mean for PhiCut: "<<k<<" and VHPtCut "<<l<<" is "<<VHj[k][l]/nsuccess[k][l]<<endl;
+      //cout<<"The Sister-ISR efficiency for PhiCut: "<<k<<" and VHPtCut "<<l<<" is "<<eff[k][l]/nsuccess2[k][l]<<endl;
+
+      //Fill TH2D
+      cout<<"Debug1"<<endl;
+      cVHj[k][l]->cd();
+      hVHj->Fill( k, l, VHj[k][l]/nsuccess[k][l]);
+      hVHj->Draw();
+      ceff[k][l]->cd();
+      heff->Fill( k, l, heff[k][l]/nsuccess2[k][l]);
+      heff->Draw();
+      cVHj[k][l]->Write();
+      ceff[k][l]->Write();
+
     }
   }
   fout->Write();
