@@ -6,6 +6,8 @@
 #include "TH2D.h"
 #include "TLorentzVector.h"
 #include "TCanvas.h"
+#include "TGraph2D.h"
+#include "TStyle.h"
 
 #include <iostream>
 #include <vector>
@@ -14,8 +16,8 @@
 //Macros
 //_*_*_*
 
+//Create a TLorentzVector of the jets other than the two Higgs candidate b-jets. 
 vector<TLorentzVector> OtherJets(Float_t Jet_pt[15], Float_t Jet_eta[15], Float_t Jet_phi[15], Float_t Jet_mass[15], Int_t Jet_puId[15], Int_t Jet_id[15], Int_t aJCidx[8], Int_t hJCidx[2]){
-  //Create a TLorentzVector of the jets other than the two Higgs candidate b-jets. 
   vector<TLorentzVector> OtherJets;
   for(int i = 0; i < 15; ++i){
     TLorentzVector Ojet;
@@ -27,10 +29,10 @@ vector<TLorentzVector> OtherJets(Float_t Jet_pt[15], Float_t Jet_eta[15], Float_
   return OtherJets;
 }
 
+//Create a TLorentzVector of containing all the Higgs sisters
 vector<TLorentzVector> Sis(Float_t Sis_pt[3], Float_t Sis_eta[3], Float_t Sis_phi[3], Float_t Sis_mass[3]){
-  //Create a TLorentzVector of containing all the sisters
   vector<TLorentzVector> SIS;
-  for(int i = 1; i < 3; ++i){//Start at 1 since 0 entrie is always Z bosons
+  for(int i = 1; i < 3; ++i){//Start at 1 since 0 entrie is always the Z bosons
     TLorentzVector Sis;
     Sis.SetPtEtaPhiM( Sis_pt[i], Sis_eta[i], Sis_phi[i], Sis_mass[i]);
     SIS.push_back(Sis);
@@ -38,13 +40,41 @@ vector<TLorentzVector> Sis(Float_t Sis_pt[3], Float_t Sis_eta[3], Float_t Sis_ph
   return SIS;
 }
 
-double VHj_Pt(double V_pt, double V_eta, double V_phi, double V_mass, double H_pt, double H_eta, double H_phi, double H_mass, vector<TLorentzVector> O_Jets, double PhiCut, double VHPtCut, bool keep = false){
-  //Calculates the VHj_Pt taking as parameter the Phi and Pt cut. If keep == false, -1 is returned when no V_pt value is found. Otherwise VH.Pt() without the ISR jet is returned
-
+int foundISR(double V_pt, double V_eta, double V_phi, double V_mass, double H_pt, double H_eta, double H_phi, double H_mass, vector<TLorentzVector> O_Jets, double PhiCut, double VHPtCut){
+  //_*_*_*_*_*_*_*_*
+  //Find the ISR jet 
+  //_*_*_*_*_*_*_*_*
   //Build the V, H, V+H vector
   TLorentzVector V, H,VH, VHj;
   V.SetPtEtaPhiM(V_pt,V_eta,V_phi,V_mass);
   H.SetPtEtaPhiM(H_pt,H_eta,H_phi,H_mass);
+  VH = V+H;
+  //Apply VHPt Cut
+  if(VH.Pt() < VHPtCut){return 0;}
+  //Passes VHPt cut
+  double maxpt = 0;
+  int ISRidx = -1;
+  //Apply phi cut and keep ISR candiate only. Choose the ISR candidate having the higest Pt
+  for(unsigned int i = 0; i < O_Jets.size(); ++i){
+    if(abs(O_Jets[i].DeltaPhi(VH)) < TMath::Pi() - PhiCut) continue;
+    if(O_Jets[i].Pt() < maxpt) continue;
+    maxpt = O_Jets[i].Pt();
+    ISRidx = i;
+  }
+  //No ISR Jets found
+  if(ISRidx == -1){return 0;}
+  else{return 1;}
+}
+
+double VHj_Pt(double V_pt, double V_eta, double V_phi, double V_mass, double H_pt, double H_eta, double H_phi, double H_mass, vector<TLorentzVector> O_Jets, double PhiCut, double VHPtCut, bool keep = true){
+  //_*_*_*_*_*_*_*_*
+  //Find the ISR jet 
+  //_*_*_*_*_*_*_*_*
+  //Build the V, H, V+H vector
+  TLorentzVector V, H,VH, VHj;
+  V.SetPtEtaPhiM(V_pt,V_eta,V_phi,V_mass);
+  H.SetPtEtaPhiM(H_pt,H_eta,H_phi,H_mass);
+
   VH = V+H;
   //Apply VHPt Cut
   if(VH.Pt() < VHPtCut && keep == false){
@@ -57,21 +87,25 @@ double VHj_Pt(double V_pt, double V_eta, double V_phi, double V_mass, double H_p
     int ISRidx = -1;
     //Apply phi cut and keep ISR candiate only. Choose the ISR candidate having the higest Pt
     for(unsigned int i = 0; i < O_Jets.size(); ++i){
-      if( abs(O_Jets[i].DeltaPhi(VH)) < TMath::Pi() - PhiCut ) continue;
-      if( O_Jets[i].Pt() < maxpt ) continue;
-      if( O_Jets[i].Pt() == 0 && O_Jets[i].Eta() == 0 && O_Jets[i].Phi() == 0) continue;//In case the jet haven't passed the "no Higgs candidtate" selection
+      if(abs(O_Jets[i].DeltaPhi(VH)) < TMath::Pi() - PhiCut) continue;
+      if(O_Jets[i].Pt() < maxpt) continue;
       maxpt = O_Jets[i].Pt();
       ISRidx = i;
     }
     //No ISR Jets found
     if(ISRidx == -1 && keep == true) return VH.Pt();
     else if(ISRidx == -1 && keep == false) return -1;
+    else{
     VHj = VH + O_Jets[ISRidx];
     return VHj.Pt();
+    }
   }
 }
 
-double EffSisISR(double V_pt, double V_eta, double V_phi, double V_mass, double H_pt, double H_eta, double H_phi, double H_mass, vector<TLorentzVector> O_Jets, vector<TLorentzVector> Sis, double PhiCut, double VHPtCut){
+double PurSisISR(double V_pt, double V_eta, double V_phi, double V_mass, double H_pt, double H_eta, double H_phi, double H_mass, vector<TLorentzVector> O_Jets, vector<TLorentzVector> Sis, double PhiCut, double VHPtCut){
+  //_*_*_*_*_*_*_*_*
+  //Find the ISR jet 
+  //_*_*_*_*_*_*_*_*
   //Returns the efficiency for a ISR-tagged jet to be matched to a syster jet
   TLorentzVector V, H,VH, VHj;
   V.SetPtEtaPhiM(V_pt,V_eta,V_phi,V_mass);
@@ -79,7 +113,7 @@ double EffSisISR(double V_pt, double V_eta, double V_phi, double V_mass, double 
   VH = V+H;
   //Apply VHPt Cut
   if(VH.Pt() < VHPtCut){
-    return -1;
+    return 0;
     //Passes VHPt cut
   }else{
     double maxpt = 0;
@@ -88,16 +122,14 @@ double EffSisISR(double V_pt, double V_eta, double V_phi, double V_mass, double 
     for(unsigned int i = 0; i < O_Jets.size(); ++i){
       if( abs(O_Jets[i].DeltaPhi(VH)) < TMath::Pi() - PhiCut ) continue;
       if( O_Jets[i].Pt() < maxpt ) continue;
-      if( O_Jets[i].Pt() == 0 && O_Jets[i].Eta() == 0 && O_Jets[i].Phi() == 0) continue;//In case the jet haven't passed the "no Higgs candidtate" selection
       maxpt = O_Jets[i].Pt();
       ISRidx = i;
     }
-    //cout<<"ISRidx is"<<ISRidx<<endl;
-    if(ISRidx == -1) {return -1;}
+    if(ISRidx == -1) {return 0;}
     else{
       double dR = 99999;
       for(unsigned int i = 0; i < Sis.size(); ++i){
-	if(Sis[i].Pt() == 0 && Sis[i].Eta() == 0 && Sis[i].Phi() == 0) continue;
+	//if(Sis[i].Pt() == 0 && Sis[i].Eta() == 0 && Sis[i].Phi() == 0) continue;
 	if(Sis[i].DeltaR(O_Jets[ISRidx]) > dR) continue;
 	dR = Sis[i].DeltaR(O_Jets[ISRidx]);
       }
@@ -130,30 +162,29 @@ void VHF_Pt(){
   //_*_*_*_*_*_*_*_*_*
 
   double _PhiCut[14] = { 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3, 1.4, 1.5};
-  double _VHPtCut[10] = { 0, 10, 20, 30, 40, 50, 60, 80, 90, 100};
-  //double _PhiCut[2] = { 0.2, 0.3};
-  //double _VHPtCut[2] = { 0, 10};
+  double _VHPtCut[9] = {10, 20, 30, 40, 50, 60, 80, 90, 100};
+  double _PhiCut2[15] = {0, 0.25, 0.35, 0.45, 0.55, 0.65, 0.75, 0.85, 0.95, 1.05, 1.15, 1.25, 1.35, 1.45, 1.55};
+  double _VHPtCut2[10] = { 0, 15, 25, 35, 45, 55, 65, 85, 95, 105};
   bool keep = true;
 
   vector<double> PhiCut(_PhiCut, _PhiCut+14);
-  vector<double> VHPtCut(_VHPtCut, _VHPtCut+10);
+  vector<double> VHPtCut(_VHPtCut, _VHPtCut+9);
   vector<vector<TH1D*> > hist;
   vector<vector<TCanvas*> > c;
-  vector<vector<TCanvas*> > cVHj;
-  vector<vector<TCanvas*> > ceff;
+  TCanvas* cVHj = new TCanvas("cVHj","cVHj");
+  TCanvas* cpur = new TCanvas("cpur","cpur");
+  TCanvas* ceff = new TCanvas("ceff","ceff");
 
   vector<vector<double> > VHj;//VHj_Pt. To be computed in each event
   vector<vector<double> > eff;//Sister-ISR efficiency. To be computed at each event
-  vector<vector<Int_t> > nsuccess;//count the # of times vhj_pt is filler to a > 0 value
-  vector<vector<Int_t> > nsuccess2;
+  vector<vector<Int_t> > nbinentries;//#entries per PhixPt bins
+  vector<vector<Int_t> > nisrtag;//#ISR jets found per PhixPt bins
+  vector<vector<Int_t> > isreff;//#efficiency to be ISR tagged
   vector<vector<Int_t> > noISR;//count the # of times no ISR has been found
 
-  //TH2D* hVHj = new TH2D("hVHj", "h_VHj", PhiCut.size(), 0, PhiCut[PhiCut.size()-1], VHPtCut.size(), 0, VHPtCut[VHPtCut.size()-1]);
-  //TH2D* heff = new TH2D("heff", "heff", PhiCut.size(), 0, PhiCut[PhiCut.size()-1], VHPtCut.size(), 0, VHPtCut[VHPtCut.size()-1]);
-  cout<<"Hello"<<endl;
-  TH2D* hVHj = new TH2D("hVHj", "h_VHj", PhiCut.size()+1, _PhiCut, VHPtCut.size()+1, _VHPtCut);
-  cout<<"Hello2"<<endl;
-  TH2D* heff = new TH2D("heff", "heff",  PhiCut.size()+1, _PhiCut, VHPtCut.size()+1, _VHPtCut);
+  TH2D* hVHj = new TH2D("hVHj", "h_VHj", 14, _PhiCut2, 9, _VHPtCut2);
+  TH2D* hpur = new TH2D("hpur", "hpur",  14, _PhiCut2, 9, _VHPtCut2);
+  TH2D* heff = new TH2D("heff", "heff",  14, _PhiCut2, 9, _VHPtCut2);
 
   //Simple h_VH histogram without the ISR jet 
   TH1D* h_VH = new TH1D("h_VH","h_VH",200,0,200);
@@ -166,12 +197,11 @@ void VHF_Pt(){
 
     vector<TH1D*>  _hist;
     vector<TCanvas*>  _c;
-    vector<TCanvas*>  _cVHj;
-    vector<TCanvas*>  _ceff;
     vector<double> _VHj;
     vector<double> _eff;
-    vector<Int_t> _nsuccess;
-    vector<Int_t> _nsuccess2;
+    vector<Int_t> _nbinentries;
+    vector<Int_t> _nisrtag;
+    vector<Int_t> _isreff;
     vector<Int_t> _noISR;
 
     for(unsigned int k = 0; k < VHPtCut.size(); ++k){
@@ -179,27 +209,23 @@ void VHF_Pt(){
       TH1D* h = new TH1D(Form("h_phi%i_Pt%i",i,k),Form("h_phi%i_Pt%i",i,k),200, 0, 200);
       _hist.push_back(h);
       TCanvas* c1 = new TCanvas(Form("c_phi%i_Pt%i",i,k),Form("c_phi%i_Pt%i",i,k));
-      TCanvas* cVHj1 = new TCanvas(Form("cVHj_phi%i_Pt%i",i,k),Form("cVHj_phi%i_Pt%i",i,k));
-      TCanvas* ceff1 = new TCanvas(Form("ceff_phi%i_Pt%i",i,k),Form("ceff_phi%i_Pt%i",i,k));
       _c.push_back(c1);
-      _cVHj.push_back(cVHj1);
-      _ceff.push_back(ceff1);
 
       _VHj.push_back(0);
       _eff.push_back(0);
-      _nsuccess.push_back(0);
-      _nsuccess2.push_back(0);
+      _nbinentries.push_back(0);
+      _nisrtag.push_back(0);
+      _isreff.push_back(0);
       _noISR.push_back(0);
     }		
 
     hist.push_back(_hist);
     c.push_back(_c);
-    cVHj.push_back(_cVHj);
-    ceff.push_back(_ceff);
     VHj.push_back(_VHj);
     eff.push_back(_eff);
-    nsuccess.push_back(_nsuccess);
-    nsuccess2.push_back(_nsuccess2);
+    nbinentries.push_back(_nbinentries);
+    nisrtag.push_back(_nisrtag);
+    isreff.push_back(_isreff);
     noISR.push_back(_noISR);
 
   }
@@ -255,7 +281,7 @@ void VHF_Pt(){
   //_*_*_*_*_*_*_*_*
 
   // double nentries = t->GetEntries();
-  double nentries = 1e4;
+  double nentries = 1e5;
   for(Int_t i = 0; i < nentries; ++i){
     if(i%10000==0) cout << "event " << i << "/" << nentries << endl;
     t->GetEntry(i);
@@ -268,37 +294,39 @@ void VHF_Pt(){
       for(unsigned int k = 0; k < PhiCut.size(); ++k){
 	for(unsigned int l = 0; l < VHPtCut.size(); ++l){
 	  h_VH->Fill(VH.Pt());
-	  //VHj minimisation
+	  //Count #ISR tags
+	  nisrtag[k][l] +=  foundISR( V_pt,  V_eta,  V_phi,  V_mass,  H_pt,  H_eta,  H_phi,  H_mass, OtherJets( Jet_pt,  Jet_eta,  Jet_phi,  Jet_mass, Jet_puId, Jet_id, Jet_aJCidx, Jet_hJCidx),  PhiCut[k],  VHPtCut[l]);
+	  ++nbinentries[k][l];
+	  //Fill TH2D
+	  isreff[k][l] = nisrtag[k][l]/nbinentries[k][l];
+	    //VHj minimisation
 	  double VHj_add = VHj_Pt(V_pt, V_eta, V_phi, V_mass, H_pt, H_eta, H_phi, H_mass, OtherJets( Jet_pt,  Jet_eta,  Jet_phi,  Jet_mass, Jet_puId, Jet_id, Jet_aJCidx, Jet_hJCidx), PhiCut[k], VHPtCut[l], keep);
-	  if(keep){ 
-	    hist[k][l]->Fill(VHj_add);
-	    VHj[k][l]+= VHj_add; 
-	    ++nsuccess[k][l];
-	  }else if(VHj_add != -1 && (!keep)){ 
-	    hist[k][l]->Fill(VHj_add);
-	    VHj[k][l]+= VHj_add; 
-	    ++nsuccess[k][l];
-	  }else if(VHj_add = -1 && (!keep)){ ++noISR[k][l];}
+	  //if(keep){ 
+	  hist[k][l]->Fill(VHj_add);
+	  VHj[k][l]+= VHj_add; 
+	  //}else if(VHj_add != -1 && (!keep)){ 
+	  //  hist[k][l]->Fill(VHj_add);
+	  //  VHj[k][l]+= VHj_add; 
+	  //  ++nbinentries[k][l];
+	  //}else if(VHj_add == -1 && (!keep)){ ++noISR[k][l];}
 	  //Sister optimisation
-	  double num =  EffSisISR(V_pt, V_eta, V_phi, V_mass, H_pt, H_eta, H_phi, H_mass, OtherJets( Jet_pt,  Jet_eta,  Jet_phi,  Jet_mass, Jet_puId, Jet_id, Jet_aJCidx, Jet_hJCidx), Sis(Sis_pt, Sis_eta, Sis_phi, Sis_mass), PhiCut[k], VHPtCut[l]);
-	  //cout<<"num is"<<num<<endl;
-	  if(num != -1) {
-	    ++nsuccess2[k][l];
-	    eff[k][l] += num;
-	  }
+	  eff[k][l] +=  PurSisISR(V_pt, V_eta, V_phi, V_mass, H_pt, H_eta, H_phi, H_mass, OtherJets( Jet_pt,  Jet_eta,  Jet_phi,  Jet_mass, Jet_puId, Jet_id, Jet_aJCidx, Jet_hJCidx), Sis(Sis_pt, Sis_eta, Sis_phi, Sis_mass), PhiCut[k], VHPtCut[l]);
 	}
       }
     }
   }
 
 
+
   //_*_*_*_*_*_*_*_
   //Save the histos
   //_*_*_*_*_*_*_*_
+  gStyle->SetPaintTextFormat("4.2f");
   h_VH->Scale(1./h_VH->Integral(h_VH->FindBin(1.5),h_VH->FindBin(199.5)));
   TFile *fout = new TFile("results_keep.root","RECREATE");
   for(unsigned int k = 0; k < PhiCut.size(); ++k){
     for(unsigned int l = 0; l < VHPtCut.size(); ++l){
+      //compute isreff
       hist[k][l]->Scale(1./hist[k][l]->Integral(hist[k][l]->FindBin(0.5),hist[k][l]->FindBin(199.5)));
       c[k][l]->cd();
       hist[k][l]->SetLineColor(2);
@@ -306,22 +334,31 @@ void VHF_Pt(){
       h_VH->Draw("same");
       // c[k][l]->SaveAs(Form("ISR_phi%i_Pt%i.pdf",k,l));
       c[k][l]->Write();
-      //cout<<"(keep) The VHj_Pt mean for PhiCut: "<<k<<" and VHPtCut "<<l<<" is "<<VHj[k][l]/nsuccess[k][l]<<endl;
-      //cout<<"The Sister-ISR efficiency for PhiCut: "<<k<<" and VHPtCut "<<l<<" is "<<eff[k][l]/nsuccess2[k][l]<<endl;
-
-      //Fill TH2D
-      cout<<"Debug1"<<endl;
-      cVHj[k][l]->cd();
-      hVHj->Fill( k, l, VHj[k][l]/nsuccess[k][l]);
-      hVHj->Draw();
-      ceff[k][l]->cd();
-      heff->Fill( k, l, heff[k][l]/nsuccess2[k][l]);
-      heff->Draw();
-      cVHj[k][l]->Write();
-      ceff[k][l]->Write();
-
+      //cout<<"The VHj_Pt mean for PhiCut: "<<k<<" and VHPtCut "<<l<<" is "<<VHj[k][l]/nbinentries[k][l]<<endl;
+      //cout<<"The Sister-ISR efficiency for PhiCut: "<<k<<" and VHPtCut "<<l<<" is "<<eff[k][l]/nisrtag[k][l]<<endl;
+      //cout<<"The efficiency for PhiCut: "<<k<<" and VHPtCut "<<l<<" is "<<nisrtag[k][l]/nbinentries[k][l]<<endl;
     }
   }
+  for(unsigned int k = 0; k < 14; ++k){
+    for(unsigned int l = 0; l < 9; ++l){
+      ceff->cd();
+      heff->Fill(PhiCut[k], VHPtCut[l], (double)nisrtag[k][l]/(double)nbinentries[k][l]);
+      heff->Draw("colz text");
+      //cout<<"Debug1blabla"<<endl;
+      //cout<<"k is"<<k<<endl;
+      //cout<<"l is"<<l<<endl;
+      cVHj->cd();
+      //cout<<"The x bin is"<<(PhiCut[k]+PhiCut[k+1])/2.0<<endl;
+      hVHj->Fill(PhiCut[k], VHPtCut[l], VHj[k][l]/nbinentries[k][l]);
+      hVHj->Draw("colz text");
+      cpur->cd();
+      hpur->Fill(PhiCut[k], VHPtCut[l], eff[k][l]/nisrtag[k][l]);
+      hpur->Draw("colz text");
+    }
+  }
+  cVHj->Write();
+  cpur->Write();
+  ceff->Write();
   fout->Write();
   fout->Close();
 }
