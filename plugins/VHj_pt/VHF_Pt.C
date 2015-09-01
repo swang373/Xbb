@@ -174,6 +174,7 @@ void VHF_Pt(){
   TCanvas* cVHj = new TCanvas("cVHj","cVHj");
   TCanvas* cpur = new TCanvas("cpur","cpur");
   TCanvas* ceff = new TCanvas("ceff","ceff");
+  TCanvas* ceffxpur = new TCanvas("ceffxpur","ceffxpur");
 
   vector<vector<double> > VHj;//VHj_Pt. To be computed in each event
   vector<vector<double> > eff;//Sister-ISR efficiency. To be computed at each event
@@ -185,6 +186,7 @@ void VHF_Pt(){
   TH2D* hVHj = new TH2D("hVHj", "h_VHj", 14, _PhiCut2, 9, _VHPtCut2);
   TH2D* hpur = new TH2D("hpur", "hpur",  14, _PhiCut2, 9, _VHPtCut2);
   TH2D* heff = new TH2D("heff", "heff",  14, _PhiCut2, 9, _VHPtCut2);
+  TH2D* heffxpur = new TH2D("heffxpur", "heffxpur",  14, _PhiCut2, 9, _VHPtCut2);
 
   //Simple h_VH histogram without the ISR jet 
   TH1D* h_VH = new TH1D("h_VH","h_VH",200,0,200);
@@ -281,7 +283,7 @@ void VHF_Pt(){
   //_*_*_*_*_*_*_*_*
 
   // double nentries = t->GetEntries();
-  double nentries = 1e5;
+  double nentries = 1e3;
   for(Int_t i = 0; i < nentries; ++i){
     if(i%10000==0) cout << "event " << i << "/" << nentries << endl;
     t->GetEntry(i);
@@ -321,7 +323,6 @@ void VHF_Pt(){
   //_*_*_*_*_*_*_*_
   //Save the histos
   //_*_*_*_*_*_*_*_
-  gStyle->SetPaintTextFormat("4.2f");
   h_VH->Scale(1./h_VH->Integral(h_VH->FindBin(1.5),h_VH->FindBin(199.5)));
   TFile *fout = new TFile("results_keep.root","RECREATE");
   for(unsigned int k = 0; k < PhiCut.size(); ++k){
@@ -354,11 +355,15 @@ void VHF_Pt(){
       cpur->cd();
       hpur->Fill(PhiCut[k], VHPtCut[l], eff[k][l]/nisrtag[k][l]);
       hpur->Draw("colz text");
+      ceffxpur->cd();
+      heffxpur->Fill(PhiCut[k], VHPtCut[l], ((double)nisrtag[k][l]*eff[k][l])/((double)nisrtag[k][l]*nbinentries[k][l]));
+      heffxpur->Draw("colz text");
     }
   }
   cVHj->Write();
   cpur->Write();
   ceff->Write();
   fout->Write();
+  ceffxpur->Write();
   fout->Close();
 }
