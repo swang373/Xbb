@@ -152,7 +152,8 @@ void VHF_Pt(){
   //Read Input
   //_*_*_*_*_*
 
-  TString _f_in ="dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/t3groups/ethz-higgs/run2/V12/VHBB_HEPPY_V12_ZH_HToBB_ZToLL_M125_13TeV_powheg_pythia8__RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1.root";
+  //TString _f_in ="dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/t3groups/ethz-higgs/run2/V12/VHBB_HEPPY_V12_ZH_HToBB_ZToLL_M125_13TeV_powheg_pythia8__RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1.root";
+  TString _f_in ="dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/t3groups/ethz-higgs/run2/V12/VHBB_HEPPY_V12_ZH_HToBB_ZToLL_M125_13TeV_amcatnloFXFX_madspin_pythia8__RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1.root";
   TString _f_out ="";
   TFile* f = TFile::Open(_f_in);
   TTree* t = (TTree*) f->Get("tree");
@@ -161,13 +162,13 @@ void VHF_Pt(){
   //ISR-tag Parameters
   //_*_*_*_*_*_*_*_*_*
 
-  double _PhiCut[14] = { 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3, 1.4, 1.5};
+  double _PhiCut[31] = { 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2., 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3., 3.1, 3.2};
   double _VHPtCut[9] = {10, 20, 30, 40, 50, 60, 80, 90, 100};
   double _PhiCut2[15] = {0, 0.25, 0.35, 0.45, 0.55, 0.65, 0.75, 0.85, 0.95, 1.05, 1.15, 1.25, 1.35, 1.45, 1.55};
   double _VHPtCut2[10] = { 0, 15, 25, 35, 45, 55, 65, 85, 95, 105};
   bool keep = true;
 
-  vector<double> PhiCut(_PhiCut, _PhiCut+14);
+  vector<double> PhiCut(_PhiCut, _PhiCut+31);
   vector<double> VHPtCut(_VHPtCut, _VHPtCut+9);
   vector<vector<TH1D*> > hist;
   vector<vector<TCanvas*> > c;
@@ -177,16 +178,23 @@ void VHF_Pt(){
   TCanvas* ceffxpur = new TCanvas("ceffxpur","ceffxpur");
 
   vector<vector<double> > VHj;//VHj_Pt. To be computed in each event
-  vector<vector<double> > eff;//Sister-ISR efficiency. To be computed at each event
+  vector<vector<double> > pur;//Sister-ISR efficiency. To be computed at each event
   vector<vector<Int_t> > nbinentries;//#entries per PhixPt bins
   vector<vector<Int_t> > nisrtag;//#ISR jets found per PhixPt bins
   vector<vector<Int_t> > isreff;//#efficiency to be ISR tagged
   vector<vector<Int_t> > noISR;//count the # of times no ISR has been found
 
+  TH2D* hVHj = new TH2D("hVHj", "h_VHj", 30, _PhiCut, 8, _VHPtCut);
+  TH2D* hpur = new TH2D("hpur", "hpur",  30, _PhiCut, 8, _VHPtCut);
+  TH2D* heff = new TH2D("heff", "heff",  30, _PhiCut, 8, _VHPtCut);
+  TH2D* heffxpur = new TH2D("heffxpur", "heffxpur",  30, _PhiCut, 8, _VHPtCut);
+
+  /*
   TH2D* hVHj = new TH2D("hVHj", "h_VHj", 14, _PhiCut2, 9, _VHPtCut2);
   TH2D* hpur = new TH2D("hpur", "hpur",  14, _PhiCut2, 9, _VHPtCut2);
   TH2D* heff = new TH2D("heff", "heff",  14, _PhiCut2, 9, _VHPtCut2);
   TH2D* heffxpur = new TH2D("heffxpur", "heffxpur",  14, _PhiCut2, 9, _VHPtCut2);
+  */
 
   //Simple h_VH histogram without the ISR jet 
   TH1D* h_VH = new TH1D("h_VH","h_VH",200,0,200);
@@ -200,7 +208,7 @@ void VHF_Pt(){
     vector<TH1D*>  _hist;
     vector<TCanvas*>  _c;
     vector<double> _VHj;
-    vector<double> _eff;
+    vector<double> _pur;
     vector<Int_t> _nbinentries;
     vector<Int_t> _nisrtag;
     vector<Int_t> _isreff;
@@ -214,7 +222,7 @@ void VHF_Pt(){
       _c.push_back(c1);
 
       _VHj.push_back(0);
-      _eff.push_back(0);
+      _pur.push_back(0);
       _nbinentries.push_back(0);
       _nisrtag.push_back(0);
       _isreff.push_back(0);
@@ -224,7 +232,7 @@ void VHF_Pt(){
     hist.push_back(_hist);
     c.push_back(_c);
     VHj.push_back(_VHj);
-    eff.push_back(_eff);
+    pur.push_back(_pur);
     nbinentries.push_back(_nbinentries);
     nisrtag.push_back(_nisrtag);
     isreff.push_back(_isreff);
@@ -256,6 +264,7 @@ void VHF_Pt(){
   Float_t Sis_eta[3];
   Float_t Sis_phi[3];
   Float_t Sis_mass[3];
+  Float_t weight;
 
   t->SetBranchAddress("Jet_pt", &Jet_pt);
   t->SetBranchAddress("Jet_eta", &Jet_eta);
@@ -277,6 +286,7 @@ void VHF_Pt(){
   t->SetBranchAddress("GenHiggsSisters_eta", &Sis_eta);
   t->SetBranchAddress("GenHiggsSisters_phi", &Sis_phi);
   t->SetBranchAddress("GenHiggsSisters_mass", &Sis_mass);
+  t->SetBranchAddress("genWeight", &weight);
 
   //_*_*_*_*_*_*_*_*
   //Perform the loop
@@ -292,6 +302,8 @@ void VHF_Pt(){
     V.SetPtEtaPhiM(V_pt,V_eta,V_phi,V_mass);
     H.SetPtEtaPhiM(H_pt,H_eta,H_phi,H_mass);
     VH = V+H;
+    //cout<<"weight is"<<weight<<endl;
+    weight = 1;
     if(V_pt > 100){
       for(unsigned int k = 0; k < PhiCut.size(); ++k){
 	for(unsigned int l = 0; l < VHPtCut.size(); ++l){
@@ -300,19 +312,13 @@ void VHF_Pt(){
 	  nisrtag[k][l] +=  foundISR( V_pt,  V_eta,  V_phi,  V_mass,  H_pt,  H_eta,  H_phi,  H_mass, OtherJets( Jet_pt,  Jet_eta,  Jet_phi,  Jet_mass, Jet_puId, Jet_id, Jet_aJCidx, Jet_hJCidx),  PhiCut[k],  VHPtCut[l]);
 	  ++nbinentries[k][l];
 	  //Fill TH2D
-	  isreff[k][l] = nisrtag[k][l]/nbinentries[k][l];
-	    //VHj minimisation
+	  isreff[k][l] = weight*nisrtag[k][l];
+	  //VHj minimisation
 	  double VHj_add = VHj_Pt(V_pt, V_eta, V_phi, V_mass, H_pt, H_eta, H_phi, H_mass, OtherJets( Jet_pt,  Jet_eta,  Jet_phi,  Jet_mass, Jet_puId, Jet_id, Jet_aJCidx, Jet_hJCidx), PhiCut[k], VHPtCut[l], keep);
-	  //if(keep){ 
-	  hist[k][l]->Fill(VHj_add);
-	  VHj[k][l]+= VHj_add; 
-	  //}else if(VHj_add != -1 && (!keep)){ 
-	  //  hist[k][l]->Fill(VHj_add);
-	  //  VHj[k][l]+= VHj_add; 
-	  //  ++nbinentries[k][l];
-	  //}else if(VHj_add == -1 && (!keep)){ ++noISR[k][l];}
+	  hist[k][l]->Fill(weight*VHj_add);
+	  VHj[k][l]+= weight*VHj_add; 
 	  //Sister optimisation
-	  eff[k][l] +=  PurSisISR(V_pt, V_eta, V_phi, V_mass, H_pt, H_eta, H_phi, H_mass, OtherJets( Jet_pt,  Jet_eta,  Jet_phi,  Jet_mass, Jet_puId, Jet_id, Jet_aJCidx, Jet_hJCidx), Sis(Sis_pt, Sis_eta, Sis_phi, Sis_mass), PhiCut[k], VHPtCut[l]);
+	  pur[k][l] +=  weight*PurSisISR(V_pt, V_eta, V_phi, V_mass, H_pt, H_eta, H_phi, H_mass, OtherJets( Jet_pt,  Jet_eta,  Jet_phi,  Jet_mass, Jet_puId, Jet_id, Jet_aJCidx, Jet_hJCidx), Sis(Sis_pt, Sis_eta, Sis_phi, Sis_mass), PhiCut[k], VHPtCut[l]);
 	}
       }
     }
@@ -333,13 +339,29 @@ void VHF_Pt(){
       hist[k][l]->SetLineColor(2);
       hist[k][l]->Draw();
       h_VH->Draw("same");
-      // c[k][l]->SaveAs(Form("ISR_phi%i_Pt%i.pdf",k,l));
       c[k][l]->Write();
       //cout<<"The VHj_Pt mean for PhiCut: "<<k<<" and VHPtCut "<<l<<" is "<<VHj[k][l]/nbinentries[k][l]<<endl;
       //cout<<"The Sister-ISR efficiency for PhiCut: "<<k<<" and VHPtCut "<<l<<" is "<<eff[k][l]/nisrtag[k][l]<<endl;
       //cout<<"The efficiency for PhiCut: "<<k<<" and VHPtCut "<<l<<" is "<<nisrtag[k][l]/nbinentries[k][l]<<endl;
     }
   }
+  for(unsigned int k = 0; k < 30; ++k){
+    for(unsigned int l = 0; l < 8; ++l){
+      ceff->cd();
+      heff->Fill((PhiCut[k]+PhiCut[k+1])/2., (VHPtCut[l]+VHPtCut[l+1])/2., isreff[k][l]/(double)nbinentries[k][l]);
+      heff->Draw("colz text");
+      cVHj->cd();
+      hVHj->Fill((PhiCut[k]+PhiCut[k+1])/2., (VHPtCut[l]+VHPtCut[l+1])/2., VHj[k][l]/nbinentries[k][l]);
+      hVHj->Draw("colz text");
+      cpur->cd();
+      hpur->Fill((PhiCut[k]+PhiCut[k+1])/2., (VHPtCut[l]+VHPtCut[l+1])/2., pur[k][l]/nisrtag[k][l]);
+      hpur->Draw("colz text");
+      ceffxpur->cd();
+      heffxpur->Fill((PhiCut[k]+PhiCut[k+1])/2., (VHPtCut[l]+VHPtCut[l+1])/2., ((double)nisrtag[k][l]*pur[k][l])/((double)nisrtag[k][l]*nbinentries[k][l]));
+      heffxpur->Draw("colz text");
+    }
+  }
+  /*
   for(unsigned int k = 0; k < 14; ++k){
     for(unsigned int l = 0; l < 9; ++l){
       ceff->cd();
@@ -353,13 +375,14 @@ void VHF_Pt(){
       hVHj->Fill(PhiCut[k], VHPtCut[l], VHj[k][l]/nbinentries[k][l]);
       hVHj->Draw("colz text");
       cpur->cd();
-      hpur->Fill(PhiCut[k], VHPtCut[l], eff[k][l]/nisrtag[k][l]);
+      hpur->Fill(PhiCut[k], VHPtCut[l], pur[k][l]/nisrtag[k][l]);
       hpur->Draw("colz text");
       ceffxpur->cd();
-      heffxpur->Fill(PhiCut[k], VHPtCut[l], ((double)nisrtag[k][l]*eff[k][l])/((double)nisrtag[k][l]*nbinentries[k][l]));
+      heffxpur->Fill(PhiCut[k], VHPtCut[l], ((double)nisrtag[k][l]*pur[k][l])/((double)nisrtag[k][l]*nbinentries[k][l]));
       heffxpur->Draw("colz text");
     }
   }
+  */
   cVHj->Write();
   cpur->Write();
   ceff->Write();
