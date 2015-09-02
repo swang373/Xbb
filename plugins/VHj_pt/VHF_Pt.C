@@ -9,6 +9,8 @@
 #include "TGraph2D.h"
 #include "TStyle.h"
 
+#include "tdrstyle.C"
+
 #include <iostream>
 #include <vector>
 
@@ -148,12 +150,32 @@ double PurSisISR(double V_pt, double V_eta, double V_phi, double V_mass, double 
 
 void VHF_Pt(){
 
+  //setTDRStyle();
+  //gStyle->SetPaintTextFormat("4.2f");
+  //gStyle->SetOptStat(0);
+
+
   //_*_*_*_*_*
   //Read Input
   //_*_*_*_*_*
 
+  //TString _sample = "ZH_HToBB_powheg_pythia";
+  //TString _sample = "ZH_HToBB_amcanlo_pythia";
+  //TString _sample = "ggZH_powheg_pythia";
+  //tstring _sample = "tth_powheg_pythia";
+  TString _sample = "tth_amcanlo_pythia";
+
+
+  //ZHbb
   //TString _f_in ="dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/t3groups/ethz-higgs/run2/V12/VHBB_HEPPY_V12_ZH_HToBB_ZToLL_M125_13TeV_powheg_pythia8__RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1.root";
-  TString _f_in ="dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/t3groups/ethz-higgs/run2/V12/VHBB_HEPPY_V12_ZH_HToBB_ZToLL_M125_13TeV_amcatnloFXFX_madspin_pythia8__RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1.root";
+  //TString _f_in ="dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/t3groups/ethz-higgs/run2/V12/VHBB_HEPPY_V12_ZH_HToBB_ZToLL_M125_13TeV_amcatnloFXFX_madspin_pythia8__RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1.root";
+  //ggZH
+  //TString _f_in ="dcap://t3se01.psi.ch:22125/pnfs/psi.ch/cms/trivcat/store/t3groups/ethz-higgs/run2/V12/VHBB_HEPPY_V12_ggZH_HToBB_ZToLL_M125_13TeV_powheg_pythia8__RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1.root";
+  //ttH
+  //TString _f_in ="dcap://t3se01.psi.ch:22125/pnfs/psi.ch/cms/trivcat/store/t3groups/ethz-higgs/run2/V12/VHBB_HEPPY_V12_ttHTobb_M125_13TeV_powheg_pythia8__RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1.root";
+  TString _f_in ="dcap://t3se01.psi.ch:22125/pnfs/psi.ch/cms/trivcat/store/t3groups/ethz-higgs/run2/V12/VHBB_HEPPY_V12_ttHJetTobb_M125_13TeV_amcatnloFXFX_madspin_pythia8__RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1.root";
+
+
   TString _f_out ="";
   TFile* f = TFile::Open(_f_in);
   TTree* t = (TTree*) f->Get("tree");
@@ -162,13 +184,13 @@ void VHF_Pt(){
   //ISR-tag Parameters
   //_*_*_*_*_*_*_*_*_*
 
-  double _PhiCut[31] = { 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2., 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3., 3.1, 3.2};
+  double _PhiCut[16] = { 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2., 2.2, 2.4, 2.6, 2.8, 3., 3.2};
   double _VHPtCut[9] = {10, 20, 30, 40, 50, 60, 80, 90, 100};
   double _PhiCut2[15] = {0, 0.25, 0.35, 0.45, 0.55, 0.65, 0.75, 0.85, 0.95, 1.05, 1.15, 1.25, 1.35, 1.45, 1.55};
   double _VHPtCut2[10] = { 0, 15, 25, 35, 45, 55, 65, 85, 95, 105};
   bool keep = true;
 
-  vector<double> PhiCut(_PhiCut, _PhiCut+31);
+  vector<double> PhiCut(_PhiCut, _PhiCut+16);
   vector<double> VHPtCut(_VHPtCut, _VHPtCut+9);
   vector<vector<TH1D*> > hist;
   vector<vector<TCanvas*> > c;
@@ -184,17 +206,10 @@ void VHF_Pt(){
   vector<vector<Int_t> > isreff;//#efficiency to be ISR tagged
   vector<vector<Int_t> > noISR;//count the # of times no ISR has been found
 
-  TH2D* hVHj = new TH2D("hVHj", "h_VHj", 30, _PhiCut, 8, _VHPtCut);
-  TH2D* hpur = new TH2D("hpur", "hpur",  30, _PhiCut, 8, _VHPtCut);
-  TH2D* heff = new TH2D("heff", "heff",  30, _PhiCut, 8, _VHPtCut);
-  TH2D* heffxpur = new TH2D("heffxpur", "heffxpur",  30, _PhiCut, 8, _VHPtCut);
-
-  /*
-  TH2D* hVHj = new TH2D("hVHj", "h_VHj", 14, _PhiCut2, 9, _VHPtCut2);
-  TH2D* hpur = new TH2D("hpur", "hpur",  14, _PhiCut2, 9, _VHPtCut2);
-  TH2D* heff = new TH2D("heff", "heff",  14, _PhiCut2, 9, _VHPtCut2);
-  TH2D* heffxpur = new TH2D("heffxpur", "heffxpur",  14, _PhiCut2, 9, _VHPtCut2);
-  */
+  TH2D* hVHj = new TH2D("hVHj", "h_VHj", 15, _PhiCut, 8, _VHPtCut);
+  TH2D* hpur = new TH2D("hpur", "hpur",  15, _PhiCut, 8, _VHPtCut);
+  TH2D* heff = new TH2D("heff", "heff",  15, _PhiCut, 8, _VHPtCut);
+  TH2D* heffxpur = new TH2D("heffxpur", "heffxpur",  15, _PhiCut, 8, _VHPtCut);
 
   //Simple h_VH histogram without the ISR jet 
   TH1D* h_VH = new TH1D("h_VH","h_VH",200,0,200);
@@ -293,7 +308,7 @@ void VHF_Pt(){
   //_*_*_*_*_*_*_*_*
 
   // double nentries = t->GetEntries();
-  double nentries = 1e3;
+  double nentries = 1e6;
   for(Int_t i = 0; i < nentries; ++i){
     if(i%10000==0) cout << "event " << i << "/" << nentries << endl;
     t->GetEntry(i);
@@ -302,16 +317,16 @@ void VHF_Pt(){
     V.SetPtEtaPhiM(V_pt,V_eta,V_phi,V_mass);
     H.SetPtEtaPhiM(H_pt,H_eta,H_phi,H_mass);
     VH = V+H;
-    //cout<<"weight is"<<weight<<endl;
+    if(weight < 0){weight = -1;}
+    else if(weight > 0){weight = 1;}
     weight = 1;
     if(V_pt > 100){
       for(unsigned int k = 0; k < PhiCut.size(); ++k){
 	for(unsigned int l = 0; l < VHPtCut.size(); ++l){
 	  h_VH->Fill(VH.Pt());
+	  ++nbinentries[k][l];
 	  //Count #ISR tags
 	  nisrtag[k][l] +=  foundISR( V_pt,  V_eta,  V_phi,  V_mass,  H_pt,  H_eta,  H_phi,  H_mass, OtherJets( Jet_pt,  Jet_eta,  Jet_phi,  Jet_mass, Jet_puId, Jet_id, Jet_aJCidx, Jet_hJCidx),  PhiCut[k],  VHPtCut[l]);
-	  ++nbinentries[k][l];
-	  //Fill TH2D
 	  isreff[k][l] = weight*nisrtag[k][l];
 	  //VHj minimisation
 	  double VHj_add = VHj_Pt(V_pt, V_eta, V_phi, V_mass, H_pt, H_eta, H_phi, H_mass, OtherJets( Jet_pt,  Jet_eta,  Jet_phi,  Jet_mass, Jet_puId, Jet_id, Jet_aJCidx, Jet_hJCidx), PhiCut[k], VHPtCut[l], keep);
@@ -324,13 +339,11 @@ void VHF_Pt(){
     }
   }
 
-
-
   //_*_*_*_*_*_*_*_
   //Save the histos
   //_*_*_*_*_*_*_*_
   h_VH->Scale(1./h_VH->Integral(h_VH->FindBin(1.5),h_VH->FindBin(199.5)));
-  TFile *fout = new TFile("results_keep.root","RECREATE");
+  TFile *fout = new TFile("results"+_sample+".root","RECREATE");
   for(unsigned int k = 0; k < PhiCut.size(); ++k){
     for(unsigned int l = 0; l < VHPtCut.size(); ++l){
       //compute isreff
@@ -345,48 +358,78 @@ void VHF_Pt(){
       //cout<<"The efficiency for PhiCut: "<<k<<" and VHPtCut "<<l<<" is "<<nisrtag[k][l]/nbinentries[k][l]<<endl;
     }
   }
-  for(unsigned int k = 0; k < 30; ++k){
+  for(unsigned int k = 0; k < 15; ++k){
     for(unsigned int l = 0; l < 8; ++l){
       ceff->cd();
       heff->Fill((PhiCut[k]+PhiCut[k+1])/2., (VHPtCut[l]+VHPtCut[l+1])/2., isreff[k][l]/(double)nbinentries[k][l]);
+      heff->SetTitle("ISR-finder efficiency");
+      heff->GetXaxis()->SetTitle("#Delta #phi");
+      heff->GetXaxis()->SetLabelSize(20);
+      heff->GetXaxis()->SetLabelFont(43);
+      heff->GetXaxis()->SetTitleFont(63);
+      heff->GetXaxis()->SetTitleSize(20);
+      heff->GetYaxis()->SetTitle("P_{T}(VH) Cut");
+      heff->GetYaxis()->SetLabelSize(20);
+      heff->GetYaxis()->SetLabelFont(43);
+      heff->GetYaxis()->SetTitleFont(63);
+      heff->GetYaxis()->SetTitleSize(20);
       heff->Draw("colz text");
       cVHj->cd();
       hVHj->Fill((PhiCut[k]+PhiCut[k+1])/2., (VHPtCut[l]+VHPtCut[l+1])/2., VHj[k][l]/nbinentries[k][l]);
+      hVHj->SetTitle("P_{T}(VH + ISR Jets)");
+      hVHj->GetXaxis()->SetTitle("#Delta #phi");
+      hVHj->GetXaxis()->SetLabelSize(20);
+      hVHj->GetXaxis()->SetLabelFont(43);
+      hVHj->GetXaxis()->SetTitleFont(63);
+      hVHj->GetXaxis()->SetTitleSize(20);
+      hVHj->GetYaxis()->SetTitle("P_{t}(VH) Cut");
+      hVHj->GetYaxis()->SetLabelSize(20);
+      hVHj->GetYaxis()->SetLabelFont(43);
+      hVHj->GetYaxis()->SetTitleFont(63);
+      hVHj->GetYaxis()->SetTitleSize(20);
       hVHj->Draw("colz text");
       cpur->cd();
       hpur->Fill((PhiCut[k]+PhiCut[k+1])/2., (VHPtCut[l]+VHPtCut[l+1])/2., pur[k][l]/nisrtag[k][l]);
+      hpur->SetTitle("ISR-finder purity");
+      hpur->GetXaxis()->SetTitle("#Delta #phi");
+      hpur->GetXaxis()->SetLabelSize(20);
+      hpur->GetXaxis()->SetLabelFont(43);
+      hpur->GetXaxis()->SetTitleFont(63);
+      hpur->GetXaxis()->SetTitleSize(20);
+      hpur->GetYaxis()->SetTitle("P_{t}(VH) Cut");
+      hpur->GetYaxis()->SetLabelSize(20);
+      hpur->GetYaxis()->SetLabelFont(43);
+      hpur->GetYaxis()->SetTitleFont(63);
+      hpur->GetYaxis()->SetTitleSize(20);
       hpur->Draw("colz text");
       ceffxpur->cd();
       heffxpur->Fill((PhiCut[k]+PhiCut[k+1])/2., (VHPtCut[l]+VHPtCut[l+1])/2., ((double)nisrtag[k][l]*pur[k][l])/((double)nisrtag[k][l]*nbinentries[k][l]));
+      heffxpur->SetTitle("ISR-finder purity x efficiency");
+      heffxpur->GetXaxis()->SetTitle("#Delta #phi");
+      heffxpur->GetXaxis()->SetLabelSize(20);
+      heffxpur->GetXaxis()->SetLabelFont(43);
+      heffxpur->GetXaxis()->SetTitleFont(63);
+      heffxpur->GetXaxis()->SetTitleSize(20);
+      heffxpur->GetYaxis()->SetTitle("P_{t}(VH) Cut");
+      heffxpur->GetYaxis()->SetLabelSize(20);
+      heffxpur->GetYaxis()->SetLabelFont(43);
+      heffxpur->GetYaxis()->SetTitleFont(63);
+      heffxpur->GetYaxis()->SetTitleSize(20);
       heffxpur->Draw("colz text");
     }
   }
-  /*
-  for(unsigned int k = 0; k < 14; ++k){
-    for(unsigned int l = 0; l < 9; ++l){
-      ceff->cd();
-      heff->Fill(PhiCut[k], VHPtCut[l], (double)nisrtag[k][l]/(double)nbinentries[k][l]);
-      heff->Draw("colz text");
-      //cout<<"Debug1blabla"<<endl;
-      //cout<<"k is"<<k<<endl;
-      //cout<<"l is"<<l<<endl;
-      cVHj->cd();
-      //cout<<"The x bin is"<<(PhiCut[k]+PhiCut[k+1])/2.0<<endl;
-      hVHj->Fill(PhiCut[k], VHPtCut[l], VHj[k][l]/nbinentries[k][l]);
-      hVHj->Draw("colz text");
-      cpur->cd();
-      hpur->Fill(PhiCut[k], VHPtCut[l], pur[k][l]/nisrtag[k][l]);
-      hpur->Draw("colz text");
-      ceffxpur->cd();
-      heffxpur->Fill(PhiCut[k], VHPtCut[l], ((double)nisrtag[k][l]*pur[k][l])/((double)nisrtag[k][l]*nbinentries[k][l]));
-      heffxpur->Draw("colz text");
-    }
-  }
-  */
+
+  gStyle->SetPaintTextFormat("4.2f");
+  gStyle->SetOptStat(0);
+
   cVHj->Write();
+  cVHj->SaveAs("optimisation/VHj"+_sample+".pdf");
   cpur->Write();
+  cpur->SaveAs("optimisation/pur"+_sample+".pdf");
   ceff->Write();
-  fout->Write();
+  ceff->SaveAs("optimisation/eff"+_sample+".pdf");
   ceffxpur->Write();
+  ceffxpur->SaveAs("optimisation/effxpur"+_sample+".pdf");
+  fout->Write();
   fout->Close();
 }
