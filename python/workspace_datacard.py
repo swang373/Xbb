@@ -9,6 +9,10 @@ warnings.filterwarnings( action='ignore', category=RuntimeWarning, message='crea
 from optparse import OptionParser
 from myutils import BetterConfigParser, Sample, progbar, printc, ParseInfo, Rebinner, HistoMaker
 
+debug = True
+
+if debug: print "workspace_datacard.py debug 1: beginning of the file"
+
 #--CONFIGURE---------------------------------------------------------------------
 argv = sys.argv
 parser = OptionParser()
@@ -20,6 +24,7 @@ parser.add_option("-C", "--config", dest="config", default=[], action="append",
 config = BetterConfigParser()
 config.read(opts.config)
 var=opts.variable
+if debug: print "var is", var#take the values of the list parameter in datacards
 #-------------------------------------------------------------------------------
 
 #--read variables from config---------------------------------------------------
@@ -109,8 +114,9 @@ if str(anType) == 'cr':
     blind = False
 if blind: 
     printc('red','', 'I AM BLINDED!')    
-#get List of backgrounds in use:
+#get List of backgrounds in use: (defined in cfg genereal under allBKG)
 backgrounds = eval(config.get('LimitGeneral','BKG'))
+if debug: print 'backgrounds is', config.get('LimitGeneral','BKG') + '\n' 
 #Groups for adding samples together
 GroupDict = eval(config.get('LimitGeneral','Group'))
 #naming for DC
@@ -164,10 +170,14 @@ info = ParseInfo(samplesinfo,path)
 all_samples = info.get_samples(signals+backgrounds+additionals)
 
 signal_samples = info.get_samples(signals) 
+print'signal sample is', signal_samples, '\n'
 background_samples = info.get_samples(backgrounds) 
+print'background sample is', background_samples, '\n'
 data_sample_names = config.get('dc:%s'%var,'data').split(' ')
 data_samples = info.get_samples(data_sample_names)
 #-------------------------------------------------------------------------------------------------
+
+if debug: print "workspace_datacard.py debug 2"
 
 optionsList=[]
 
@@ -212,6 +222,8 @@ for syst in systematics:
         #append
         appendList()
 
+if debug: print "workspace_datacard.py debug 3"
+
 #UEPS
 for weightF_sys in weightF_systematics:
     for _weight in [config.get('Weights','%s_UP' %(weightF_sys)),config.get('Weights','%s_DOWN' %(weightF_sys))]:
@@ -246,7 +258,10 @@ if addBlindingCut:
 
 
 if rebin_active:
+    if debug: print "workspace_datacard.py debug 4:  before mc_hMaker.calc_rebin(background_samples)"
+    #ERROR HERE, because background_samples is empty
     mc_hMaker.calc_rebin(background_samples)
+    if debug: print "workspace_datacard.py debug 5:  after mc_hMaker.calc_rebin(background_samples)"
     #transfer rebinning info to data maker
     data_hMaker.norebin_nBins = copy(mc_hMaker.norebin_nBins)
     data_hMaker.rebin_nBins = copy(mc_hMaker.rebin_nBins)
@@ -592,3 +607,4 @@ for DCtype in ['WS','TH']:
 
 
 outfile.Close()
+if debug: print "workspace_datacard.py END"
