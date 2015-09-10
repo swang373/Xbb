@@ -188,6 +188,7 @@ class HistoMaker:
         self.nBins = nBins_start
         i=0
         #add all together:
+	totalBG = ROOT.TH1D()
         print '\n\t...calculating rebinning...'
         for job in bg_list:
             htree = self.get_histos_from_tree(job)[0].values()[0]
