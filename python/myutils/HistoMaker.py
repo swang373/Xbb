@@ -191,6 +191,7 @@ class HistoMaker:
 	totalBG = ROOT.TH1D()
         print '\n\t...calculating rebinning...'
         for job in bg_list:
+	    print 'In HistoMaker calc_rebin: job is ', job
             htree = self.get_histos_from_tree(job)[0].values()[0]
             if not i:
                 totalBG = copy(htree)
@@ -206,16 +207,19 @@ class HistoMaker:
         binL=1
         rel=1.0
         #---- from right
+	print 'In HistoMaker calc_rebin: debug1'
         while rel > tolerance:
             TotR+=totalBG.GetBinContent(binR)
             ErrorR=sqrt(ErrorR**2+totalBG.GetBinError(binR)**2)
             binR-=1
+	    #print 'is this loop infinite ?'
             if not TotR == 0 and not ErrorR == 0:
                 rel=ErrorR/TotR
                 #print rel
         #print 'upper bin is %s'%binR
 
         #---- from left
+	print 'In HistoMaker calc_rebin: debug2'
         rel=1.0
         while rel > tolerance:
             TotL+=totalBG.GetBinContent(binL)
@@ -228,6 +232,7 @@ class HistoMaker:
         binL+=1
         #print 'lower bin is %s'%binL
 
+	print 'In HistoMaker calc_rebin: debug3'
         inbetween=binR-binL
         stepsize=int(inbetween)/(int(self.norebin_nBins)-2)
         modulo = int(inbetween)%(int(self.norebin_nBins)-2)
@@ -235,6 +240,7 @@ class HistoMaker:
         #print 'stepsize %s'% stepsize
         #print 'modulo %s'%modulo
         binlist=[binL]
+	print 'In HistoMaker calc_rebin: debug4'
         for i in range(0,int(self.norebin_nBins)-3):
             binlist.append(binlist[-1]+stepsize)
         binlist[-1]+=modulo
