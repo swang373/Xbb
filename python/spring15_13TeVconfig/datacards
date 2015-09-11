@@ -87,7 +87,7 @@ systematicsnaming = {'JER':'CMS_vhbb_Zll_res_j','JES':'CMS_vhbb_Zll_scale_j','be
 #!! --------------------------------------
 #!! to be processed in batch mode
 #!! --------------------------------------
-List = RMed_ZH125_EE_8TeV_janAngularOnly_noWeights
+List = ZH125_EE_8TeV_janAngularOnly_noWeights
 #List = RMed_ZH125_EE_8TeV_janAngularOnly,RMed_ZH125_MM_8TeV_janAngularOnly
 
 #List = RTight_ZH125_EE_8TeV_janAngularOnly,RTight_ZH125_MM_8TeV_janAngularOnly,RMed_ZH125_EE_8TeV_janAngularOnly,RMed_ZH125_MM_8TeV_janAngularOnly
@@ -166,8 +166,8 @@ CMS_vhbb_TT_SF_Zll_LowPt_8TeV: {'type':'lnN', 'TT':1.05}
 #!! -------------------------
 
 #TEST
-[dc:RMed_ZH125_EE_8TeV_janAngularOnly_noWeights] 
-var = RMed_ZH125_janAngularOnly_noWeights.nominal
+[dc:ZH125_EE_8TeV_janAngularOnly_noWeights] 
+var = Hmass
 wsVarName = <!LimitGeneral|BDToutname!>
 range = <!LimitGeneral|BDTrange!>
 dcName = BDT_M125_ZeeLowPt_8TeV
@@ -175,17 +175,6 @@ cut = RMed_EE
 signal = ZH125
 dcBin = ZeeLowPt_8TeV
 data = ZHbb 
-type= BDT
-
-[dc:RMed_ZH125_EE_8TeV_janAngularOnly_noWeights] 
-var = RMed_ZH125_janAngularOnly_noWeights.nominal
-wsVarName = <!LimitGeneral|BDToutname!>
-range = <!LimitGeneral|BDTrange!>
-dcName = BDT_M125_ZeeLowPt_8TeV
-cut = RMed_EE
-signal = ZH125
-dcBin = ZeeLowPt_8TeV
-data = ggH
 type= BDT
 
 #[dc:RMed_ZH125_MM_8TeV_janAngularOnly_noWeights] 

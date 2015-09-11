@@ -33,6 +33,7 @@ class HistoMaker:
         ROOT.gSystem.Load(VHbbNameSpace)
 
     def get_histos_from_tree(self,job,cutOverWrite=None):
+        '''Take job containing all the information on the sample. Save the corresponding histogram in TH1F'''
         
         print "get_histo_from_tree_debug1"
         '''Function that produce the trees from a HistoMaker'''
@@ -84,6 +85,7 @@ class HistoMaker:
             print 'treeCut',treeCut
             print 'weightF',weightF
             
+	    #Histogram of the sample
             hTree = ROOT.TH1F('%s'%name,'%s'%name,nBins,xMin,xMax)
             hTree.Sumw2()
             print "Histomaker debug5"
