@@ -23,6 +23,7 @@ SettingsMed_VV = !H:!V:NTrees=500:nEventsMin=500:MaxDepth=2:BoostType=AdaBoost:A
 #!! define the backgorund for the training.
 #!! the "Samples" seciton is in the file "general".
 backgrounds8TeV = [<!Samples|allBKG!>] 
+backgrounds13TeV = [<!Samples|allBKG!>] 
 backgrounds_Diboson8TeV = [<!Samples|BKG_VV_training!>] 
 
 
@@ -48,6 +49,14 @@ backgrounds: [<!Samples|TT!>,<!Samples|WJets!>]
 treeVarSet: myVars
 treeCut: myTight
 
+
+[MyBDT-All]
+MVAtype: <!MVAGeneral|type!>
+MVAsettings: <!MVAGeneral|SettingsAll!>
+signals: [<!Samples|Signal!>]
+backgrounds: [<!Samples|AllBKG!>]
+treeVarSet: myVars
+treeCut: myTight
 
 [MyBDT-TT]
 MVAtype: <!MVAGeneral|type!>

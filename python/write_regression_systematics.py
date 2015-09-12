@@ -864,12 +864,12 @@ for job in info:
             angleZZS_JES_up[0]=fAngleZZS_JES_up.EvalInstance()
             angleZZS_JES_down[0]=fAngleZZS_JES_down.EvalInstance()
 
-            print "hJet_eta[0]",hJet_eta[0] 
-            print "hJet_eta[1]",hJet_eta[1] 
-            print "hJet_phi[0]",hJet_phi[0] 
-            print "hJet_phi[1]",hJet_phi[1] 
-            print "hJet_mass[0]",hJet_mass[0] 
-            print "hJet_mass[1]",hJet_mass[1] 
+#            print "hJet_eta[0]",hJet_eta[0] 
+#            print "hJet_eta[1]",hJet_eta[1] 
+#            print "hJet_phi[0]",hJet_phi[0] 
+#            print "hJet_phi[1]",hJet_phi[1] 
+#            print "hJet_mass[0]",hJet_mass[0] 
+#            print "hJet_mass[1]",hJet_mass[1] 
             
             newtree.Fill()
                    

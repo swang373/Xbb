@@ -154,6 +154,44 @@ allBKG_ZZsplit: <!Samples|DrellYan!>,<!Samples|Diboson_split!>,<!Samples|Top!>,<
 BKG_VV_training: <!Samples|DrellYan!>,<!Samples|Top!>,<!Samples|s_Top!>,'WW','WZ'
 
 
+Signal: 'ZH'
+Signal: 'ZH','WH'
+
+WJetsHT100: 'WJetsHT100_light','WJetsHT100_c','WJetsHT100_1b','WJetsHT100_2b'
+WJetsHT200: 'WJetsHT200_light','WJetsHT200_c','WJetsHT200_1b','WJetsHT200_2b'
+WJetsHT400: 'WJetsHT400_light','WJetsHT400_c','WJetsHT400_1b','WJetsHT400_2b'
+WJetsHT600: 'WJetsHT600_light','WJetsHT600_c','WJetsHT600_1b','WJetsHT600_2b'
+
+WJets_light: <!Samples|WJetsHT100_light!>,<!Samples|WJetsHT200_light!>,<!Samples|WJetsHT400_light!>,<!Samples|WJetsHT600_light!>
+WJets_c: <!Samples|WJetsHT100_c!>,<!Samples|WJetsHT200_c!>,<!Samples|WJetsHT400_c!>,<!Samples|WJetsHT600_c!>
+WJets_1b: <!Samples|WJetsHT100_1b!>,<!Samples|WJetsHT200_1b!>,<!Samples|WJetsHT400_1b!>,<!Samples|WJetsHT600_1b!>
+WJets_2b: <!Samples|WJetsHT100_2b!>,<!Samples|WJetsHT200_2b!>,<!Samples|WJetsHT400_2b!>,<!Samples|WJetsHT600_2b!>
+WJets: <!Samples|WJetsHT100!>,<!Samples|WJetsHT200!>,<!Samples|WJetsHT400!>,<!Samples|WJetsHT600!>
+
+#WJets_light: <!Samples|WJetsMad_light!>
+#WJets_c: <!Samples|WJetsMad_c!>
+#WJets_1b: <!Samples|WJetsMad_1b!>
+#WJets_2b: <!Samples|WJetsMad_2b!>
+#WJets: <!Samples|WJetsMad!>
+
+ZJetsHT100: 'ZJetsHT100_light','ZJetsHT100_c','ZJetsHT100_1b','ZJetsHT100_2b'
+ZJetsHT200: 'ZJetsHT200_light','ZJetsHT200_c','ZJetsHT200_1b','ZJetsHT200_2b'
+ZJetsHT400: 'ZJetsHT400_light','ZJetsHT400_c','ZJetsHT400_1b','ZJetsHT400_2b'
+ZJetsHT600: 'ZJetsHT600_light','ZJetsHT600_c','ZJetsHT600_1b','ZJetsHT600_2b'
+
+ZJets_light: <!Samples|ZJetsHT100_light!>,<!Samples|ZJetsHT200_light!>,<!Samples|ZJetsHT400_light!>,<!Samples|ZJetsHT600_light!>
+ZJets_c: <!Samples|ZJetsHT100_c!>,<!Samples|ZJetsHT200_c!>,<!Samples|ZJetsHT400_c!>,<!Samples|ZJetsHT600_c!>
+ZJets_1b: <!Samples|ZJetsHT100_1b!>,<!Samples|ZJetsHT200_1b!>,<!Samples|ZJetsHT400_1b!>,<!Samples|ZJetsHT600_1b!>
+ZJets_2b: <!Samples|ZJetsHT100_2b!>,<!Samples|ZJetsHT200_2b!>,<!Samples|ZJetsHT400_2b!>,<!Samples|ZJetsHT600_2b!>
+ZJets: <!Samples|ZJetsHT100!>,<!Samples|ZJetsHT200!>,<!Samples|ZJetsHT400!>,<!Samples|ZJetsHT600!>
+
+TT: 'TT'
+#TT: 'TTMad'
+
+ST: 'T_s','Tbar_s','T_t','Tbar_t','T_tW','Tbar_tW'
+
+QCD: 'QCDHT100','QCDHT250','QCDHT500','QCDHT1000'
+
 Group: {'ZH':'ZH','ZJetsHT100':'ZJets','ZJetsHT200':'ZJets','ZJetsHT400':'ZJets','ZJetsHT600':'ZJets', \
     'WH':'WH','WJetsHT100':'WJets','WJetsHT200':'WJets','WJetsHT400':'WJets','WJetsHT600':'WJets', \
     'TT':'TT',
