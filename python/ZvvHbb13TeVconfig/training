@@ -43,18 +43,9 @@ List_for_submitscript: MyBDT-All
 [MyBDT-All]
 MVAtype: <!MVAGeneral|type!>
 MVAsettings: <!MVAGeneral|SettingsAll!>
-signals: [<!Samples|Signal!>]
+signals: ['ZH']
 #backgrounds: [<!Samples|TT!>,<!Samples|ZJets!>,<!Samples|WJets!>]
 backgrounds: [<!Samples|TT!>,<!Samples|WJets!>]
-treeVarSet: myVars
-treeCut: myTight
-
-
-[MyBDT-All]
-MVAtype: <!MVAGeneral|type!>
-MVAsettings: <!MVAGeneral|SettingsAll!>
-signals: [<!Samples|Signal!>]
-backgrounds: [<!Samples|AllBKG!>]
 treeVarSet: myVars
 treeCut: myTight
 
