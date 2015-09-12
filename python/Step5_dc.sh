@@ -1,2 +1,2 @@
-bash runAll.sh myTest test13TeV dc
+bash runAll.sh myDatacard ZvvHbb13TeV dc
 

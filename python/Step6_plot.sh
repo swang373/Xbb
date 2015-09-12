@@ -1,3 +1,3 @@
-bash runAll.sh myPlot ZvvHbb13TeV plot
+bash runAll.sh MyRegion_HighPt_Zvv ZvvHbb13TeV plot
 
 

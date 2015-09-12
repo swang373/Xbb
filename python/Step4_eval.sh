@@ -20,5 +20,9 @@ bash runAll.sh QCDHT250 ZvvHbb13TeV eval >& log/logEvalQCDHT250 &
 bash runAll.sh QCDHT500 ZvvHbb13TeV eval >& log/logEvalQCDHT500 &
 bash runAll.sh QCDHT1000 ZvvHbb13TeV eval >& log/logEvalQCDHT1000 &
 
+bash runAll.sh DataMET ZvvHbb13TeV eval >& log/logEvalDataMET &
+
+bash runAll.sh TTMad ZvvHbb13TeV eval >& log/logEvalTTMad &
+bash runAll.sh WJetsMad ZvvHbb13TeV eval >& log/logEvalWJetsMad &
 
 
