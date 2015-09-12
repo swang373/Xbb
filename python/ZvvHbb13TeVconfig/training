@@ -35,7 +35,25 @@ factorysettings = !V:Silent:Color:!DrawProgressBar:AnalysisType=Classification:T
 
 [MVALists]
 #!! list to be trained and evaluated
-List_for_submitscript: RTight_ZH110_janAngularOnly,RTight_ZH115_janAngularOnly,RTight_ZH120_janAngularOnly,RTight_ZH125_janAngularOnly,RTight_ZH130_janAngularOnly,RTight_ZH135_janAngularOnly,RTight_ZH140_janAngularOnly,RTight_ZH145_janAngularOnly,RTight_ZH150_janAngularOnly,RMed_ZH110_janAngularOnly,RMed_ZH115_janAngularOnly,RMed_ZH120_janAngularOnly,RMed_ZH125_janAngularOnly,RMed_ZH130_janAngularOnly,RMed_ZH135_janAngularOnly,RMed_ZH140_janAngularOnly,RMed_ZH145_janAngularOnly,RMed_ZH150_janAngularOnly,RTight_VVb_apr_noWeights,RMed_VVb_apr_noWeights
+List_for_submitscript: MyBDT-TT
+#RTight_ZH110_janAngularOnly,RTight_ZH115_janAngularOnly,RTight_ZH120_janAngularOnly,RTight_ZH125_janAngularOnly,RTight_ZH130_janAngularOnly,RTight_ZH135_janAngularOnly,RTight_ZH140_janAngularOnly,RTight_ZH145_janAngularOnly,RTight_ZH150_janAngularOnly,RMed_ZH110_janAngularOnly,RMed_ZH115_janAngularOnly,RMed_ZH120_janAngularOnly,RMed_ZH125_janAngularOnly,RMed_ZH130_janAngularOnly,RMed_ZH135_janAngularOnly,RMed_ZH140_janAngularOnly,RMed_ZH145_janAngularOnly,RMed_ZH150_janAngularOnly,RTight_VVb_apr_noWeights,RMed_VVb_apr_noWeights
+
+
+[MyBDT-TT]
+MVAtype: <!MVAGeneral|type!>
+MVAsettings: <!MVAGeneral|SettingsTT!>
+signals: ['ZH']
+backgrounds: ['TT']
+treeVarSet: myVars
+treeCut: myTight
+
+[MyBDT-ZJets]
+MVAtype: <!MVAGeneral|type!>
+MVAsettings: <!MVAGeneral|SettingsTT!>
+signals: ['ZH']
+backgrounds: ['ZJetsHT100','ZJetsHT200','ZJetsHT400','ZJetsHT600']
+treeVarSet: myVars
+treeCut: myTight
 
 #!! individual BKGds training
 [TT_HighPt_ZH125_nov]
@@ -91,7 +109,7 @@ MVAsettings: <!MVAGeneral|SettingsTight!>
 signals: ['ZH125']
 backgrounds: <!MVAGeneral|backgrounds8TeV!>
 treeVarSet: treeVarsAngularOnly
-treeCut: RTight
+treeCut: myTight
 
 [RMed_ZH125_janAngularOnly_noWeights]
 MVAtype: <!MVAGeneral|type!>

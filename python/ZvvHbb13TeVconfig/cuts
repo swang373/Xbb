@@ -25,6 +25,7 @@ max1AddJet = Sum$(Jet_pt[aJidx] > 20 & abs(Jet_eta[aJidx]) < 2.4) < 2.
 pullAngle = 1 < 10. & 1 < 10.
 rLoose = V.pt < 50
 rTight = V.pt > 100.
+myTight = met_pt > 100.
 rTight2 = V.pt > 150.
 rTight_120 = V.pt > 120.
 rTight_150 = V.pt > 150.
@@ -80,7 +81,7 @@ addCuts = Vtype==0
 
 #!! Test with heppy ntuple
 dy_heppy_test = <!ZHbb|zWindow!>
-
+myTight = met_pt>100
 
 #!! -------------
 #!! Mjj
@@ -113,6 +114,7 @@ HighPtLooseBTag = <!Cuts|RTightLooseBTag!>
 #!! individual training
 #!! ---------------------
 RTight_andTT = <!Cuts|RTight!> & TT_HighPt_ZH125_nov.nominal > 0.28
+myTight_andTT = <!Cuts|myTight!> & myBDT-TT.nominal > 0.28
 RTight_andDY = <!Cuts|RTight!> & TT_HighPt_ZH125_nov.nominal > 0.28 & DY_HighPt_ZH125_nov.nominal > -0.1
 HighPt_ExpertRegion0 = <!Cuts|RTight!> & TT_HighPt_ZH125_nov.nominal <= 0.28
 HighPt_ExpertRegion1 = <!Cuts|RTight!> & TT_HighPt_ZH125_nov.nominal > 0.28 & DY_HighPt_ZH125_nov.nominal <= -0.1
@@ -176,6 +178,7 @@ TTbar_beforeReg = <!ZHbb|preselection_beforeReg!> & <!ZHbb|upperHMass_beforeReg!
 Zbb_beforeReg = <!ZHbb|preselection_beforeReg!> & <!ZHbb|vetoHMass_beforeReg!> & <!ZHbb|upperHMass_beforeReg!> & <!ZHbb|zWindow!> & <!ZHbb|tcBtag!> & <!ZHbb|max1AddJet!> & <!ZHbb|dPhiVH!> 
 Zbb_Balance = <!ZHbb|preselection!> & <!ZHbb|zWindow!> & <!ZHbb|ccBtag!> & <!ZHbb|noAddJet!> & V.pt > 50. & H.pt/V.pt < 2.
 Zbb_BalanceNoReg = <!ZHbb|preselection_beforeReg!> & <!ZHbb|zWindow!> & <!ZHbb|ccBtag!> & <!ZHbb|noAddJet!> & V.pt > 50. & HNoReg.pt/V.pt < 2. 
+MyRegion_HighPt_Zvv = met_pt>300 & H.mass<250 & H.mass>50 & Jet_btagnew[hJCidx[0]]>0.5 & Jet_btagnew[hJCidx[1]]>0.5
 ZLight_HighPt = <!Cuts|ZLight!> & <!ZHbb|rTight!>
 ZLight_HighPt_beforeReg = <!Cuts|ZLight_beforeReg!> & <!ZHbb|rTight!>
 TTbar_HighPt = <!Cuts|TTbar!> & <!ZHbb|rTight!>

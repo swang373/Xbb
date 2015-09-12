@@ -3,24 +3,48 @@
 lumi = 18940.
 
 #!! Samples to be used for plotting. it also can be <!Samples|allBKG!>
-samples:'Zudsg','Zcc','Z1b','Z2b'
+#samples:'Zudsg','Zcc','Z1b','Z2b'
+samples:['ZH','ZJetsHT100_light','ZJetsHT100_c','ZJetsHT100_1b','ZJetsHT100_2b','ZJetsHT200_light','ZJetsHT200_c','ZJetsHT200_1b','ZJetsHT200_2b', 'ZJetsHT400_light', 'ZJetsHT400_c','ZJetsHT400_1b','ZJetsHT400_2b''WH','WJetsHT100_light','WJetsHT100_c','WJetsHT100_1b','WJetsHT100_2b','WJetsHT200_light','WJetsHT200_c', 'WJetsHT200_1b','WJetsHT200_2b','WJetsHT400_light','WJetsHT400_c','WJetsHT400_1b','WJetsHT400_2b','WJetsHT600_light','WJetsHT600_c','WJetsHT600_1b', 'WJetsHT600_2b','TT']
+##ADD-ME: ,'ZJetsHT600','Tbar_s','Tbar_t','Tbar_tW','T_s','T_t','T_tW' ,'ZJetsHT600_light','ZJetsHT600_c','ZJetsHT600_1b','ZJetsHT600_2b',
 
 #!! Groups for adding samples together and for the legend {'sampleName':'sampleGroup',...}. it also can be <!Samples|Group!>
-Group: {'Zudsg':'DYlight','Zcc':'DYc','Z1b':'DY1b','Z2b':'DY2b','Zee':'Data'}
+# Group: {'Zudsg':'DYlight','Zcc':'DYc','Z1b':'DY1b','Z2b':'DY2b'}
+#Group: <!Samples|Group!>
+Group: {'ZH':'VH','WH':'VH',\
+    'ZJetsHT100_light':'ZJets_light','ZJetsHT200_light':'ZJets_light','ZJetsHT400_light':'ZJets_light','ZJetsHT600_light':'ZJets_light', \
+    'ZJetsHT100_c':'ZJets_c','ZJetsHT200_c':'ZJets_c','ZJetsHT400_c':'ZJets_c','ZJetsHT600_c':'ZJets_c', \
+    'ZJetsHT100_1b':'ZJets_1b','ZJetsHT200_1b':'ZJets_1b','ZJetsHT400_1b':'ZJets_1b','ZJetsHT600_1b':'ZJets_1b', \
+    'ZJetsHT100_2b':'ZJets_2b','ZJetsHT200_2b':'ZJets_2b','ZJetsHT400_2b':'ZJets_2b','ZJetsHT600_2b':'ZJets_2b', \
+    'WJetsHT100_light':'WJets_light','WJetsHT200_light':'WJets_light','WJetsHT400_light':'WJets_light','WJetsHT600_light':'WJets_light', \
+    'WJetsHT100_c':'WJets_c','WJetsHT200_c':'WJets_c','WJetsHT400_c':'WJets_c','WJetsHT600_c':'WJets_c', \
+    'WJetsHT100_1b':'WJets_1b','WJetsHT200_1b':'WJets_1b','WJetsHT400_1b':'WJets_1b','WJetsHT600_1b':'WJets_1b', \
+    'WJetsHT100_2b':'WJets_2b','WJetsHT200_2b':'WJets_2b','WJetsHT400_2b':'WJets_2b','WJetsHT600_2b':'WJets_2b', \
+    'TT':'TT',
+    'DataMET':'DataMET'
+    }
 
 #!! Here the order and the groups that will go in the plots
-setup: DY2b,DY1b,DYc,DYlight
-setupLog: DY2b,DY1b,DYc,DYlight
+#setup: DY2b,DY1b,DYlight
+#setupLog: DY2b,DY1b,DYlight
+setup: VH,ZJets_light,ZJets_c,ZJets_1b,ZJets_2b,WJets_light,WJets_c,WJets_1b,WJets_2b,TT
+setupLog: ZH,WH,ZJets,WJets,TT
+##ADD-ME ,ST
 
 #!! Colors dictionary and legend
-colorDict: {'DYlight':401,'DYc':402,'DY2b':5,'DY1b':41,'TT':596,'ST':840,'VVlight':922,'VVb':920,'ZZb':18,'WZb':18,'ZH':2,'DYlc':401,'':1}
-typLegendDict: {'DYlight':'Z+udscg','DYc':'Z + c#bar{c}','DYlc':'Z+udscg','DY2b':'Z + b#bar{b}','DY1b':'Z + b','Wlight':'W+udscg','W1b':'W + b','W2b':'W + b#bar{b}','TT':'t#bar{t}','ST':'Single top','VV':'VV','VVlight':'VV(udscg)','VVb':'VZ(b#bar{b})','ZH':'ZH','WH':'VH(b#bar{b}) 125','VH':'VH','QCD':'QCD','Overlay':'VH(b#bar{b}) 125','':''}
+#colorDict: {'ZJets':401,'DYlight':401,'DYc':402,'DY2b':5,'DY1b':41,'TT':596,'ST':840,'VVlight':922,'VVb':920,'ZZb':18,'WZb':18,'WJets':18,'VH':2,'ZH':2,'WH':2,'DYlc':401,'':1,'ZJetsHT100':'402','WJetsHT100':'41'}
+
+colorDict: {'ZJets_light':401,'ZJets_c':402,'ZJets_1b':5,'ZJets_2b':41, 'WJets_light':31,'WJets_c':32,'WJets_1b':33,'WJets_2b':34, 'TT':596,'ST':840,'VH':2}
+
+typLegendDict: {'ZJets_light':'Z+udscg','ZJets_c':'Z + c#bar{c}','ZJets_2b':'Z + b#bar{b}','ZJets_1b':'Z + b','WJets_light':'W+udscg','WJets_1b':'W + b','WJets_2b':'W + b#bar{b}','WJets_c':'W + c#bar{c}','TT':'t#bar{t}','ST':'Single top','VV':'VV','VVlight':'VV(udscg)','VVb':'VZ(b#bar{b})','ZH':'ZH','WH':'VH(b#bar{b}) 125','VH':'VH','QCD':'QCD','Overlay':'VH(b#bar{b}) 125','ZJets':'Z + jets','WJets':'W + jets','ZJetsHT100':'ZJetsHT100','WJetsHT100':'WJetsHT100'}
+
+
 
 #!! Add overflow bin in the plots
 addOverFlow = False
 
 #!! List of regions to be submitted in case of bacth submission
-List: ZLight_HighPt_Zee,ZLight_HighPt_Zmm,ZLight_HighPt
+List: MyRegion_HighPt_Zvv
+#ZLight_HighPt_Zee,ZLight_HighPt_Zmm,ZLight_HighPt
 
 #!! Possibility to add an additional blinding cut for the plot
 #addBlindingCut = run < 203002
@@ -31,12 +55,29 @@ leptons_var:vleptons_ptMax,vleptons_etaMax
 #!! Additional global variables
 BDT_plot_blind: False
 BDT_plot_log: False
-plot_mass = ZH125
+plot_mass = ZH
 Normalize = False
 
 #!! -----------------------
 #!! Plot regions definition
 #!! -----------------------
+
+#!! Plot name should match the cut name in the cuts config
+[Plot:MyRegion_HighPt_Zvv]
+#!! which data to compare to
+Datas: DataMET
+Normalize: <!Plot_general|Normalize!>
+#vars: <!Plot_general|jet_var!>
+vars: Hmass,Hmass_NoReg,MET,csv0,csv1,maxCSV,minCSV
+#Signal: <!Plot_general|plot_mass!>
+Signal: ['VH']
+#!! log scale
+log: False
+#!! apply blinding cut
+blind: False
+cut: Vtype>0
+
+
 
 #!! Plot name should match the cut name in the cuts config
 [Plot:dy_heppy_test]
