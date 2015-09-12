@@ -1,1 +1,1 @@
-bash runAll.sh MyBDT-ZJets ZvvHbb13TeV train >& log/logTrainZH &
+bash runAll.sh MyBDT-All ZvvHbb13TeV train >& log/logTrainZH &

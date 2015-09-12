@@ -15,6 +15,7 @@ SettingsTight_optimisation = !H:!V:NTrees=400:nEventsMin=500:MaxDepth=3:BoostTyp
 SettingsTT = !H:!V:NTrees=300:nEventsMin=300:MaxDepth=2:BoostType=AdaBoost:AdaBoostBeta=0.1:SeparationType=MisClassificationError:nCuts=25:PruneMethod=NoPruning
 SettingsDY = !H:!V:NTrees=400:nEventsMin=500:MaxDepth=3:BoostType=AdaBoost:AdaBoostBeta=0.1:SeparationType=MisClassificationError:nCuts=25:PruneMethod=NoPruning
 SettingsVV = !H:!V:NTrees=250:nEventsMin=250:MaxDepth=2:BoostType=AdaBoost:AdaBoostBeta=0.1:SeparationType=MisClassificationError:nCuts=25:PruneMethod=NoPruning
+SettingsAll = !H:!V:NTrees=300:nEventsMin=300:MaxDepth=2:BoostType=AdaBoost:AdaBoostBeta=0.1:SeparationType=MisClassificationError:nCuts=25:PruneMethod=NoPruning
 
 SettingsTight_VV = !H:!V:NTrees=500:nEventsMin=400:MaxDepth=2:BoostType=AdaBoost:AdaBoostBeta=0.1:SeparationType=MisClassificationError:nCuts=20:PruneMethod=CostComplexity:PruneBeforeBoost=False:PruneStrength=3
 SettingsMed_VV = !H:!V:NTrees=500:nEventsMin=500:MaxDepth=2:BoostType=AdaBoost:AdaBoostBeta=0.1:SeparationType=MisClassificationError:nCuts=20:PruneMethod=CostComplexity:PruneBeforeBoost=False:PruneStrength=3
@@ -35,8 +36,17 @@ factorysettings = !V:Silent:Color:!DrawProgressBar:AnalysisType=Classification:T
 
 [MVALists]
 #!! list to be trained and evaluated
-List_for_submitscript: MyBDT-TT
+List_for_submitscript: MyBDT-All
 #RTight_ZH110_janAngularOnly,RTight_ZH115_janAngularOnly,RTight_ZH120_janAngularOnly,RTight_ZH125_janAngularOnly,RTight_ZH130_janAngularOnly,RTight_ZH135_janAngularOnly,RTight_ZH140_janAngularOnly,RTight_ZH145_janAngularOnly,RTight_ZH150_janAngularOnly,RMed_ZH110_janAngularOnly,RMed_ZH115_janAngularOnly,RMed_ZH120_janAngularOnly,RMed_ZH125_janAngularOnly,RMed_ZH130_janAngularOnly,RMed_ZH135_janAngularOnly,RMed_ZH140_janAngularOnly,RMed_ZH145_janAngularOnly,RMed_ZH150_janAngularOnly,RTight_VVb_apr_noWeights,RMed_VVb_apr_noWeights
+
+[MyBDT-All]
+MVAtype: <!MVAGeneral|type!>
+MVAsettings: <!MVAGeneral|SettingsAll!>
+signals: [<!Samples|Signal!>]
+#backgrounds: [<!Samples|TT!>,<!Samples|ZJets!>,<!Samples|WJets!>]
+backgrounds: [<!Samples|TT!>,<!Samples|WJets!>]
+treeVarSet: myVars
+treeCut: myTight
 
 
 [MyBDT-TT]
