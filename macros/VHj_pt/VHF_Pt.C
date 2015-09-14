@@ -8,6 +8,7 @@
 #include "TCanvas.h"
 #include "TGraph2D.h"
 #include "TStyle.h"
+#include "TROOT.h"
 
 #include "tdrstyle.C"
 
@@ -82,7 +83,7 @@ double ISRj_Idx(TLorentzVector V, TLorentzVector H, TLorentzVector VH, vector<TL
   return ISRidx;
 }
 
-double PurSisISR(TLorentzVector V, TLorentzVector H, TLorentzVector VH, vector<TLorentzVector> O_Jets, vector<TLorentzVector> Sis, double PhiCut, double VHPtCut){
+double PurSisISR(TLorentzVector V, TLorentzVector H, TLorentzVector VH, int ISRidx, TLorentzVector ISRjet, vector<TLorentzVector> Sis, double PhiCut, double VHPtCut){
   //_*_*_*_*_*_*_*_*
   //Find the ISR jet 
   //_*_*_*_*_*_*_*_*
@@ -93,21 +94,13 @@ double PurSisISR(TLorentzVector V, TLorentzVector H, TLorentzVector VH, vector<T
     //Passes VHPt cut
   }else{
     double maxpt = 0;
-    int ISRidx = -1;
-    //Apply phi cut and keep ISR candiate only. Choose the ISR candidate having the higest Pt
-    for(unsigned int i = 0; i < O_Jets.size(); ++i){
-      if( abs(O_Jets[i].DeltaPhi(VH)) < TMath::Pi() - PhiCut ) continue;
-      if( O_Jets[i].Pt() < maxpt ) continue;
-      maxpt = O_Jets[i].Pt();
-      ISRidx = i;
-    }
     if(ISRidx == -1) {return 0;}
     else{
       double dR = 99999;
       for(unsigned int i = 0; i < Sis.size(); ++i){
         //if(Sis[i].Pt() == 0 && Sis[i].Eta() == 0 && Sis[i].Phi() == 0) continue;
-        if(Sis[i].DeltaR(O_Jets[ISRidx]) > dR) continue;
-        dR = Sis[i].DeltaR(O_Jets[ISRidx]);
+        if(Sis[i].DeltaR(ISRjet) > dR) continue;
+        dR = Sis[i].DeltaR(ISRjet);
       }
       if(dR < 0.3){
         return 1;
@@ -170,7 +163,7 @@ void VHF_Pt(int sample=0){
 
   vector<double> PhiCut(_PhiCut, _PhiCut+16);
   vector<double> VHPtCut(_VHPtCut, _VHPtCut+9);
-  vector<vector<TH1D*> > hist;
+  vector<vector<TH1D*> > hist_VHj_pt;
   vector<vector<TCanvas*> > c;
   TCanvas* cVHj = new TCanvas("cVHj","cVHj");
   TCanvas* cpur = new TCanvas("cpur","cpur");
@@ -178,6 +171,7 @@ void VHF_Pt(int sample=0){
   TCanvas* ceffxpur = new TCanvas("ceffxpur","ceffxpur");
 
   vector<vector<double> > VHj;//VHj_Pt. To be computed in each event
+  vector<vector<TH1D*> > hVHj1D;
   vector<vector<double> > pur;//Sister-ISR efficiency. To be computed at each event
   vector<vector<Int_t> > nbinentries;//#entries per PhixPt bins
   vector<vector<Int_t> > nisrtag;//#ISR jets found per PhixPt bins
@@ -200,6 +194,7 @@ void VHF_Pt(int sample=0){
     vector<TH1D*>  _hist;
     vector<TCanvas*>  _c;
     vector<double> _VHj;
+    vector<TH1D*>  _histVHj1D;
     vector<double> _pur;
     vector<Int_t> _nbinentries;
     vector<Int_t> _nisrtag;
@@ -209,6 +204,8 @@ void VHF_Pt(int sample=0){
 
       TH1D* h = new TH1D(Form("h_phi%i_Pt%i",i,k),Form("h_phi%i_Pt%i",i,k),200, 0, 200);
       _hist.push_back(h);
+      TH1D* hVHj1D_temp = new TH1D(Form("hVHj1D_phi%i_Pt%i",i,k),Form("h_phi%i_Pt%i",i,k),200, 0, 200);
+      _histVHj1D.push_back(hVHj1D_temp);
       TCanvas* c1 = new TCanvas(Form("c_phi%i_Pt%i",i,k),Form("c_phi%i_Pt%i",i,k));
       _c.push_back(c1);
 
@@ -219,7 +216,7 @@ void VHF_Pt(int sample=0){
       _noISR.push_back(0);
     }		
 
-    hist.push_back(_hist);
+    hist_VHj_pt.push_back(_hist);
     c.push_back(_c);
     VHj.push_back(_VHj);
     pur.push_back(_pur);
@@ -298,8 +295,7 @@ void VHF_Pt(int sample=0){
     V.SetPtEtaPhiM(V_pt,V_eta,V_phi,V_mass);
     H.SetPtEtaPhiM(H_pt,H_eta,H_phi,H_mass);
     VH = V+H;
-    
-    h_VH->Fill(VH.Pt());
+    VHj4v = VH;
     
     vector<TLorentzVector> vOtherJets = OtherJets( Jet_pt,  Jet_eta,  Jet_phi,  Jet_mass, Jet_puId, Jet_id, Jet_aJCidx, Jet_hJCidx);
     vector<TLorentzVector> vSis = Sis(Sis_pt, Sis_eta, Sis_phi, Sis_mass);
@@ -307,6 +303,8 @@ void VHF_Pt(int sample=0){
     if(weight < 0){weight = -1;}
     else if(weight > 0){weight = 1;}
     //weight = 1;
+    
+    h_VH->Fill(VH.Pt(),weight);
     
     for(unsigned int k = 0; k < PhiCut.size(); ++k){
       for(unsigned int l = 0; l < VHPtCut.size(); ++l){
@@ -323,11 +321,11 @@ void VHF_Pt(int sample=0){
         }
 
         //VHj minimisation
-        hist[k][l]->Fill(VHj4v.Pt(),weight);
+        hist_VHj_pt[k][l]->Fill(VHj4v.Pt(),weight);
         VHj[k][l]+= weight*VHj4v.Pt(); // TO BE CROSSCHECKED!
         
         //Sister optimisation
-        pur[k][l] +=  weight*PurSisISR(V, H, VH, vOtherJets, vSis, PhiCut[k], VHPtCut[l]);
+        pur[k][l] +=  weight*PurSisISR(V, H, VH, ISRj_Index, vOtherJets[ISRj_Index], vSis, PhiCut[k], VHPtCut[l]);
               
       }
     }
@@ -336,15 +334,15 @@ void VHF_Pt(int sample=0){
   //_*_*_*_*_*_*_*_
   //Save the histos
   //_*_*_*_*_*_*_*_
-  h_VH->Scale(1./h_VH->Integral(h_VH->FindBin(1.5),h_VH->FindBin(199.5)));
+  h_VH->Scale(1./h_VH->Integral());
   TFile *fout = new TFile("results"+_sample+".root","RECREATE");
   for(unsigned int k = 0; k < PhiCut.size(); ++k){
     for(unsigned int l = 0; l < VHPtCut.size(); ++l){
       //compute isreff
-      hist[k][l]->Scale(1./hist[k][l]->Integral(hist[k][l]->FindBin(0.5),hist[k][l]->FindBin(199.5)));
+      hist_VHj_pt[k][l]->Scale(1./hist_VHj_pt[k][l]->Integral());
       c[k][l]->cd();
-      hist[k][l]->SetLineColor(2);
-      hist[k][l]->Draw();
+      hist_VHj_pt[k][l]->SetLineColor(2);
+      hist_VHj_pt[k][l]->Draw();
       h_VH->Draw("same");
       c[k][l]->Write();
       //cout<<"The VHj_Pt mean for PhiCut: "<<k<<" and VHPtCut "<<l<<" is "<<VHj[k][l]/nbinentries[k][l]<<endl;
@@ -352,30 +350,38 @@ void VHF_Pt(int sample=0){
       //cout<<"The efficiency for PhiCut: "<<k<<" and VHPtCut "<<l<<" is "<<nisrtag[k][l]/nbinentries[k][l]<<endl;
     }
   }
+  
+  preparehisto(heff,"ISR-finder efficiency","#alpha","P_{T}(VH) Cut");
+  preparehisto(hVHj,"P_{T}(VH + ISR Jets)","#alpha","P_{T}(VH) Cut");
+  preparehisto(hpur,"ISR-finder purity","#alpha","P_{T}(VH) Cut");
+  preparehisto(heffxpur,"ISR-finder purity x efficiency","#alpha","P_{T}(VH) Cut");
+  
   for(unsigned int k = 0; k < 15; ++k){
     for(unsigned int l = 0; l < 8; ++l){
+      
       ceff->cd();
-      heff->Fill((PhiCut[k]+PhiCut[k+1])/2., (VHPtCut[l]+VHPtCut[l+1])/2., nisrtag[k][l]/(double)nbinentries[k][l]); //#efficiency to be ISR tagged
-      preparehisto(heff,"ISR-finder efficiency","#alpha","P_{T}(VH) Cut");
+      heff->Fill((PhiCut[k]+PhiCut[k+1])/2., (VHPtCut[l]+VHPtCut[l+1])/2., ((double)nisrtag[k][l])/((double)nbinentries[k][l])); //#efficiency to be ISR tagged
       heff->Draw("colz text");
+      
       cVHj->cd();
-      hVHj->Fill((PhiCut[k]+PhiCut[k+1])/2., (VHPtCut[l]+VHPtCut[l+1])/2., VHj[k][l]/nbinentries[k][l]);
-      preparehisto(hVHj,"P_{T}(VH + ISR Jets)","#alpha","P_{T}(VH) Cut");
+      hVHj->Fill((PhiCut[k]+PhiCut[k+1])/2., (VHPtCut[l]+VHPtCut[l+1])/2., hist_VHj_pt[k][l]->GetMean());
       hVHj->Draw("colz text");
+      
       cpur->cd();
       hpur->Fill((PhiCut[k]+PhiCut[k+1])/2., (VHPtCut[l]+VHPtCut[l+1])/2., pur[k][l]/nisrtag[k][l]);
-      preparehisto(hpur,"ISR-finder purity","#alpha","P_{T}(VH) Cut");
       hpur->Draw("colz text");
+      
       ceffxpur->cd();
-      heffxpur->Fill((PhiCut[k]+PhiCut[k+1])/2., (VHPtCut[l]+VHPtCut[l+1])/2., ((double)nisrtag[k][l]*pur[k][l])/((double)nisrtag[k][l]*nbinentries[k][l]));
-      preparehisto(heffxpur,"ISR-finder purity x efficiency","#alpha","P_{T}(VH) Cut");
+      heffxpur->Fill((PhiCut[k]+PhiCut[k+1])/2., (VHPtCut[l]+VHPtCut[l+1])/2., ((double)pur[k][l])/((double)nbinentries[k][l]));
       heffxpur->Draw("colz text");
+    
     }
   }
 
   gStyle->SetPaintTextFormat("4.2f");
   gStyle->SetOptStat(0);
 
+  gROOT->ProcessLine(".! mkdir optimisation");
   cVHj->Write();
   cVHj->SaveAs("optimisation/VHj"+_sample+".pdf");
   cpur->Write();
