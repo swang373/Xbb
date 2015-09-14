@@ -18,12 +18,30 @@
 //Macros
 //_*_*_*
 
+// prepare histogram with axis labels and style
+void preparehisto(TH2D* histo, TString title, TString xtitle, TString ytitle){
+      histo->SetTitle(title);
+      histo->GetXaxis()->SetTitle(xtitle);
+      histo->GetXaxis()->SetLabelSize(20);
+      histo->GetXaxis()->SetLabelFont(43);
+      histo->GetXaxis()->SetTitleFont(63);
+      histo->GetXaxis()->SetTitleSize(20);
+      histo->GetYaxis()->SetTitle(ytitle);
+      histo->GetYaxis()->SetLabelSize(20);
+      histo->GetYaxis()->SetLabelFont(43);
+      histo->GetYaxis()->SetTitleFont(63);
+      histo->GetYaxis()->SetTitleSize(20);
+}
+
 //Create a TLorentzVector of the jets other than the two Higgs candidate b-jets. 
 vector<TLorentzVector> OtherJets(Float_t Jet_pt[15], Float_t Jet_eta[15], Float_t Jet_phi[15], Float_t Jet_mass[15], Int_t Jet_puId[15], Int_t Jet_id[15], Int_t aJCidx[8], Int_t hJCidx[2]){
   vector<TLorentzVector> OtherJets;
   for(int i = 0; i < 15; ++i){
     TLorentzVector Ojet;
-    if(Jet_pt[i]>30 && abs(Jet_eta[i])<4.5 && Jet_puId[i]>0 && Jet_id[i]>0 && aJCidx[i] != (hJCidx[0]) && (aJCidx[i] != (hJCidx[1]))){
+    if(
+      Jet_pt[i]>30 && abs(Jet_eta[i])<4.5 && Jet_puId[i]>0 && Jet_id[i]>0 // quality cuts
+      && aJCidx[i] != (hJCidx[0]) && (aJCidx[i] != (hJCidx[1])) // not an higgs b-jet
+      ){ 
       Ojet.SetPtEtaPhiM( Jet_pt[i], Jet_eta[i], Jet_phi[i], Jet_mass[i]);
     }
     OtherJets.push_back(Ojet);
@@ -42,18 +60,16 @@ vector<TLorentzVector> Sis(Float_t Sis_pt[3], Float_t Sis_eta[3], Float_t Sis_ph
   return SIS;
 }
 
-int foundISR(double V_pt, double V_eta, double V_phi, double V_mass, double H_pt, double H_eta, double H_phi, double H_mass, vector<TLorentzVector> O_Jets, double PhiCut, double VHPtCut){
+double ISRj_Idx(TLorentzVector V, TLorentzVector H, TLorentzVector VH, vector<TLorentzVector> O_Jets, double PhiCut, double VHPtCut, bool keep = true){
   //_*_*_*_*_*_*_*_*
   //Find the ISR jet 
   //_*_*_*_*_*_*_*_*
-  //Build the V, H, V+H vector
-  TLorentzVector V, H,VH, VHj;
-  V.SetPtEtaPhiM(V_pt,V_eta,V_phi,V_mass);
-  H.SetPtEtaPhiM(H_pt,H_eta,H_phi,H_mass);
-  VH = V+H;
+  TLorentzVector VHj;
+
   //Apply VHPt Cut
-  if(VH.Pt() < VHPtCut){return 0;}
-  //Passes VHPt cut
+  if(VH.Pt() < VHPtCut){
+    return -1;
+  }
   double maxpt = 0;
   int ISRidx = -1;
   //Apply phi cut and keep ISR candiate only. Choose the ISR candidate having the higest Pt
@@ -63,56 +79,14 @@ int foundISR(double V_pt, double V_eta, double V_phi, double V_mass, double H_pt
     maxpt = O_Jets[i].Pt();
     ISRidx = i;
   }
-  //No ISR Jets found
-  if(ISRidx == -1){return 0;}
-  else{return 1;}
+  return ISRidx;
 }
 
-double VHj_Pt(double V_pt, double V_eta, double V_phi, double V_mass, double H_pt, double H_eta, double H_phi, double H_mass, vector<TLorentzVector> O_Jets, double PhiCut, double VHPtCut, bool keep = true){
-  //_*_*_*_*_*_*_*_*
-  //Find the ISR jet 
-  //_*_*_*_*_*_*_*_*
-  //Build the V, H, V+H vector
-  TLorentzVector V, H,VH, VHj;
-  V.SetPtEtaPhiM(V_pt,V_eta,V_phi,V_mass);
-  H.SetPtEtaPhiM(H_pt,H_eta,H_phi,H_mass);
-
-  VH = V+H;
-  //Apply VHPt Cut
-  if(VH.Pt() < VHPtCut && keep == false){
-    return -1;
-    //Passes VHPt cut
-  }else if(VH.Pt() < VHPtCut && keep == true){
-    return VH.Pt();
-  }else{
-    double maxpt = 0;
-    int ISRidx = -1;
-    //Apply phi cut and keep ISR candiate only. Choose the ISR candidate having the higest Pt
-    for(unsigned int i = 0; i < O_Jets.size(); ++i){
-      if(abs(O_Jets[i].DeltaPhi(VH)) < TMath::Pi() - PhiCut) continue;
-      if(O_Jets[i].Pt() < maxpt) continue;
-      maxpt = O_Jets[i].Pt();
-      ISRidx = i;
-    }
-    //No ISR Jets found
-    if(ISRidx == -1 && keep == true) return VH.Pt();
-    else if(ISRidx == -1 && keep == false) return -1;
-    else{
-    VHj = VH + O_Jets[ISRidx];
-    return VHj.Pt();
-    }
-  }
-}
-
-double PurSisISR(double V_pt, double V_eta, double V_phi, double V_mass, double H_pt, double H_eta, double H_phi, double H_mass, vector<TLorentzVector> O_Jets, vector<TLorentzVector> Sis, double PhiCut, double VHPtCut){
+double PurSisISR(TLorentzVector V, TLorentzVector H, TLorentzVector VH, vector<TLorentzVector> O_Jets, vector<TLorentzVector> Sis, double PhiCut, double VHPtCut){
   //_*_*_*_*_*_*_*_*
   //Find the ISR jet 
   //_*_*_*_*_*_*_*_*
   //Returns the efficiency for a ISR-tagged jet to be matched to a syster jet
-  TLorentzVector V, H,VH, VHj;
-  V.SetPtEtaPhiM(V_pt,V_eta,V_phi,V_mass);
-  H.SetPtEtaPhiM(H_pt,H_eta,H_phi,H_mass);
-  VH = V+H;
   //Apply VHPt Cut
   if(VH.Pt() < VHPtCut){
     return 0;
@@ -131,14 +105,14 @@ double PurSisISR(double V_pt, double V_eta, double V_phi, double V_mass, double 
     else{
       double dR = 99999;
       for(unsigned int i = 0; i < Sis.size(); ++i){
-	//if(Sis[i].Pt() == 0 && Sis[i].Eta() == 0 && Sis[i].Phi() == 0) continue;
-	if(Sis[i].DeltaR(O_Jets[ISRidx]) > dR) continue;
-	dR = Sis[i].DeltaR(O_Jets[ISRidx]);
+        //if(Sis[i].Pt() == 0 && Sis[i].Eta() == 0 && Sis[i].Phi() == 0) continue;
+        if(Sis[i].DeltaR(O_Jets[ISRidx]) > dR) continue;
+        dR = Sis[i].DeltaR(O_Jets[ISRidx]);
       }
       if(dR < 0.3){
-	return 1;
+        return 1;
       }else{
-	return 0;
+        return 0;
       }
     }
   }
@@ -148,33 +122,39 @@ double PurSisISR(double V_pt, double V_eta, double V_phi, double V_mass, double 
 //Main
 //_*_*
 
-void VHF_Pt(){
+void VHF_Pt(int sample=0){
 
   //setTDRStyle();
   //gStyle->SetPaintTextFormat("4.2f");
   //gStyle->SetOptStat(0);
 
+  TString _f_in="dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/t3groups/ethz-higgs/run2/V12/", _sample;
 
   //_*_*_*_*_*
   //Read Input
   //_*_*_*_*_*
 
-  //TString _sample = "ZH_HToBB_powheg_pythia";
-  //TString _sample = "ZH_HToBB_amcanlo_pythia";
-  //TString _sample = "ggZH_powheg_pythia";
-  //TString _sample = "ttjets_amcanlo_pythia";
-  //TString _sample = "ttjets_madgraph_pythia";
-
-
-  //ZHbb
-  //TString _f_in ="dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/t3groups/ethz-higgs/run2/V12/VHBB_HEPPY_V12_ZH_HToBB_ZToLL_M125_13TeV_powheg_pythia8__RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1.root";
-  //TString _f_in ="dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/t3groups/ethz-higgs/run2/V12/VHBB_HEPPY_V12_ZH_HToBB_ZToLL_M125_13TeV_amcatnloFXFX_madspin_pythia8__RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1.root";
-  //ggZH
-  //TString _f_in ="dcap://t3se01.psi.ch:22125/pnfs/psi.ch/cms/trivcat/store/t3groups/ethz-higgs/run2/V12/VHBB_HEPPY_V12_ggZH_HToBB_ZToLL_M125_13TeV_powheg_pythia8__RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1.root";
-  //ttH
-  //TString _f_in ="dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/t3groups/ethz-higgs/run2/V12/VHBB_HEPPY_V12_TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8__RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1.root";
-  //TString _f_in ="dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/t3groups/ethz-higgs/run2/V12/VHBB_HEPPY_V12_TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8__RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2.root";
-
+  if(sample==0){
+    //ZHbb powheg
+    _f_in +="VHBB_HEPPY_V12_ZH_HToBB_ZToLL_M125_13TeV_powheg_pythia8__RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1.root";
+    _sample = "ZH_HToBB_powheg_pythia";
+  } else if(sample==0){
+    //ZHbb amc@nlo
+    _f_in +="VHBB_HEPPY_V12_ZH_HToBB_ZToLL_M125_13TeV_amcatnloFXFX_madspin_pythia8__RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1.root";
+    _sample = "ZH_HToBB_amcanlo_pythia";
+  } else if(sample==0){
+    //ggZH powheg
+    _f_in +="VHBB_HEPPY_V12_ggZH_HToBB_ZToLL_M125_13TeV_powheg_pythia8__RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1.root";
+    _sample = "ggZH_powheg_pythia";
+  } else if(sample==0){
+    // ttH amc@nlo
+    _f_in +="VHBB_HEPPY_V12_TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8__RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1.root";
+    _sample = "ttjets_amcanlo_pythia";
+  } else if(sample==0){
+    //ttH powheg
+    _f_in +="VHBB_HEPPY_V12_TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8__RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v2.root";
+    _sample = "ttjets_madgraph_pythia";
+  }
 
   TString _f_out ="";
   TFile* f = TFile::Open(_f_in);
@@ -201,7 +181,6 @@ void VHF_Pt(){
   vector<vector<double> > pur;//Sister-ISR efficiency. To be computed at each event
   vector<vector<Int_t> > nbinentries;//#entries per PhixPt bins
   vector<vector<Int_t> > nisrtag;//#ISR jets found per PhixPt bins
-  vector<vector<Int_t> > isreff;//#efficiency to be ISR tagged
   vector<vector<Int_t> > noISR;//count the # of times no ISR has been found
 
   TH2D* hVHj = new TH2D("hVHj", "h_VHj", 15, _PhiCut, 8, _VHPtCut);
@@ -224,7 +203,6 @@ void VHF_Pt(){
     vector<double> _pur;
     vector<Int_t> _nbinentries;
     vector<Int_t> _nisrtag;
-    vector<Int_t> _isreff;
     vector<Int_t> _noISR;
 
     for(unsigned int k = 0; k < VHPtCut.size(); ++k){
@@ -238,7 +216,6 @@ void VHF_Pt(){
       _pur.push_back(0);
       _nbinentries.push_back(0);
       _nisrtag.push_back(0);
-      _isreff.push_back(0);
       _noISR.push_back(0);
     }		
 
@@ -248,7 +225,6 @@ void VHF_Pt(){
     pur.push_back(_pur);
     nbinentries.push_back(_nbinentries);
     nisrtag.push_back(_nisrtag);
-    isreff.push_back(_isreff);
     noISR.push_back(_noISR);
 
   }
@@ -278,6 +254,7 @@ void VHF_Pt(){
   Float_t Sis_phi[3];
   Float_t Sis_mass[3];
   Float_t weight;
+  Float_t Vtype;
 
   t->SetBranchAddress("Jet_pt", &Jet_pt);
   t->SetBranchAddress("Jet_eta", &Jet_eta);
@@ -300,6 +277,7 @@ void VHF_Pt(){
   t->SetBranchAddress("GenHiggsSisters_phi", &Sis_phi);
   t->SetBranchAddress("GenHiggsSisters_mass", &Sis_mass);
   t->SetBranchAddress("genWeight", &weight);
+  t->SetBranchAddress("Vtype", &Vtype);
 
   //_*_*_*_*_*_*_*_*
   //Perform the loop
@@ -310,31 +288,47 @@ void VHF_Pt(){
   for(Int_t i = 0; i < nentries; ++i){
     if(i%10000==0) cout << "event " << i << "/" << nentries << endl;
     t->GetEntry(i);
+    
+    if(Vtype!=0 && Vtype!=1) continue; // select only ZToMuMu or ZToEE 
+    if(V_pt < 100) continue;
+    
     //Build the V+H to cross-check
-    TLorentzVector V, H, VH;
+    TLorentzVector V, H, VH, VHj4v;
+    // cout << "H_pt,H_eta,H_phi,H_mass= " << H_pt << " " << H_eta << " " << H_phi << " " <<H_mass << endl;
     V.SetPtEtaPhiM(V_pt,V_eta,V_phi,V_mass);
     H.SetPtEtaPhiM(H_pt,H_eta,H_phi,H_mass);
     VH = V+H;
+    
+    h_VH->Fill(VH.Pt());
+    
+    vector<TLorentzVector> vOtherJets = OtherJets( Jet_pt,  Jet_eta,  Jet_phi,  Jet_mass, Jet_puId, Jet_id, Jet_aJCidx, Jet_hJCidx);
+    vector<TLorentzVector> vSis = Sis(Sis_pt, Sis_eta, Sis_phi, Sis_mass);
+    
     if(weight < 0){weight = -1;}
     else if(weight > 0){weight = 1;}
     //weight = 1;
-    if(V_pt > 100){
-      for(unsigned int k = 0; k < PhiCut.size(); ++k){
-	for(unsigned int l = 0; l < VHPtCut.size(); ++l){
-	  //Count n events
-	  nbinentries[k][l] += weight;
-	  //Count #ISR tags
-	  nisrtag[k][l] +=  weight*foundISR( V_pt,  V_eta,  V_phi,  V_mass,  H_pt,  H_eta,  H_phi,  H_mass, OtherJets( Jet_pt,  Jet_eta,  Jet_phi,  Jet_mass, Jet_puId, Jet_id, Jet_aJCidx, Jet_hJCidx),  PhiCut[k],  VHPtCut[l]);
-	  isreff[k][l] = nisrtag[k][l];
-	  //VHj minimisation
-	  double VHj_add = VHj_Pt(V_pt, V_eta, V_phi, V_mass, H_pt, H_eta, H_phi, H_mass, OtherJets( Jet_pt,  Jet_eta,  Jet_phi,  Jet_mass, Jet_puId, Jet_id, Jet_aJCidx, Jet_hJCidx), PhiCut[k], VHPtCut[l], keep);
-	  hist[k][l]->Fill(weight*VHj_add);
-	  VHj[k][l]+= weight*VHj_add; 
-	  //Sister optimisation
-	  pur[k][l] +=  weight*PurSisISR(V_pt, V_eta, V_phi, V_mass, H_pt, H_eta, H_phi, H_mass, OtherJets( Jet_pt,  Jet_eta,  Jet_phi,  Jet_mass, Jet_puId, Jet_id, Jet_aJCidx, Jet_hJCidx), Sis(Sis_pt, Sis_eta, Sis_phi, Sis_mass), PhiCut[k], VHPtCut[l]);
-	  //Fill VH histogram
-	  h_VH->Fill(VH.Pt());
-	}
+    
+    for(unsigned int k = 0; k < PhiCut.size(); ++k){
+      for(unsigned int l = 0; l < VHPtCut.size(); ++l){
+        
+        //Count n events
+        nbinentries[k][l] += weight;
+        
+        double ISRj_Index = ISRj_Idx(V, H, VH, vOtherJets, PhiCut[k], VHPtCut[l], keep);
+        
+        if(ISRj_Index>-1){
+          VHj4v+=vOtherJets[ISRj_Index];
+          //Count #ISR tags
+          nisrtag[k][l] +=  weight;
+        }
+
+        //VHj minimisation
+        hist[k][l]->Fill(VHj4v.Pt(),weight);
+        VHj[k][l]+= weight*VHj4v.Pt(); // TO BE CROSSCHECKED!
+        
+        //Sister optimisation
+        pur[k][l] +=  weight*PurSisISR(V, H, VH, vOtherJets, vSis, PhiCut[k], VHPtCut[l]);
+              
       }
     }
   }
@@ -361,60 +355,20 @@ void VHF_Pt(){
   for(unsigned int k = 0; k < 15; ++k){
     for(unsigned int l = 0; l < 8; ++l){
       ceff->cd();
-      heff->Fill((PhiCut[k]+PhiCut[k+1])/2., (VHPtCut[l]+VHPtCut[l+1])/2., isreff[k][l]/(double)nbinentries[k][l]);
-      heff->SetTitle("ISR-finder efficiency");
-      heff->GetXaxis()->SetTitle("#alpha");
-      heff->GetXaxis()->SetLabelSize(20);
-      heff->GetXaxis()->SetLabelFont(43);
-      heff->GetXaxis()->SetTitleFont(63);
-      heff->GetXaxis()->SetTitleSize(20);
-      heff->GetYaxis()->SetTitle("P_{T}(VH) Cut");
-      heff->GetYaxis()->SetLabelSize(20);
-      heff->GetYaxis()->SetLabelFont(43);
-      heff->GetYaxis()->SetTitleFont(63);
-      heff->GetYaxis()->SetTitleSize(20);
+      heff->Fill((PhiCut[k]+PhiCut[k+1])/2., (VHPtCut[l]+VHPtCut[l+1])/2., nisrtag[k][l]/(double)nbinentries[k][l]); //#efficiency to be ISR tagged
+      preparehisto(heff,"ISR-finder efficiency","#alpha","P_{T}(VH) Cut");
       heff->Draw("colz text");
       cVHj->cd();
       hVHj->Fill((PhiCut[k]+PhiCut[k+1])/2., (VHPtCut[l]+VHPtCut[l+1])/2., VHj[k][l]/nbinentries[k][l]);
-      hVHj->SetTitle("P_{T}(VH + ISR Jets)");
-      hVHj->GetXaxis()->SetTitle("#alpha");
-      hVHj->GetXaxis()->SetLabelSize(20);
-      hVHj->GetXaxis()->SetLabelFont(43);
-      hVHj->GetXaxis()->SetTitleFont(63);
-      hVHj->GetXaxis()->SetTitleSize(20);
-      hVHj->GetYaxis()->SetTitle("P_{t}(VH) Cut");
-      hVHj->GetYaxis()->SetLabelSize(20);
-      hVHj->GetYaxis()->SetLabelFont(43);
-      hVHj->GetYaxis()->SetTitleFont(63);
-      hVHj->GetYaxis()->SetTitleSize(20);
+      preparehisto(hVHj,"P_{T}(VH + ISR Jets)","#alpha","P_{T}(VH) Cut");
       hVHj->Draw("colz text");
       cpur->cd();
       hpur->Fill((PhiCut[k]+PhiCut[k+1])/2., (VHPtCut[l]+VHPtCut[l+1])/2., pur[k][l]/nisrtag[k][l]);
-      hpur->SetTitle("ISR-finder purity");
-      hpur->GetXaxis()->SetTitle("#alpha");
-      hpur->GetXaxis()->SetLabelSize(20);
-      hpur->GetXaxis()->SetLabelFont(43);
-      hpur->GetXaxis()->SetTitleFont(63);
-      hpur->GetXaxis()->SetTitleSize(20);
-      hpur->GetYaxis()->SetTitle("P_{t}(VH) Cut");
-      hpur->GetYaxis()->SetLabelSize(20);
-      hpur->GetYaxis()->SetLabelFont(43);
-      hpur->GetYaxis()->SetTitleFont(63);
-      hpur->GetYaxis()->SetTitleSize(20);
+      preparehisto(hpur,"ISR-finder purity","#alpha","P_{T}(VH) Cut");
       hpur->Draw("colz text");
       ceffxpur->cd();
       heffxpur->Fill((PhiCut[k]+PhiCut[k+1])/2., (VHPtCut[l]+VHPtCut[l+1])/2., ((double)nisrtag[k][l]*pur[k][l])/((double)nisrtag[k][l]*nbinentries[k][l]));
-      heffxpur->SetTitle("ISR-finder purity x efficiency");
-      heffxpur->GetXaxis()->SetTitle("#alpha");
-      heffxpur->GetXaxis()->SetLabelSize(20);
-      heffxpur->GetXaxis()->SetLabelFont(43);
-      heffxpur->GetXaxis()->SetTitleFont(63);
-      heffxpur->GetXaxis()->SetTitleSize(20);
-      heffxpur->GetYaxis()->SetTitle("P_{t}(VH) Cut");
-      heffxpur->GetYaxis()->SetLabelSize(20);
-      heffxpur->GetYaxis()->SetLabelFont(43);
-      heffxpur->GetYaxis()->SetTitleFont(63);
-      heffxpur->GetYaxis()->SetTitleSize(20);
+      preparehisto(heffxpur,"ISR-finder purity x efficiency","#alpha","P_{T}(VH) Cut");
       heffxpur->Draw("colz text");
     }
   }
