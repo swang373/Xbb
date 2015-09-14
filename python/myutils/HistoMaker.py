@@ -44,7 +44,12 @@ class HistoMaker:
 	print "==============\n" 
 
     def get_histos_from_tree(self,job,cutOverWrite=None):
-        '''Take job containing all the information on the sample. Save the corresponding histogram in TH1F. Returns an array of dictionnary of TH1F. The key of the dictionnary are defined in Group in genral'''
+        '''
+	Take job containing all the information on the sample. 
+	Save the corresponding histogram in TH1F. Returns an array of dictionnary of TH1F. 
+	The entries of the array are filled for each option from the optionsList. 
+	The key of the dictionnary are defined in Group in general
+	'''
         
         #print "get_histo_from_tree_debug1"
         '''Function that produce the trees from a HistoMaker'''

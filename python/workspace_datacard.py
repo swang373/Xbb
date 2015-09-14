@@ -282,7 +282,12 @@ if rebin_active:
     data_hMaker._rebin = copy(mc_hMaker._rebin)
     data_hMaker.mybinning = deepcopy(mc_hMaker.mybinning)
 
-all_histos = {}
+all_histos = {}#all_histo is a dictionnary, where each sample name (key), get assigned an array of dictionnaries, containing an array of Group:TH1F dictionnaries
+
+'''Examples of output
+{'DYLL': [{'DATA': <ROOT.TH1F object ("hnew") at 0x67f1490>}, {'DATA': <ROOT.TH1F object ("hnew") at 0x38283f10>}, {'DATA': <ROOT.TH1F object ("hnew") at 0x384163a0>}, {'DATA': <ROOT.TH1F object ("hnew") at 0x45569a0>}, {'DATA': <ROOT.TH1F object ("hnew") at 0x451cf70>}, {'DATA': <ROOT.TH1F object ("hnew") at 0x451c260>}, {'DATA': <ROOT.TH1F object ("hnew") at 0x4521740>}, {'DATA': <ROOT.TH1F object ("hnew") at 0x4525a50>}, {'DATA': <ROOT.TH1F object ("hnew") at 0x4528290>}, {'DATA': <ROOT.TH1F object ("hnew") at 0x45267e0>}, {'DATA': <ROOT.TH1F object ("hnew") at 0x4555140>}], 'TTJets': [{'TT': <ROOT.TH1F object ("hnew") at 0x51e93f0>}, {'TT': <ROOT.TH1F object ("hnew") at 0xf3749b0>}, {'TT': <ROOT.TH1F object ("hnew") at 0x3eb1efb0>}, {'TT': <ROOT.TH1F object ("hnew") at 0x17f79990>}, {'TT': <ROOT.TH1F object ("hnew") at 0xc4fe870>}, {'TT': <ROOT.TH1F object ("hnew") at 0xc64ff60>}, {'TT': <ROOT.TH1F object ("hnew") at 0xaa0fcf0>}, {'TT': <ROOT.TH1F object ("hnew") at 0x383ff270>}, {'TT': <ROOT.TH1F object ("hnew") at 0x20213c90>}, {'TT': <ROOT.TH1F object ("hnew") at 0xc64cab0>}, {'TT': <ROOT.TH1F object ("hnew") at 0x592c9a0>}]}
+'''
+
 data_histos = {}
 
 print '\n\t...fetching histos...'
@@ -298,6 +303,9 @@ for job in all_samples:
     else:
         all_histos[job.name] = mc_hMaker.get_histos_from_tree(job)
 
+if debug:
+    print "all_histos are"
+    print all_histos
 print 'data samples\n'
 for job in data_samples:
     if debug:
@@ -362,7 +370,7 @@ final_histos = {}
 print '\n\t--> Ordering and Adding Histos\n'
 
 #NOMINAL:
-final_histos['nominal'] = HistoMaker.orderandadd([all_histos['%s'%job][0] for job in all_samples],setup) 
+final_histos['nominal'] = HistoMaker.orderandadd([all_histos['%s'%job][0] for job in all_samples],setup)#note: printing a samples class will return the 
 
 #SYSTEMATICS:
 ind = 1
@@ -552,7 +560,15 @@ for DCtype in ['WS','TH']:
     f.write('\n')
     # datacard yields
     f.write('rate')
+    if debug: 
+        print "The final_histos dictionnary:"
+	print final_histos['nominal']
+    if debug:
+	print "List of the final_histos dictionnary keys"
+	for key in list(final_histos['nominal'].keys()):
+	    print "The key is", key
     for c in setup: 
+        if debug: print "c is", c 
         f.write('\t%s'%final_histos['nominal'][c].Integral())
     f.write('\n')
     # get list of systematics in use

@@ -32,7 +32,9 @@ def check_correspondency(sample,list,config):
 class ParseInfo:
     '''Class containing a list of Sample. Is filled during the prep stage.'''
     def __init__(self,samples_config,samples_path):
-	'''Methode filling a list of Sample "self._samplelist = []" contained in the class. "sample_path" contains the path where the samples are stored (PREPin). "samples_config" is the "samples_nosplit.cfg" file. Depending of the variable "run_on_files" defined in "samples_nosplit.cfg", the sample list are generated from the input folder (PREPin) or the list in "samples_nosplit.cfg" '''
+	'''Methode filling a list of Sample "self._samplelist = []" contained in the class. "sample_path" contains the path where the samples are stored (PREPin). "samples_config" is the "samples_nosplit.cfg" file. Depending of the variable "run_on_files" defined in "samples_nosplit.cfg", the sample list are generated from the input folder (PREPin) or the list in "samples_nosplit.cfg" 
+	The name of the sample corresponds to the one in sampleName in sample_nospit.cfg
+	'''
 
         print ""
         print "START Parsing the samples configuration (ParseInfo)"
@@ -171,6 +173,7 @@ class ParseInfo:
         return None
     
     def get_samples(self, samplenames):
+        '''return a list of all samples'''
         samples = []
         thenames = []
         #for splitted samples use the identifier. There is always only one. if list, they are all true
