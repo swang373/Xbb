@@ -64,7 +64,7 @@ signals = config.get('dc:%s'%var,'signal').split(' ')
 datas = config.get('dc:%s'%var,'dcBin')
 Datacardbin=config.get('dc:%s'%var,'dcBin')
 anType = config.get('dc:%s'%var,'type')
-setup=eval(config.get('LimitGeneral','setup'))
+setup=eval(config.get('LimitGeneral','setup'))#setup is a dictionnary containing the sig and bkg, defined in datacards
 #Systematics:
 if config.has_option('LimitGeneral','addSample_sys'):
     addSample_sys = eval(config.get('LimitGeneral','addSample_sys'))
@@ -518,6 +518,9 @@ for key in final_histos:
 #-----------------------------------------------------------------------------------------------------------
 
 # -------------------- write DATAcard: ----------------------------------------------------------------------
+
+print "Writing the DATAcards"
+print "=====================\n"
 DCprocessseparatordict = {'WS':':','TH':'/'}
 # create two datacards: for TH an WS
 for DCtype in ['WS','TH']:
@@ -538,6 +541,10 @@ for DCtype in ['WS','TH']:
     f.write('\n')
     # datacard process
     f.write('process')
+    if debug:
+	print "List of the keys from Dict dictionnary"
+	for key in list(Dict.keys()):
+	    print "The key is", key
     for c in setup: f.write('\t%s'%Dict[c])
     f.write('\n')
     f.write('process')

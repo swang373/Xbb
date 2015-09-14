@@ -69,7 +69,8 @@ toy: False
 #!! Samples
 #!! --------------------------------------
 #!! Datacard samples setup (1st Signal, afterwards BKG)
-setup: ['ZH', 'DYlight','DY1b','DY2b','VVlight','VVb','TT','ST']
+setup: ['DYLL','TTJets']
+#setup: ['ZH', 'DYlight','DY1b','DY2b','VVlight','VVb','TT','ST']
 #setup: ['ZH', 'DYlight','DYb','VV','TT','ST']
 #!! Lists from general config
 #Corresponds to the allBKG in general config file
@@ -80,7 +81,8 @@ Group = <!Samples|Group!>
 #!! Naming
 #!! --------------------------------------
 #!! naming of processes
-Dict = {'ZH':'ZH','DYlight':'Zj0b','DY1b':'Zj1b','DY2b':'Zj2b','TT':'TT','ST':'s_Top','VVb':'VVHF','VVlight':'VVLF','Data':'data_obs','ZH125':'H125'}
+Dict = {'DYLL':'DY','TTJets':'TT'}
+#Dict = {'ZH':'ZH','DYlight':'Zj0b','DY1b':'Zj1b','DY2b':'Zj2b','TT':'TT','ST':'s_Top','VVb':'VVHF','VVlight':'VVLF','Data':'data_obs','ZH125':'H125'}
 #!! naming of systematics
 systematicsnaming = {'JER':'CMS_vhbb_Zll_res_j','JES':'CMS_vhbb_Zll_scale_j','beff':'CMS_vhbb_eff_b','bmis':'CMS_vhbb_fake_b_8TeV','beff1':'CMS_vhbb_eff_b_SIG','stats': 'CMS_vhbb_stats','weightF_sys':'UEPS','weightF_QCD':'CMS_vhbb_boost_QCD','model':'CMS_vhbb_model'}
 
