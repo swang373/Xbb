@@ -123,9 +123,9 @@ BKG_VV_training: <!Samples|DrellYan!>,<!Samples|Top!>,<!Samples|s_Top!>,'WW','WZ
 #Group: {'DYLL':'Z_','TTJets':'TT','WJets':'W','WZ':'WZ','ZHbb':'Hbb','ZZ':'ZZ','ggH':'ggH'}
 #Datas: DYLL TTJets WJets WZ ZHbb ZZ ggH
 #For ggH-VHbb comparison
-allBKG:'ZHbb', 'ggH'
-Group: {'ZHbb':'Hbb','ggH':'ggH'}
-Datas: ZZ ggH
+allBKG:'DYLL', 'TTJets' 
+Group: {'DYLL':'DATA', 'TTJets':'TT'}
+Datas: DYLL TTJets
 
 [Weights]
 #5fb:
@@ -137,11 +137,25 @@ Datas: ZZ ggH
 #weightF: (puWeight*weightTrig2012*lheWeight)
 # weightF: (puWeight*weightTrig2012*lheWeight*weightSignalQCD*VHbb::ewkAtlas8TeVZllH(genH_pt,genZ.pt)*VHbb::ptWeightDY(lheV_pt)*VHbb::mueEff(Vtype,vLepton_eta[0],vLepton_eta[1],vLepton_pt[0],vLepton_pt[1]))
 # weightF: (puWeight*VHbb::ewkAtlas8TeVZllH(GenHiggsBoson_pt,GenVbosons_pt)*VHbb::ptWeightDY(lheV_pt)*VHbb::mueEff(Vtype,vLepton_eta[0],vLepton_eta[1],vLepton_pt[0],vLepton_pt[1]))
-weightF: (puWeight*genWeight/TMath::Abs(genWeight))
 
-weightF_sys_UP: (puWeightP*weightTrig2012*lheWeight*weightSignalQCD*VHbb::ewkAtlas8TeVZllH(genH_pt,genZ.pt)*VHbb::ptWeightDY(lheV_pt)*VHbb::mueEff(Vtype,vLepton_eta[0],vLepton_eta[1],vLepton_pt[0],vLepton_pt[1]))
-weightF_sys_DOWN: (puWeightM*weightTrig2012*lheWeight*weightSignalQCD*VHbb::ewkAtlas8TeVZllH(genH_pt,genZ.pt)*VHbb::ptWeightDY(lheV_pt)*VHbb::mueEff(Vtype,vLepton_eta[0],vLepton_eta[1],vLepton_pt[0],vLepton_pt[1]))
-weightF_QCD_UP: (puWeight*weightTrig2012*lheWeight*weightSignalQCD*(1.+(1./weightSignalQCD-1.)*0.5)*VHbb::ewkAtlas8TeVZllH(genH_pt,genZ.pt)*VHbb::ptWeightDY(lheV_pt)*VHbb::mueEff(Vtype,vLepton_eta[0],vLepton_eta[1],vLepton_pt[0],vLepton_pt[1]))
-weightF_QCD_DOWN: (puWeight*weightTrig2012*lheWeight*weightSignalQCD*(1.-(1./weightSignalQCD-1.)*0.5)*VHbb::ewkAtlas8TeVZllH(genH_pt,genZ.pt)*VHbb::ptWeightDY(lheV_pt)*VHbb::mueEff(Vtype,vLepton_eta[0],vLepton_eta[1],vLepton_pt[0],vLepton_pt[1]))
+#############################
+#Set All weights to 0 for test
+#############################
+
+#weightF: (puWeight*genWeight/TMath::Abs(genWeight))
+#
+#weightF_sys_UP: (puWeightP*weightTrig2012*lheWeight*weightSignalQCD*VHbb::ewkAtlas8TeVZllH(genH_pt,genZ.pt)*VHbb::ptWeightDY(lheV_pt)*VHbb::mueEff(Vtype,vLepton_eta[0],vLepton_eta[1],vLepton_pt[0],vLepton_pt[1]))
+#weightF_sys_DOWN: (puWeightM*weightTrig2012*lheWeight*weightSignalQCD*VHbb::ewkAtlas8TeVZllH(genH_pt,genZ.pt)*VHbb::ptWeightDY(lheV_pt)*VHbb::mueEff(Vtype,vLepton_eta[0],vLepton_eta[1],vLepton_pt[0],vLepton_pt[1]))
+#weightF_QCD_UP: (puWeight*weightTrig2012*lheWeight*weightSignalQCD*(1.+(1./weightSignalQCD-1.)*0.5)*VHbb::ewkAtlas8TeVZllH(genH_pt,genZ.pt)*VHbb::ptWeightDY(lheV_pt)*VHbb::mueEff(Vtype,vLepton_eta[0],vLepton_eta[1],vLepton_pt[0],vLepton_pt[1]))
+#weightF_QCD_DOWN: (puWeight*weightTrig2012*lheWeight*weightSignalQCD*(1.-(1./weightSignalQCD-1.)*0.5)*VHbb::ewkAtlas8TeVZllH(genH_pt,genZ.pt)*VHbb::ptWeightDY(lheV_pt)*VHbb::mueEff(Vtype,vLepton_eta[0],vLepton_eta[1],vLepton_pt[0],vLepton_pt[1]))
 
 #weightF: (puWeight*lheWeight)
+
+weightF: 1
+
+weightF_sys_UP: 1
+weightF_sys_DOWN: 1
+weightF_QCD_UP: 1 
+weightF_QCD_DOWN: 1 
+
+#######################

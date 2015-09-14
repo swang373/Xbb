@@ -27,27 +27,36 @@ def copytree(pathIN,pathOUT,prefix,newprefix,file,Aprefix,Acut):
     del_protocol = del_protocol.replace('dcap://t3se01.psi.ch:22125/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
     del_protocol = del_protocol.replace('root://t3dcachedb03.psi.ch:1094/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
     # RECURSIVELY CREATE REMOTE FOLDER ON PSI SE, but only up to 3 new levels
-    mkdir_command = del_protocol.replace('srm://t3se01.psi.ch:8443/srm/managerv2?SFN=','srm://t3se01.psi.ch/')
-    mkdir_command1 = mkdir_command.rsplit('/',1)[0]
-    mkdir_command2 = mkdir_command1.rsplit('/',1)[0]
-    mkdir_command3 = mkdir_command2.rsplit('/',1)[0]
-    my_user = os.popen("whoami").read().strip('\n').strip('\r')+'/'
-    if my_user in mkdir_command3:
-      print 'mkdir_command3',mkdir_command3
-      subprocess.call(['srmmkdir '+mkdir_command3], shell=True)# delete the files already created ?     
-    if my_user in mkdir_command2:
-      print 'mkdir_command2',mkdir_command2
-      subprocess.call(['srmmkdir '+mkdir_command2], shell=True)# delete the files already created ?     
-    if my_user in mkdir_command1:
-      print 'mkdir_command1',mkdir_command1
-      subprocess.call(['srmmkdir '+mkdir_command1], shell=True)# delete the files already created ?     
-    if my_user in mkdir_command:
-      print 'mkdir_command',mkdir_command
-      subprocess.call(['srmmkdir '+mkdir_command], shell=True)# delete the files already created ?     
-    
-    command = 'srmrm %s/%s%s%s.root' %(del_protocol,newprefix,Aprefix,file)# command to delete previous files ?
-    print(command)
-    subprocess.call([command], shell=True)# delete the files already created ?     
+    if del_protocol.find('srm://t3se01.psi.ch:8443/srm/managerv2?SFN=') != -1:
+        print "Remote folder contain ssrm://t3se01.psi.ch:8443/srm/managerv2?SFN="
+        mkdir_command = del_protocol.replace('srm://t3se01.psi.ch:8443/srm/managerv2?SFN=','srm://t3se01.psi.ch/')
+        mkdir_command1 = mkdir_command.rsplit('/',1)[0]
+        mkdir_command2 = mkdir_command1.rsplit('/',1)[0]
+        mkdir_command3 = mkdir_command2.rsplit('/',1)[0]
+        my_user = os.popen("whoami").read().strip('\n').strip('\r')+'/'
+        if my_user in mkdir_command3:
+          print 'mkdir_command3',mkdir_command3
+          subprocess.call(['srmmkdir '+mkdir_command3], shell=True)# delete the files already created ?     
+        if my_user in mkdir_command2:
+          print 'mkdir_command2',mkdir_command2
+          subprocess.call(['srmmkdir '+mkdir_command2], shell=True)# delete the files already created ?     
+        if my_user in mkdir_command1:
+          print 'mkdir_command1',mkdir_command1
+          subprocess.call(['srmmkdir '+mkdir_command1], shell=True)# delete the files already created ?     
+        if my_user in mkdir_command:
+          print 'mkdir_command',mkdir_command
+          subprocess.call(['srmmkdir '+mkdir_command], shell=True)# delete the files already created ?     
+        command = 'srmrm %s/%s%s%s.root' %(del_protocol,newprefix,Aprefix,file)# command to delete previous files ?
+        print(command)
+        subprocess.call([command], shell=True)# delete the files already created ?     
+    else:
+        print "Remote folder doesn't contain ssrm://t3se01.psi.ch:8443/srm/managerv2?SFN="
+        print 'mkdir_command', 'mkdir '+ del_protocol
+        subprocess.call(['mkdir '+ del_protocol], shell=True)# delete the files already created ?     
+        command = 'rm %s/%s%s%s.root' %(del_protocol,newprefix,Aprefix,file)# command to delete previous files ?
+        print(command)
+        subprocess.call([command], shell=True)# delete the files already created ?     
+
     output = ROOT.TFile.Open("%s/%s%s%s.root" %(pathOUT,newprefix,Aprefix,file),'create')
     input.ls()
     input.cd()

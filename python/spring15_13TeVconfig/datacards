@@ -10,6 +10,7 @@ addOverFlow = True
 #!! --------------------------------------
 #!! Binning:
 #!! --------------------------------------
+HMassRange = 10,80,145
 BDTrange = 15,-1,1
 BDToutname = CMS_vhbb_BDT_Zll_8TeV
 Mjjrange = 17,0.,255.
@@ -167,14 +168,17 @@ CMS_vhbb_TT_SF_Zll_LowPt_8TeV: {'type':'lnN', 'TT':1.05}
 
 #TEST
 [dc:ZH125_EE_8TeV_janAngularOnly_noWeights] 
-var = Hmass
+#Need to write variables directly from the tree
+var = H_mass
 wsVarName = <!LimitGeneral|BDToutname!>
-range = <!LimitGeneral|BDTrange!>
+#range = <!LimitGeneral|BDTrange!>
+range = <!LimitGeneral|HMassRange!>
 dcName = BDT_M125_ZeeLowPt_8TeV
-cut = RMed_EE
-signal = ZH125
+#create tmp file after applying this cut
+cut = dummy 
+signal = DYLL 
 dcBin = ZeeLowPt_8TeV
-data = ZHbb 
+data = DYLL 
 type= BDT
 
 #[dc:RMed_ZH125_MM_8TeV_janAngularOnly_noWeights] 

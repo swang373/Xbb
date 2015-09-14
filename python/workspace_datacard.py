@@ -9,9 +9,14 @@ warnings.filterwarnings( action='ignore', category=RuntimeWarning, message='crea
 from optparse import OptionParser
 from myutils import BetterConfigParser, Sample, progbar, printc, ParseInfo, Rebinner, HistoMaker
 
-debug = True
+debug = True 
 
+print ''
+print "_*_*_*_*_*_*_*_*_*_*_*_*_*_"
+print "Starting datacard production"
+print "_*_*_*_*_*_*_*_*_*_*_*_*_*_\n"
 if debug: print "workspace_datacard.py debug 1: beginning of the file"
+
 
 #--CONFIGURE---------------------------------------------------------------------
 argv = sys.argv
@@ -28,6 +33,10 @@ if debug: print "var is", var#take the values of the list parameter in datacards
 #-------------------------------------------------------------------------------
 
 #--read variables from config---------------------------------------------------
+
+print "Reading configuration files and assigning variables"
+print "===================================================\n"
+
 # 7 or 8TeV Analysis
 anaTag = config.get("Analysis","tag")
 if not any([anaTag == '7TeV',anaTag == '8TeV']):
@@ -141,6 +150,9 @@ if not add_signal_as_bkg == 'None':
 
 #--Setup--------------------------------------------------------------------
 #Assign Pt region for sys factors
+
+print "Assign Pt region for sys factors"
+print "================================\n"
 if 'HighPtLooseBTag' in ROOToutname:
     pt_region = 'HighPtLooseBTag'
 elif 'HighPt' in ROOToutname or 'highPt' in ROOToutname:
@@ -177,11 +189,10 @@ data_sample_names = config.get('dc:%s'%var,'data').split(' ')
 data_samples = info.get_samples(data_sample_names)
 #-------------------------------------------------------------------------------------------------
 
-if debug: print "workspace_datacard.py debug 2"
-
 optionsList=[]
 
 def appendList(): optionsList.append({'cut':copy(_cut),'var':copy(_treevar),'name':copy(_name),'nBins':nBins,'xMin':xMin,'xMax':xMax,'weight':copy(_weight),'blind':blind})
+
 
 #nominal
 _cut = treecut
@@ -234,7 +245,9 @@ for weightF_sys in weightF_systematics:
 
 #for option in optionsList:
 #    print option['cut']
-
+print "Start Making the histograms"
+print "===========================\n"
+print 'The options list is', optionsList, '\n'
 mc_hMaker = HistoMaker(all_samples,path,config,optionsList,GroupDict)
 data_hMaker = HistoMaker(data_samples,path,config,[optionsList[0]])
 #Calculate lumi
@@ -285,7 +298,12 @@ for job in all_samples:
     else:
         all_histos[job.name] = mc_hMaker.get_histos_from_tree(job)
 
+print 'data samples\n'
 for job in data_samples:
+    if debug:
+	print "List of the keys form HistoMaker dictionnary"
+	for key in list(data_hMaker.get_histos_from_tree(job)[0].keys()):
+	    print "The key is", key
     print '\t- %s'%job
     data_histos[job.name] = data_hMaker.get_histos_from_tree(job)[0]['DATA']
 

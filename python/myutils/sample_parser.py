@@ -21,6 +21,7 @@ def test_samples(run_on_fileList,__fileslist,config_sections):
 
 def check_correspondency(sample,list,config):
         '''Check the samples that are available in the PREPin directory and in the samples_nosplit file '''
+	print "Check what sample are available in the PREPin folder"
         if any( sample in file for file in list ):
                 print '@INFO: Sample %s is present'%(config.get(sample,'sampleName'))
         else:
@@ -32,6 +33,13 @@ class ParseInfo:
     '''Class containing a list of Sample. Is filled during the prep stage.'''
     def __init__(self,samples_config,samples_path):
 	'''Methode filling a list of Sample "self._samplelist = []" contained in the class. "sample_path" contains the path where the samples are stored (PREPin). "samples_config" is the "samples_nosplit.cfg" file. Depending of the variable "run_on_files" defined in "samples_nosplit.cfg", the sample list are generated from the input folder (PREPin) or the list in "samples_nosplit.cfg" '''
+
+        print ""
+        print "START Parsing the samples configuration (ParseInfo)"
+        print "===================================================\n"
+
+        debug = False
+
         try:
             os.stat(samples_config)
         except:
@@ -62,10 +70,10 @@ class ParseInfo:
         else:
             ls = os.popen("ls "+samples_path)
     
-	print 'will start the loop over the lines.'
-	print ls.read()
+	if debug: print 'will start the loop over the lines.'
+	if debug: print ls.read()
         for line in ls.readlines():
-		print 'loop over the lines'
+		if debug: print 'loop over the lines'
                 if('.root' in line):
                         truncated_line = line[line.rfind('/')+1:]
                         _p = findnth(truncated_line,'.',2)
@@ -77,13 +85,13 @@ class ParseInfo:
 	#Deleteme: Do a loop to check on __fileslist
 	#Start the loop
 	for i in range(0,len(self.__fileslist)):
-	        print 'Is the ',i ,'th file None ? Answer:', (self.__fileslist[i] == None) 
+	        if debug: print 'Is the ',i ,'th file None ? Answer:', (self.__fileslist[i] == None) 
 
 	#End Deleteme
 
         run_on_fileList = eval(config.get('Samples_running','run_on_fileList'))#Evaluate run_on_fileList from samples_nosplit.cfg 
 
-	print 'Is Sample None ? Answer: ', (self.__fileslist == None)
+	if debug: print 'Is Sample None ? Answer: ', (self.__fileslist == None)
 
         if( not test_samples(run_on_fileList,self.__fileslist,config.sections()) ): # stop if it finds None as sample
                 sys.exit('@ERROR: Sample == None. Check RunOnFileList flag in section General, the sample_config of the sample directory.')
@@ -145,6 +153,10 @@ class ParseInfo:
                     newsample.sf = eval((config.get(sample, 'SF')))
                 newsample.group = config.get(sample,'sampleGroup')
                 self._samplelist.append(newsample)
+
+        print ""
+        print "END Parsing the samples configuration (ParseInfo)"
+        print "=================================================\n"
 
     def __iter__(self):
         for sample in self._samplelist:
