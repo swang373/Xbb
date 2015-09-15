@@ -17,4 +17,4 @@ cd /shome/perrozzi/for_gael/CMSSW_7_4_3/src/Xbb/macros/VHj_pt
 #$ -o /shome/gaperrin/VHbb/CMSSW_7_4_3/src/Xbb/plugins/VHj_pt/Log
 #$ -e /shome/gaperrin/VHbb/CMSSW_7_4_3/src/Xbb/plugins/VHj_pt/Log
 
-root -l -b 'VHF_Pt.C++(0)'
+root -l -b -q 'VHF_Pt.C++(0)'

@@ -43,6 +43,7 @@ vector<TLorentzVector> OtherJets(Float_t Jet_pt[15], Float_t Jet_eta[15], Float_
       Jet_pt[i]>30 && abs(Jet_eta[i])<4.5 && Jet_puId[i]>0 && Jet_id[i]>0 // quality cuts
       && aJCidx[i] != (hJCidx[0]) && (aJCidx[i] != (hJCidx[1])) // not an higgs b-jet
       ){ 
+      // cout << " i= " << i << " Jet_pt= " << Jet_pt[i] << ";";
       Ojet.SetPtEtaPhiM( Jet_pt[i], Jet_eta[i], Jet_phi[i], Jet_mass[i]);
     }
     OtherJets.push_back(Ojet);
@@ -51,9 +52,11 @@ vector<TLorentzVector> OtherJets(Float_t Jet_pt[15], Float_t Jet_eta[15], Float_
 }
 
 //Create a TLorentzVector of containing all the Higgs sisters
-vector<TLorentzVector> Sis(Float_t Sis_pt[3], Float_t Sis_eta[3], Float_t Sis_phi[3], Float_t Sis_mass[3]){
+vector<TLorentzVector> Sis(Float_t Sis_pt[3], Float_t Sis_eta[3], Float_t Sis_phi[3], Float_t Sis_mass[3], Int_t Sis_pdgId[3]){
   vector<TLorentzVector> SIS;
-  for(int i = 1; i < 3; ++i){//Start at 1 since 0 entrie is always the Z bosons
+  for(int i = 0; i < 3; ++i){
+    if(Sis_pdgId[i]==23 || Sis_pdgId[i]==24) continue;
+    // cout << " i= " << i << " Sis_pdgId= " << Sis_pdgId[i] << " Sis_pt= " << Sis_pt[i] << ";";
     TLorentzVector Sis;
     Sis.SetPtEtaPhiM( Sis_pt[i], Sis_eta[i], Sis_phi[i], Sis_mass[i]);
     SIS.push_back(Sis);
@@ -83,32 +86,30 @@ double ISRj_Idx(TLorentzVector V, TLorentzVector H, TLorentzVector VH, vector<TL
   return ISRidx;
 }
 
-double PurSisISR(TLorentzVector V, TLorentzVector H, TLorentzVector VH, int ISRidx, TLorentzVector ISRjet, vector<TLorentzVector> Sis, double PhiCut, double VHPtCut){
+double HSisIerISR_Idx(TLorentzVector V, TLorentzVector H, TLorentzVector VH, int ISRidx, TLorentzVector ISRjet, vector<TLorentzVector> Sis, double PhiCut, double VHPtCut){
   //_*_*_*_*_*_*_*_*
   //Find the ISR jet 
   //_*_*_*_*_*_*_*_*
   //Returns the efficiency for a ISR-tagged jet to be matched to a syster jet
   //Apply VHPt Cut
-  if(VH.Pt() < VHPtCut){
-    return 0;
-    //Passes VHPt cut
-  }else{
-    double maxpt = 0;
-    if(ISRidx == -1) {return 0;}
-    else{
-      double dR = 99999;
-      for(unsigned int i = 0; i < Sis.size(); ++i){
-        //if(Sis[i].Pt() == 0 && Sis[i].Eta() == 0 && Sis[i].Phi() == 0) continue;
-        if(Sis[i].DeltaR(ISRjet) > dR) continue;
-        dR = Sis[i].DeltaR(ISRjet);
-      }
-      if(dR < 0.3){
-        return 1;
-      }else{
-        return 0;
-      }
+  
+  if(ISRidx == -1) return -1;
+  
+  if(VH.Pt() < VHPtCut) return -1;
+
+  //Passes VHPt cut
+  double idx = -1;
+  double dR = 1e6;
+  for(unsigned int i = 0; i < Sis.size(); ++i){
+    //if(Sis[i].Pt() == 0 && Sis[i].Eta() == 0 && Sis[i].Phi() == 0) continue;
+    if(Sis[i].DeltaR(ISRjet) < dR){
+      dR = Sis[i].DeltaR(ISRjet);
+      idx = i;
     }
   }
+
+  return idx;
+
 }
 
 //_*_*
@@ -163,8 +164,8 @@ void VHF_Pt(int sample=0){
 
   vector<double> PhiCut(_PhiCut, _PhiCut+16);
   vector<double> VHPtCut(_VHPtCut, _VHPtCut+9);
-  vector<vector<TH1D*> > hist_VHj_pt;
-  vector<vector<TCanvas*> > c;
+  vector<vector<TH1D*> > hist_VHj_pt,hist_Sister_pt,hist_Sister_eta,hist_ISRjall_pt,hist_ISRjall_eta,hist_ISRjmatched_pt,hist_ISRjmatched_eta;
+  vector<vector<TCanvas*> > c_VHj_pt,c_ISR_sister_pt,c_ISR_sister_eta;
   TCanvas* cVHj = new TCanvas("cVHj","cVHj");
   TCanvas* cpur = new TCanvas("cpur","cpur");
   TCanvas* ceff = new TCanvas("ceff","ceff");
@@ -191,10 +192,10 @@ void VHF_Pt(int sample=0){
 
   for(unsigned int i = 0; i < PhiCut.size(); ++i){
 
-    vector<TH1D*>  _hist;
-    vector<TCanvas*>  _c;
+    vector<TH1D*>  _hist_VHj_pt;
+    vector<TCanvas*>  _c_VHj_pt,_c_ISR_sister_pt,_c_ISR_sister_eta;
     vector<double> _VHj;
-    vector<TH1D*>  _histVHj1D;
+    vector<TH1D*>  _histVHj1D,_hist_Sister_pt,_hist_Sister_eta,_hist_ISRjall_pt,_hist_ISRjall_eta,_hist_ISRjmatched_pt,_hist_ISRjmatched_eta;
     vector<double> _pur;
     vector<Int_t> _nbinentries;
     vector<Int_t> _nisrtag;
@@ -202,12 +203,29 @@ void VHF_Pt(int sample=0){
 
     for(unsigned int k = 0; k < VHPtCut.size(); ++k){
 
-      TH1D* h = new TH1D(Form("h_phi%i_Pt%i",i,k),Form("h_phi%i_Pt%i",i,k),200, 0, 200);
-      _hist.push_back(h);
+      TH1D* _hist_VHj_pt_temp = new TH1D(Form("h_phi%i_Pt%i",i,k),Form("h_phi%i_Pt%i",i,k),200, 0, 200);
+      _hist_VHj_pt.push_back(_hist_VHj_pt_temp);
       TH1D* hVHj1D_temp = new TH1D(Form("hVHj1D_phi%i_Pt%i",i,k),Form("h_phi%i_Pt%i",i,k),200, 0, 200);
       _histVHj1D.push_back(hVHj1D_temp);
-      TCanvas* c1 = new TCanvas(Form("c_phi%i_Pt%i",i,k),Form("c_phi%i_Pt%i",i,k));
-      _c.push_back(c1);
+      TH1D* _hist_Sister_pt_temp = new TH1D(Form("hist_Sister_pt_phi%i_Pt%i",i,k),Form("hist_Sister_pt_phi%i_Pt%i",i,k),200, 0, 200);
+      _hist_Sister_pt.push_back(_hist_Sister_pt_temp);
+      TH1D* _hist_Sister_eta_temp = new TH1D(Form("hist_Sister_eta_phi%i_Pt%i",i,k),Form("hist_Sister_eta_phi%i_Pt%i",i,k),50, -5, 5);
+      _hist_Sister_eta.push_back(_hist_Sister_eta_temp);
+      TH1D* _hist_ISRjall_pt_temp = new TH1D(Form("hist_ISRjall_pt_phi%i_Pt%i",i,k),Form("hist_ISRjall_pt_phi%i_Pt%i",i,k),200, 0, 200);
+      _hist_ISRjall_pt.push_back(_hist_ISRjall_pt_temp);
+      TH1D* _hist_ISRjall_eta_temp = new TH1D(Form("hist_ISRjall_eta_phi%i_Pt%i",i,k),Form("hist_ISRjall_eta_phi%i_Pt%i",i,k),50, -5, 5);
+      _hist_ISRjall_eta.push_back(_hist_ISRjall_eta_temp);
+      TH1D* _hist_ISRjmatched_pt_temp = new TH1D(Form("hist_ISRjmatched_pt_phi%i_Pt%i",i,k),Form("hist_ISRjmatched_pt_phi%i_Pt%i",i,k),200, 0, 200);
+      _hist_ISRjmatched_pt.push_back(_hist_ISRjmatched_pt_temp);
+      TH1D* _hist_ISRjmatched_eta_temp = new TH1D(Form("hist_ISRjmatched_eta_phi%i_Pt%i",i,k),Form("hist_ISRjmatched_eta_phi%i_Pt%i",i,k),50, -5, 5);
+      _hist_ISRjmatched_eta.push_back(_hist_ISRjmatched_eta_temp);
+      
+      TCanvas* _c_VHj_pt_temp = new TCanvas(Form("c_phi%i_Pt%i",i,k),Form("c_phi%i_Pt%i",i,k));
+      _c_VHj_pt.push_back(_c_VHj_pt_temp);
+      TCanvas* _c_ISR_sister_pt_temp = new TCanvas(Form("c_ISR_sister_pt_phi%i_Pt%i",i,k),Form("c_ISR_sister_pt_phi%i_Pt%i",i,k));
+      _c_ISR_sister_pt.push_back(_c_ISR_sister_pt_temp);
+      TCanvas* _c_ISR_sister_eta_temp = new TCanvas(Form("c_ISR_sister_eta_phi%i_Pt%i",i,k),Form("c_ISR_sister_eta_phi%i_Pt%i",i,k));
+      _c_ISR_sister_eta.push_back(_c_ISR_sister_eta_temp);
 
       _VHj.push_back(0);
       _pur.push_back(0);
@@ -216,8 +234,16 @@ void VHF_Pt(int sample=0){
       _noISR.push_back(0);
     }		
 
-    hist_VHj_pt.push_back(_hist);
-    c.push_back(_c);
+    hist_VHj_pt.push_back(_hist_VHj_pt);
+    hist_Sister_pt.push_back(_hist_Sister_pt);
+    hist_Sister_eta.push_back(_hist_Sister_eta);
+    hist_ISRjall_pt.push_back(_hist_ISRjall_pt);
+    hist_ISRjall_eta.push_back(_hist_ISRjall_eta);
+    hist_ISRjmatched_pt.push_back(_hist_ISRjmatched_pt);
+    hist_ISRjmatched_eta.push_back(_hist_ISRjmatched_eta);
+    c_VHj_pt.push_back(_c_VHj_pt);
+    c_ISR_sister_pt.push_back(_c_ISR_sister_pt);
+    c_ISR_sister_eta.push_back(_c_ISR_sister_eta);
     VHj.push_back(_VHj);
     pur.push_back(_pur);
     nbinentries.push_back(_nbinentries);
@@ -250,6 +276,7 @@ void VHF_Pt(int sample=0){
   Float_t Sis_eta[3];
   Float_t Sis_phi[3];
   Float_t Sis_mass[3];
+  Int_t Sis_pdgId[3];
   Float_t weight;
   Float_t Vtype;
 
@@ -273,6 +300,7 @@ void VHF_Pt(int sample=0){
   t->SetBranchAddress("GenHiggsSisters_eta", &Sis_eta);
   t->SetBranchAddress("GenHiggsSisters_phi", &Sis_phi);
   t->SetBranchAddress("GenHiggsSisters_mass", &Sis_mass);
+  t->SetBranchAddress("GenHiggsSisters_pdgId", &Sis_pdgId);
   t->SetBranchAddress("genWeight", &weight);
   t->SetBranchAddress("Vtype", &Vtype);
 
@@ -298,7 +326,7 @@ void VHF_Pt(int sample=0){
     VHj4v = VH;
     
     vector<TLorentzVector> vOtherJets = OtherJets( Jet_pt,  Jet_eta,  Jet_phi,  Jet_mass, Jet_puId, Jet_id, Jet_aJCidx, Jet_hJCidx);
-    vector<TLorentzVector> vSis = Sis(Sis_pt, Sis_eta, Sis_phi, Sis_mass);
+    vector<TLorentzVector> vSis = Sis(Sis_pt, Sis_eta, Sis_phi, Sis_mass, Sis_pdgId);
     
     if(weight < 0){weight = -1;}
     else if(weight > 0){weight = 1;}
@@ -313,19 +341,35 @@ void VHF_Pt(int sample=0){
         nbinentries[k][l] += weight;
         
         double ISRj_Index = ISRj_Idx(V, H, VH, vOtherJets, PhiCut[k], VHPtCut[l], keep);
+        int HSisIerISR_Index = HSisIerISR_Idx(V, H, VH, ISRj_Index, vOtherJets[ISRj_Index], vSis, PhiCut[k], VHPtCut[l]);
+        
+        int ISRj_matched_to_sister = vOtherJets[ISRj_Index].DeltaR(vSis[HSisIerISR_Index]) < 0.3 ? 1 : 0;
         
         if(ISRj_Index>-1){
           VHj4v+=vOtherJets[ISRj_Index];
           //Count #ISR tags
           nisrtag[k][l] +=  weight;
-        }
+          
+          if(HSisIerISR_Index>-1){
+            hist_Sister_pt[k][l]->Fill(vSis[HSisIerISR_Index].Pt(),weight);
+            hist_Sister_eta[k][l]->Fill(vSis[HSisIerISR_Index].Eta(),weight);
+            hist_ISRjall_pt[k][l]->Fill(vOtherJets[ISRj_Index].Pt(),weight);
+            hist_ISRjall_eta[k][l]->Fill(vOtherJets[ISRj_Index].Eta(),weight);
+            
+            if(ISRj_matched_to_sister==1){
+              hist_ISRjmatched_pt[k][l]->Fill(vOtherJets[ISRj_Index].Pt(),weight);
+              hist_ISRjmatched_eta[k][l]->Fill(vOtherJets[ISRj_Index].Eta(),weight);
+              
+            }
+          }
 
-        //VHj minimisation
-        hist_VHj_pt[k][l]->Fill(VHj4v.Pt(),weight);
-        VHj[k][l]+= weight*VHj4v.Pt(); // TO BE CROSSCHECKED!
-        
-        //Sister optimisation
-        pur[k][l] +=  weight*PurSisISR(V, H, VH, ISRj_Index, vOtherJets[ISRj_Index], vSis, PhiCut[k], VHPtCut[l]);
+          //VHj minimisation
+          hist_VHj_pt[k][l]->Fill(VHj4v.Pt(),weight);
+          // VHj[k][l]+= weight*VHj4v.Pt(); // TO BE CROSSCHECKED!
+          
+          //Sister optimisation
+          pur[k][l] += weight*ISRj_matched_to_sister;
+        }
               
       }
     }
@@ -340,11 +384,25 @@ void VHF_Pt(int sample=0){
     for(unsigned int l = 0; l < VHPtCut.size(); ++l){
       //compute isreff
       hist_VHj_pt[k][l]->Scale(1./hist_VHj_pt[k][l]->Integral());
-      c[k][l]->cd();
+      c_VHj_pt[k][l]->cd();
       hist_VHj_pt[k][l]->SetLineColor(2);
       hist_VHj_pt[k][l]->Draw();
       h_VH->Draw("same");
-      c[k][l]->Write();
+      c_VHj_pt[k][l]->Write();
+      c_ISR_sister_pt[k][l]->cd();
+      hist_Sister_pt[k][l]->Draw();
+      hist_ISRjall_pt[k][l]->SetLineColor(3);
+      hist_ISRjall_pt[k][l]->Draw("same");
+      hist_ISRjmatched_pt[k][l]->SetLineColor(2);
+      hist_ISRjmatched_pt[k][l]->Draw("same");
+      c_ISR_sister_pt[k][l]->Write();
+      c_ISR_sister_eta[k][l]->cd();
+      hist_Sister_eta[k][l]->Draw();
+      hist_ISRjall_eta[k][l]->SetLineColor(3);
+      hist_ISRjall_eta[k][l]->Draw("same");
+      hist_ISRjmatched_eta[k][l]->SetLineColor(2);
+      hist_ISRjmatched_eta[k][l]->Draw("same");
+      c_ISR_sister_eta[k][l]->Write();
       //cout<<"The VHj_Pt mean for PhiCut: "<<k<<" and VHPtCut "<<l<<" is "<<VHj[k][l]/nbinentries[k][l]<<endl;
       //cout<<"The Sister-ISR efficiency for PhiCut: "<<k<<" and VHPtCut "<<l<<" is "<<eff[k][l]/nisrtag[k][l]<<endl;
       //cout<<"The efficiency for PhiCut: "<<k<<" and VHPtCut "<<l<<" is "<<nisrtag[k][l]/nbinentries[k][l]<<endl;
