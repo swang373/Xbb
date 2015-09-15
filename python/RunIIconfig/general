@@ -1,0 +1,15 @@
+#!! -------------------------
+#!! GENERAL CONFIGURATION
+#!! -------------------------
+
+[General]
+
+#Set to True or False to display debug messages
+Debug: True
+
+[Samples]
+
+allBKG:'ZHbb', 'ggH'
+Group: {'ZHbb':'Hbb','ggH':'ggH'}
+Datas: ZZ ggH
+

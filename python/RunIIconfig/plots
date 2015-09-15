@@ -1,0 +1,86 @@
+[Plot_general]
+
+lumi = 1.
+
+#!!!_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*
+# MC stuff
+#!!!_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*
+
+#!! MC Samples to be used for the plotting. It also can be <!Samples|allBKG!>, where the header "Samples" is defined in general.
+samples: <!Samples|allBKG!>
+
+#!! Groups for adding samples together and for the legend {'sampleName':'sampleGroup',...}. it also can be <!Samples|Group!>
+Group: <!Samples|Group!>
+
+#!! Here the order and the groups that will go in the plots. This influence the MC
+setup: Hbb,ggH
+setupLog: Hbb,ggH
+
+#!! Colors dictionary and legend
+colorDict: {'Hbb':4,'ggH':2}
+typLegendDict: {'Hbb':'ZHbb','ggH':'ggZH'}
+
+#!! Add overflow bin in the plots
+addOverFlow = False
+
+#!! List of regions to be submitted in case of batch submission
+List: VPt100 
+
+#!! Possibility to add an additional blinding cut for the plot
+#addBlindingCut = EVENT.run < 203002
+
+#!! Variables definition. Do not put any space, otherwise the parsing doesn't work
+jet_var: VHpt,Vpt,Veta,Vphi,Vm,HCSVmass,HCSVpt,HCSVeta,HV_Dphi,HjCSV0_pt,HjCSV1_pt,HjCSV0_CSV,HjCSV1_CSV,Rbb,Etabb,NJets,MET
+#!! Additional global variables
+BDT_plot_blind: False
+BDT_plot_log: False
+plot_mass = ZH125
+Normalize = False
+
+#!!_*_*_*_*_*_
+# Plot regions
+#!!_*_*_*_*_*_
+
+#!!_*
+#TEST
+#!!_*
+
+##!! Plot name should match the cut name in the cuts config
+[Plot:AllSamples]
+##!! which data to compare to
+Datas: DYLL TTJets WJets WZ ZHbb ZZ
+Normalize: <!Plot_general|Normalize!>
+vars: <!Plot_general|jet_var!>
+#Signal: <!Plot_general|plot_mass!>
+#!! log scale
+log: True 
+#!! apply blinding cut
+blind: False
+
+##!! Plot name should match the cut name in the cuts config
+[Plot:VPt100]
+##!! which data to compare to
+#Datas: DYLL TTJets WJets WZ ZHbb ZZ
+#for ggH-VHbb comparison
+Datas: ggH
+Normalize: <!Plot_general|Normalize!>
+vars: <!Plot_general|jet_var!>
+#Signal: <!Plot_general|plot_mass!>
+#!! log scale
+log: True 
+#!! apply blinding cut
+blind: False
+
+##!! Plot name should match the cut name in the cuts config
+[Plot:TESTRegion]
+##!! which data to compare to
+Datas: DYLL TTJets WJets WZ ZHbb ZZ
+#for ggH-VHbb comparison
+#Datas: ZHbb ggH
+Normalize: <!Plot_general|Normalize!>
+vars: <!Plot_general|jet_var!>
+#Signal: <!Plot_general|plot_mass!>
+#!! log scale
+log: True 
+#!! apply blinding cut
+blind: False
