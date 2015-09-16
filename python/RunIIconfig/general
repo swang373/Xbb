@@ -4,12 +4,20 @@
 
 [General]
 
+#Set as the lumi of each sample
+lumi = 1
+
 #Set to True or False to display debug messages
 Debug: True
 
+[Analysis]
+
+tag = 13TeV
+
+#Need this for the plotting
+[VHbbNameSpace]
+library=<!Directories|vhbbpath!>/interface/VHbbNameSpace_h.so
+
 [Samples]
 
-allBKG:'ZHbb', 'ggH'
-Group: {'ZHbb':'Hbb','ggH':'ggH'}
-Datas: ZZ ggH
 

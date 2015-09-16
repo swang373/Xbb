@@ -1,85 +1,72 @@
 [Plot_general]
 
-lumi = 1.
+#Is used by the histomaker
+#lumi = 1.
 
-#!!!_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*
-# MC stuff
-#!!!_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*
+#!!_*_*_*_*_*_
+#MC Samples
+#!!_*_*_*_*_*_
 
-#!! MC Samples to be used for the plotting. It also can be <!Samples|allBKG!>, where the header "Samples" is defined in general.
-samples: <!Samples|allBKG!>
+#!! MC Samples to be used in the ploting step
+samples: [<!Plot_general|allBKG!>,<!Plot_general|allSIG!>]
 
-#!! Groups for adding samples together and for the legend {'sampleName':'sampleGroup',...}. it also can be <!Samples|Group!>
-Group: <!Samples|Group!>
+#!! BKG MC Samples to be used for the plotting.
+allBKG: <!Plot_general|DY!>
+DY: 'DYJetsToLL_M-50_HT-100to200_TuneCUETP8M1','DYJetsToLL_M-50_HT-200to400_TuneCUETP8M1','DYJetsToLL_M-50_HT-400to600_TuneCUETP8M1','DYJetsToLL_M-50_HT-600toInf_TuneCUETP8M1'
 
-#!! Here the order and the groups that will go in the plots. This influence the MC
-setup: Hbb,ggH
-setupLog: Hbb,ggH
+#!! Signal MC Samples to be used for the plotting.
+allSIG: 'ZH_HToBB_ZToLL_M125_amcatnloFXFX'
+#!! Signal
+plot_mass = ZH_HToBB_ZToLL_M125_amcatnloFXFX 
+
+#!!_*_*_*_*_*_
+#Group
+#!!_*_*_*_*_*_
+
+#!! Groups for adding samples together and for the legend {'sampleName':'sampleGroup',...}. 
+Group: {'DYJetsToLL_M-50_HT-100to200_TuneCUETP8M1':'DYJets','DYJetsToLL_M-50_HT-200to400_TuneCUETP8M1':'DYJets','DYJetsToLL_M-50_HT-400to600_TuneCUETP8M1':'DYJets','DYJetsToLL_M-50_HT-600toInf_TuneCUETP8M1':'DYJets', 'ZH_HToBB_ZToLL_M125_amcatnloFXFX':'qqZHbb'}
+
+#!! Here the order and the groups that will go in the plots. 
+setup: DYJets,qqZHbb 
+setupLog: DYJets,qqZHbb
 
 #!! Colors dictionary and legend
-colorDict: {'Hbb':4,'ggH':2}
-typLegendDict: {'Hbb':'ZHbb','ggH':'ggZH'}
+colorDict: {'DYJets':4,'qqZHbb':2}
+#Group to the left
+typLegendDict: {'DYJets':'DY+Jet','qqZHbb':'qqZHbb'}
+
+
+#!!_*_*_*_*_*_
+#Plot Regions and variables
+#!!_*_*_*_*_*_
+
+#!! List of regions to be submitted in case of batch submission
+List: TEST 
+
+#!! Variables definition. 
+#Do not put any space, otherwise the parsing doesn't work.
+var: HCSVmass
+
+#!!_*_*_*_*_*_
+#Other Options
+#!!_*_*_*_*_*_
 
 #!! Add overflow bin in the plots
 addOverFlow = False
-
-#!! List of regions to be submitted in case of batch submission
-List: VPt100 
-
-#!! Possibility to add an additional blinding cut for the plot
-#addBlindingCut = EVENT.run < 203002
-
-#!! Variables definition. Do not put any space, otherwise the parsing doesn't work
-jet_var: VHpt,Vpt,Veta,Vphi,Vm,HCSVmass,HCSVpt,HCSVeta,HV_Dphi,HjCSV0_pt,HjCSV1_pt,HjCSV0_CSV,HjCSV1_CSV,Rbb,Etabb,NJets,MET
-#!! Additional global variables
-BDT_plot_blind: False
-BDT_plot_log: False
-plot_mass = ZH125
 Normalize = False
+
 
 #!!_*_*_*_*_*_
 # Plot regions
 #!!_*_*_*_*_*_
 
-#!!_*
-#TEST
-#!!_*
-
 ##!! Plot name should match the cut name in the cuts config
-[Plot:AllSamples]
+[Plot:TEST]
 ##!! which data to compare to
-Datas: DYLL TTJets WJets WZ ZHbb ZZ
+Datas: ZH_HToBB_DATA
 Normalize: <!Plot_general|Normalize!>
-vars: <!Plot_general|jet_var!>
-#Signal: <!Plot_general|plot_mass!>
-#!! log scale
-log: True 
-#!! apply blinding cut
-blind: False
-
-##!! Plot name should match the cut name in the cuts config
-[Plot:VPt100]
-##!! which data to compare to
-#Datas: DYLL TTJets WJets WZ ZHbb ZZ
-#for ggH-VHbb comparison
-Datas: ggH
-Normalize: <!Plot_general|Normalize!>
-vars: <!Plot_general|jet_var!>
-#Signal: <!Plot_general|plot_mass!>
-#!! log scale
-log: True 
-#!! apply blinding cut
-blind: False
-
-##!! Plot name should match the cut name in the cuts config
-[Plot:TESTRegion]
-##!! which data to compare to
-Datas: DYLL TTJets WJets WZ ZHbb ZZ
-#for ggH-VHbb comparison
-#Datas: ZHbb ggH
-Normalize: <!Plot_general|Normalize!>
-vars: <!Plot_general|jet_var!>
-#Signal: <!Plot_general|plot_mass!>
+vars: <!Plot_general|var!>
+Signal: <!Plot_general|plot_mass!>
 #!! log scale
 log: True 
 #!! apply blinding cut

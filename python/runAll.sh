@@ -24,9 +24,30 @@ job_id=$4           # needed for train optimisation. @TO FIX: it does not have a
 additional_arg=$5   # needed for train optimisation. @TO FIX: it does not have a unique meaning
 
 #-------------------------------------------------
+# Read debug variable
+#-------------------------------------------------
+
+DEBUG=`python << EOF 
+import os
+from myutils import BetterConfigParser
+config = BetterConfigParser()
+config.read('./${energy}config/general')
+print config.get('General','Debug')
+EOF`
+
+echo "Debug is " $DEBUG
+
+#-------------------------------------------------
 # Check the number of input arguments
 #-------------------------------------------------
-echo "RunAll DEBUG1"
+
+if [ $DEBUG = "True" ]
+  then
+  echo ""
+  echo "Checking the number of input arguments"
+  echo ""
+fi
+
 if [ $# -lt 3 ]
     then
     echo "ERROR: You passed " $# "arguments while the script needs at least 3 arguments."
@@ -40,7 +61,6 @@ fi
 #------------------------------------------------
 # get the log dir from the config and create it
 #------------------------------------------------
-echo "RunAll DEBUG2"
 logpath=`python << EOF 
 import os
 from myutils import BetterConfigParser
@@ -56,7 +76,6 @@ fi
 #-------------------------------------------------
 #Set the environment for the batch job execution
 #-------------------------------------------------
-echo "RunAll DEBUG3"
 cd $CMSSW_BASE/src/
 source /swshare/psit3/etc/profile.d/cms_ui_env.sh
 export SCRAM_ARCH="slc5_amd64_gcc462"
@@ -69,19 +88,21 @@ mkdir $TMPDIR
 
 cd -   #back to the working dir
 
-MVAList=`python << EOF 
-import os
-from myutils import BetterConfigParser
-config = BetterConfigParser()
-config.read('./${energy}config/training')
-print config.get('MVALists','List_for_submitscript')
-EOF`
+#Comment for now since not using training 
+#
+#MVAList=`python << EOF 
+#import os
+#from myutils import BetterConfigParser
+#config = BetterConfigParser()
+#config.read('./${energy}config/training')
+#print config.get('MVALists','List_for_submitscript')
+#EOF`
+
 
 
 #----------------------------------------------
 # load from the paths the configs to be used
 #----------------------------------------------
-echo "RunAll DEBUG4"
 input_configs=`python << EOF 
 import os
 from myutils import BetterConfigParser
@@ -93,8 +114,10 @@ required_number_of_configs=7                                             # set t
 input_configs_array=( $input_configs )                                   # create an array to count the number of elements
 if [ ${#input_configs_array[*]} -lt $required_number_of_configs ]        # check if the list contains the right number of configs
     then 
-    echo "@ERROR : The number of the elements in the config list is not correct"
-    exit
+    #echo "@ERROR : The number of the elements in the config list is not correct"
+    #exit
+    echo "@LOG : The number of config files you are using is"
+    echo ${#input_configs_array[*]}
 fi
 configList=${input_configs// / -C ${energy}config\/}                     # replace the spaces with ' -C '
 echo "@LOG : The config list you are using is"
@@ -104,7 +127,6 @@ echo ${configList}
 #------------------------------------
 #Run the scripts
 #------------------------------------
-echo "RunAll DEBUG5"
 
 if [ $task = "prep" ]; then
     # ./prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList}
