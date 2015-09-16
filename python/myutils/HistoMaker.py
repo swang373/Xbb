@@ -16,7 +16,7 @@ class HistoMaker:
         #optionsList: Dictionnary containing information on vars, including the cuts
         #! Read arguments and initialise variables
 
-        print "Start Creating HistoMaker"
+	print "Start Creating HistoMaker"
         print "=========================\n"
         self.path = path
         self.config = config
@@ -48,7 +48,6 @@ class HistoMaker:
          
         hTreeList=[]
 
-        print "get_histo_from_tree_debug2"
         #get the conversion rate in case of BDT plots
         TrainFlag = eval(self.config.get('Analysis','TrainFlag'))
         BDT_add_cut='EventForTraining == 0'
@@ -56,7 +55,6 @@ class HistoMaker:
         plot_path = self.config.get('Directories','plotpath')
         addOverFlow=eval(self.config.get('Plot_general','addOverFlow'))
 
-        print "get_histo_from_tree_debug3"
         # get all Histos at once
         print "The tree in the job is ", job.tree
         CuttedTree = self.tc.get_tree(job,'1')# retrieve the cuted tree
@@ -64,7 +62,6 @@ class HistoMaker:
         # print 'begin self.optionsList',self.optionsList
         # print 'end self.optionsList'
 
-        print "get_histo_from_tree_debug4"
         #! start the loop over variables (descriebed in options) 
         for options in self.optionsList:
             name=job.name
@@ -93,7 +90,6 @@ class HistoMaker:
             
             hTree = ROOT.TH1F('%s'%name,'%s'%name,nBins,xMin,xMax)
             hTree.Sumw2()
-            print "Histomaker debug5"
             print('hTree.name() 1 =',hTree.GetName())
             print('treeVar 1 =',treeVar)
             drawoption = ''
