@@ -8,23 +8,24 @@
 #!!_*_*_*_*_*_
 
 #!! MC Samples to be used in the ploting step
-samples: [<!Plot_general|allBKG!>,<!Plot_general|allSIG!>]
+#samples: [<!Plot_general|allBKG!>,<!Plot_general|allSIG!>]
+samples: [<!Plot_general|allBKG!>]
 
 #!! BKG MC Samples to be used for the plotting.
 allBKG: <!Plot_general|DY!>
 DY: 'DYJetsToLL_M-50_HT-100to200_TuneCUETP8M1','DYJetsToLL_M-50_HT-200to400_TuneCUETP8M1','DYJetsToLL_M-50_HT-400to600_TuneCUETP8M1','DYJetsToLL_M-50_HT-600toInf_TuneCUETP8M1'
 
 #!! Signal MC Samples to be used for the plotting.
-allSIG: 'ZH_HToBB_ZToLL_M125_amcatnloFXFX'
+allSIG: 'ZH_HToBB_ZToLL_M125_powheg_pythia8'
 #!! Signal
-plot_mass = ZH_HToBB_ZToLL_M125_amcatnloFXFX 
+plot_mass = ZH_HToBB_ZToLL_M125_powheg_pythia8
 
 #!!_*_*_*_*_*_
 #Group
 #!!_*_*_*_*_*_
 
-#!! Groups for adding samples together and for the legend {'sampleName':'sampleGroup',...}. 
-Group: {'DYJetsToLL_M-50_HT-100to200_TuneCUETP8M1':'DYJets','DYJetsToLL_M-50_HT-200to400_TuneCUETP8M1':'DYJets','DYJetsToLL_M-50_HT-400to600_TuneCUETP8M1':'DYJets','DYJetsToLL_M-50_HT-600toInf_TuneCUETP8M1':'DYJets', 'ZH_HToBB_ZToLL_M125_amcatnloFXFX':'qqZHbb'}
+#!! Groups for adding samples together and for the legend {'sampleName':'sampleGroup',...}.Need to put data as well 
+Group: {'DYJetsToLL_M-50_HT-100to200_TuneCUETP8M1':'DYJets','DYJetsToLL_M-50_HT-200to400_TuneCUETP8M1':'DYJets','DYJetsToLL_M-50_HT-400to600_TuneCUETP8M1':'DYJets','DYJetsToLL_M-50_HT-600toInf_TuneCUETP8M1':'DYJets', 'ZH_HToBB_ZToLL_M125_powheg_pythia8':'qqZHbb','ZH_HToBB_DATA':'DATA'}
 
 #!! Here the order and the groups that will go in the plots. 
 setup: DYJets,qqZHbb 

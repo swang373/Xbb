@@ -8,6 +8,9 @@ from HistoMaker import HistoMaker
 
 class StackMaker:
     def __init__(self, config, var,region,SignalRegion,setup=None):
+
+        print "Start Creating StackMaker"
+        print "========================="
         section='Plot:%s'%region #CR region of the plot
         self.var = var #variable to plot in the CR
         self.SignalRegion=SignalRegion #signal region
@@ -131,8 +134,13 @@ class StackMaker:
         c.Print(name)
 
     def doPlot(self):
+
+        print "Start doing stacked plots"
+        print "=========================\n"
+
         TdrStyles.tdrStyle()
         histo_dict = HistoMaker.orderandadd([{self.typs[i]:self.histos[i]} for i in range(len(self.histos))],self.setup)
+	print "The list of histos is ", histo_dict
         #sort
         self.histos=[histo_dict[key] for key in self.setup]
         self.typs=self.setup

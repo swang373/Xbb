@@ -15,7 +15,9 @@ class HistoMaker:
         #config: list of the configuration files
         #optionsList: Dictionnary containing information on vars, including the cuts
         #! Read arguments and initialise variables
-        print "The options are ", optionsList
+
+        print "Start Creating HistoMaker"
+        print "=========================\n"
         self.path = path
         self.config = config
         self.optionsList = optionsList
@@ -32,10 +34,15 @@ class HistoMaker:
         VHbbNameSpace=config.get('VHbbNameSpace','library')
         ROOT.gSystem.Load(VHbbNameSpace)
 
+        print "Done Creating HistoMaker"
+        print "========================\n"
+
     def get_histos_from_tree(self,job,cutOverWrite=None):
-        
-        print "get_histo_from_tree_debug1"
         '''Function that produce the trees from a HistoMaker'''
+         
+        print "Begin to extract the histos from trees (get_histos_from_tree)"
+        print "=============================================================\n"
+
         if self.lumi == 0: 
             raise Exception("You're trying to plot with no lumi")
          
@@ -91,7 +98,9 @@ class HistoMaker:
             print('treeVar 1 =',treeVar)
             drawoption = ''
             if job.type != 'DATA':
+	        print "the jobs is not data"
                 if CuttedTree and CuttedTree.GetEntries():
+		    print 'hello'
                     if 'RTight' in treeVar or 'RMed' in treeVar: 
                         drawoption = '(%s)*(%s & %s)'%(weightF,treeCut,BDT_add_cut)
                         #print drawoption
@@ -158,6 +167,9 @@ class HistoMaker:
             hTreeList.append(gDict)
         if CuttedTree: CuttedTree.IsA().Destructor(CuttedTree)
         del CuttedTree
+
+        print "Finished to extract the histos from trees (get_histos_from_tree)"
+        print "================================================================\n"
         return hTreeList
        
     @property
@@ -246,6 +258,13 @@ class HistoMaker:
 
     @staticmethod
     def orderandadd(histo_dicts,setup):
+        '''
+	Setup is defined in the plot conf file
+	histo_dicts contains an array of dictionnary
+	'''
+
+	print "Doing orderandadd"
+	
         ordered_histo_dict = {}
         for sample in setup:
             nSample = 0

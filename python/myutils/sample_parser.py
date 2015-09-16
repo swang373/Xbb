@@ -32,6 +32,8 @@ class ParseInfo:
     '''Class containing a list of Sample. Is filled during the prep stage.'''
     def __init__(self,samples_config,samples_path):
 	'''Methode filling a list of Sample "self._samplelist = []" contained in the class. "sample_path" contains the path where the samples are stored (PREPin). "samples_config" is the "samples_nosplit.cfg" file. Depending of the variable "run_on_files" defined in "samples_nosplit.cfg", the sample list are generated from the input folder (PREPin) or the list in "samples_nosplit.cfg" '''
+	print "Start getting infos on all the samples (ParseInfo)"
+	print "==================================================\n"
         try:
             os.stat(samples_config)
         except:
@@ -52,6 +54,8 @@ class ParseInfo:
         lumi=float(config.get('General','lumi'))
         weightexpression=config.get('General','weightexpression')
 
+	print "The lumi is", lumi
+
         self._samplelist = []
 
         #!! Store the list of input samples in __fileslist. Reads them directly from the folder defined in PREPin  
@@ -62,22 +66,22 @@ class ParseInfo:
         else:
             ls = os.popen("ls "+samples_path)
     
-	print 'will start the loop over the lines.'
-	print ls.read()
+	#print 'will start the loop over the lines.'
+	#print ls.read()
         for line in ls.readlines():
-		print 'loop over the lines'
+		#print 'loop over the lines'
                 if('.root' in line):
                         truncated_line = line[line.rfind('/')+1:]
                         _p = findnth(truncated_line,'.',2)
                         self.__fileslist.append(truncated_line[_p+1:truncated_line.rfind('.')])
-			print 'added a new line !'
+			#print 'added a new line !'
 
         print '@DEBUG: ' + str(self.__fileslist)
 
 	#Deleteme: Do a loop to check on __fileslist
 	#Start the loop
-	for i in range(0,len(self.__fileslist)):
-	        print 'Is the ',i ,'th file None ? Answer:', (self.__fileslist[i] == None) 
+	#for i in range(0,len(self.__fileslist)):
+		#print 'Is the ',i ,'th file None ? Answer:', (self.__fileslist[i] == None) 
 
 	#End Deleteme
 
@@ -145,6 +149,8 @@ class ParseInfo:
                     newsample.sf = eval((config.get(sample, 'SF')))
                 newsample.group = config.get(sample,'sampleGroup')
                 self._samplelist.append(newsample)
+        print "Finished getting infos on all the samples (ParseInfo)"
+	print "=====================================================\n"
 
     def __iter__(self):
         for sample in self._samplelist:
@@ -163,6 +169,7 @@ class ParseInfo:
         thenames = []
         #for splitted samples use the identifier. There is always only one. if list, they are all true
         if (self.checkSplittedSampleName(samplenames[0])):
+	        print "The samples is splitted"
                 for sample in self._samplelist:
                         if (sample.subsample): continue #avoid multiple submissions from subsamples
                         print '@DEBUG: samplenames ' + samplenames[0]
@@ -172,7 +179,9 @@ class ParseInfo:
                                 thenames.append(sample.name)
         #else check the name
         else:
+		print "samplename is", samplenames 
                 for sample in self._samplelist:
+		        print "sample is", sample 
                         if sample.name in samplenames:
                                 #if (sample.subsample): continue #avoid multiple submissions from subsamples
                                 samples.append(sample)
