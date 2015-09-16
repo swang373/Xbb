@@ -4,6 +4,5 @@
 #!! Plot Regions 
 #!! ---------------------
 
-#TEST = V_pt > 0 
 TEST = (V_pt < 150 & V_pt > 100 & V_mass > 75 & V_mass < 105 & HCSV_mass > 40 & HCSV_mass < 250 & max(Jet_btagCSV[hJCidx[0]],Jet_btagCSV[hJCidx[1]]) > 0.679 & min(Jet_btagCSV[hJCidx[0]],Jet_btagCSV[hJCidx[1]]) > 0.5 & met_pt < 60)
 
