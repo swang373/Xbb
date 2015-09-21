@@ -313,7 +313,8 @@ for job in info:
 #        f.Close()
 
         
-    if job.type != 'DATA':
+#    if job.type != 'DATA': ##FIXME###
+    if True:
         #CSV branches
         hJet_hadronFlavour = array('f',[0]*2)
         hJet_btagnew = array('f',[0]*2)
@@ -442,9 +443,19 @@ for job in info:
 #            hJet_pt = tree.Jet_pt[tree.hJidx]
 #            hJet_mass = tree.Jet_mass[tree.hJidx]
 
+            ##FIXME##
+            try:
+                hJet_pt0 = tree.Jet_pt[tree.hJidx[0]]
+                hJet_pt1 = tree.Jet_pt[tree.hJidx[1]]
+            except:
+                print "tree.nhJidx",tree.nhJidx
+                print "tree.nJet",tree.nJet
+                print "tree.hJidx[0]",tree.hJidx[0]
+                print "tree.hJidx[1]",tree.hJidx[1]
+                if tree.hJidx[1] >=tree.nJet : tree.hJidx[1] =1
+                if tree.hJidx[0] >=tree.nJet : tree.hJidx[1] =0
+                
 
-            hJet_pt0 = tree.Jet_pt[tree.hJidx[0]]
-            hJet_pt1 = tree.Jet_pt[tree.hJidx[1]]
             hJet_pt = [hJet_pt0,hJet_pt1]
             hJet_mass0 = tree.Jet_mass[tree.hJidx[0]]
             hJet_mass1 = tree.Jet_mass[tree.hJidx[1]]

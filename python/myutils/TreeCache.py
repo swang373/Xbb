@@ -3,6 +3,69 @@ import os,sys,subprocess,hashlib
 import ROOT
 from samplesclass import Sample
 
+
+def trim_treeMT(myinput):
+            ( myoptions, sample) = myinput
+            (sampleList,doCache,tmpPath,cutList,hashDict,minCut,path) = myoptions
+            print("myobj.__tmpPath:"+tmpPath)
+            theName = sample.name
+            print('Reading sample <<<< %s' %sample)
+            source = '%s/%s' %( path,sample.get_path)
+            checksum =  TreeCache.get_checksum(source)
+            theHash = hashlib.sha224('%s_s%s_%s' %(sample,checksum, minCut)).hexdigest()
+    #         myobj.__hashDict[theName] = theHash
+            tmpSource = '%s/tmp_%s.root'%( tmpPath,theHash)
+#            print (' doCache', doCache,' file_exists(tmpSource)', TreeCache.file_exists(tmpSource))
+            if  doCache and  TreeCache.file_exists(tmpSource):
+#                print('sample',theName,'skipped, filename=',tmpSource)
+                return (theName,theHash)
+#            print ('trying to create',tmpSource)
+            output = ROOT.TFile.Open(tmpSource,'create')
+#            print ('reading',source)
+            input = ROOT.TFile.Open(source,'read')
+            output.cd()
+            tree = input.Get(sample.tree)
+            if not type(tree) is ROOT.TTree:
+                print("ERRORE!!")
+                print(type(tree))
+            # CountWithPU = input.Get("CountWithPU")
+            # CountWithPU2011B = input.Get("CountWithPU2011B")
+            # sample.count_with_PU = CountWithPU.GetBinContent(1) 
+            # sample.count_with_PU2011B = CountWithPU2011B.GetBinContent(1) 
+            try:
+                CountWithPU = input.Get("CountWithPU")
+                CountWithPU2011B = input.Get("CountWithPU2011B")
+                sample.count_with_PU = CountWithPU.GetBinContent(1) 
+                sample.count_with_PU2011B = CountWithPU2011B.GetBinContent(1)
+            except:
+#                print('WARNING: No Count with PU histograms available. Using 1.')
+                sample.count_with_PU = 1.
+                sample.count_with_PU2011B = 1.
+            input.cd()
+            obj = ROOT.TObject
+            for key in ROOT.gDirectory.GetListOfKeys():
+                input.cd()
+                obj = key.ReadObj()
+                if obj.GetName() == 'tree':
+                    continue
+                output.cd()
+                obj.Write(key.GetName())
+            output.cd()
+            theCut = minCut
+            if sample.subsample:
+                theCut += '& (%s)' %(sample.subcut)
+            cuttedTree=tree.CopyTree(theCut)
+            cuttedTree.Write()
+            output.Write()
+            input.Close()
+            del input
+            output.Close()
+    #        tmpSourceFile = ROOT.TFile.Open(tmpSource,'read')
+    #        if tmpSourceFile.IsZombie():
+    #            print("@ERROR: Zombie file")
+            del output
+            return (theName,theHash)
+
 class TreeCache:
     def __init__(self, cutList, sampleList, path, config):
         ROOT.gROOT.SetBatch(True)
@@ -27,6 +90,9 @@ class TreeCache:
         self.__sampleList = sampleList
         print('\n\t>>> Caching FILES <<<\n')
         self.__cache_samples()
+        
+    def putOptions(self):
+        return (self.__sampleList,self.__doCache,self.__tmpPath,self._cutList,self.__hashDict,self.minCut,self.path)
     
     def _mkdir_recursive(self, path):
         sub_path = os.path.dirname(path)
@@ -98,9 +164,33 @@ class TreeCache:
 #            print("@ERROR: Zombie file")
         del output
 
+
+    ### OLD VERSION ###
+#    def __cache_samples(self):
+#        for job in self.__sampleList:
+#            self.__trim_tree(job)
+
+    ### MULTI-THREADING VERSION ###
     def __cache_samples(self):
-        for job in self.__sampleList:
-            self.__trim_tree(job)
+        import copy
+        multiprocess=16
+        if multiprocess>0:
+            from multiprocessing import Pool
+            p = Pool(multiprocess)
+#            import pathos.multiprocessing as mp
+#            p = mp.ProcessingPool(multiprocess)
+            myinputs = []
+            for job in self.__sampleList:
+                myoptions = self.putOptions()
+                myinputs.append((myoptions,job))
+                
+            outputs = p.map(trim_treeMT, myinputs)
+            for output in outputs:
+                (theName,theHash) = output
+                self.__hashDict[theName]=theHash
+        else:
+            for job in self.__sampleList:
+                self.__trim_tree(job)
 
     def get_tree(self, sample, cut):
         input = ROOT.TFile.Open('%s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]),'read')
@@ -217,3 +307,5 @@ class TreeCache:
         # else:
         print('os.path.exists(',file_dummy,')',os.path.exists(file_dummy))
         return os.path.exists(file_dummy)
+
+

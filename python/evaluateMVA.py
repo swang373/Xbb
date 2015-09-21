@@ -94,6 +94,10 @@ for job in samples:
     #get trees:
     print(INpath+'/'+job.prefix+job.identifier+'.root')
     input = ROOT.TFile.Open(INpath+'/'+job.prefix+job.identifier+'.root','read')
+    try:
+        os.mkdir(OUTpath)
+    except:
+        pass
     print(OUTpath+'/'+job.prefix+job.identifier+'.root')
     outfile = ROOT.TFile.Open(tmpDir+'/'+job.prefix+job.identifier+'.root','recreate')
     input.cd()

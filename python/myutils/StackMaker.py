@@ -12,6 +12,7 @@ class StackMaker:
         self.var = var
         self.SignalRegion=SignalRegion
         self.region = region
+        print "region:",region
         self.normalize = eval(config.get(section,'Normalize'))
         self.log = eval(config.get(section,'log'))
         if config.has_option('plotDef:%s'%var,'log') and not self.log:
@@ -62,6 +63,7 @@ class StackMaker:
             cut = config.get('Cuts',region)
         else:
             cut = None
+            print "''Cuts' section doesn't contain any ",region
         if config.has_option(section, 'Datacut'):
             cut=config.get(section, 'Datacut')
         if config.has_option(section, 'doFit'):
@@ -75,6 +77,14 @@ class StackMaker:
         self.anaTag = config.get("Analysis","tag")
         self.xAxis = config.get('plotDef:%s'%var,'xAxis')
         self.hname = self.name.replace('.','')
+        self.hname = self.hname.replace(')','')
+        self.hname = self.hname.replace('(','')
+        self.hname = self.hname.replace('-','')
+        self.hname = self.hname.replace(':','')
+        self.hname = self.hname.replace(':','')
+        self.hname = self.hname.replace('[','')
+        self.hname = self.hname.replace(']','')
+        self.hname = self.hname.replace('$','')
         print ('self.hname',self.hname)
         self.options = {'var': self.name,'name':self.hname,'xAxis': self.xAxis, 'nBins': self.nBins, 'xMin': self.xMin, 'xMax': self.xMax,'pdfName': '%s_%s_%s.pdf'%(region,var,self.mass),'cut':cut,'mass': self.mass, 'data': data, 'blind': self.blind}
         if config.has_option('Weights','weightF'):
@@ -207,7 +217,7 @@ class StackMaker:
 
         #ORDER AND ADD TOGETHER
 
-        if not 'DYc' in self.typs: self.typLegendDict.update({'DYlight':self.typLegendDict['DYlc']})
+#        if not 'DYc' in self.typs: self.typLegendDict.update({'DYlight':self.typLegendDict['DYlc']})
         print self.typLegendDict
 
         k=len(self.histos)
