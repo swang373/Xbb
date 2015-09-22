@@ -3,6 +3,7 @@ from printcolor import printc
 import os 
 
 def copytree(pathIN,pathOUT,prefix,newprefix,file,Aprefix,Acut):
+    print (pathIN,pathOUT,prefix,newprefix,file,Aprefix,Acut)
     from os import walk
     dirpath = ""
     filename = ""
@@ -77,3 +78,12 @@ def copytree(pathIN,pathOUT,prefix,newprefix,file,Aprefix,Acut):
         input.Close()
 
         print "##### COPY TREE - END ######"
+        
+    for vhbbfolder in inputFile.split("/"):
+        if 'VHBB_HEPPY' in vhbbfolder:
+            break
+    fileToMerge = inputFile[:inputFile.rfind("tree_")+5]+"*"+inputFile[inputFile.rfind(".root"):]
+    command = "hadd -f "+pathOUT+'/'+newprefix+'_'+vhbbfolder+".root "+fileToMerge
+    print command
+    os.system(command)
+

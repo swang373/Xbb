@@ -47,7 +47,7 @@ logpath=`python << EOF
 import os
 from myutils import BetterConfigParser
 config = BetterConfigParser()
-config.read('./${energy}config/paths')
+config.read('./${energy}config/paths.ini')
 print config.get('Directories','logpath')
 EOF`
 if [ ! -d $logpath ]
@@ -75,7 +75,7 @@ MVAList=`python << EOF
 import os
 from myutils import BetterConfigParser
 config = BetterConfigParser()
-config.read('./${energy}config/training')
+config.read('./${energy}config/training.ini')
 print config.get('MVALists','List_for_submitscript')
 EOF`
 
@@ -87,7 +87,7 @@ input_configs=`python << EOF
 import os
 from myutils import BetterConfigParser
 config = BetterConfigParser()
-config.read('./${energy}config/paths')
+config.read('./${energy}config/paths.ini')
 print config.get('Configuration','List')
 EOF`
 required_number_of_configs=7                                             # set the number of required cconfig
@@ -109,12 +109,12 @@ echo ${configList}
 if [ $task = "prep" ]; then
     # ./prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList}
 #    print "./prepare_environment_with_config.py --samples" $sample "--config "${energy}"config/"${configList}" --config "${energy}"config/samples_nosplit.cfg #sometime"
-    echo ./prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.cfg #sometime I need this add: please check --config ${energy}
-    ./prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.cfg #sometime I need this add: please check --config ${energy}config/samples_nosplit.cfg
+    echo ./prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.ini #sometime I need this add: please check --config ${energy}
+    ./prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.ini #sometime I need this add: please check --config ${energy}config/samples_nosplit.cfg
 fi
 if [ $task = "trainReg" ]; then
     # ./trainRegression.py --config ${energy}config/${configList}
-    ./trainRegression.py --config ${energy}config/${configList} --config ${energy}config/regression
+    ./trainRegression.py --config ${energy}config/${configList} --config ${energy}config/regression.ini
 fi
 if [ $task = "sys" ]; then
     ./write_regression_systematics.py --samples $sample --config ${energy}config/${configList}
