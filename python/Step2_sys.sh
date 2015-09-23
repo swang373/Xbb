@@ -44,5 +44,4 @@ bash runAll.sh	WZTo4Q		 ZvvHbb13TeV sys >& log/logSysWZTo4Q	&
 bash runAll.sh	ZZpythia		 ZvvHbb13TeV sys >& log/logSysZZpythia	&
 bash runAll.sh	ZZTo2L2Q		 ZvvHbb13TeV sys >& log/logSysZZTo2L2Q	&
 bash runAll.sh	ZZTo2Q2Nu		 ZvvHbb13TeV sys >& log/logSysZZTo2Q2Nu	&
-bash runAll.sh	ZZTo2L2Q		 ZvvHbb13TeV sys >& log/logSysZZTo2L2Q	&
 

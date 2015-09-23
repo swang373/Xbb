@@ -44,7 +44,6 @@ bash runAll.sh	WZTo4Q		 ZvvHbb13TeV prep >& log/logPrepWZTo4Q	&
 bash runAll.sh	ZZpythia		 ZvvHbb13TeV prep >& log/logPrepZZpythia	&
 bash runAll.sh	ZZTo2L2Q		 ZvvHbb13TeV prep >& log/logPrepZZTo2L2Q	&
 bash runAll.sh	ZZTo2Q2Nu		 ZvvHbb13TeV prep >& log/logPrepZZTo2Q2Nu	&
-bash runAll.sh	ZZTo2L2Q		 ZvvHbb13TeV prep >& log/logPrepZZTo2L2Q	&
 
 #bash runAll.sh ZH ZvvHbb13TeV prep >& log/logPrepZH &
 #bash runAll.sh WH ZvvHbb13TeV prep >& log/logPrepWH &

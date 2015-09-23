@@ -46,6 +46,5 @@ bash runAll.sh	WZTo4Q		 ZvvHbb13TeV eval >& log/logEvalWZTo4Q	&
 bash runAll.sh	ZZpythia		 ZvvHbb13TeV eval >& log/logEvalZZpythia	&
 bash runAll.sh	ZZTo2L2Q		 ZvvHbb13TeV eval >& log/logEvalZZTo2L2Q	&
 bash runAll.sh	ZZTo2Q2Nu		 ZvvHbb13TeV eval >& log/logEvalZZTo2Q2Nu	&
-bash runAll.sh	ZZTo2L2Q		 ZvvHbb13TeV eval >& log/logEvalZZTo2L2Q	&
 
 
