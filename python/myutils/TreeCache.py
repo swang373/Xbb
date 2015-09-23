@@ -206,9 +206,10 @@ class TreeCache:
             sample.count_with_PU = CountWithPU.GetBinContent(1) 
             sample.count_with_PU2011B = CountWithPU2011B.GetBinContent(1) 
         except:
-            print('WARNING: No Count with PU histograms available. Using 1.')
-            sample.count_with_PU = 1.
-            sample.count_with_PU2011B = 1.
+            Count = input.Get("Count")
+            print('WARNING: No Count with PU histograms available. Using Count.')
+            sample.count_with_PU = Count.GetBinContent(1) 
+            sample.count_with_PU2011B = Count.GetBinContent(1) 
         if sample.subsample:
             cut += '& (%s)' %(sample.subcut)
         ROOT.gROOT.cd()

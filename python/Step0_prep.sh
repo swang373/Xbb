@@ -1,3 +1,5 @@
+setenv TMPDIR /scratch/sdonato/VHbbRun2/CMSSW_7_4_12_patch4/src/Xbb/tmp
+
 bash runAll.sh	ZH		ZvvHbb13TeV  prep >& log/logPrepZH	&
 bash runAll.sh	ZHpow		 ZvvHbb13TeV prep >& log/logPrepZHpow	&
 bash runAll.sh	ggZH		 ZvvHbb13TeV prep >& log/logPrepggZH	&
@@ -10,7 +12,7 @@ bash runAll.sh	WJetsMadHT100		 ZvvHbb13TeV prep >& log/logPrepWJetsMadHT100	&
 bash runAll.sh	WJetsMadHT200		 ZvvHbb13TeV prep >& log/logPrepWJetsMadHT200	&
 bash runAll.sh	WJetsMadHT400		 ZvvHbb13TeV prep >& log/logPrepWJetsMadHT400	&
 bash runAll.sh	WJetsMadHT600		 ZvvHbb13TeV prep >& log/logPrepWJetsMadHT600	&
-bash runAll.sh	ZJetsHT100		 ZvvHbb13TeV prep >& log/logPrepZJetsHT100	&
+bash runAll.sh	ZJets		 ZvvHbb13TeV prep >& log/logPrepZJets	&
 bash runAll.sh	ZJetsMadHT100		 ZvvHbb13TeV prep >& log/logPrepZJetsMadHT100	&
 bash runAll.sh	ZJetsMadHT200		 ZvvHbb13TeV prep >& log/logPrepZJetsMadHT200	&
 bash runAll.sh	ZJetsMadHT400		 ZvvHbb13TeV prep >& log/logPrepZJetsMadHT400	&

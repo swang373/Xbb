@@ -2,14 +2,14 @@ import ROOT,sys,os,subprocess
 from printcolor import printc
 import os 
 
-def copytree(pathIN,pathOUT,prefix,newprefix,file,Aprefix,Acut):
-    print (pathIN,pathOUT,prefix,newprefix,file,Aprefix,Acut)
+def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut):
+    print (pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut)
     from os import walk
     dirpath = ""
     filename = ""
     filenames = []
     print "##### COPY TREE - BEGIN ######"
-    for (dirpath_, dirnames, filenames_) in walk(pathIN+'/'+file):
+    for (dirpath_, dirnames, filenames_) in walk(pathIN+'/'+folderName):
         for filename_ in filenames_:
             if 'root' in filename_ and not 'failed' in dirpath_:
                 dirpath = dirpath_
@@ -19,7 +19,7 @@ def copytree(pathIN,pathOUT,prefix,newprefix,file,Aprefix,Acut):
         if len(filenames)>0: break
     
     if dirpath == "":
-        print "No .root files found in ",pathIN+'/'+file
+        print "No .root files found in ",pathIN+'/'+folderName
         return
     
     pathIN = dirpath
@@ -28,8 +28,8 @@ def copytree(pathIN,pathOUT,prefix,newprefix,file,Aprefix,Acut):
     for filename in filenames:
         inputFile = '%s/%s ' %(pathIN,filename)
         input = ROOT.TFile.Open(inputFile,'read')
-        outputFolder = "%s/%s/" %(pathOUT,file)
-        outputFile = "%s/%s/%s" %(pathOUT,file,filename)
+        outputFolder = "%s/%s/" %(pathOUT,folderName)
+        outputFile = "%s/%s/%s" %(pathOUT,folderName,filename)
         try:
             os.mkdir(outputFolder)
         except:
@@ -63,7 +63,7 @@ def copytree(pathIN,pathOUT,prefix,newprefix,file,Aprefix,Acut):
         inputTree = input.Get("tree")
         nEntries = inputTree.GetEntries()
         output.cd()
-        print '\n\t copy file: %s with cut: %s' %(file,Acut)
+        print '\n\t copy file: %s with cut: %s' %(folderName,Acut)
         outputTree = inputTree.CopyTree(Acut)
         kEntries = outputTree.GetEntries()
         printc('blue','',"\t before cuts\t %s" %nEntries)
@@ -79,11 +79,12 @@ def copytree(pathIN,pathOUT,prefix,newprefix,file,Aprefix,Acut):
 
         print "##### COPY TREE - END ######"
         
-    for vhbbfolder in inputFile.split("/"):
-        if 'VHBB_HEPPY' in vhbbfolder:
-            break
-    fileToMerge = inputFile[:inputFile.rfind("tree_")+5]+"*"+inputFile[inputFile.rfind(".root"):]
-    command = "hadd -f "+pathOUT+'/'+newprefix+'_'+vhbbfolder+".root "+fileToMerge
+#    for vhbbfolder in inputFile.split("/"):
+#        if 'VHBB_HEPPY' in vhbbfolder:
+#            break
+    fileToMerge = outputFile[:outputFile.rfind("tree_")+5]+"*"+outputFile[outputFile.rfind(".root"):]
+#    command = "hadd -f "+pathOUT+'/'+newprefix+vhbbfolder+".root "+fileToMerge
+    command = "hadd -f "+pathOUT+'/'+newprefix+folderName+".root "+fileToMerge
     print command
     os.system(command)
 

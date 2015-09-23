@@ -35,7 +35,8 @@ class RegressionTrainer():
         signals = []
         signalsTest = []
         for job in self.__samples:
-            print '\tREADING IN %s AS SIG'%job.name
+            print '\tREADING IN %s AS SIG'%job.name,
+            print ' in ',job.identifier
             signals.append(self.__tc.get_tree(job,'%s & %s' %(self.__cut,self.__trainCut)))
             signalsTest.append(self.__tc.get_tree(job,'%s & %s'%(self.__cut,self.__testCut)))
         
