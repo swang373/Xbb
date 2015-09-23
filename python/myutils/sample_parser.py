@@ -21,9 +21,7 @@ def test_samples(run_on_fileList,__fileslist,config_sections):
 
 def check_correspondency(sample,list,config):
         '''Check the samples that are available in the PREPin directory and in the samples_nosplit file '''
-        if any( sample in file for file in list ):
-                print '@INFO: Sample %s is present'%(config.get(sample,'sampleName'))
-        else:
+        if not any( sample in file for file in list ):
                 warnings.warn('@INFO: Sample %s is NOT! present'%(config.get(sample,'sampleName')))
                 warnings.warn("@INFO: File %s not present"%(config.get(sample,'infile')))
 
@@ -43,7 +41,6 @@ class ParseInfo:
             T3 = True
             _,p2=samples_path.split('/pnfs/')
             t3_path = '/pnfs/'+p2.strip('\n')
-	    print 't3_path is ', t3_path
         else:
             T3 = False
 
@@ -53,8 +50,6 @@ class ParseInfo:
         newprefix=config.get('General','newprefix')
         lumi=float(config.get('General','lumi'))
         weightexpression=config.get('General','weightexpression')
-
-	print "The lumi is", lumi
 
         self._samplelist = []
 
@@ -87,7 +82,7 @@ class ParseInfo:
 
         run_on_fileList = eval(config.get('Samples_running','run_on_fileList'))#Evaluate run_on_fileList from samples_nosplit.cfg 
 
-	print 'Is Sample None ? Answer: ', (self.__fileslist == None)
+	#print 'Is Sample None ? Answer: ', (self.__fileslist == None)
 
         if( not test_samples(run_on_fileList,self.__fileslist,config.sections()) ): # stop if it finds None as sample
                 sys.exit('@ERROR: Sample == None. Check RunOnFileList flag in section General, the sample_config of the sample directory.')
@@ -165,6 +160,7 @@ class ParseInfo:
         return None
     
     def get_samples(self, samplenames):
+        '''Samplenames is list of the samples names. Returns a list of samples corresponding to the names'''
         samples = []
         thenames = []
         #for splitted samples use the identifier. There is always only one. if list, they are all true
@@ -179,9 +175,8 @@ class ParseInfo:
                                 thenames.append(sample.name)
         #else check the name
         else:
-		print "samplename is", samplenames 
                 for sample in self._samplelist:
-		        print "sample is", sample 
+		        #print "sample is", sample 
                         if sample.name in samplenames:
                                 #if (sample.subsample): continue #avoid multiple submissions from subsamples
                                 samples.append(sample)

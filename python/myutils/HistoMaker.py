@@ -34,6 +34,7 @@ class HistoMaker:
         VHbbNameSpace=config.get('VHbbNameSpace','library')
         ROOT.gSystem.Load(VHbbNameSpace)
 
+        print ""
         print "Done Creating HistoMaker"
         print "========================\n"
 
@@ -217,6 +218,7 @@ class HistoMaker:
             TotR+=totalBG.GetBinContent(binR)
             ErrorR=sqrt(ErrorR**2+totalBG.GetBinError(binR)**2)
             binR-=1
+	    print 'is this loop infinite ?'
             if not TotR == 0 and not ErrorR == 0:
                 rel=ErrorR/TotR
                 #print rel
@@ -259,7 +261,11 @@ class HistoMaker:
 	histo_dicts contains an array of dictionnary
 	'''
 
-	print "Doing orderandadd"
+	print "Start orderandadd"
+	print "=================\n"
+
+	print "Input dict is", histo_dicts
+	
 	
         ordered_histo_dict = {}
         for sample in setup:
@@ -273,6 +279,7 @@ class HistoMaker:
                         ordered_histo_dict[sample].Add(histo_dict[sample])
                     nSample += 1
         del histo_dicts
+	print "Output dict is", ordered_histo_dict
         return ordered_histo_dict 
 
 class Rebinner:

@@ -29,4 +29,7 @@ library=<!Directories|vhbbpath!>/interface/VHbbNameSpace_h.so
 #lhe weights. Are used to produce the histograms. See "get_histos_from_tree" in StackMaker
 weightF: (puWeight*genWeight/TMath::Abs(genWeight)) 
 
-
+weightF_sys_UP: 1
+weightF_sys_DOWN: 1
+weightF_QCD_UP: 1 
+weightF_QCD_DOWN: 1 

@@ -1,15 +1,12 @@
 [Plot_general]
 
-#Is used by the histomaker
-#lumi = 1.
-
 #!!_*_*_*_*_*_
 #MC Samples
 #!!_*_*_*_*_*_
 
 #!! MC Samples to be used in the ploting step
 #samples: [<!Plot_general|allBKG!>,<!Plot_general|allSIG!>]
-samples: [<!Plot_general|allBKG!>]
+samples: [<!Plot_general|allBKG!>,<!Plot_general|allSIG!>]
 
 #!! BKG MC Samples to be used for the plotting.
 allBKG: <!Plot_general|DY!>
@@ -18,7 +15,7 @@ DY: 'DYJetsToLL_M-50_HT-100to200_TuneCUETP8M1','DYJetsToLL_M-50_HT-200to400_Tune
 #!! Signal MC Samples to be used for the plotting.
 allSIG: 'ZH_HToBB_ZToLL_M125_powheg_pythia8'
 #!! Signal
-plot_mass = ZH_HToBB_ZToLL_M125_powheg_pythia8
+plot_mass: ZH_HToBB_ZToLL_M125_powheg_pythia8
 
 #!!_*_*_*_*_*_
 #Group
