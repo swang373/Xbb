@@ -9,16 +9,15 @@ warnings.filterwarnings( action='ignore', category=RuntimeWarning, message='crea
 from optparse import OptionParser
 from myutils import BetterConfigParser, Sample, progbar, printc, ParseInfo, Rebinner, HistoMaker
 
-debug = True 
-
-print ''
-print "_*_*_*_*_*_*_*_*_*_*_*_*_*_"
-print "Starting datacard production"
-print "_*_*_*_*_*_*_*_*_*_*_*_*_*_\n"
-if debug: print "workspace_datacard.py debug 1: beginning of the file"
-
+print '_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_'
+print 'START DATACARD (workspace_datacard)'
+print '_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_\n'
 
 #--CONFIGURE---------------------------------------------------------------------
+
+print 'Reading configuration files'
+print '===========================\n'
+
 argv = sys.argv
 parser = OptionParser()
 parser.add_option("-V", "--variable", dest="variable", default="",
@@ -29,17 +28,16 @@ parser.add_option("-C", "--config", dest="config", default=[], action="append",
 config = BetterConfigParser()
 config.read(opts.config)
 var=opts.variable
-if debug: print "var is", var#take the values of the list parameter in datacards
 #-------------------------------------------------------------------------------
 
 #--read variables from config---------------------------------------------------
-
-print "Reading configuration files and assigning variables"
-print "===================================================\n"
-
 # 7 or 8TeV Analysis
+
+print 'Assigne variables from  config'
+print '==============================\n'
+
 anaTag = config.get("Analysis","tag")
-if not any([anaTag == '7TeV',anaTag == '8TeV']):
+if not any([anaTag == '7TeV',anaTag == '8TeV', anaTag == '13TeV']):
     raise Exception("anaTag %s unknown. Specify 8TeV or 7TeV in the general config"%anaTag)
 # Directories:
 Wdir=config.get('Directories','Wdir')
@@ -55,6 +53,7 @@ except:
 treevar = config.get('dc:%s'%var,'var')
 name = config.get('dc:%s'%var,'wsVarName')
 title = name
+# set binning
 nBins = int(config.get('dc:%s'%var,'range').split(',')[0])
 xMin = float(config.get('dc:%s'%var,'range').split(',')[1])
 xMax = float(config.get('dc:%s'%var,'range').split(',')[2])
@@ -64,7 +63,7 @@ signals = config.get('dc:%s'%var,'signal').split(' ')
 datas = config.get('dc:%s'%var,'dcBin')
 Datacardbin=config.get('dc:%s'%var,'dcBin')
 anType = config.get('dc:%s'%var,'type')
-setup=eval(config.get('LimitGeneral','setup'))#setup is a dictionnary containing the sig and bkg, defined in datacards
+setup=eval(config.get('LimitGeneral','setup'))
 #Systematics:
 if config.has_option('LimitGeneral','addSample_sys'):
     addSample_sys = eval(config.get('LimitGeneral','addSample_sys'))
@@ -123,9 +122,8 @@ if str(anType) == 'cr':
     blind = False
 if blind: 
     printc('red','', 'I AM BLINDED!')    
-#get List of backgrounds in use: (defined in cfg genereal under allBKG)
+#get List of backgrounds in use:
 backgrounds = eval(config.get('LimitGeneral','BKG'))
-if debug: print 'backgrounds is', config.get('LimitGeneral','BKG') + '\n' 
 #Groups for adding samples together
 GroupDict = eval(config.get('LimitGeneral','Group'))
 #naming for DC
@@ -150,9 +148,9 @@ if not add_signal_as_bkg == 'None':
 
 #--Setup--------------------------------------------------------------------
 #Assign Pt region for sys factors
+print 'Assign Pt region for sys factors'
+print '================================\n'
 
-print "Assign Pt region for sys factors"
-print "================================\n"
 if 'HighPtLooseBTag' in ROOToutname:
     pt_region = 'HighPtLooseBTag'
 elif 'HighPt' in ROOToutname or 'highPt' in ROOToutname:
@@ -167,7 +165,8 @@ elif 'MJJ' in ROOToutname:
     pt_region = 'HighPt' 
 else:
     print "Unknown Pt region"
-    sys.exit("Unknown Pt region")
+    pt_region = 'NoSysRegion'
+    #sys.exit("Unknown Pt region")
 # Set rescale factor of 2 in case of TrainFalg
 if TrainFlag:
     MC_rescale_factor=2.
@@ -175,24 +174,40 @@ if TrainFlag:
 else: MC_rescale_factor = 1.
 #systematics up/down
 UD = ['Up','Down']
+
+print 'Parse the sample information'
+print '============================\n'
 #Parse samples configuration
 info = ParseInfo(samplesinfo,path)
 # get all the treeCut sets
 # create different sample Lists
+
+print 'Get the sample list'
+print '===================\n'
 all_samples = info.get_samples(signals+backgrounds+additionals)
 
 signal_samples = info.get_samples(signals) 
-print'signal sample is', signal_samples, '\n'
 background_samples = info.get_samples(backgrounds) 
-print'background sample is', background_samples, '\n'
 data_sample_names = config.get('dc:%s'%var,'data').split(' ')
 data_samples = info.get_samples(data_sample_names)
+
+print 'The signal sample list is\n'
+for samp in signal_samples:
+    print samp
+    print ''
+print 'The background sample list is\n'
+for samp in background_samples:
+    print samp
+    print ''
+print 'The data samples are' 
+for samp in data_samples:
+    print samp
+    print '' 
 #-------------------------------------------------------------------------------------------------
 
 optionsList=[]
 
 def appendList(): optionsList.append({'cut':copy(_cut),'var':copy(_treevar),'name':copy(_name),'nBins':nBins,'xMin':xMin,'xMax':xMax,'weight':copy(_weight),'blind':blind})
-
 
 #nominal
 _cut = treecut
@@ -200,6 +215,13 @@ _treevar = treevar
 _name = title
 _weight = weightF
 appendList()
+
+print 'Get the option list'
+print '===================\n'
+print 'The option list is', optionsList
+
+print 'Assign the systematics'
+print '======================\n'
 
 #the 4 sys
 for syst in systematics:
@@ -233,23 +255,23 @@ for syst in systematics:
         #append
         appendList()
 
-if debug: print "workspace_datacard.py debug 3"
-
 #UEPS
-for weightF_sys in weightF_systematics:
-    for _weight in [config.get('Weights','%s_UP' %(weightF_sys)),config.get('Weights','%s_DOWN' %(weightF_sys))]:
-        _cut = treecut
-        _treevar = treevar
-        _name = title
-        appendList()
+#Appends options for each weight 
+#for weightF_sys in weightF_systematics:
+#    for _weight in [config.get('Weights','%s_UP' %(weightF_sys)),config.get('Weights','%s_DOWN' %(weightF_sys))]:
+#        _cut = treecut
+#        _treevar = treevar
+#        _name = title
+#        appendList()
 
-#for option in optionsList:
-#    print option['cut']
-print "Start Making the histograms"
-print "===========================\n"
-print 'The options list is', optionsList, '\n'
+print 'Preparations for Histograms (HistoMakeri)'
+print '=========================================\n'
+
 mc_hMaker = HistoMaker(all_samples,path,config,optionsList,GroupDict)
 data_hMaker = HistoMaker(data_samples,path,config,[optionsList[0]])
+
+print 'Calculate luminosity'
+print '====================\n'
 #Calculate lumi
 lumi = 0.
 nData = 0
@@ -271,10 +293,7 @@ if addBlindingCut:
 
 
 if rebin_active:
-    if debug: print "workspace_datacard.py debug 4:  before mc_hMaker.calc_rebin(background_samples)"
-    #ERROR HERE, because background_samples is empty
     mc_hMaker.calc_rebin(background_samples)
-    if debug: print "workspace_datacard.py debug 5:  after mc_hMaker.calc_rebin(background_samples)"
     #transfer rebinning info to data maker
     data_hMaker.norebin_nBins = copy(mc_hMaker.norebin_nBins)
     data_hMaker.rebin_nBins = copy(mc_hMaker.rebin_nBins)
@@ -282,15 +301,10 @@ if rebin_active:
     data_hMaker._rebin = copy(mc_hMaker._rebin)
     data_hMaker.mybinning = deepcopy(mc_hMaker.mybinning)
 
-all_histos = {}#all_histo is a dictionnary, where each sample name (key), get assigned an array of dictionnaries, containing an array of Group:TH1F dictionnaries
-
-'''Examples of output
-{'DYLL': [{'DATA': <ROOT.TH1F object ("hnew") at 0x67f1490>}, {'DATA': <ROOT.TH1F object ("hnew") at 0x38283f10>}, {'DATA': <ROOT.TH1F object ("hnew") at 0x384163a0>}, {'DATA': <ROOT.TH1F object ("hnew") at 0x45569a0>}, {'DATA': <ROOT.TH1F object ("hnew") at 0x451cf70>}, {'DATA': <ROOT.TH1F object ("hnew") at 0x451c260>}, {'DATA': <ROOT.TH1F object ("hnew") at 0x4521740>}, {'DATA': <ROOT.TH1F object ("hnew") at 0x4525a50>}, {'DATA': <ROOT.TH1F object ("hnew") at 0x4528290>}, {'DATA': <ROOT.TH1F object ("hnew") at 0x45267e0>}, {'DATA': <ROOT.TH1F object ("hnew") at 0x4555140>}], 'TTJets': [{'TT': <ROOT.TH1F object ("hnew") at 0x51e93f0>}, {'TT': <ROOT.TH1F object ("hnew") at 0xf3749b0>}, {'TT': <ROOT.TH1F object ("hnew") at 0x3eb1efb0>}, {'TT': <ROOT.TH1F object ("hnew") at 0x17f79990>}, {'TT': <ROOT.TH1F object ("hnew") at 0xc4fe870>}, {'TT': <ROOT.TH1F object ("hnew") at 0xc64ff60>}, {'TT': <ROOT.TH1F object ("hnew") at 0xaa0fcf0>}, {'TT': <ROOT.TH1F object ("hnew") at 0x383ff270>}, {'TT': <ROOT.TH1F object ("hnew") at 0x20213c90>}, {'TT': <ROOT.TH1F object ("hnew") at 0xc64cab0>}, {'TT': <ROOT.TH1F object ("hnew") at 0x592c9a0>}]}
-'''
-
+all_histos = {}
 data_histos = {}
 
-print '\n\t...fetching histos...'
+print '\n\t...fetching histos...\n'
 
 for job in all_samples:
     print '\t- %s'%job
@@ -303,20 +317,14 @@ for job in all_samples:
     else:
         all_histos[job.name] = mc_hMaker.get_histos_from_tree(job)
 
-if debug:
-    print "all_histos are"
-    print all_histos
-print 'data samples\n'
 for job in data_samples:
-    if debug:
-	print "List of the keys form HistoMaker dictionnary"
-	for key in list(data_hMaker.get_histos_from_tree(job)[0].keys()):
-	    print "The key is", key
     print '\t- %s'%job
     data_histos[job.name] = data_hMaker.get_histos_from_tree(job)[0]['DATA']
 
 print '\t> done <\n'
 
+print 'Get the bkg histo'
+print '=================\n'
 i=0
 for job in background_samples: 
     print job.name
@@ -327,7 +335,7 @@ for job in background_samples:
         hDummy.Add(htree,1) 
     del htree 
     i+=1
-
+#?
 if signal_inject:
     signal_inject = info.get_samples([signal_inject])
     sig_hMaker = HistoMaker(signal_inject,path,config,optionsList,GroupDict)
@@ -339,11 +347,15 @@ if signal_inject:
         sig_hMaker._rebin = copy(mc_hMaker._rebin)
         sig_hMaker.mybinning = deepcopy(mc_hMaker.mybinning)
 
+print 'Get the signal histo'
+print '====================\n'
 for job in signal_inject: 
     htree = sig_hMaker.get_histos_from_tree(job)
     hDummy.Add(htree[0].values()[0],1) 
     del htree 
 
+print 'Get the data histo'
+print '==================\n'
 nData = 0
 for job in data_histos:
     if nData == 0:
@@ -353,6 +365,11 @@ for job in data_histos:
 
 #-- Write Files-----------------------------------------------------------------------------------
 # generate the TH outfile:
+print 'Start writing the files'
+print '=======================\n'
+
+print 'Creating output file'
+print '====================\n'
 outfile = ROOT.TFile(outpath+'vhbb_TH_'+ROOToutname+'.root', 'RECREATE')
 outfile.mkdir(Datacardbin,Datacardbin)
 outfile.cd(Datacardbin)
@@ -370,19 +387,26 @@ final_histos = {}
 print '\n\t--> Ordering and Adding Histos\n'
 
 #NOMINAL:
-final_histos['nominal'] = HistoMaker.orderandadd([all_histos['%s'%job][0] for job in all_samples],setup)#note: printing a samples class will return the 
+final_histos['nominal'] = HistoMaker.orderandadd([all_histos['%s'%job][0] for job in all_samples],setup) 
 
 #SYSTEMATICS:
 ind = 1
+#print 'systematics is', systematics
+
+
+print 'add UD sys'
+print '==========\n'
 for syst in systematics:
     for Q in UD:
         final_histos['%s_%s'%(systematicsnaming[syst],Q)] = HistoMaker.orderandadd([all_histos[job.name][ind] for job in all_samples],setup)
         ind+=1
+print 'add weight sys'
+print '==============\n'
 for weightF_sys in weightF_systematics: 
     for Q in UD:
         final_histos['%s_%s'%(systematicsnaming[weightF_sys],Q)]= HistoMaker.orderandadd([all_histos[job.name][ind] for job in all_samples],setup)
         ind+=1
-
+#?
 if change_shapes:
     for key in change_shapes:
         syst,val=change_shapes[key].split('*')
@@ -417,6 +441,8 @@ def get_alternate_shapes(all_histos,asample_dict,all_samples):
     return alternate_shapes_up, alternate_shapes_down
         
 if addSample_sys: 
+    print 'Adding the samples systematics'
+    print '==============================\n'
     aUp, aDown = get_alternate_shapes(all_histos,addSample_sys,all_samples)
     final_histos['%s_Up'%(systematicsnaming['model'])]= HistoMaker.orderandadd(aUp,setup)
     del aUp
@@ -425,6 +451,8 @@ if addSample_sys:
 
 if not ignore_stats:
     #make statistical shapes:
+    print 'Make the statistical shapes'
+    print '===========================\n'
     if not binstat:
         for Q in UD:
             final_histos['%s_%s'%(systematicsnaming['stats'],Q)] = {}
@@ -467,6 +495,8 @@ if not ignore_stats:
                         final_histos['%s_bin%s_%s'%(systematicsnaming['stats'],bin,Q)][job].SetBinContent(bin,max(0,hist.GetBinContent(bin)-hist.GetBinError(bin)))
 
 
+print 'Start writing shapes in WS'
+print '==========================\n'
 #write shapes in WS:
 for key in final_histos:
     for job, hist in final_histos[key].items():
@@ -526,9 +556,6 @@ for key in final_histos:
 #-----------------------------------------------------------------------------------------------------------
 
 # -------------------- write DATAcard: ----------------------------------------------------------------------
-
-print "Writing the DATAcards"
-print "=====================\n"
 DCprocessseparatordict = {'WS':':','TH':'/'}
 # create two datacards: for TH an WS
 for DCtype in ['WS','TH']:
@@ -549,10 +576,6 @@ for DCtype in ['WS','TH']:
     f.write('\n')
     # datacard process
     f.write('process')
-    if debug:
-	print "List of the keys from Dict dictionnary"
-	for key in list(Dict.keys()):
-	    print "The key is", key
     for c in setup: f.write('\t%s'%Dict[c])
     f.write('\n')
     f.write('process')
@@ -560,15 +583,7 @@ for DCtype in ['WS','TH']:
     f.write('\n')
     # datacard yields
     f.write('rate')
-    if debug: 
-        print "The final_histos dictionnary:"
-	print final_histos['nominal']
-    if debug:
-	print "List of the final_histos dictionnary keys"
-	for key in list(final_histos['nominal'].keys()):
-	    print "The key is", key
     for c in setup: 
-        if debug: print "c is", c 
         f.write('\t%s'%final_histos['nominal'][c].Integral())
     f.write('\n')
     # get list of systematics in use
@@ -648,4 +663,3 @@ for DCtype in ['WS','TH']:
 
 
 outfile.Close()
-if debug: print "workspace_datacard.py END"

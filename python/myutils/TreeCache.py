@@ -46,6 +46,10 @@ class TreeCache:
         self.minCut = '||'.join(self._cutList)
 
     def __trim_tree(self, sample):
+
+        print("Caching the sample")
+        print("==================\n")
+
         ''' Create temporary file for each sample '''
         theName = sample.name
         print('Reading sample <<<< %s' %sample)
@@ -57,8 +61,8 @@ class TreeCache:
         print('the tmp source is ', tmpSource)
         #print ('self.__doCache',self.__doCache,'self.file_exists(tmpSource)',self.file_exists(tmpSource))
         print("==================================================================")
-        print ('theCut is ', self.minCut)
-        print("==================================================================")
+        print ('The cut is ', self.minCut)
+        print("==================================================================\n")
         if self.__doCache and self.file_exists(tmpSource):
             print('sample',theName,'skipped, filename=',tmpSource)
             return
@@ -163,25 +167,21 @@ class TreeCache:
             # CountWithPU2011B = input.Get("CountWithPU2011B")
             # sample.count_with_PU = CountWithPU.GetBinContent(1) 
             # sample.count_with_PU2011B = CountWithPU2011B.GetBinContent(1)
-            print('get_tree2')
         except:
             print('WARNING: No Count histograms available. Using 1.')
             sample.count = 1.
             # sample.count_with_PU = 1.
             # sample.count_with_PU2011B = 1.
-            print('get_tree4')
         if sample.subsample:
             cut += '& (%s)' %(sample.subcut)
         print('cut is', cut)
         ROOT.gROOT.cd()
         print('getting the tree after applying cuts')
         cuttedTree=tree.CopyTree(cut)
-        print('get_tree6')
         # cuttedTree.SetDirectory(0)
         input.Close()
         del input
         del tree
-        print('get_tree7')
         return cuttedTree
 
     @staticmethod
@@ -252,10 +252,10 @@ class TreeCache:
     
     @staticmethod
     def file_exists(file):
-        print ('============================== will now check if the file exists')
+        print ('Will now check if the file exists')
+        print ('=================================\n')
 
         file_dummy = file
-        print ('file_dummy is ', file_dummy)
         srmPath = 'srm://t3se01.psi.ch:8443/srm/managerv2?SFN='
         file_dummy = file_dummy.replace('root://t3dcachedb03.psi.ch:1094/','')
         file_dummy = file_dummy.replace('srm://t3se01.psi.ch:8443/srm/managerv2?SFN=','')

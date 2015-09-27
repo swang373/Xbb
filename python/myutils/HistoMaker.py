@@ -15,14 +15,9 @@ class HistoMaker:
         #config: list of the configuration files
         #optionsList: Dictionnary containing information on vars, including the cuts
         #! Read arguments and initialise variables
-	print "================" 
-	print "START HistoMaker" 
-	print "================\n" 
-	print "The samples are", samples
-	print "The path is:", path 
-	print "The config is", config 
-        print "The options are ", optionsList
-        print '' 
+
+	print "Start Creating HistoMaker"
+        print "=========================\n"
         self.path = path
         self.config = config
         self.optionsList = optionsList
@@ -39,26 +34,21 @@ class HistoMaker:
         VHbbNameSpace=config.get('VHbbNameSpace','library')
         ROOT.gSystem.Load(VHbbNameSpace)
 
-	print "==============" 
-	print "END HistoMaker" 
-	print "==============\n" 
+        print ""
+        print "Done Creating HistoMaker"
+        print "========================\n"
 
     def get_histos_from_tree(self,job,cutOverWrite=None):
-        '''
-	Take job containing all the information on the sample. 
-	Save the corresponding histogram in TH1F. Returns an array of dictionnary of TH1F. 
-	The entries of the array are filled for each option from the optionsList. 
-	The key of the dictionnary are defined in Group in general
-	'''
-        
-        #print "get_histo_from_tree_debug1"
         '''Function that produce the trees from a HistoMaker'''
+         
+        print "Begin to extract the histos from trees (get_histos_from_tree)"
+        print "=============================================================\n"
+
         if self.lumi == 0: 
             raise Exception("You're trying to plot with no lumi")
          
         hTreeList=[]
 
-        #print "get_histo_from_tree_debug2"
         #get the conversion rate in case of BDT plots
         TrainFlag = eval(self.config.get('Analysis','TrainFlag'))
         BDT_add_cut='EventForTraining == 0'
@@ -66,15 +56,13 @@ class HistoMaker:
         plot_path = self.config.get('Directories','plotpath')
         addOverFlow=eval(self.config.get('Plot_general','addOverFlow'))
 
-        #print "get_histo_from_tree_debug3"
         # get all Histos at once
-        #print "The tree in the job is ", job.tree
+        print "The tree in the job is ", job.tree
         CuttedTree = self.tc.get_tree(job,'1')# retrieve the cuted tree
         # print 'CuttedTree.GetEntries()',CuttedTree.GetEntries()
         # print 'begin self.optionsList',self.optionsList
         # print 'end self.optionsList'
 
-        #print "get_histo_from_tree_debug4"
         #! start the loop over variables (descriebed in options) 
         for options in self.optionsList:
             name=job.name
@@ -82,7 +70,6 @@ class HistoMaker:
                 group=job.group
             else:
                 group=self.GroupDict[job.name]
-	    #print "The sample group is", group
             treeVar=options['var']
             name=options['name']
             # print 'options[\'name\']',options['name']
@@ -99,27 +86,27 @@ class HistoMaker:
                 treeCut='%s'%(options['cut'])
 
             #options
-            #print 'treeCut',treeCut
-            #print 'weightF',weightF
+            print 'treeCut',treeCut
+            print 'weightF',weightF
             
-	    #Histogram of the sample
             hTree = ROOT.TH1F('%s'%name,'%s'%name,nBins,xMin,xMax)
             hTree.Sumw2()
-            #print "Histomaker debug5"
-            #print('hTree.name() 1 =',hTree.GetName())
-            #print('treeVar 1 =',treeVar)
+            print('hTree.name() 1 =',hTree.GetName())
+            print('treeVar 1 =',treeVar)
             drawoption = ''
             if job.type != 'DATA':
+	        print "the jobs is not data"
                 if CuttedTree and CuttedTree.GetEntries():
+		    print 'hello'
                     if 'RTight' in treeVar or 'RMed' in treeVar: 
                         drawoption = '(%s)*(%s & %s)'%(weightF,treeCut,BDT_add_cut)
                         #print drawoption
                     else: 
                         drawoption = '(%s)*(%s)'%(weightF,treeCut)
-                    #print ('Draw: %s>>%s' %(treeVar,name), drawoption, "goff,e")
+                    print ('Draw: %s>>%s' %(treeVar,name), drawoption, "goff,e")
                     CuttedTree.Draw('%s>>%s' %(treeVar,name), drawoption, "goff,e")
-                    #print name
-                    #print('hTree.name() 2 =',hTree.GetName())
+                    print name
+                    print('hTree.name() 2 =',hTree.GetName())
                     full=True
                 else:
                     full=False
@@ -140,8 +127,8 @@ class HistoMaker:
                 # hTree = ROOT.TH1F('%s'%name,'%s'%name,nBins,xMin,xMax)
                 # hTree.Sumw2()
                 # print('histo2',ROOT.gDirectory.Get(name))
-            #print('%s>>%s' %(treeVar,name), drawoption, "goff,e")
-            #print 'name',hTree
+            print('%s>>%s' %(treeVar,name), drawoption, "goff,e")
+            print 'name',hTree
             # if full: print 'hTree',hTree.GetName()
               
             if job.type != 'DATA':
@@ -177,6 +164,9 @@ class HistoMaker:
             hTreeList.append(gDict)
         if CuttedTree: CuttedTree.IsA().Destructor(CuttedTree)
         del CuttedTree
+
+        print "Finished to extract the histos from trees (get_histos_from_tree)"
+        print "================================================================\n"
         return hTreeList
        
     @property
@@ -200,18 +190,15 @@ class HistoMaker:
         elif not self._rebin and not self.value:
             return False
 
-    #initial bin start: 10000
-    def calc_rebin(self, bg_list, nBins_start=10, tolerance=0.25):
+    def calc_rebin(self, bg_list, nBins_start=1000, tolerance=0.25):
         self.calc_rebin_flag = True
         self.norebin_nBins = copy(self.nBins)
         self.rebin_nBins = nBins_start
         self.nBins = nBins_start
         i=0
         #add all together:
-	totalBG = ROOT.TH1F()
         print '\n\t...calculating rebinning...'
         for job in bg_list:
-	    print 'In HistoMaker calc_rebin: job is ', job
             htree = self.get_histos_from_tree(job)[0].values()[0]
             if not i:
                 totalBG = copy(htree)
@@ -227,20 +214,17 @@ class HistoMaker:
         binL=1
         rel=1.0
         #---- from right
-	print 'In HistoMaker calc_rebin: debug1'
         while rel > tolerance:
             TotR+=totalBG.GetBinContent(binR)
-	    #print 'the bin content is', TotR 
             ErrorR=sqrt(ErrorR**2+totalBG.GetBinError(binR)**2)
             binR-=1
-	    #print 'is this loop infinite ?'
+	    print 'is this loop infinite ?'
             if not TotR == 0 and not ErrorR == 0:
                 rel=ErrorR/TotR
                 #print rel
         #print 'upper bin is %s'%binR
 
         #---- from left
-	print 'In HistoMaker calc_rebin: debug2'
         rel=1.0
         while rel > tolerance:
             TotL+=totalBG.GetBinContent(binL)
@@ -253,7 +237,6 @@ class HistoMaker:
         binL+=1
         #print 'lower bin is %s'%binL
 
-	print 'In HistoMaker calc_rebin: debug3'
         inbetween=binR-binL
         stepsize=int(inbetween)/(int(self.norebin_nBins)-2)
         modulo = int(inbetween)%(int(self.norebin_nBins)-2)
@@ -261,7 +244,6 @@ class HistoMaker:
         #print 'stepsize %s'% stepsize
         #print 'modulo %s'%modulo
         binlist=[binL]
-	print 'In HistoMaker calc_rebin: debug4'
         for i in range(0,int(self.norebin_nBins)-3):
             binlist.append(binlist[-1]+stepsize)
         binlist[-1]+=modulo
@@ -274,6 +256,17 @@ class HistoMaker:
 
     @staticmethod
     def orderandadd(histo_dicts,setup):
+        '''
+	Setup is defined in the plot conf file
+	histo_dicts contains an array of dictionnary
+	'''
+
+	print "Start orderandadd"
+	print "=================\n"
+
+	print "Input dict is", histo_dicts
+	
+	
         ordered_histo_dict = {}
         for sample in setup:
             nSample = 0
@@ -286,6 +279,7 @@ class HistoMaker:
                         ordered_histo_dict[sample].Add(histo_dict[sample])
                     nSample += 1
         del histo_dicts
+	print "Output dict is", ordered_histo_dict
         return ordered_histo_dict 
 
 class Rebinner:
