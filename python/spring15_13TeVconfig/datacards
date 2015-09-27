@@ -170,7 +170,7 @@ CMS_vhbb_TT_SF_Zll_LowPt_8TeV: {'type':'lnN', 'TT':1.05}
 #!! -------------------------
 
 #TEST
-[dc:ZH125_EE_8TeV_janAngularOnly_noWeights] 
+[dc:ZH125_EE_8TeV_janAngularOnly_noWeights]
 #Need to write variables directly from the tree
 var = H_mass
 wsVarName = <!LimitGeneral|BDToutname!>
