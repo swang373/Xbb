@@ -21,6 +21,7 @@ if opts.config =="":
         
 from myutils import BetterConfigParser, printc, ParseInfo, mvainfo, StackMaker, HistoMaker
 
+
 print 'opts.config',opts.config
 
 vhbbPlotDef=opts.config[0].split('/')[0]+'/vhbbPlotDef.ini'
@@ -85,6 +86,7 @@ def doPlot():
     Ldatas = [[] for _ in range(0,len(vars))]
     Ldatatyps = [[] for _ in range(0,len(vars))]
     Ldatanames = [[] for _ in range(0,len(vars))]
+    Ljobnames = [[] for _ in range(0,len(vars))]
 
     #Find out Lumi:
     lumicounter=0.
@@ -99,21 +101,110 @@ def doPlot():
     Plotter.lumi=lumi
     mass = Stacks[0].mass
 
+#        multiprocess=16
+#        if multiprocess>0:
+#            from multiprocessing import Pool
+#            p = Pool(multiprocess)
+##            import pathos.multiprocessing as mp
+##            p = mp.ProcessingPool(multiprocess)
+#            myinputs = []
+#            for job in self.__sampleList:
+#                myoptions = self.putOptions()
+#                myinputs.append((myoptions,job))
+#                
+#            outputs = p.map(trim_treeMT, myinputs)
+
     print 'mcsamples',mcsamples
+    inputs=[]
     for job in mcsamples:
-        print 'job.name',job.name
-        #hTempList, typList = Plotter.get_histos_from_tree(job)
+#        print 'job.name'
+        cutOverWrite = None
         if addBlindingCut:
-            hDictList = Plotter.get_histos_from_tree(job,config.get('Cuts',region)+' & ' + addBlindingCut)
-        else:
-            print 'going to get_histos_from_tree'
-            hDictList = Plotter.get_histos_from_tree(job)
-        if job.name == mass:
-            print 'job.name', job.name
-            Overlaylist= deepcopy([hDictList[v].values()[0] for v in range(0,len(vars))])
+            cutOverWrite = config.get('Cuts',region)+' & ' + addBlindingCut
+        inputs.append((Plotter,"get_histos_from_tree",(job,cutOverWrite)))
+    
+    multiprocess=64
+    outputs = []
+    if multiprocess>0:
+        from multiprocessing import Pool
+        from myutils import GlobalFunction
+        p = Pool(multiprocess)
+        print 'launching get_histos_from_tree with ',multiprocess,' processes'
+        outputs = p.map(GlobalFunction, inputs)
+    else:
+        print 'launching get_histos_from_tree with ',multiprocess,' processes'
+        for input_ in inputs:
+            outputs.append(getattr(input_[0],input_[1])(*input_[2])) #ie. Plotter.get_histos_from_tree(job,cutOverWrite)
+    print 'get_histos_from_tree DONE'
+    Overlaylist = []
+    for i,job in enumerate(mcsamples):
+        print 'job.name',job.name,"mass==",mass
+        #hTempList, typList = Plotter.get_histos_from_tree(job)
+        hDictList = outputs[i]
+        if job.name in mass:
+            print 'job.name == mass'
+            histoList = []
+            for v in range(0,len(vars)):
+                histoCopy = deepcopy(hDictList[v].values()[0])
+                histoCopy.SetTitle(job.name)
+                histoList.append(histoCopy)
+            Overlaylist.append(histoList)
+#            Overlaylist.append(deepcopy([hDictList[v].values()[0] for v in range(0,len(vars))]))
         for v in range(0,len(vars)):
             Lhistos[v].append(hDictList[v].values()[0])
             Ltyps[v].append(hDictList[v].keys()[0])
+            Ljobnames[v].append(job.name)
+    
+    print "len(vars)=",len(vars)
+    ##invert Overlaylist[variable][job] -> Overlaylist[job][variable]
+    print "len(Overlaylist) before: ",len(Overlaylist)
+    print "Overlaylist",Overlaylist
+#    newOverlaylist = [[None]*len(Overlaylist)]*len(vars)
+#    for i,OverlaySameSample in enumerate(Overlaylist):
+#            for j,Overlay in enumerate(OverlaySameSample):
+#                newOverlaylist[j][i] = Overlay    
+#    Overlaylist = newOverlaylist
+    Overlaylist = [list(a) for a in zip(*Overlaylist)]
+    print "len(Overlaylist) after: ",len(Overlaylist)
+    print "Overlaylist",Overlaylist
+    
+    ##merge overlays in groups 
+    for i in range(len(Overlaylist)):
+        newhistos = {}
+        print "len(Overlaylist[i]):",Overlaylist[i]
+        for histo in Overlaylist[i]:
+            print "histo.GetName()",histo.GetName(),
+            print "histo.GetTitle()",histo.GetTitle(),
+            group = GroupDict[histo.GetTitle()]
+            if not group in newhistos.keys():
+                histo.SetTitle(group)
+                newhistos[group]=histo
+            else:
+                print "Before newhistos[group].Integral()",newhistos[group].Integral(),
+                newhistos[group].Add(histo)
+                print "After newhistos[group].Integral()",newhistos[group].Integral()
+        Overlaylist[i] = newhistos.values()
+        
+
+
+#   ### ORIGINAL ###
+#    print 'mcsamples',mcsamples
+#    for job in mcsamples:
+#        print 'job.name',job.name
+#        #hTempList, typList = Plotter.get_histos_from_tree(job)
+#        if addBlindingCut:
+#            hDictList = Plotter.get_histos_from_tree(job,config.get('Cuts',region)+' & ' + addBlindingCut)
+#        else:
+#            print 'going to get_histos_from_tree'
+#            hDictList = Plotter.get_histos_from_tree(job)
+#        if job.name == mass:
+#            print 'job.name', job.name
+#            Overlaylist= deepcopy([hDictList[v].values()[0] for v in range(0,len(vars))])
+#        for v in range(0,len(vars)):
+#            Lhistos[v].append(hDictList[v].values()[0])
+#            Ltyps[v].append(hDictList[v].keys()[0])
+#            Ljobnames[v].append(job.name)
+
 
     print 'datasamples',datasamples
     for job in datasamples:
@@ -144,17 +235,19 @@ def doPlot():
         Stacks[v].datatyps = Ldatatyps[v]
         Stacks[v].datanames= Ldatanames[v]
         #if SignalRegion:
-        #    Stacks[v].overlay = Overlaylist[v]
+        Stacks[v].overlay = Overlaylist[v] ## from 
         Stacks[v].lumi = lumi
+        Stacks[v].jobnames= Ljobnames[v]
         Stacks[v].doPlot()
-        Stacks[v].histos = Lhistos[v]
-        Stacks[v].typs = Ltyps[v]
-        Stacks[v].datas = Ldatas[v]
-        Stacks[v].datatyps = Ldatatyps[v]
-        Stacks[v].datanames= Ldatanames[v]
-        Stacks[v].normalize = True
-        Stacks[v].options['pdfName'] = Stacks[v].options['pdfName'].replace('.pdf','_norm.pdf')
-        Stacks[v].doPlot()
+        ##FIXME##
+#        Stacks[v].histos = Lhistos[v]
+#        Stacks[v].typs = Ltyps[v]
+#        Stacks[v].datas = Ldatas[v]
+#        Stacks[v].datatyps = Ldatatyps[v]
+#        Stacks[v].datanames= Ldatanames[v]
+#        Stacks[v].normalize = True
+#        Stacks[v].options['pdfName'] = Stacks[v].options['pdfName'].replace('.pdf','_norm.pdf')
+#        Stacks[v].doPlot()
         print 'i am done!\n'
 #----------------------------------------------------
 doPlot()

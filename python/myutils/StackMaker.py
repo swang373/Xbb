@@ -80,6 +80,8 @@ class StackMaker:
         self.hname = self.hname.replace(')','')
         self.hname = self.hname.replace('(','')
         self.hname = self.hname.replace('-','')
+        self.hname = self.hname.replace('/','')
+        self.hname = self.hname.replace('\\','')
         self.hname = self.hname.replace(':','')
         self.hname = self.hname.replace(':','')
         self.hname = self.hname.replace('[','')
@@ -104,6 +106,7 @@ class StackMaker:
         self.histos = None
         self.typs = None
         self.AddErrors = None
+        self.jobnames = None
         self.addFlag2 = ''
         if 'TTbar' in self.region:
 	        self.addFlag2 = 't#bar{t} enriched'
@@ -155,16 +158,21 @@ class StackMaker:
         aStack.GetXaxis().SetTitle(self.xAxis)
         aStack.Draw('HISTNOSTACK')
         l.Draw()
-        name = '%s/comp_%s' %(self.plotDir,self.options['pdfName'])
+        if not os.path.exists(self.plotDir):
+            os.mkdir(self.plotDir)
+        if not os.path.exists(self.plotDir+'/pdf'):
+            os.mkdir(self.plotDir+'/pdf')
+        name = '%s/pdf/comp_%s' %(self.plotDir,self.options['pdfName'])
         c.Print(name)
-        c.Print(name.replace('.pdf','.png'))
+        c.Print((name.replace('.pdf','.png')).replace("/pdf",""))
+
 
     def doPlot(self):
         TdrStyles.tdrStyle()
         print "self.typs",self.typs
         print "self.histos",self.histos
         print "self.setup",self.setup
-        histo_dict = HistoMaker.orderandadd([{self.typs[i]:self.histos[i]} for i in range(len(self.histos))],self.setup)
+        histo_dict = HistoMaker.orderandadd([{self.typs[i]:self.histos[i]} for i in range(len(self.histos))],self.setup,self.jobnames)
         #sort
         
         print "histo_dict",histo_dict
@@ -259,8 +267,9 @@ class StackMaker:
             self.overlay = [self.overlay]
         if self.overlay:
             for _overlay in self.overlay:
-                _overlay.SetLineColor(int(self.colorDict[_overlay.GetName()]))
-                _overlay.SetLineWidth(2)
+                _overlay.SetLineColor(99)
+                _overlay.SetLineColor(int(self.colorDict[_overlay.GetTitle()]))
+                _overlay.SetLineWidth(3)
                 _overlay.SetFillColor(0)
                 _overlay.SetFillStyle(4000)
 
@@ -274,8 +283,34 @@ class StackMaker:
             else:
                 l_2.AddEntry(self.histos[j],self.typLegendDict[self.typs[j]],'F')
         if self.overlay:
+            overScale = 100000
             for _overlay in self.overlay:
-                l_2.AddEntry(_overlay,self.typLegendDict[_overlay.GetName()],'L')
+                stackMax = allStack.GetMaximum()
+                overMax = _overlay.GetMaximum()
+                print "overScale=",overScale,
+                print "stackMax/overMax=",stackMax/overMax,
+                print "overMax=",overMax,
+                print "stackMax=",stackMax,
+                overScale = min(overScale,stackMax/overMax)
+                if overScale >= 100000: overScale=100000
+                elif overScale >= 50000: overScale=50000
+                elif overScale >= 20000: overScale=20000
+                elif overScale >= 10000: overScale=10000
+                elif overScale >= 5000: overScale=5000
+                elif overScale >= 2000: overScale=2000
+                elif overScale >= 1000: overScale=1000
+                elif overScale >= 500: overScale=500
+                elif overScale >= 200: overScale=200
+                elif overScale >= 100: overScale=100
+                elif overScale >= 50: overScale=50
+                elif overScale >= 20: overScale=20
+                elif overScale >= 10: overScale=10
+                elif overScale >= 5: overScale=5
+                elif overScale >= 2: overScale=2
+                else: overScale=1
+                _overlay.Scale(overScale)
+                l_2.AddEntry(_overlay,self.typLegendDict[_overlay.GetTitle()]+" X"+str(overScale),'L')
+#                l_2.AddEntry(_overlay,self.typLegendDict[_overlay.GetTitle()],'L')
     
         if self.normalize:
             if MC_integral != 0:	stackscale=d1.Integral()/MC_integral
@@ -328,6 +363,7 @@ class StackMaker:
         
         if self.overlay:
             for _overlay in self.overlay:
+                print("Drawing overlay")
                 _overlay.Draw('hist,same')
         d1.Draw("E,same")
         l.Draw()
@@ -405,10 +441,12 @@ class StackMaker:
         if not self.log:
     	    t0.DrawTextNDC(0.1059,0.96, "0")
         if not os.path.exists(self.plotDir):
-            os.makedirs(os.path.dirname(self.plotDir))
-        name = '%s/%s' %(self.plotDir,self.options['pdfName'])
+            os.mkdir(self.plotDir)
+        if not os.path.exists(self.plotDir+'/pdf'):
+            os.mkdir(self.plotDir+'/pdf')
+        name = '%s/pdf/%s' %(self.plotDir,self.options['pdfName'])
         c.Print(name)
-        c.Print(name.replace('.pdf','.png'))
+        c.Print((name.replace('.pdf','.png')).replace("/pdf",""))
         #print "DATA INTEGRAL: %s" %d1.Integral(d1.GetNbinsX()-2,d1.GetNbinsX()) 
         #fOut = ROOT.TFile.Open(name.replace('.pdf','.root'),'RECREATE')
         #for theHist in allStack.GetHists():
@@ -439,7 +477,7 @@ class StackMaker:
     def doSubPlot(self,signal):
         
         TdrStyles.tdrStyle()
-        histo_dict = HistoMaker.orderandadd([{self.typs[i]:self.histos[i]} for i in range(len(self.histos))],self.setup)
+        histo_dict = HistoMaker.orderandadd([{self.typs[i]:self.histos[i]} for i in range(len(self.histos))],self.setup,self.jobnames)
         #sort
         print 'histo_dict',histo_dict
         sig_histos=[]
@@ -541,7 +579,7 @@ class StackMaker:
                     l_2.AddEntry(sub_histos[j],self.typLegendDict[self.typs[j]],'F')
         if self.overlay:
             for _overlay in self.overlay:
-                l_2.AddEntry(_overlay,self.typLegendDict['Overlay'+_overlay.GetName()],'L')
+                l_2.AddEntry(_overlay,self.typLegendDict['Overlay'+_overlay.GetTitle()],'L')
     
         if self.normalize:
             if MC_integral != 0:	stackscale=d1.Integral()/MC_integral
@@ -616,6 +654,7 @@ class StackMaker:
         
         if self.overlay:
             for _overlay in self.overlay:
+                print "Drawing overlay"
                 _overlay.Draw('hist,same')
         sub_d1.Draw("E,same")
         l.Draw()
@@ -648,6 +687,9 @@ class StackMaker:
 
         if not os.path.exists(self.plotDir):
             os.makedirs(os.path.dirname(self.plotDir))
-        name = '%s/%s' %(self.plotDir,self.options['pdfName'])
+        if not os.path.exists(self.plotDir+'/pdf'):
+            os.mkdir(self.plotDir+'/pdf')
+        name = '%s/pdf/%s' %(self.plotDir,self.options['pdfName'])
         c.Print(name)
-        c.Print(name.replace('.pdf','.png'))
+        c.Print((name.replace('.pdf','.png')).replace("/pdf",""))
+

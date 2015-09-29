@@ -29,10 +29,12 @@ class HistoMaker:
         VHbbNameSpace=config.get('VHbbNameSpace','library')
         ROOT.gSystem.Load(VHbbNameSpace)
 
-    def get_histos_from_tree(self,job,cutOverWrite=None):
-        print "get_histos_from_tree START"
+    def get_histos_from_tree(self,job,cutOverWrite=None,quick=True):
+        print "get_histos_from_tree START for ",job.name
         if self.lumi == 0: 
-            raise Exception("You're trying to plot with no lumi")
+            lumi = self.config.get('Plot_general','lumi')
+            print("You're trying to plot with no lumi, I will use ",lumi)
+            self.lumi = lumi
          
         hTreeList=[]
 
@@ -47,7 +49,7 @@ class HistoMaker:
         # get all Histos at once
         CuttedTree = self.tc.get_tree(job,'1')
         # print 'CuttedTree.GetEntries()',CuttedTree.GetEntries()
-        print 'begin self.optionsList',self.optionsList
+#        print 'begin self.optionsList',self.optionsList
         # print 'end self.optionsList'
         for options in self.optionsList:
             name=job.name
@@ -56,7 +58,7 @@ class HistoMaker:
             else:
                 group=self.GroupDict[job.name]
             treeVar=options['var']
-            print("START %s"%treeVar)
+#            print("START %s"%treeVar)
             name=options['name']
             # print 'options[\'name\']',options['name']
             if self._rebin or self.calc_rebin_flag:
@@ -77,22 +79,25 @@ class HistoMaker:
             
             hTree = ROOT.TH1F('%s'%name,'%s'%name,nBins,xMin,xMax)
             hTree.Sumw2()
-            print('hTree.name() 1 =',hTree.GetName())
+#            print('hTree.name() 1 =',hTree.GetName())
             drawoption = ''
-            print("START DRAWING")
+#            print("START DRAWING")
             if job.type != 'DATA':
                 if CuttedTree and CuttedTree.GetEntries():
-                    if 'RTight' in treeVar or 'RMed' in treeVar: 
-                        drawoption = '(%s)*(%s & %s)'%(weightF,treeCut,BDT_add_cut)
-                        #print drawoption
-                    else: 
-                        drawoption = '(%s)*(%s)'%(weightF,treeCut)
-                    print ('Draw: %s>>%s' %(treeVar,name), drawoption, "goff,e")
-#                    print
-                    nevent = CuttedTree.Draw('%s>>%s' %(treeVar,name), drawoption, "goff,e")
-                    print name
-                    print('hTree.name() 2 =',hTree.GetName()," nevent=",nevent)
+                    drawoption = 'sign(genWeight)*(%s)*(%s & %s)'%(weightF,treeCut,BDT_add_cut)
+                    CuttedTree.Draw('%s>>%s' %(treeVar,name), drawoption, "goff,e")
                     full=True
+#                    if 'RTight' in treeVar or 'RMed' in treeVar: 
+#                        drawoption = '(%s)*(%s & %s)'%(weightF,treeCut,BDT_add_cut)
+#                        #print drawoption
+#                    else: 
+#                        drawoption = '(%s)*(%s)'%(weightF,treeCut)
+##                    print ('Draw: %s>>%s' %(treeVar,name), drawoption, "goff,e")
+##                    print
+#                    nevent = CuttedTree.Draw('%s>>%s' %(treeVar,name), drawoption, "goff,e")
+##                    print name
+##                    print('hTree.name() 2 =',hTree.GetName()," nevent=",nevent)
+#                    full=True
                 else:
                     full=False
             elif job.type == 'DATA':
@@ -112,7 +117,7 @@ class HistoMaker:
                 # hTree = ROOT.TH1F('%s'%name,'%s'%name,nBins,xMin,xMax)
                 # hTree.Sumw2()
                 # print('histo2',ROOT.gDirectory.Get(name))
-            print("END DRAWING")
+#            print("END DRAWING")
 #            print("START RESCALE")
             # if full: print 'hTree',hTree.GetName()
               
@@ -129,8 +134,9 @@ class HistoMaker:
                 if ScaleFactor != 0:
                     hTree.Scale(ScaleFactor)
             #print '\t-->import %s\t Integral: %s'%(job.name,hTree.Integral())
-            print("END RESCALE")
-            print("START addOverFlow")
+#            print("job:",job.name," ScaleFactor=",ScaleFactor)
+#            print("END RESCALE")
+#            print("START addOverFlow")
             if addOverFlow:
             	uFlow = hTree.GetBinContent(0)+hTree.GetBinContent(1)
             	oFlow = hTree.GetBinContent(hTree.GetNbinsX()+1)+hTree.GetBinContent(hTree.GetNbinsX())
@@ -141,8 +147,8 @@ class HistoMaker:
             	hTree.SetBinError(1,uFlowErr)
             	hTree.SetBinError(hTree.GetNbinsX(),oFlowErr)
             hTree.SetDirectory(0)
-            print("STOP addOverFlow")
-            print("START rebin")
+#            print("STOP addOverFlow")
+#            print("START rebin")
             gDict = {}
             if self._rebin:
                 gDict[group] = self.mybinning.rebin(hTree)
@@ -150,11 +156,11 @@ class HistoMaker:
             else: 
                 #print 'not rebinning %s'%job.name 
                 gDict[group] = hTree
-            print("STOP %s"%treeVar)
+#            print("STOP %s"%treeVar)
             hTreeList.append(gDict)
         if CuttedTree: CuttedTree.IsA().Destructor(CuttedTree)
         del CuttedTree
-        print "get_histos_from_tree DONE"
+        print "get_histos_from_tree DONE for ",job.name
         return hTreeList
        
     @property
@@ -256,7 +262,7 @@ class HistoMaker:
         print '\t > rebinning is set <\n'
 
     @staticmethod
-    def orderandadd(histo_dicts,setup):
+    def orderandadd(histo_dicts,setup,jobnames):
         ordered_histo_dict = {}
         print "orderandadd-setup",setup
         print "orderandadd-histo_dicts",histo_dicts
@@ -264,15 +270,17 @@ class HistoMaker:
             nSample = 0
             for histo_dict in histo_dicts:
                 if histo_dict.has_key(sample):
+                    integral = histo_dict[sample].Integral()
+                    entries = histo_dict[sample].GetEntries()
                     if nSample == 0:
                         ordered_histo_dict[sample] = histo_dict[sample].Clone()
-                    else:
-                        printc('magenta','','\t--> added %s to %s'%(sample,sample))
-                        ordered_histo_dict[sample].Add(histo_dict[sample])
+                    printc('magenta','','\t--> added %s to %s. Integral: %s. Entries: %s'%(jobnames[histo_dicts.index(histo_dict)],sample,integral,entries))
+                    ordered_histo_dict[sample].Add(histo_dict[sample])
                     nSample += 1
         print "orderandadd-ordered_histo_dict",ordered_histo_dict
         del histo_dicts
         return ordered_histo_dict 
+
 
 class Rebinner:
     def __init__(self,nBins,lowedgearray,active=True):

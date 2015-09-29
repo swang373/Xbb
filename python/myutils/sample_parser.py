@@ -141,7 +141,7 @@ class ParseInfo:
         samples = []
         thenames = []
         #for splitted samples use the identifier. There is always only one. if list, they are all true
-        if (self.checkSplittedSampleName(samplenames[0])):
+        if (len(samplenames)>0 and self.checkSplittedSampleName(samplenames[0])):
                 for sample in self._samplelist:
                         if (sample.subsample): continue #avoid multiple submissions from subsamples
                         print '@DEBUG: samplenames ' + samplenames[0]
