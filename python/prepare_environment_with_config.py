@@ -19,6 +19,7 @@ config = BetterConfigParser()
 config.read(opts.config)
 
 namelist=opts.names.split(',')
+print "namelist:",namelist
 
 pathIN = config.get('Directories','PREPin')
 pathOUT = config.get('Directories','PREPout')
@@ -29,8 +30,10 @@ sampleconf.read(samplesinfo)
 prefix=sampleconf.get('General','prefix')
 
 info = ParseInfo(samplesinfo,pathIN)
-
+print "samplesinfo:",samplesinfo
+print "info:",info
 for job in info:
+    print "job.name:",job.name
     if not job.name in namelist: 
         continue
     if job.subsample:

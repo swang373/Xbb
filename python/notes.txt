@@ -1,0 +1,37 @@
+Heppy ntuples V11 in Pisa:
+/gpfs/ddn/srm/cms/store/user/arizzi/VHBBHeppyV11/
+
+
+---------------------------
+- ConfigParser.NoSectionError: No section: 'General' --> fix paths in particular sample.ini address
+- missing env folder
+- casino nomi files
+- Problem with:"uselocale" solved using 745ROOT5
+- /scratch/sdonato/VHbb/ETH/CMSSW_5_3_22_patch1/src/Xbb/
+- "Please set your TMPDIR and try again..." ---> export TMPDIR=/tmp
+- [the option *InverseBoostNegWeights* does not exist for BoostType=Grad --> change to *IgnoreNegWeights*] -> added IgnoreNegWeights in config/training 
+
+- Error in <TUnixSystem::DynamicPathName>: /home/sdonato/CMS/VHbbETH//Xbb/interface/VHbbNameSpace_h.so does not exist in /home/sdonato/ROOT/root/lib:.:/home/sdonato/ROOT/root/lib::/home/sdonato/ROOT/root/cint/cint/stl ---> fixed with cd /home/sdonato/CMS/VHbbETH//Xbb/interface/; root -l; 
+
+- NameError: global name '_RegressionTrainer__samples' is not defined --> in "config/regression": signals = ZvvHbb
+
+- SysError in <TFile::TFile>: file /home/sdonato/CMS/VHbbETH/Xbb//env/skims//tmp_3b56bd4e45b15e5fee8abbed156190f18f0bb1b69be1ac53531c989f.root can not be opened (No such file or directory) --->  mkdir /home/sdonato/CMS/VHbbETH/Xbb//env/skims/
+
+- missing hJet_e (in et evaluation) -> added "evalEtFromPtEtaPhiM" and "evalMtFromPtEtaPhiM" in VHbbNameSpace and use it!
+
+- general:  regWeight = ../data/MVA_BDT_REG_Mar13.weights.xml -> regWeight = weights/MVA_BDT_REG_Oct8_13TeV.weights.xml
+
+- regression, [TrainRegression], vars are different then: general, [Regression], regVars !!!! I will override the second!
+
+- HV problem ---> VHbb::HV_mass
+
+
+Variables (???)
+- FatH.FatHiggsFlag -> ntrimmedFatjets>0
+- nfathFilterJets -> nungroomedFatjets
+- METnoPU.et -> met_pt
+- METnoPU.phi -> met_phi
+
+
+To traslate
+- wri

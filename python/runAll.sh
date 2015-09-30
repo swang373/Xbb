@@ -22,6 +22,10 @@ energy=$2           # sqrt(s) you want to run
 task=$3             # the task 
 job_id=$4           # needed for train optimisation. @TO FIX: it does not have a unique meaning
 additional_arg=$5   # needed for train optimisation. @TO FIX: it does not have a unique meaning
+echo 
+echo 'Reading ./'${energy}'config'
+echo 'task'$task
+echo 
 
 #-------------------------------------------------
 # Read debug variable
@@ -65,7 +69,7 @@ logpath=`python << EOF
 import os
 from myutils import BetterConfigParser
 config = BetterConfigParser()
-config.read('./${energy}config/paths')
+config.read('./${energy}config/paths.ini')
 print config.get('Directories','logpath')
 EOF`
 if [ ! -d $logpath ]
@@ -77,27 +81,25 @@ fi
 #Set the environment for the batch job execution
 #-------------------------------------------------
 cd $CMSSW_BASE/src/
-source /swshare/psit3/etc/profile.d/cms_ui_env.sh
+#source /swshare/psit3/etc/profile.d/cms_ui_env.sh
+source /afs/pi.infn.it/grid_exp_sw/cms/scripts/setcms.sh
 export SCRAM_ARCH="slc5_amd64_gcc462"
 source $VO_CMS_SW_DIR/cmsset_default.sh
 eval `scramv1 runtime -sh`
 #export LD_PRELOAD="libglobus_gssapi_gsi_gcc64pthr.so.0":${LD_PRELOAD}
-export LD_LIBRARY_PATH=/swshare/glite/globus/lib/:/swshare/glite/d-cache/dcap/lib64/:$LD_LIBRARY_PATH
-export LD_PRELOAD="libglobus_gssapi_gsi_gcc64pthr.so.0:${LD_PRELOAD}"
+#export LD_LIBRARY_PATH=/swshare/glite/globus/lib/:/swshare/glite/d-cache/dcap/lib64/:$LD_LIBRARY_PATH
+#export LD_PRELOAD="libglobus_gssapi_gsi_gcc64pthr.so.0:${LD_PRELOAD}"
 mkdir $TMPDIR
 
 cd -   #back to the working dir
 
-#Comment for now since not using training 
-#
-#MVAList=`python << EOF 
-#import os
-#from myutils import BetterConfigParser
-#config = BetterConfigParser()
-#config.read('./${energy}config/training')
-#print config.get('MVALists','List_for_submitscript')
-#EOF`
-
+MVAList=`python << EOF 
+import os
+from myutils import BetterConfigParser
+config = BetterConfigParser()
+config.read('./${energy}config/training.ini')
+print config.get('MVALists','List_for_submitscript')
+EOF`
 
 
 #----------------------------------------------
@@ -107,7 +109,7 @@ input_configs=`python << EOF
 import os
 from myutils import BetterConfigParser
 config = BetterConfigParser()
-config.read('./${energy}config/paths')
+config.read('./${energy}config/paths.ini')
 print config.get('Configuration','List')
 EOF`
 required_number_of_configs=7                                             # set the number of required cconfig
@@ -130,11 +132,13 @@ echo ${configList}
 
 if [ $task = "prep" ]; then
     # ./prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList}
-    ./prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.cfg #sometime I need this add: please check --config ${energy}config/samples_nosplit.cfg
+#    print "./prepare_environment_with_config.py --samples" $sample "--config "${energy}"config/"${configList}" --config "${energy}"config/samples_nosplit.cfg #sometime"
+    echo ./prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.ini #sometime I need this add: please check --config ${energy}
+    ./prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.ini #sometime I need this add: please check --config ${energy}config/samples_nosplit.cfg
 fi
 if [ $task = "trainReg" ]; then
     # ./trainRegression.py --config ${energy}config/${configList}
-    ./trainRegression.py --config ${energy}config/${configList} --config ${energy}config/regression
+    ./trainRegression.py --config ${energy}config/${configList} --config ${energy}config/regression.ini
 fi
 if [ $task = "sys" ]; then
     ./write_regression_systematics.py --samples $sample --config ${energy}config/${configList}
@@ -147,6 +151,7 @@ if [ $task = "syseval" ]; then
     ./evaluateMVA.py --discr $MVAList --samples $sample --config ${energy}config/${configList}
 fi
 if [ $task = "train" ]; then
+    echo ./train.py --training $sample --config ${energy}config/${configList} --local True
     ./train.py --training $sample --config ${energy}config/${configList} --local True
 fi
 if [ $task = "plot" ]; then

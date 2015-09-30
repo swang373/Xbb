@@ -13,3 +13,4 @@ from TreeCache import TreeCache
 from Rebinner import Rebinner
 from MvaEvaluator import MvaEvaluator
 from RegressionTrainer import RegressionTrainer
+from GlobalFunction import GlobalFunction

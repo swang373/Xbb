@@ -1,0 +1,32 @@
+[TrainRegression]
+name = Oct8_13TeV
+#signals = ZHtest
+signals = ZvvHbb
+#signals = ZH110,ZH115,ZH120,ZH125,ZH130,ZH135
+#signals = ZH125
+options = !H:!V:NTrees=2000::BoostType=Grad:Shrinkage=0.1:SeparationType=RegressionVariance:UseBaggedGrad:GradBaggingFraction=0.7:nCuts=20:MaxDepth=3:NNodesMax=15:IgnoreNegWeights
+#options = !H:!V:NTrees=100::BoostType=Grad:Shrinkage=0.7:SeparationType=RegressionVariance:UseBaggedGrad:GradBaggingFraction=0.7:nCuts=20:MaxDepth=3:NNodesMax=5
+#
+#hJCidx==hJCidx[hJCidx]
+#vars = Jet_pt[hJCidx] VHbb::evalJERBias(Jet_rawPt[hJCidx],Jet_mcPt[hJCidx],Jet_eta[hJCidx]) hJCidx==hJCidx[hJCidx] VHbb::evalEtFromPtEtaPhiM(Jet_pt[hJCidx],Jet_eta[hJCidx],Jet_phi[hJCidx],Jet_mass[hJCidx]) VHbb::evalMtFromPtEtaPhiM(Jet_pt[hJCidx],Jet_eta[hJCidx],Jet_phi[hJCidx],Jet_mass[hJCidx]) Jet_leadTrackPt[hJCidx] max(0,(Jet_leptonPtRel[hJCidx]*(abs(Jet_leptonPdgId)==13==1||456==456))) max(0,(Jet_leptonDeltaR[hJCidx]*(abs(Jet_leptonPdgId)==13==1||456==456))) max(0,(Jet_leptonPt[hJCidx]*(abs(Jet_leptonPdgId)==13==1||456==456))) Jet_chEmEF[hJCidx] Jet_mult[hJCidx] met_pt VHbb::deltaPhi(met_phi,Jet_phi[hJCidx])
+# removing max(0,Jet_vtxPt[hJCidx]) because missing from the testSample
+#changing METnoPU with MET becuase missing from the testSample 
+
+#for 13tev 
+vars = Jet_pt[hJCidx] VHbb::evalJERBias(Jet_rawPt[hJCidx],Jet_mcPt[hJCidx],Jet_eta[hJCidx]) hJCidx==hJCidx[hJCidx] VHbb::evalEtFromPtEtaPhiM(Jet_pt[hJCidx],Jet_eta[hJCidx],Jet_phi[hJCidx],Jet_mass[hJCidx]) VHbb::evalMtFromPtEtaPhiM(Jet_pt[hJCidx],Jet_eta[hJCidx],Jet_phi[hJCidx],Jet_mass[hJCidx]) Jet_leadTrackPt[hJCidx] Jet_mult[hJCidx] met_pt VHbb::deltaPhi(met_phi,Jet_phi[hJCidx]) max(0,Jet_vtxMass[hJCidx]) max(0,Jet_vtx3DVal[hJCidx]) max(0,Jet_vtx3DSig[hJCidx])
+#variables with 0:
+#max(0,Jet_leptonPtRel[hJCidx]) max(0,Jet_leptonDeltaR[hJCidx]) max(0,Jet_leptonPt[hJCidx]) Jet_chEmEF[hJCidx] 
+
+
+#vars = Jet_pt[hJCidx] hJCidx==hJCidx[hJCidx]
+cut = abs(Jet_eta[hJCidx][0]) < 2.4 & abs(Jet_eta[hJCidx][1]) < 2.4 & Jet_mcPt[hJCidx][0] > 0. & Jet_mcPt[hJCidx][1] > 0. & Jet_btagnew[hJCidx][0] > 0. & Jet_btagnew[hJCidx][1] > 0. & Jet_chHEF[hJCidx][0] > 0. & Jet_chHEF[hJCidx][1] > 0.
+
+trainCut = evt%8==0
+testCut = evt%8!=0 & evt%5==0
+weight = 1
+#weight = puWeight
+target = Jet_mcPt[hJCidx]
+
+
+#### 456==456 was hJet_SoftLeptId95==1
+#### hJCidx==hJCidx was Jet_JECUnc[hJCidx]

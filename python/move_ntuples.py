@@ -2,8 +2,8 @@
 import sys,os,shutil,ROOT
 
 # TO BE CUSTOMIZED
-indir = '/scratch/perrozzi/VHbb13TeVntuples/merged/'
-outdir = '/pnfs/psi.ch/cms/trivcat/store/HBB_EDMNtuple/heppyV6/'
+indir = '/scratch/perrozzi/VHbb13TeVntuples/V12/V12all/merged/'
+outdir = '/pnfs/psi.ch/cms/trivcat/store/t3groups/ethz-higgs/run2/V12/'
 
 filelist = os.popen('ls '+indir).read()
 filelist = filelist.split('\n')

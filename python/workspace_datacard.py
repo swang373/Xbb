@@ -37,8 +37,8 @@ print 'Assigne variables from  config'
 print '==============================\n'
 
 anaTag = config.get("Analysis","tag")
-if not any([anaTag == '7TeV',anaTag == '8TeV', anaTag == '13TeV']):
-    raise Exception("anaTag %s unknown. Specify 8TeV or 7TeV in the general config"%anaTag)
+if not any([anaTag == '7TeV',anaTag == '8TeV',anaTag == '13TeV']):
+    raise Exception("anaTag %s unknown. Specify 8TeV or 7TeV or 13TeV in the general config"%anaTag)
 # Directories:
 Wdir=config.get('Directories','Wdir')
 vhbbpath=config.get('Directories','vhbbpath')
@@ -64,6 +64,21 @@ datas = config.get('dc:%s'%var,'dcBin')
 Datacardbin=config.get('dc:%s'%var,'dcBin')
 anType = config.get('dc:%s'%var,'type')
 setup=eval(config.get('LimitGeneral','setup'))
+
+print "Using",('dc:%s'%var,'var')
+print name
+print title
+print nBins
+print xMin
+print xMax
+print ROOToutname
+print RCut
+print signals
+print datas
+print Datacardbin
+print anType
+print setup
+
 #Systematics:
 if config.has_option('LimitGeneral','addSample_sys'):
     addSample_sys = eval(config.get('LimitGeneral','addSample_sys'))
@@ -185,8 +200,11 @@ info = ParseInfo(samplesinfo,path)
 print 'Get the sample list'
 print '===================\n'
 all_samples = info.get_samples(signals+backgrounds+additionals)
+print 'workspace_datacard-all_samples:',[job.name for job in all_samples]
 
 signal_samples = info.get_samples(signals) 
+print 'signal samples:',[job.name for job in signal_samples]
+
 background_samples = info.get_samples(backgrounds) 
 data_sample_names = config.get('dc:%s'%var,'data').split(' ')
 data_samples = info.get_samples(data_sample_names)
@@ -293,6 +311,7 @@ if addBlindingCut:
 
 
 if rebin_active:
+    print "background_samples: ",background_samples
     mc_hMaker.calc_rebin(background_samples)
     #transfer rebinning info to data maker
     data_hMaker.norebin_nBins = copy(mc_hMaker.norebin_nBins)
@@ -316,6 +335,18 @@ for job in all_samples:
             all_histos[job.name] = mc_hMaker.get_histos_from_tree(job,treecut)
     else:
         all_histos[job.name] = mc_hMaker.get_histos_from_tree(job)
+
+
+#for job in all_samples:
+#    print '\t- %s'%job
+#    if not GroupDict[job.name] in sys_cut_include:
+#        # manual overwrite
+#        if addBlindingCut:
+#            all_histos[job.name] = mc_hMaker.get_histos_from_tree(job,treecut+'& %s'%addBlindingCut)
+#        else:
+#            all_histos[job.name] = mc_hMaker.get_histos_from_tree(job,treecut)
+#    else:
+#        all_histos[job.name] = mc_hMaker.get_histos_from_tree(job)
 
 for job in data_samples:
     print '\t- %s'%job
@@ -385,6 +416,9 @@ ROOT.gROOT.SetStyle("Plain")
 final_histos = {}
 
 print '\n\t--> Ordering and Adding Histos\n'
+
+print 'workspace_datacard-all_samples:',[all_histos['%s'%job][0] for job in all_samples]
+
 
 #NOMINAL:
 final_histos['nominal'] = HistoMaker.orderandadd([all_histos['%s'%job][0] for job in all_samples],setup) 
@@ -583,6 +617,8 @@ for DCtype in ['WS','TH']:
     f.write('\n')
     # datacard yields
     f.write('rate')
+    print "workspace_datacard-setup: ", setup
+    print "workspace_datacard-final_histos: ", final_histos
     for c in setup: 
         f.write('\t%s'%final_histos['nominal'][c].Integral())
     f.write('\n')
