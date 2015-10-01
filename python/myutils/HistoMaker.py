@@ -116,20 +116,20 @@ class HistoMaker:
               CuttedTree.Draw('%s>>%s' %(treeVar,name), drawoption, "goff,e")
               print name
               print('hTree.name() 2 =',hTree.GetName())
-                    full=True
-#                    if 'RTight' in treeVar or 'RMed' in treeVar: 
-#                        drawoption = '(%s)*(%s & %s)'%(weightF,treeCut,BDT_add_cut)
-#                        #print drawoption
-#                    else: 
-#                        drawoption = '(%s)*(%s)'%(weightF,treeCut)
-##                    print ('Draw: %s>>%s' %(treeVar,name), drawoption, "goff,e")
-##                    print
-#                    nevent = CuttedTree.Draw('%s>>%s' %(treeVar,name), drawoption, "goff,e")
-##                    print name
-##                    print('hTree.name() 2 =',hTree.GetName()," nevent=",nevent)
-#                    full=True
-              else:
-                  full=False
+              full=True
+                    # if 'RTight' in treeVar or 'RMed' in treeVar: 
+                        # drawoption = '(%s)*(%s & %s)'%(weightF,treeCut,BDT_add_cut)
+                        # print drawoption
+                    # else: 
+                        # drawoption = '(%s)*(%s)'%(weightF,treeCut)
+                    # print ('Draw: %s>>%s' %(treeVar,name), drawoption, "goff,e")
+                    # print
+                    # nevent = CuttedTree.Draw('%s>>%s' %(treeVar,name), drawoption, "goff,e")
+                    # print name
+                    # print('hTree.name() 2 =',hTree.GetName()," nevent=",nevent)
+                    # full=True
+              # else:
+                  # full=False
             elif job.type == 'DATA':
                 if options['blind']:
                     if treeVar == 'H.mass':

@@ -81,11 +81,11 @@ fi
 #Set the environment for the batch job execution
 #-------------------------------------------------
 cd $CMSSW_BASE/src/
-#source /swshare/psit3/etc/profile.d/cms_ui_env.sh
 source /afs/pi.infn.it/grid_exp_sw/cms/scripts/setcms.sh
 export SCRAM_ARCH="slc5_amd64_gcc462"
 source $VO_CMS_SW_DIR/cmsset_default.sh
 eval `scramv1 runtime -sh`
+#source /swshare/psit3/etc/profile.d/cms_ui_env.sh
 #export LD_PRELOAD="libglobus_gssapi_gsi_gcc64pthr.so.0":${LD_PRELOAD}
 #export LD_LIBRARY_PATH=/swshare/glite/globus/lib/:/swshare/glite/d-cache/dcap/lib64/:$LD_LIBRARY_PATH
 #export LD_PRELOAD="libglobus_gssapi_gsi_gcc64pthr.so.0:${LD_PRELOAD}"
