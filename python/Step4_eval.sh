@@ -3,6 +3,7 @@ setenv TMPDIR /scratch/sdonato/VHbbRun2/CMSSW_7_4_12_patch4/src/Xbb/tmp
 
 
 bash runAll.sh	ZH		ZvvHbb13TeV  eval >& log/logEvalZH	&
+bash runAll.sh	ZH_mini		ZvvHbb13TeV  eval >& log/logEvalZH_mini	&
 bash runAll.sh	ZHpow		 ZvvHbb13TeV eval >& log/logEvalZHpow	&
 bash runAll.sh	ggZH		 ZvvHbb13TeV eval >& log/logEvalggZH	&
 bash runAll.sh	ggZHpow		 ZvvHbb13TeV eval >& log/logEvalggZHpow	&
