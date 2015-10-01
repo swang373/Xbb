@@ -223,7 +223,9 @@ class TreeCache:
         inputs=[]
         for job in self.__sampleList:
             inputs.append((self,"_trim_tree",(job)))
-        multiprocess=64
+        multiprocess=0
+        if('pisa' in config.get('Configuration','whereToLaunch')):
+          multiprocess=64
         outputs = []
         if multiprocess>0:
             from multiprocessing import Pool
