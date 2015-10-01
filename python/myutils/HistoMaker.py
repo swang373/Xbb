@@ -84,7 +84,8 @@ class HistoMaker:
 #            print("START DRAWING")
             if job.type != 'DATA':
                 if CuttedTree and CuttedTree.GetEntries():
-                    drawoption = 'sign(genWeight)*(%s)*(%s & %s)'%(weightF,treeCut,BDT_add_cut)
+                    drawoption = '(%s)*(%s & %s)'%(weightF,treeCut,BDT_add_cut)
+#                    drawoption = 'sign(genWeight)*(%s)*(%s & %s)'%(weightF,treeCut,BDT_add_cut)
                     CuttedTree.Draw('%s>>%s' %(treeVar,name), drawoption, "goff,e")
                     full=True
 #                    if 'RTight' in treeVar or 'RMed' in treeVar: 

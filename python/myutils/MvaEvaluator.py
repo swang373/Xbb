@@ -19,7 +19,7 @@ class MvaEvaluator:
         for i in range(len( self.MVA_Vars['Nominal'])):
             self.MVA_var_buffer.append(array( 'f', [ 0 ] ))
             self.reader.AddVariable( self.MVA_Vars['Nominal'][i],self.MVA_var_buffer[i])
-        self.reader.BookMVA(MVAinfo.MVAname,MVAdir+'/data/'+MVAinfo.getweightfile())
+        self.reader.BookMVA(MVAinfo.MVAname,MVAdir+'/python/weights/'+MVAinfo.getweightfile())
         #--> Now the MVA is booked
 
     def setVariables(self,tree,job):
@@ -38,5 +38,6 @@ class MvaEvaluator:
             for j in range(len( self.MVA_Vars['Nominal'])):
                 if job.type == 'DATA' and not systematic == 'Nominal': 
                     continue
+                self.MVA_formulas[systematic][j].GetNdata()
                 self.MVA_var_buffer[j][0] = self.MVA_formulas[systematic][j].EvalInstance()                
             MVA_values[self.systematics.index(systematic)] = self.reader.EvaluateMVA(self.MVAname)
