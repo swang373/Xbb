@@ -134,7 +134,8 @@ if [ $task = "plot" ]; then
     ./tree_stack.py --region $sample --config ${energy}config/${configList}
 fi
 if [ $task = "dc" ]; then
-    ./workspace_datacard.py --variable $sample --config ${energy}config/${configList}
+    echo ./workspace_datacard.py --variable $sample --config ${energy}config/${configList}  --config ${energy}config/datacards.ini
+    ./workspace_datacard.py --variable $sample --config ${energy}config/${configList}  --config ${energy}config/datacards.ini
 fi
 if [ $task = "split" ]; then
     ./split_tree.py --samples $sample --config ${energy}config/${configList} --max-events $job_id
