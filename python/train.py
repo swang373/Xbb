@@ -42,7 +42,7 @@ gui=opts.verbose
 global_rescale=2.
 
 #get locations:
-MVAdir=config.get('Directories','vhbbpath')+'/data/'
+MVAdir=config.get('Directories','vhbbpath')+'/python/weights/'
 samplesinfo=config.get('Directories','samplesinfo')
 
 #systematics
