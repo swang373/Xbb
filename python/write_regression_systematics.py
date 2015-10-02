@@ -417,10 +417,27 @@ for job in info:
         #iter=0
         
         
-#    for entry in range(0,100):
+    ### Adding new variable from configuration ###
+    newVariableNames = []
+    if config.exists("Regression","writeNewVariables"):
+        writeNewVariables = eval(config.get("Regression","writeNewVariables"))
+        newVariableNames = writeNewVariables.keys()
+        newVariables = {}
+        newVariableFormulas = {}
+        for variableName in newVariableNames:
+            newVariables[variableName] = array('f',[0])
+            newtree.Branch(variableName,newVariables[variableName],variableName+'/F')
+            newVariableFormulas[variableName] =ROOT.TTreeFormula(variableName,writeNewVariables[variableName],tree)
+            print "adding variable ",variableName,", using formula",writeNewVariables[variableName]," ."
+
     for entry in range(0,nEntries):
             tree.GetEntry(entry)
-
+            
+            ### Fill new variable from configuration ###
+            for variableName in newVariableNames:
+                newVariableFormulas[variableName].GetNdata()
+                newVariables[variableName][0] = newVariableFormulas[variableName].EvalInstance()
+            
             if tree.nJet<=tree.hJCidx[0] or tree.nJet<=tree.hJCidx[1]:
                 print('tree.nJet<=tree.hJCidx[0] or tree.nJet<=tree.hJCidx[1]',tree.nJet,tree.hJCidx[0],tree.hJCidx[1])
                 print('skip event')
