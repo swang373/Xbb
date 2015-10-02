@@ -317,17 +317,17 @@ for job in info:
     if True:
         #CSV branches
         hJet_hadronFlavour = array('f',[0]*2)
-        hJet_btagnew = array('f',[0]*2)
-        hJet_btagnewOld = array('f',[0]*2)
-        hJet_btagnewUp = array('f',[0]*2)
-        hJet_btagnewDown = array('f',[0]*2)
-        hJet_btagnewFUp = array('f',[0]*2)
-        hJet_btagnewFDown = array('f',[0]*2)
-        newtree.Branch('hJet_btagnewOld',hJet_btagnewOld,'hJet_btagnewOld[2]/F')
-        newtree.Branch('hJet_btagnewUp',hJet_btagnewUp,'hJet_btagnewUp[2]/F')
-        newtree.Branch('hJet_btagnewDown',hJet_btagnewDown,'hJet_btagnewDown[2]/F')
-        newtree.Branch('hJet_btagnewFUp',hJet_btagnewFUp,'hJet_btagnewFUp[2]/F')
-        newtree.Branch('hJet_btagnewFDown',hJet_btagnewFDown,'hJet_btagnewFDown[2]/F')
+        hJet_btagCSV = array('f',[0]*2)
+        hJet_btagCSVOld = array('f',[0]*2)
+        hJet_btagCSVUp = array('f',[0]*2)
+        hJet_btagCSVDown = array('f',[0]*2)
+        hJet_btagCSVFUp = array('f',[0]*2)
+        hJet_btagCSVFDown = array('f',[0]*2)
+        newtree.Branch('hJet_btagCSVOld',hJet_btagCSVOld,'hJet_btagCSVOld[2]/F')
+        newtree.Branch('hJet_btagCSVUp',hJet_btagCSVUp,'hJet_btagCSVUp[2]/F')
+        newtree.Branch('hJet_btagCSVDown',hJet_btagCSVDown,'hJet_btagCSVDown[2]/F')
+        newtree.Branch('hJet_btagCSVFUp',hJet_btagCSVFUp,'hJet_btagCSVFUp[2]/F')
+        newtree.Branch('hJet_btagCSVFDown',hJet_btagCSVFDown,'hJet_btagCSVFDown[2]/F')
         
         #JER branches
         hJet_pt_JER_up = array('f',[0]*2)
@@ -716,25 +716,25 @@ for job in info:
                 flavour = int(tree.Jet_hadronFlavour[i])
                 pt = float(tree.Jet_pt[i])
                 eta = float(tree.Jet_eta[i])
-                csv = float(tree.Jet_btagnew[i])
-                hJet_btagnewOld[i] = csv 
+                csv = float(tree.Jet_btagCSV[i])
+                hJet_btagCSVOld[i] = csv 
                 if anaTag == '7TeV':
-                    tree.Jet_btagnew[i] = corrCSV(btagNom,csv,flavour)
-                    hJet_btagnewDown[i] = corrCSV(btagDown,csv,flavour)
-                    hJet_btagnewUp[i] = corrCSV(btagUp,csv,flavour) 
-                    hJet_btagnewFDown[i] = corrCSV(btagFDown,csv,flavour)
-                    hJet_btagnewFUp[i] = corrCSV(btagFUp,csv,flavour)
+                    tree.Jet_btagCSV[i] = corrCSV(btagNom,csv,flavour)
+                    hJet_btagCSVDown[i] = corrCSV(btagDown,csv,flavour)
+                    hJet_btagCSVUp[i] = corrCSV(btagUp,csv,flavour) 
+                    hJet_btagCSVFDown[i] = corrCSV(btagFDown,csv,flavour)
+                    hJet_btagCSVFUp[i] = corrCSV(btagFUp,csv,flavour)
                 else:
-                    #tree.Jet_btagnew[i] = btagNom.reshape(eta,pt,csv,flavour)
-                    #hJet_btagnewDown[i] = btagDown.reshape(eta,pt,csv,flavour)
-                    #hJet_btagnewUp[i] = btagUp.reshape(eta,pt,csv,flavour) 
-                    #hJet_btagnewFDown[i] = btagFDown.reshape(eta,pt,csv,flavour)
-                    #hJet_btagnewFUp[i] = btagFUp.reshape(eta,pt,csv,flavour)
-#                    tree.Jet_btagnew[i] = tree.Jet_btagnew[i]
-                    hJet_btagnewDown[i] = tree.Jet_btagnew[i]
-                    hJet_btagnewUp[i] = tree.Jet_btagnew[i]
-                    hJet_btagnewFDown[i] = tree.Jet_btagnew[i]
-                    hJet_btagnewFUp[i] = tree.Jet_btagnew[i]
+                    #tree.Jet_btagCSV[i] = btagNom.reshape(eta,pt,csv,flavour)
+                    #hJet_btagCSVDown[i] = btagDown.reshape(eta,pt,csv,flavour)
+                    #hJet_btagCSVUp[i] = btagUp.reshape(eta,pt,csv,flavour) 
+                    #hJet_btagCSVFDown[i] = btagFDown.reshape(eta,pt,csv,flavour)
+                    #hJet_btagCSVFUp[i] = btagFUp.reshape(eta,pt,csv,flavour)
+#                    tree.Jet_btagCSV[i] = tree.Jet_btagCSV[i]
+                    hJet_btagCSVDown[i] = tree.Jet_btagCSV[i]
+                    hJet_btagCSVUp[i] = tree.Jet_btagCSV[i]
+                    hJet_btagCSVFDown[i] = tree.Jet_btagCSV[i]
+                    hJet_btagCSVFUp[i] = tree.Jet_btagCSV[i]
 
             for updown in ['up','down']:
                 #JER
