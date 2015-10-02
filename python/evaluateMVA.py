@@ -70,7 +70,7 @@ ROOT.gSystem.Load(VHbbNameSpace)
 MVAinfos=[]
 MVAdir=config.get('Directories','vhbbpath')
 for MVAname in MVAlist:
-    MVAinfofile = open(MVAdir+'/data/'+factoryname+'_'+MVAname+'.info','r')
+    MVAinfofile = open(MVAdir+'/python/weights/'+factoryname+'_'+MVAname+'.info','r')
     MVAinfos.append(pickle.load(MVAinfofile))
     MVAinfofile.close()
     
