@@ -357,8 +357,8 @@ for job in info:
         hJet_ptOld = array('f',[0]*2)
         newtree.Branch('hJet_ptOld',hJet_ptOld,'hJet_ptOld[2]/F')
 
-        hJet_ptNew = array('f',[0]*2)
-        newtree.Branch('hJet_ptNew',hJet_ptNew,'hJet_ptNew[2]/F')
+        hJet_pt = array('f',[0]*2)
+        newtree.Branch('hJet_pt',hJet_pt,'hJet_pt[2]/F')
 
         hJet_ptMc = array('f',[0]*2)
         newtree.Branch('hJet_ptMc',hJet_ptMc,'hJet_ptMc[2]/F')
@@ -616,8 +616,8 @@ for job in info:
 #                print "jetEt1: ",jetEt1
 #                print "hJet_pt0: ",hJet_pt0
 #                print "hJet_pt1: ",hJet_pt1
-                hJet_ptNew[0] = rPt0
-                hJet_ptNew[1] = rPt1
+                hJet_pt[0] = rPt0
+                hJet_pt[1] = rPt1
 
                 hJet_regWeight[0] = rPt0/hJet_pt0
                 hJet_regWeight[1] = rPt1/hJet_pt1
