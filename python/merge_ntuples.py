@@ -2,9 +2,9 @@
 import sys,os,shutil,ROOT
 
 # TO BE CUSTOMIZED
-outdir = '/scratch/perrozzi/VHbb13TeVntuples/'
+outdir = '/scratch/perrozzi/VHbb13TeVntuples/V12/V12all/'
 
-filelist = '/shome/perrozzi/test_merge_code/CMSSW_5_3_22_patch1/src/Xbb/python/heppy13TeVconfig/filelist.log'
+filelist = '/scratch/perrozzi/VHbb13TeVntuples/V12/V12all/filelist.log'
 
 if not os.path.exists(outdir+'/merged'):
     os.makedirs(outdir+'/merged')
@@ -20,6 +20,7 @@ single_files = list(set(single_files))
 for basename in single_files:
     if '.root' in basename: continue
     if 'merged' in basename: continue
+    if '.log' in basename: continue
     string = 'hadd -f '+outdir+'/merged'+'/'+basename+'.root '
     check = float(os.popen('ls '+outdir+'/merged'+'/'+basename+'.root |wc -l').read())
     if check == 1: continue

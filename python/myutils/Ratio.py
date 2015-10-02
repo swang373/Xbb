@@ -27,15 +27,19 @@ def renewHist(hist,reference,min,max):
 def getRatio(hist,reference,min,max,yTitle="",maxUncertainty = 1000.000,restrict=True):
     from ROOT import gROOT
     theHist, theReference = renewHist(hist,reference,min,max)
+    ROOT.gSystem.CompileMacro('./myutils/Ratio.C',"k") 
     ROOT.gSystem.Load('./myutils/Ratio_C.so') 
     from ROOT import coolRatio
     thePlotter = coolRatio()
     theRatio = thePlotter.make_rebinned_ratios(theHist,theReference,maxUncertainty,False,0)
     refError = thePlotter.make_rebinned_ratios(theHist,theReference,maxUncertainty,False,1)
     theRatio.GetXaxis().SetRangeUser(min,max)
+    #theRatio.GetXaxis().SetRangeUser(0,1)
     if restrict:
-        theRatio.SetMinimum(0.01)
-        theRatio.SetMaximum(2.49)
+        theRatio.SetMinimum(0.)
+        theRatio.SetMaximum(1.)
+        #theRatio.SetMinimum(0.01)
+        #theRatio.SetMaximum(2.49)
         #theRatio.SetMinimum(0.35)
         #theRatio.SetMaximum(1.8)
     else:

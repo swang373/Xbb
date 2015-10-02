@@ -76,17 +76,22 @@ class StackMaker:
         self.typLegendDict=eval(config.get('Plot_general','typLegendDict'))
         self.anaTag = config.get("Analysis","tag")
         self.xAxis = config.get('plotDef:%s'%var,'xAxis')
-        self.hname = self.name.replace('.','')
-        self.hname = self.hname.replace(')','')
-        self.hname = self.hname.replace('(','')
-        self.hname = self.hname.replace('-','')
-        self.hname = self.hname.replace('/','')
-        self.hname = self.hname.replace('\\','')
-        self.hname = self.hname.replace(':','')
-        self.hname = self.hname.replace(':','')
-        self.hname = self.hname.replace('[','')
-        self.hname = self.hname.replace(']','')
-        self.hname = self.hname.replace('$','')
+# <<<<<<< HEAD
+        # self.hname = self.name.replace('.','')
+        self.hname = var
+# =======
+        # self.hname = self.name.replace('.','')
+        # self.hname = self.hname.replace(')','')
+        # self.hname = self.hname.replace('(','')
+        # self.hname = self.hname.replace('-','')
+        # self.hname = self.hname.replace('/','')
+        # self.hname = self.hname.replace('\\','')
+        # self.hname = self.hname.replace(':','')
+        # self.hname = self.hname.replace(':','')
+        # self.hname = self.hname.replace('[','')
+        # self.hname = self.hname.replace(']','')
+        # self.hname = self.hname.replace('$','')
+# >>>>>>> silviodonato/master
         print ('self.hname',self.hname)
         self.options = {'var': self.name,'name':self.hname,'xAxis': self.xAxis, 'nBins': self.nBins, 'xMin': self.xMin, 'xMax': self.xMax,'pdfName': '%s_%s_%s.pdf'%(region,var,self.mass),'cut':cut,'mass': self.mass, 'data': data, 'blind': self.blind}
         if config.has_option('Weights','weightF'):
@@ -168,15 +173,20 @@ class StackMaker:
 
 
     def doPlot(self):
+
+        print "Start performing stacked plot"
+	print "=============================\n"
+
         TdrStyles.tdrStyle()
         print "self.typs",self.typs
         print "self.histos",self.histos
         print "self.setup",self.setup
         histo_dict = HistoMaker.orderandadd([{self.typs[i]:self.histos[i]} for i in range(len(self.histos))],self.setup,self.jobnames)
         #sort
-        
         print "histo_dict",histo_dict
-        
+        for key in self.setup:
+          print "The sample in setup are", key
+
         self.histos=[histo_dict[key] for key in self.setup]
         self.typs=self.setup
     
@@ -370,15 +380,17 @@ class StackMaker:
         l_2.Draw()
 
         tPrel = self.myText("CMS",0.17,0.88,1.04)
-        if not d1.GetSumOfWeights() % 1 == 0.0:
-            tLumi = self.myText("#sqrt{s} =  %s, L = %.1f fb^{-1}"%('7TeV',(float(5000.)/1000.)),0.17,0.83)
-            tLumi = self.myText("#sqrt{s} =  %s, L = %.1f fb^{-1}"%(self.anaTag,(float(self.lumi)/1000.)),0.17,0.78)
-        else:
-            tLumi = self.myText("#sqrt{s} =  %s, L = %.1f fb^{-1}"%(self.anaTag,(float(self.lumi)/1000.)),0.17,0.83)
+        # if not d1.GetSumOfWeights() % 1 == 0.0:
+            # tLumi = self.myText("#sqrt{s} =  %s, L = %.1f fb^{-1}"%('7TeV',(float(5000.)/1000.)),0.17,0.83)
+            # tLumi = self.myText("#sqrt{s} =  %s, L = %.1f fb^{-1}"%(self.anaTag,(float(self.lumi)/1000.)),0.17,0.78)
+        # else:
+            # tLumi = self.myText("#sqrt{s} =  %s, L = %.1f fb^{-1}"%(self.anaTag,(float(self.lumi)/1000.)),0.17,0.83)
+        tLumi = self.myText("#sqrt{s} =  %s, L = %.1f fb^{-1}"%('13TeV',(float(self.lumi)/1000.)),0.17,0.83)
         tAddFlag = self.myText(addFlag,0.17,0.78)
         print 'Add Flag %s' %self.addFlag2
         if self.addFlag2:
             tAddFlag2 = self.myText(self.addFlag2,0.17,0.73)
+
 
         unten.cd()
         ROOT.gPad.SetTicks(1,1)
@@ -473,6 +485,9 @@ class StackMaker:
         #d1.Write()
         #fOut.Close()
         self.doCompPlot(allStack,l)
+
+        print "Finished performing stacked plot"
+	print "================================\n"
 
     def doSubPlot(self,signal):
         

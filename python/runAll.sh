@@ -6,12 +6,14 @@
 #       USAGE: runAll.sh sample energy task
 #
 # DESCRIPTION: Script to be launched in the batch system.
-#              Can also be used, with some careful, to run locally.
+#              Can also be used, with some care, to run locally.
 #
 #      AUTHOR: VHbb team
 #              ETH Zurich
 #
 #=====================================================================
+
+
 
 # fix for python escape sequence bug:
 export TERM=""
@@ -27,9 +29,40 @@ echo 'Reading ./'${energy}'config'
 echo 'task'$task
 echo 
 
+whereToLaunch=`python << EOF 
+import os
+from myutils import BetterConfigParser
+config = BetterConfigParser()
+config.read('./${energy}config/paths.ini')
+print config.get('Configuration','whereToLaunch')
+EOF`
+echo 'whereToLaunch= '$whereToLaunch
+
+#-------------------------------------------------
+# Read debug variable
+#-------------------------------------------------
+
+DEBUG=`python << EOF 
+import os
+from myutils import BetterConfigParser
+config = BetterConfigParser()
+config.read('./${energy}config/general.ini')
+print config.get('General','Debug')
+EOF`
+
+echo "Debug is " $DEBUG
+
 #-------------------------------------------------
 # Check the number of input arguments
 #-------------------------------------------------
+
+if [[ $DEBUG -eq "True" ]]
+  then
+  echo ""
+  echo "Checking the number of input arguments"
+  echo ""
+fi
+
 if [ $# -lt 3 ]
     then
     echo "ERROR: You passed " $# "arguments while the script needs at least 3 arguments."
@@ -52,21 +85,25 @@ print config.get('Directories','logpath')
 EOF`
 if [ ! -d $logpath ]
     then
-    mkdir $logpath
+    mkdir -p $logpath
 fi
 
 #-------------------------------------------------
 #Set the environment for the batch job execution
 #-------------------------------------------------
 cd $CMSSW_BASE/src/
-#source /swshare/psit3/etc/profile.d/cms_ui_env.sh
-source /afs/pi.infn.it/grid_exp_sw/cms/scripts/setcms.sh
+if [[ whereToLaunch == "pisa" ]]; then
+  source /afs/pi.infn.it/grid_exp_sw/cms/scripts/setcms.sh
+else
+  source /swshare/psit3/etc/profile.d/cms_ui_env.sh
+  export LD_PRELOAD="libglobus_gssapi_gsi_gcc64pthr.so.0":${LD_PRELOAD}
+  export LD_LIBRARY_PATH=/swshare/glite/globus/lib/:/swshare/glite/d-cache/dcap/lib64/:$LD_LIBRARY_PATH
+export LD_PRELOAD="libglobus_gssapi_gsi_gcc64pthr.so.0:${LD_PRELOAD}"
+fi
+
 export SCRAM_ARCH="slc5_amd64_gcc462"
 source $VO_CMS_SW_DIR/cmsset_default.sh
 eval `scramv1 runtime -sh`
-#export LD_PRELOAD="libglobus_gssapi_gsi_gcc64pthr.so.0":${LD_PRELOAD}
-#export LD_LIBRARY_PATH=/swshare/glite/globus/lib/:/swshare/glite/d-cache/dcap/lib64/:$LD_LIBRARY_PATH
-#export LD_PRELOAD="libglobus_gssapi_gsi_gcc64pthr.so.0:${LD_PRELOAD}"
 mkdir $TMPDIR
 
 cd -   #back to the working dir
@@ -94,8 +131,10 @@ required_number_of_configs=7                                             # set t
 input_configs_array=( $input_configs )                                   # create an array to count the number of elements
 if [ ${#input_configs_array[*]} -lt $required_number_of_configs ]        # check if the list contains the right number of configs
     then 
-    echo "@ERROR : The number of the elements in the config list is not correct"
-    exit
+    #echo "@ERROR : The number of the elements in the config list is not correct"
+    #exit
+    echo "@LOG : The number of config files you are using is"
+    echo ${#input_configs_array[*]}
 fi
 configList=${input_configs// / -C ${energy}config\/}                     # replace the spaces with ' -C '
 echo "@LOG : The config list you are using is"

@@ -2,9 +2,9 @@
 import sys,os,shutil,ROOT
 
 # TO BE CUSTOMIZED
-outdir = '/scratch/perrozzi/VHbb13TeVntuples/'
+outdir = '/scratch/perrozzi/VHbb13TeVntuples/V12/V12all'
 
-filelist = '/shome/perrozzi/test_merge_code/CMSSW_5_3_22_patch1/src/Xbb/python/heppy13TeVconfig/filelist.log'
+filelist = '/scratch/perrozzi/VHbb13TeVntuples/V12/V12all/ntuple_filelist_V12.log'
 
 datasets = os.popen('more '+filelist).read()
 
@@ -31,7 +31,7 @@ for dataset in datasets:
         print 'running',os.popen('ps aux | grep $USER | grep xrdcp |wc -l').read()
         while float(os.popen('ps aux | grep $USER | grep xrdcp |wc -l').read())>5: 
           print os.popen('ps aux | grep $USER | grep xrdcp |wc -l').read(),' running, waiting 30 seconds'; 
-          os.system('sleep 30')
+          os.system('sleep 10')
         # if(count%6==0): print 'waiting 60 sec'; os.system('sleep 60')
         print 'copy',outfile
         # os.system('xrdcp root://cms-xrd-global.cern.ch/'+file+' '+outdir+'/'+outfile+'&')

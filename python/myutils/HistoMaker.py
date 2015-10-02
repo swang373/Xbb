@@ -10,6 +10,14 @@ from copy import copy
 
 class HistoMaker:
     def __init__(self, samples, path, config, optionsList,GroupDict=None):
+        #samples: list of the samples, data and mc
+        #path: location of the samples used to perform the plot
+        #config: list of the configuration files
+        #optionsList: Dictionnary containing information on vars, including the cuts
+        #! Read arguments and initialise variables
+
+	print "Start Creating HistoMaker"
+        print "=========================\n"
         self.path = path
         self.config = config
         self.optionsList = optionsList
@@ -18,9 +26,9 @@ class HistoMaker:
         self.cuts = []
         for options in optionsList:
             self.cuts.append(options['cut'])
-        #print self.cuts
-        #self.tc = TreeCache(self.cuts,samples,path) 
         print "Cuts:",self.cuts
+        self.tc = TreeCache(self.cuts,samples,path,config)# created cached tree i.e. create new skimmed trees using the list of cuts
+        #print self.cuts
         self.tc = TreeCache(self.cuts,samples,path,config)
         self._rebin = False
         self.mybinning = None
@@ -29,8 +37,17 @@ class HistoMaker:
         VHbbNameSpace=config.get('VHbbNameSpace','library')
         ROOT.gSystem.Load(VHbbNameSpace)
 
+        print ""
+        print "Done Creating HistoMaker"
+        print "========================\n"
+
     def get_histos_from_tree(self,job,cutOverWrite=None,quick=True):
         print "get_histos_from_tree START for ",job.name
+        '''Function that produce the trees from a HistoMaker'''
+         
+        print "Begin to extract the histos from trees (get_histos_from_tree)"
+        print "=============================================================\n"
+
         if self.lumi == 0: 
             lumi = self.config.get('Plot_general','lumi')
             print("You're trying to plot with no lumi, I will use ",lumi)
@@ -42,15 +59,17 @@ class HistoMaker:
         TrainFlag = eval(self.config.get('Analysis','TrainFlag'))
         BDT_add_cut='EventForTraining == 0'
 
-
         plot_path = self.config.get('Directories','plotpath')
         addOverFlow=eval(self.config.get('Plot_general','addOverFlow'))
 
         # get all Histos at once
-        CuttedTree = self.tc.get_tree(job,'1')
+        print "The tree in the job is ", job.tree
+        CuttedTree = self.tc.get_tree(job,'1')# retrieve the cuted tree
         # print 'CuttedTree.GetEntries()',CuttedTree.GetEntries()
 #        print 'begin self.optionsList',self.optionsList
         # print 'end self.optionsList'
+
+        #! start the loop over variables (descriebed in options) 
         for options in self.optionsList:
             name=job.name
             if self.GroupDict is None:
@@ -74,32 +93,43 @@ class HistoMaker:
                 treeCut='%s'%(options['cut'])
 
             #options
-            # print 'treeCut',treeCut
-            # print 'weightF',weightF
+            print 'treeCut',treeCut
+            print 'weightF',weightF
             
             hTree = ROOT.TH1F('%s'%name,'%s'%name,nBins,xMin,xMax)
             hTree.Sumw2()
-#            print('hTree.name() 1 =',hTree.GetName())
+            print('hTree.name() 1 =',hTree.GetName())
+            print('treeVar 1 =',treeVar)
             drawoption = ''
 #            print("START DRAWING")
             if job.type != 'DATA':
-                if CuttedTree and CuttedTree.GetEntries():
-                    drawoption = 'sign(genWeight)*(%s)*(%s & %s)'%(weightF,treeCut,BDT_add_cut)
-                    CuttedTree.Draw('%s>>%s' %(treeVar,name), drawoption, "goff,e")
-                    full=True
-#                    if 'RTight' in treeVar or 'RMed' in treeVar: 
-#                        drawoption = '(%s)*(%s & %s)'%(weightF,treeCut,BDT_add_cut)
-#                        #print drawoption
-#                    else: 
-#                        drawoption = '(%s)*(%s)'%(weightF,treeCut)
-##                    print ('Draw: %s>>%s' %(treeVar,name), drawoption, "goff,e")
-##                    print
-#                    nevent = CuttedTree.Draw('%s>>%s' %(treeVar,name), drawoption, "goff,e")
-##                    print name
-##                    print('hTree.name() 2 =',hTree.GetName()," nevent=",nevent)
-#                    full=True
-                else:
-                    full=False
+              print "the jobs is not data"
+            if CuttedTree and CuttedTree.GetEntries():
+              print 'hello'
+              if 'RTight' in treeVar or 'RMed' in treeVar: 
+                  drawoption = '(%s)*(%s & %s)'%(weightF,treeCut,BDT_add_cut)
+                  # drawoption = 'sign(genWeight)*(%s)*(%s & %s)'%(weightF,treeCut,BDT_add_cut)
+                  #print drawoption
+              else: 
+                  drawoption = '(%s)*(%s)'%(weightF,treeCut)
+              print ('Draw: %s>>%s' %(treeVar,name), drawoption, "goff,e")
+              CuttedTree.Draw('%s>>%s' %(treeVar,name), drawoption, "goff,e")
+              print name
+              print('hTree.name() 2 =',hTree.GetName())
+              full=True
+                    # if 'RTight' in treeVar or 'RMed' in treeVar: 
+                        # drawoption = '(%s)*(%s & %s)'%(weightF,treeCut,BDT_add_cut)
+                        # print drawoption
+                    # else: 
+                        # drawoption = '(%s)*(%s)'%(weightF,treeCut)
+                    # print ('Draw: %s>>%s' %(treeVar,name), drawoption, "goff,e")
+                    # print
+                    # nevent = CuttedTree.Draw('%s>>%s' %(treeVar,name), drawoption, "goff,e")
+                    # print name
+                    # print('hTree.name() 2 =',hTree.GetName()," nevent=",nevent)
+                    # full=True
+              # else:
+                  # full=False
             elif job.type == 'DATA':
                 if options['blind']:
                     if treeVar == 'H.mass':
@@ -160,6 +190,8 @@ class HistoMaker:
             hTreeList.append(gDict)
         if CuttedTree: CuttedTree.IsA().Destructor(CuttedTree)
         del CuttedTree
+        print "Finished to extract the histos from trees (get_histos_from_tree)"
+        print "================================================================\n"
         print "get_histos_from_tree DONE for ",job.name
         return hTreeList
        
@@ -217,9 +249,10 @@ class HistoMaker:
             TotR+=totalBG.GetBinContent(binR)
             ErrorR=sqrt(ErrorR**2+totalBG.GetBinError(binR)**2)
             binR-=1
-#            print "TotR",TotR
-#            print "ErrorR",ErrorR
-#            print "rel",rel
+            # print 'is this loop infinite ?'
+            # print "TotR",TotR
+            # print "ErrorR",ErrorR
+            # print "rel",rel
             if not TotR == 0 and not ErrorR == 0:
                 rel=ErrorR/TotR
                 print rel
@@ -263,6 +296,17 @@ class HistoMaker:
 
     @staticmethod
     def orderandadd(histo_dicts,setup,jobnames):
+        '''
+        Setup is defined in the plot conf file
+        histo_dicts contains an array of dictionnary
+        '''
+
+        print "Start orderandadd"
+        print "=================\n"
+
+        print "Input dict is", histo_dicts
+	
+	
         ordered_histo_dict = {}
         print "orderandadd-setup",setup
         print "orderandadd-histo_dicts",histo_dicts
@@ -279,6 +323,7 @@ class HistoMaker:
                     nSample += 1
         print "orderandadd-ordered_histo_dict",ordered_histo_dict
         del histo_dicts
+        print "Output dict is", ordered_histo_dict
         return ordered_histo_dict 
 
 

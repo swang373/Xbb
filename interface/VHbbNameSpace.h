@@ -91,14 +91,6 @@ namespace VHbb {
     msum = m1 + m2;
     return(msum.M());
   }
-
-  double HV_mass(double pt, double eta, double phi, double mass, double pt2, double eta2, double phi2, double mass2){
-    TLorentzVector m1, m2, msum;
-    m1.SetPtEtaPhiM(pt, eta, phi, mass);
-    m2.SetPtEtaPhiM(pt2, eta2, phi2, mass2);
-    msum = m1 + m2;
-    return(msum.M());
-  }
   
   double ANGLELZ(double pt, double eta, double phi, double mass, double pt2, double eta2, double phi2, double mass2){
     TLorentzVector m1, m2, msum;

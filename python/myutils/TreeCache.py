@@ -72,10 +72,13 @@ class TreeCache:
         self.path = path
         print("Init path",path," sampleList",sampleList)
         self._cutList = []
+	#! Make the cut lists from inputs
         for cut in cutList:
             self._cutList.append('(%s)'%cut.replace(' ',''))
         try:
             self.__tmpPath = os.environ["TMPDIR"]
+	    print('The TMPDIR is ', os.environ["TMPDIR"])
+	    
         except KeyError:
             print("\x1b[32;5m %s \x1b[0m" %open('%s/data/vhbb.txt' %config.get('Directories','vhbbpath')).read())
             print("\x1b[31;5;1m\n\t>>> %s: Please set your TMPDIR and try again... <<<\n\x1b[0m" %os.getlogin())
@@ -86,7 +89,7 @@ class TreeCache:
             self.__tmpPath = config.get('Directories','tmpSamples')
         self.__hashDict = {}
         self.minCut = None
-        self.__find_min_cut()
+        self.__find_min_cut()# store the cut list as one string in minCut, using ROOT syntax (i.e. || to separate between each cut) 
         self.__sampleList = sampleList
         print('\n\t>>> Caching FILES <<<\n')
         self.__cache_samples()
@@ -109,7 +112,12 @@ class TreeCache:
         self._cutList = effective_cuts
         self.minCut = '||'.join(self._cutList)
 
-    def _trim_tree(self, sample):
+    def __trim_tree(self, sample):
+
+        print("Caching the sample")
+        print("==================\n")
+
+        ''' Create temporary file for each sample '''
         theName = sample.name
         print('Reading sample <<<< %s' %sample)
         source = '%s/%s' %(self.path,sample.get_path)
@@ -117,32 +125,69 @@ class TreeCache:
         theHash = hashlib.sha224('%s_s%s_%s' %(sample,checksum,self.minCut)).hexdigest()
         self.__hashDict[theName] = theHash
         tmpSource = '%s/tmp_%s.root'%(self.__tmpPath,theHash)
-        print ('self.__doCache',self.__doCache,'self.file_exists(tmpSource)',self.file_exists(tmpSource))
+        print('the tmp source is ', tmpSource)
+        #print ('self.__doCache',self.__doCache,'self.file_exists(tmpSource)',self.file_exists(tmpSource))
+        print("==================================================================")
+        print ('The cut is ', self.minCut)
+        print("==================================================================\n")
         if self.__doCache and self.file_exists(tmpSource):
             print('sample',theName,'skipped, filename=',tmpSource)
             return (theName,theHash)
         print ('trying to create',tmpSource)
+        print ('self.__tmpPath',self.__tmpPath)
+        if self.__tmpPath.find('root://t3dcachedb03.psi.ch:1094/') != -1:
+            print ('HI')
+            mkdir_command = self.__tmpPath.replace('root://t3dcachedb03.psi.ch:1094/','srm://t3se01.psi.ch/')
+            print('mkdir_command',mkdir_command)
+            # RECURSIVELY CREATE REMOTE FOLDER ON PSI SE, but only up to 3 new levels
+            mkdir_command1 = mkdir_command.rsplit('/',1)[0]
+            mkdir_command2 = mkdir_command1.rsplit('/',1)[0]
+            mkdir_command3 = mkdir_command2.rsplit('/',1)[0]
+            my_user = os.popen("whoami").read().strip('\n').strip('\r')+'/'
+            if my_user in mkdir_command3:
+              print ('mkdir_command3',mkdir_command3)
+              subprocess.call(['srmmkdir '+mkdir_command3], shell=True)# delete the files already created ?     
+            if my_user in mkdir_command2:
+              print ('mkdir_command2',mkdir_command2)
+              subprocess.call(['srmmkdir '+mkdir_command2], shell=True)# delete the files already created ?     
+            if my_user in mkdir_command1:
+              print ('mkdir_command1',mkdir_command1)
+              subprocess.call(['srmmkdir '+mkdir_command1], shell=True)# delete the files already created ?     
+            if my_user in mkdir_command:
+              print ('mkdir_command',mkdir_command)
+              subprocess.call(['srmmkdir '+mkdir_command], shell=True)# delete the files already created ?     
+	else:
+            print ('HELLO')
+            mkdir_command = self.__tmpPath
+            print('mkdir_command',mkdir_command)
+            # RECURSIVELY CREATE REMOTE FOLDER ON PSI SE, but only up to 3 new levels
+            mkdir_command1 = mkdir_command.rsplit('/',1)[0]
+            mkdir_command2 = mkdir_command1.rsplit('/',1)[0]
+            mkdir_command3 = mkdir_command2.rsplit('/',1)[0]
+            my_user = os.popen("whoami").read().strip('\n').strip('\r')+'/'
+            if my_user in mkdir_command:
+              print ('mkdir_command',mkdir_command)
+              subprocess.call(['mkdir '+mkdir_command], shell=True)# delete the files already created ?     
+
+        #! read the tree from the input
         output = ROOT.TFile.Open(tmpSource,'create')
         print ('reading',source)
         input = ROOT.TFile.Open(source,'read')
         output.cd()
         tree = input.Get(sample.tree)
-        # CountWithPU = input.Get("CountWithPU")
-        # CountWithPU2011B = input.Get("CountWithPU2011B")
-        # sample.count_with_PU = CountWithPU.GetBinContent(1) 
-        # sample.count_with_PU2011B = CountWithPU2011B.GetBinContent(1) 
         try:
-            CountWithPU = input.Get("CountWithPU")
-            CountWithPU2011B = input.Get("CountWithPU2011B")
-
-            sample.count_with_PU = CountPosWeight.GetBinContent(1) - CountNegWeight.GetBinContent(1) 
-            sample.count_with_PU2011B = CountPosWeight.GetBinContent(1) - CountNegWeight.GetBinContent(1) 
-#            sample.count_with_PU = CountWithPU.GetBinContent(1) 
-#            sample.count_with_PU2011B = CountWithPU2011B.GetBinContent(1)
+            CountPos = input.Get("CountPosWeight")
+            CountNeg = input.Get("CountNegWeight")
+            sample.count = CountPos.GetBinContent(1) - CountPos.GetBinContent(1)
+            # CountWithPU = input.Get("CountWithPU")
+            # CountWithPU2011B = input.Get("CountWithPU2011B")
+            # sample.count_with_PU = CountWithPU.GetBinContent(1) 
+            # sample.count_with_PU2011B = CountWithPU2011B.GetBinContent(1)
         except:
-            print('WARNING: No Count with PU histograms available. Using 1.')
-            sample.count_with_PU = 1.
-            sample.count_with_PU2011B = 1.
+            print('WARNING: No Count histograms available. Using 1.')
+            sample.count = 1.
+            # sample.count_with_PU = 1.
+            # sample.count_with_PU2011B = 1.
         input.cd()
         obj = ROOT.TObject
         for key in ROOT.gDirectory.GetListOfKeys():
@@ -178,7 +223,9 @@ class TreeCache:
         inputs=[]
         for job in self.__sampleList:
             inputs.append((self,"_trim_tree",(job)))
-        multiprocess=64
+        multiprocess=0
+        if('pisa' in config.get('Configuration','whereToLaunch')):
+          multiprocess=64
         outputs = []
         if multiprocess>0:
             from multiprocessing import Pool
@@ -218,26 +265,34 @@ class TreeCache:
 #                self._trim_tree(job)
 
     def get_tree(self, sample, cut):
+        print('input file %s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]))
+        # print ('Opening %s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]))
         input = ROOT.TFile.Open('%s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]),'read')
-        print ('Opening %s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]))
         tree = input.Get(sample.tree)
+        #print('The name of the tree is ', tree.GetName())
         # CountWithPU = input.Get("CountWithPU")
         # CountWithPU2011B = input.Get("CountWithPU2011B")
         # sample.count_with_PU = CountWithPU.GetBinContent(1) 
         # sample.count_with_PU2011B = CountWithPU2011B.GetBinContent(1) 
         try:
-            CountWithPU = input.Get("CountWithPU")
-            CountWithPU2011B = input.Get("CountWithPU2011B")
-            sample.count_with_PU = CountWithPU.GetBinContent(1) 
-            sample.count_with_PU2011B = CountWithPU2011B.GetBinContent(1) 
+            CountPos = input.Get("CountPosWeight")
+            CountNeg = input.Get("CountNegWeight")
+            sample.count = CountPos.GetBinContent(1) - CountNeg.GetBinContent(1)
+            print('CountPos',CountPos.GetBinContent(1),'CountNeg',CountNeg.GetBinContent(1),'sample.count',sample.count)
+            # CountWithPU = input.Get("CountWithPU")
+            # CountWithPU2011B = input.Get("CountWithPU2011B")
+            # sample.count_with_PU = CountWithPU.GetBinContent(1) 
+            # sample.count_with_PU2011B = CountWithPU2011B.GetBinContent(1)
         except:
-            Count = input.Get("Count")
-            print('WARNING: No Count with PU histograms available. Using Count.')
-            sample.count_with_PU = Count.GetBinContent(1) 
-            sample.count_with_PU2011B = Count.GetBinContent(1) 
+            print('WARNING: No Count histograms available. Using 1.')
+            sample.count = 1.
+            # sample.count_with_PU = 1.
+            # sample.count_with_PU2011B = 1.
         if sample.subsample:
             cut += '& (%s)' %(sample.subcut)
+        print('cut is', cut)
         ROOT.gROOT.cd()
+        print('getting the tree after applying cuts')
         cuttedTree=tree.CopyTree(cut)
         # cuttedTree.SetDirectory(0)
         input.Close()
@@ -271,11 +326,19 @@ class TreeCache:
 #        print(lumi,sample.xsec,sample.sf,sample.count_with_PU)
 #        print(type(lumi),type(sample.xsec),type(sample.sf),type(sample.count_with_PU))
         if anaTag == '7TeV':
-            theScale = lumi*sample.xsec*sample.sf/(0.46502*sample.count_with_PU+0.53498*sample.count_with_PU2011B)
-        elif anaTag == '8TeV':
-            theScale = lumi*sample.xsec*sample.sf/(sample.count_with_PU)
-        elif anaTag == '13TeV':
-            theScale = lumi*sample.xsec*sample.sf/(sample.count_with_PU)
+# <<<<<<< HEAD
+            # theScale = lumi*sample.xsec*sample.sf/(0.46502*sample.count_with_PU+0.53498*sample.count_with_PU2011B)
+            theScale = lumi*sample.xsec*sample.sf/(0.46502*sample.count+0.53498*sample.count)
+        # elif anaTag == '8TeV':
+        else:
+            theScale = lumi*sample.xsec*sample.sf/(sample.count)
+# =======
+            # theScale = lumi*sample.xsec*sample.sf/(0.46502*sample.count_with_PU+0.53498*sample.count_with_PU2011B)
+        # elif anaTag == '8TeV':
+            # theScale = lumi*sample.xsec*sample.sf/(sample.count_with_PU)
+        # elif anaTag == '13TeV':
+            # theScale = lumi*sample.xsec*sample.sf/(sample.count_with_PU)
+# >>>>>>> silviodonato/master
         return theScale
 
     @staticmethod
@@ -319,6 +382,9 @@ class TreeCache:
     
     @staticmethod
     def file_exists(file):
+        print ('Will now check if the file exists')
+        print ('=================================\n')
+
         file_dummy = file
         srmPath = 'srm://t3se01.psi.ch:8443/srm/managerv2?SFN='
         file_dummy = file_dummy.replace('root://t3dcachedb03.psi.ch:1094/','')
