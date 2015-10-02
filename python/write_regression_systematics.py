@@ -419,7 +419,7 @@ for job in info:
         
     ### Adding new variable from configuration ###
     newVariableNames = []
-    if config.exists("Regression","writeNewVariables"):
+    try:
         writeNewVariables = eval(config.get("Regression","writeNewVariables"))
         newVariableNames = writeNewVariables.keys()
         newVariables = {}
@@ -429,6 +429,8 @@ for job in info:
             newtree.Branch(variableName,newVariables[variableName],variableName+'/F')
             newVariableFormulas[variableName] =ROOT.TTreeFormula(variableName,writeNewVariables[variableName],tree)
             print "adding variable ",variableName,", using formula",writeNewVariables[variableName]," ."
+    except:
+        pass
 
     for entry in range(0,nEntries):
             tree.GetEntry(entry)
