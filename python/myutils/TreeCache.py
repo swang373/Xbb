@@ -70,6 +70,7 @@ class TreeCache:
     def __init__(self, cutList, sampleList, path, config):
         ROOT.gROOT.SetBatch(True)
         self.path = path
+        self.config = config
         print("Init path",path," sampleList",sampleList)
         self._cutList = []
 	#! Make the cut lists from inputs
@@ -112,7 +113,7 @@ class TreeCache:
         self._cutList = effective_cuts
         self.minCut = '||'.join(self._cutList)
 
-    def __trim_tree(self, sample):
+    def _trim_tree(self, sample):
 
         print("Caching the sample")
         print("==================\n")
@@ -224,8 +225,7 @@ class TreeCache:
         for job in self.__sampleList:
             inputs.append((self,"_trim_tree",(job)))
         multiprocess=0
-        if('pisa' in config.get('Configuration','whereToLaunch')):
-          multiprocess=64
+        if('pisa' in self.config.get('Configuration','whereToLaunch')): multiprocess=64
         outputs = []
         if multiprocess>0:
             from multiprocessing import Pool
@@ -374,7 +374,7 @@ class TreeCache:
                 #checksum = lines[0].split()[1]
 
         else:
-            command = 'md5sumi %s' %file
+            command = 'md5sum %s' %file
             p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,shell=True)
             lines = p.stdout.readlines()
             checksum = lines[0]

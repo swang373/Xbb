@@ -1,9 +1,8 @@
 setenv TMPDIR /scratch/sdonato/VHbbRun2/CMSSW_7_4_12_patch4/src/Xbb/tmp
 
-
-
 bash runAll.sh	ZH		ZvvHbb13TeV  eval >& log/logEvalZH	&
-bash runAll.sh	ZHpow		 ZvvHbb13TeV eval >& log/logEvalZHpow	&
+bash runAll.sh	ZH_mini		ZvvHbb13TeV  eval >& log/logEvalZH_mini	&
+#bash runAll.sh	ZHpow		 ZvvHbb13TeV eval >& log/logEvalZHpow	&
 bash runAll.sh	ggZH		 ZvvHbb13TeV eval >& log/logEvalggZH	&
 bash runAll.sh	ggZHpow		 ZvvHbb13TeV eval >& log/logEvalggZHpow	&
 bash runAll.sh	WH		 ZvvHbb13TeV eval >& log/logEvalWH	&
@@ -33,7 +32,7 @@ bash runAll.sh	QCDHT700		 ZvvHbb13TeV eval >& log/logEvalQCDHT700	&
 bash runAll.sh	QCDHT1000		 ZvvHbb13TeV eval >& log/logEvalQCDHT1000	&
 bash runAll.sh	QCDHT1500		 ZvvHbb13TeV eval >& log/logEvalQCDHT1500	&
 bash runAll.sh	QCDHT2000		 ZvvHbb13TeV eval >& log/logEvalQCDHT2000	&
-bash runAll.sh	DataMET		 ZvvHbb13TeV eval >& log/logEvalDataMET	&
+bash runAll.sh	FakeData		 ZvvHbb13TeV eval >& log/logEvalDataMET	&
 
 bash runAll.sh	WWpythia		 ZvvHbb13TeV eval >& log/logEvalWWpythia	&
 bash runAll.sh	WWTo2L2Q		 ZvvHbb13TeV eval >& log/logEvalWWTo2L2Q	&

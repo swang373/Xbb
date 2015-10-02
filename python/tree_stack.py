@@ -192,7 +192,8 @@ def doPlot():
     cutOverWrite = config.get('Cuts',region)+' & ' + addBlindingCut
     inputs.append((Plotter,"get_histos_from_tree",(job,cutOverWrite)))
     
-    multiprocess=64
+    multiprocess=0
+    if('pisa' in config.get('Configuration','whereToLaunch')): multiprocess=64
     outputs = []
     if multiprocess>0:
         from multiprocessing import Pool

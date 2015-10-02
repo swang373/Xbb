@@ -66,15 +66,15 @@ class RegressionTrainer():
         factory.EvaluateAllMethods()
         output.Write()
         regDict = dict(zip(self.__vars, self.__apply)) 
-        self.__config.set('Regression', 'regWeight', '../data/MVA_BDT_REG_%s.weights.xml' %self.__title)
+        self.__config.set('Regression', 'regWeight', '../weights/MVA_BDT_REG_%s.weights.xml' %self.__title)
         self.__config.set('Regression', 'regDict', '%s' %regDict)
         self.__config.set('Regression', 'regVars', '%s' %self.__vars)
         for section in self.__config.sections():
             if not section == 'Regression':
                 self.__config.remove_section(section)
-        with open('silvio13TeVconfig/appReg', 'w') as configfile:
+        with open('weights/Config_BDT_REG_%s.ini'%self.__title, 'w') as configfile:
             self.__config.write(configfile)
-        with open('silvio13TeVconfig/appReg', 'r') as configfile:
+        with open('weights/Config_BDT_REG_%s.ini'%self.__title, 'r') as configfile:
             for line in configfile:
                 print line.strip()
 

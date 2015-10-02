@@ -92,7 +92,7 @@ fi
 #Set the environment for the batch job execution
 #-------------------------------------------------
 cd $CMSSW_BASE/src/
-if [[ whereToLaunch == "pisa" ]]; then
+if [[ $whereToLaunch == "pisa" ]]; then
   source /afs/pi.infn.it/grid_exp_sw/cms/scripts/setcms.sh
 else
   source /swshare/psit3/etc/profile.d/cms_ui_env.sh
@@ -104,7 +104,8 @@ fi
 export SCRAM_ARCH="slc5_amd64_gcc462"
 source $VO_CMS_SW_DIR/cmsset_default.sh
 eval `scramv1 runtime -sh`
-mkdir $TMPDIR
+export TMPDIR=$CMSSW_BASE/src/tmp
+if ! [ -e $TMPDIR ]; then mkdir $TMPDIR; fi
 
 cd -   #back to the working dir
 
