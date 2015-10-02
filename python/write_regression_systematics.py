@@ -323,6 +323,7 @@ for job in info:
         hJet_btagCSVDown = array('f',[0]*2)
         hJet_btagCSVFUp = array('f',[0]*2)
         hJet_btagCSVFDown = array('f',[0]*2)
+        newtree.Branch('hJet_btagCSV',hJet_btagCSV,'hJet_btagCSV[2]/F')
         newtree.Branch('hJet_btagCSVOld',hJet_btagCSVOld,'hJet_btagCSVOld[2]/F')
         newtree.Branch('hJet_btagCSVUp',hJet_btagCSVUp,'hJet_btagCSVUp[2]/F')
         newtree.Branch('hJet_btagCSVDown',hJet_btagCSVDown,'hJet_btagCSVDown[2]/F')
@@ -627,12 +628,10 @@ for job in info:
 #                print "hJet_rawPtArray[0]: ",hJet_rawPtArray[0]
 #                print "hJet_rawPtArray[1]: ",hJet_rawPtArray[1]
                 ##FIXME##########################################################################
-                rmass0 = hJet_mass0*hJet_regWeight[0]
-                rmass1 = hJet_mass1*hJet_regWeight[1]
-                rE0 = hJ0.E()*hJet_regWeight[0]
-                rE1 = hJ0.E()*hJet_regWeight[1]
-                hJ0.SetPtEtaPhiM(rPt0,hJet_eta0,hJet_phi0,hJet_mass0)
-                hJ1.SetPtEtaPhiM(rPt1,hJet_eta1,hJet_phi1,hJet_mass1)
+                hJ0 = hJet_regWeight[0]*hJ0
+                hJ1 = hJet_regWeight[1]*hJ1
+                rE0 = hJ0.E()
+                rE1 = hJ0.E()
                 #######################
                 #hJ0.SetPtEtaPhiE(rPt0,hJet_eta0,hJet_phi0,rE0)
                 #hJ1.SetPtEtaPhiE(rPt1,hJet_eta1,hJet_phi1,rE1)
@@ -737,6 +736,8 @@ for job in info:
                 eta = float(tree.Jet_eta[i])
                 csv = float(tree.Jet_btagCSV[i])
                 hJet_btagCSVOld[i] = csv 
+                ##FIXME## we have to add the CSV reshaping
+                hJet_btagCSV[i] = csv 
                 if anaTag == '7TeV':
                     tree.Jet_btagCSV[i] = corrCSV(btagNom,csv,flavour)
                     hJet_btagCSVDown[i] = corrCSV(btagDown,csv,flavour)
