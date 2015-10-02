@@ -72,9 +72,9 @@ class RegressionTrainer():
         for section in self.__config.sections():
             if not section == 'Regression':
                 self.__config.remove_section(section)
-        with open('silvio13TeVconfig/appReg', 'w') as configfile:
+        with open('weights/Config_BDT_REG_%s.ini'%self.__title, 'w') as configfile:
             self.__config.write(configfile)
-        with open('silvio13TeVconfig/appReg', 'r') as configfile:
+        with open('weights/Config_BDT_REG_%s.ini'%self.__title, 'r') as configfile:
             for line in configfile:
                 print line.strip()
 
