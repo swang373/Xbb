@@ -186,7 +186,7 @@ for job in info:
           
     #Regression branches
     applyRegression = True
-    hJet_pt = array('f',[0]*2)
+#    hJet_pt = array('f',[0]*2)
 #    hJet_mass = array('f',[0]*2)
     newtree.Branch( 'H', H , 'HiggsFlag/I:mass/F:pt/F:eta/F:phi/F:dR/F:dPhi/F:dEta/F' )
     newtree.Branch( 'HNoReg', HNoReg , 'HiggsFlag/I:mass/F:pt/F:eta/F:phi/F:dR/F:dPhi/F:dEta/F' )
@@ -478,10 +478,11 @@ for job in info:
                 print "tree.hJCidx[0]",tree.hJCidx[0]
                 print "tree.hJCidx[1]",tree.hJCidx[1]
                 if tree.hJCidx[1] >=tree.nJet : tree.hJCidx[1] =1
-                if tree.hJCidx[0] >=tree.nJet : tree.hJCidx[1] =0
+                if tree.hJCidx[0] >=tree.nJet : tree.hJCidx[0] =0
                 
 
-            hJet_pt = [hJet_pt0,hJet_pt1]
+            hJet_pt[0] = hJet_pt0
+            hJet_pt[1] = hJet_pt1
             hJet_mass0 = tree.Jet_mass[tree.hJCidx[0]]
             hJet_mass1 = tree.Jet_mass[tree.hJCidx[1]]
             hJet_mcPt0 = tree.Jet_mcPt[tree.hJCidx[0]]
