@@ -374,7 +374,7 @@ class TreeCache:
                 #checksum = lines[0].split()[1]
 
         else:
-            command = 'md5sumi %s' %file
+            command = 'md5sum %s' %file
             p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,shell=True)
             lines = p.stdout.readlines()
             checksum = lines[0]
