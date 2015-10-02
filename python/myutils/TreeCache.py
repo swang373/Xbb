@@ -166,7 +166,7 @@ class TreeCache:
             mkdir_command2 = mkdir_command1.rsplit('/',1)[0]
             mkdir_command3 = mkdir_command2.rsplit('/',1)[0]
             my_user = os.popen("whoami").read().strip('\n').strip('\r')+'/'
-            if my_user in mkdir_command:
+            if my_user in mkdir_command and not os.path.exists(mkdir_command):
               print ('mkdir_command',mkdir_command)
               subprocess.call(['mkdir '+mkdir_command], shell=True)# delete the files already created ?     
 
