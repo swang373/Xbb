@@ -171,7 +171,10 @@ class TreeCache:
               subprocess.call(['mkdir '+mkdir_command], shell=True)# delete the files already created ?     
 
         #! read the tree from the input
-        output = ROOT.TFile.Open(tmpSource,'create')
+        if forceReDo:
+            output = ROOT.TFile.Open(tmpSource,'recreate')
+        else:
+            output = ROOT.TFile.Open(tmpSource,'create')
         print ('reading',source)
         input = ROOT.TFile.Open(source,'read')
         output.cd()
@@ -268,9 +271,12 @@ class TreeCache:
         print('input file %s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]))
         # print ('Opening %s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]))
         input = ROOT.TFile.Open('%s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]),'read')
-        tree = input.Get(sample.tree)
-        if not(type(tree) is ROOT.TTree): ##if the file is corrupted relaunch _trim_tree
-            print ("%s/tmp_%s.root is corrupted. I'm relaunching _trim_tree"%(self.__tmpPath,self.__hashDict[sample.name]))
+        try:
+            tree = input.Get(sample.tree)
+            print('type(tree) is ROOT.TTree? ',type(tree) is ROOT.TTree)
+            if not(type(tree) is ROOT.TTree): ##if the file is corrupted relaunch _trim_tree
+                raise NameError("%s/tmp_%s.root is corrupted. I'm relaunching _trim_tree"%(self.__tmpPath,self.__hashDict[sample.name]))
+        except:
             self._trim_tree(sample, forceReDo=True)
             input = ROOT.TFile.Open('%s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]),'read')
             tree = input.Get(sample.tree)
