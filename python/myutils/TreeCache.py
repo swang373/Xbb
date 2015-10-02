@@ -113,7 +113,7 @@ class TreeCache:
         self._cutList = effective_cuts
         self.minCut = '||'.join(self._cutList)
 
-    def _trim_tree(self, sample):
+    def _trim_tree(self, sample, forceReDo = False):
 
         print("Caching the sample")
         print("==================\n")
@@ -131,7 +131,7 @@ class TreeCache:
         print("==================================================================")
         print ('The cut is ', self.minCut)
         print("==================================================================\n")
-        if self.__doCache and self.file_exists(tmpSource):
+        if self.__doCache and self.file_exists(tmpSource) and not forceReDo:
             print('sample',theName,'skipped, filename=',tmpSource)
             return (theName,theHash)
         print ('trying to create',tmpSource)
@@ -269,6 +269,11 @@ class TreeCache:
         # print ('Opening %s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]))
         input = ROOT.TFile.Open('%s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]),'read')
         tree = input.Get(sample.tree)
+        if not(type(tree) is ROOT.TTree): ##if the file is corrupted relaunch _trim_tree
+            print ("%s/tmp_%s.root is corrupted. I'm relaunching _trim_tree"%(self.__tmpPath,self.__hashDict[sample.name]))
+            self._trim_tree(sample, forceReDo=True)
+            input = ROOT.TFile.Open('%s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]),'read')
+            tree = input.Get(sample.tree)
         #print('The name of the tree is ', tree.GetName())
         # CountWithPU = input.Get("CountWithPU")
         # CountWithPU2011B = input.Get("CountWithPU2011B")
