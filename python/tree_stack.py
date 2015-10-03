@@ -178,22 +178,11 @@ def doPlot():
 #        print 'job.name'
         cutOverWrite = None
         if addBlindingCut:
-# <<<<<<< HEAD
-	    # print 'there is a blinding cut'
-            # hDictList = Plotter.get_histos_from_tree(job,config.get('Cuts',region)+' & ' + addBlindingCut)
-        # else:
-            # print 'going to get_histos_from_tree'
-            # hDictList = Plotter.get_histos_from_tree(job)
-        # if job.name == mass:
-            # print 'job.name', job.name
-            # Overlaylist= deepcopy([hDictList[v].values()[0] for v in range(0,len(vars))])
-	    # ! add the variables list for each job (Samples)
-# =======
-    cutOverWrite = config.get('Cuts',region)+' & ' + addBlindingCut
-    inputs.append((Plotter,"get_histos_from_tree",(job,cutOverWrite)))
+            cutOverWrite = config.get('Cuts',region)+' & ' + addBlindingCut
+        inputs.append((Plotter,"get_histos_from_tree",(job,cutOverWrite)))
     
     multiprocess=0
-    if('pisa' in config.get('Configuration','whereToLaunch')): multiprocess=64
+    if('pisa' in config.get('Configuration','whereToLaunch')): multiprocess=int(config.get('Configuration','nprocesses'))
     outputs = []
     if multiprocess>0:
         from multiprocessing import Pool
