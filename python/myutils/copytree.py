@@ -207,8 +207,26 @@ def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut):
 #        if 'VHBB_HEPPY' in vhbbfolder:
 #            break
 
+    merged = pathOUT+'/'+newprefix+folderName+".root "
+    print 'will check if merger exists'
+    print 'mergedreplace is', merged.replace('root://t3dcachedb03.psi.ch:1094/','')
+    print os.path.exists('/pnfs/psi.ch/cms/trivcat/store/user/gaperrin/VHbb/ZllHbb13TeV_V13/prep/ZmmH.BestCSV.heppy.DYJetsToLL_M-50_HT-100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root') 
+    print os.path.exists(merged.replace('root://t3dcachedb03.psi.ch:1094/','')
+)
+    #if os.path.exists(merged.replace('root://t3dcachedb03.psi.ch:1094','')): 
+    if os.path.exists('/pnfs/psi.ch/cms/trivcat/store/user/gaperrin/VHbb/ZllHbb13TeV_V13/prep/ZmmH.BestCSV.heppy.DYJetsToLL_M-50_HT-100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root'):
+        print merged, 'exists'
+	del_merged = merged
+        del_merged = del_merged.replace('gsidcap://t3se01.psi.ch:22128/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
+        del_merged = del_merged.replace('dcap://t3se01.psi.ch:22125/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
+        del_merged = del_merged.replace('root://t3dcachedb03.psi.ch:1094/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
+        command = 'srmrm %s' %(del_merged)
+	print command
+	subprocess.call([command], shell = True)
+    else: print 'Does not exist'
+
     t = ROOT.TFileMerger()
-    t.OutputFile(pathOUT+'/'+newprefix+folderName+".root ")
+    t.OutputFile(pathOUT+'/'+newprefix+folderName+".root ", "CREATE")
     print 'outputFolder is', outputFolder 
     for file in os.listdir(outputFolder.replace('root://t3dcachedb03.psi.ch:1094','')):
         print 'file is', outputFolder+file
@@ -221,4 +239,3 @@ def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut):
     #command = "hadd -f "+pathOUT+'/'+newprefix+folderName+".root "+fileToMerge
     #print command
     #os.system(command)
-
