@@ -228,7 +228,7 @@ class TreeCache:
         for job in self.__sampleList:
             inputs.append((self,"_trim_tree",(job)))
         multiprocess=0
-        if('pisa' in self.config.get('Configuration','whereToLaunch')): multiprocess=64
+        if('pisa' in self.config.get('Configuration','whereToLaunch')): multiprocess=int(self.config.get('Configuration','nprocesses'))
         outputs = []
         if multiprocess>0:
             from multiprocessing import Pool
@@ -330,19 +330,22 @@ class TreeCache:
         try: sample.xsec = sample.xsec[0]
         except: pass
         anaTag=config.get('Analysis','tag')
-        theScale = 1. ##FIXME
+        theScale = 1.
         lumi = float(sample.lumi)
+        theScale = lumi*sample.xsec*sample.sf/(sample.count)
+        print("sample: ",sample,"xsec: ",sample.xsec,"sample.sf: ",sample.sf,"sample.count: ",sample.count," ---> using scale: ", theScale)
+
 #        if not lumi:
 #            lumi = float(sample.lumi)
 #        print(lumi,sample.xsec,sample.sf,sample.count_with_PU)
 #        print(type(lumi),type(sample.xsec),type(sample.sf),type(sample.count_with_PU))
-        if anaTag == '7TeV':
+#        if anaTag == '7TeV':
 # <<<<<<< HEAD
             # theScale = lumi*sample.xsec*sample.sf/(0.46502*sample.count_with_PU+0.53498*sample.count_with_PU2011B)
-            theScale = lumi*sample.xsec*sample.sf/(0.46502*sample.count+0.53498*sample.count)
+#            theScale = lumi*sample.xsec*sample.sf/(0.46502*sample.count+0.53498*sample.count)
         # elif anaTag == '8TeV':
-        else:
-            theScale = lumi*sample.xsec*sample.sf/(sample.count)
+#        else:
+#            theScale = lumi*sample.xsec*sample.sf/(sample.count)
 # =======
             # theScale = lumi*sample.xsec*sample.sf/(0.46502*sample.count_with_PU+0.53498*sample.count_with_PU2011B)
         # elif anaTag == '8TeV':

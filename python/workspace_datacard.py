@@ -234,10 +234,6 @@ _name = title
 _weight = weightF
 appendList()
 
-print 'Get the option list'
-print '===================\n'
-print 'The option list is', optionsList
-
 print 'Assign the systematics'
 print '======================\n'
 
@@ -275,12 +271,16 @@ for syst in systematics:
 
 #UEPS
 #Appends options for each weight 
-#for weightF_sys in weightF_systematics:
-#    for _weight in [config.get('Weights','%s_UP' %(weightF_sys)),config.get('Weights','%s_DOWN' %(weightF_sys))]:
-#        _cut = treecut
-#        _treevar = treevar
-#        _name = title
-#        appendList()
+for weightF_sys in weightF_systematics:
+    for _weight in [config.get('Weights','%s_UP' %(weightF_sys)),config.get('Weights','%s_DOWN' %(weightF_sys))]:
+        _cut = treecut
+        _treevar = treevar
+        _name = title
+        appendList()
+
+print '===================\n'
+print 'The option list is', optionsList
+
 
 print 'Preparations for Histograms (HistoMakeri)'
 print '=========================================\n'
@@ -325,16 +325,57 @@ data_histos = {}
 
 print '\n\t...fetching histos...\n'
 
+### ORIGINAL ###
+#for job in all_samples:
+#    print '\t- %s'%job
+#    if not GroupDict[job.name] in sys_cut_include:
+#        # manual overwrite
+#        if addBlindingCut:
+#            all_histos[job.name] = mc_hMaker.get_histos_from_tree(job,treecut+'& %s'%addBlindingCut)
+#        else:
+#            all_histos[job.name] = mc_hMaker.get_histos_from_tree(job,treecut)
+#    else:
+#        all_histos[job.name] = mc_hMaker.get_histos_from_tree(job)
+
+inputs=[]
 for job in all_samples:
-    print '\t- %s'%job
+#   print 'job.name'
+    cutOverWrite = None
     if not GroupDict[job.name] in sys_cut_include:
-        # manual overwrite
         if addBlindingCut:
-            all_histos[job.name] = mc_hMaker.get_histos_from_tree(job,treecut+'& %s'%addBlindingCut)
+            cutOverWrite = treecut +' & ' + addBlindingCut
         else:
-            all_histos[job.name] = mc_hMaker.get_histos_from_tree(job,treecut)
-    else:
-        all_histos[job.name] = mc_hMaker.get_histos_from_tree(job)
+            cutOverWrite = treecut
+    inputs.append((mc_hMaker,"get_histos_from_tree",(job,cutOverWrite)))
+
+multiprocess=0
+if('pisa' in config.get('Configuration','whereToLaunch')): multiprocess=int(config.get('Configuration','nprocesses'))
+outputs = []
+if multiprocess>0:
+    from multiprocessing import Pool
+    from myutils import GlobalFunction
+    p = Pool(multiprocess)
+    print 'launching get_histos_from_tree with ',multiprocess,' processes'
+    outputs = p.map(GlobalFunction, inputs)
+else:
+    print 'launching get_histos_from_tree with ',multiprocess,' processes'
+    for input_ in inputs:
+        outputs.append(getattr(input_[0],input_[1])(*input_[2])) #ie. mc_hMaker.get_histos_from_tree(job,cutOverWrite)
+
+for i,job in enumerate(all_samples):
+    all_histos[job.name] = outputs[i]
+
+#for job in all_samples:
+#    print '\t- %s'%job
+#    if not GroupDict[job.name] in sys_cut_include:
+#        # manual overwrite
+#        if addBlindingCut:
+#            all_histos[job.name] = mc_hMaker.get_histos_from_tree(job,treecut+'& %s'%addBlindingCut)
+#        else:
+#            all_histos[job.name] = mc_hMaker.get_histos_from_tree(job,treecut)
+#    else:
+#        all_histos[job.name] = mc_hMaker.get_histos_from_tree(job)
+
 
 
 #for job in all_samples:
@@ -427,6 +468,8 @@ final_histos['nominal'] = HistoMaker.orderandadd([all_histos['%s'%job][0] for jo
 ind = 1
 #print 'systematics is', systematics
 
+print 'all_histos[job.name]',all_histos[job.name]
+print 'len(all_histos[job.name])',len(all_histos[job.name])
 
 print 'add UD sys'
 print '==========\n'
@@ -613,7 +656,7 @@ for DCtype in ['WS','TH']:
     for c in setup: f.write('\t%s'%Dict[c])
     f.write('\n')
     f.write('process')
-    for c in range(0,columns): f.write('\t%s'%c)
+    for c in range(0,columns): f.write('\t%s'%(c-len(signals)+1))
     f.write('\n')
     # datacard yields
     f.write('rate')
