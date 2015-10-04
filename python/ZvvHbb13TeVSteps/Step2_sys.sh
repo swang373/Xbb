@@ -1,5 +1,3 @@
-setenv TMPDIR /scratch/sdonato/VHbbRun2/CMSSW_7_4_12_patch4/src/Xbb/tmp
-
 bash runAll.sh	ZH		ZvvHbb13TeV  sys >& log/logSysZH	&
 bash runAll.sh	ZH_mini		ZvvHbb13TeV  sys >& log/logSysZH_mini	&
 #bash runAll.sh	ZHpow		 ZvvHbb13TeV sys >& log/logSysZHpow	&

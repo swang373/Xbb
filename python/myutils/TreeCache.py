@@ -113,7 +113,7 @@ class TreeCache:
         self._cutList = effective_cuts
         self.minCut = '||'.join(self._cutList)
 
-    def _trim_tree(self, sample):
+    def _trim_tree(self, sample, forceReDo = False):
 
         print("Caching the sample")
         print("==================\n")
@@ -131,7 +131,7 @@ class TreeCache:
         print("==================================================================")
         print ('The cut is ', self.minCut)
         print("==================================================================\n")
-        if self.__doCache and self.file_exists(tmpSource):
+        if self.__doCache and self.file_exists(tmpSource) and not forceReDo:
             print('sample',theName,'skipped, filename=',tmpSource)
             return (theName,theHash)
         print ('trying to create',tmpSource)
@@ -166,12 +166,15 @@ class TreeCache:
             mkdir_command2 = mkdir_command1.rsplit('/',1)[0]
             mkdir_command3 = mkdir_command2.rsplit('/',1)[0]
             my_user = os.popen("whoami").read().strip('\n').strip('\r')+'/'
-            if my_user in mkdir_command:
+            if my_user in mkdir_command and not os.path.exists(mkdir_command):
               print ('mkdir_command',mkdir_command)
               subprocess.call(['mkdir '+mkdir_command], shell=True)# delete the files already created ?     
 
         #! read the tree from the input
-        output = ROOT.TFile.Open(tmpSource,'create')
+        if forceReDo:
+            output = ROOT.TFile.Open(tmpSource,'recreate')
+        else:
+            output = ROOT.TFile.Open(tmpSource,'create')
         print ('reading',source)
         input = ROOT.TFile.Open(source,'read')
         output.cd()
@@ -225,7 +228,7 @@ class TreeCache:
         for job in self.__sampleList:
             inputs.append((self,"_trim_tree",(job)))
         multiprocess=0
-        if('pisa' in self.config.get('Configuration','whereToLaunch')): multiprocess=64
+        if('pisa' in self.config.get('Configuration','whereToLaunch')): multiprocess=int(self.config.get('Configuration','nprocesses'))
         outputs = []
         if multiprocess>0:
             from multiprocessing import Pool
@@ -268,7 +271,15 @@ class TreeCache:
         print('input file %s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]))
         # print ('Opening %s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]))
         input = ROOT.TFile.Open('%s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]),'read')
-        tree = input.Get(sample.tree)
+        try:
+            tree = input.Get(sample.tree)
+            print('type(tree) is ROOT.TTree? ',type(tree) is ROOT.TTree)
+            if not(type(tree) is ROOT.TTree): ##if the file is corrupted relaunch _trim_tree
+                raise NameError("%s/tmp_%s.root is corrupted. I'm relaunching _trim_tree"%(self.__tmpPath,self.__hashDict[sample.name]))
+        except:
+            self._trim_tree(sample, forceReDo=True)
+            input = ROOT.TFile.Open('%s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]),'read')
+            tree = input.Get(sample.tree)
         #print('The name of the tree is ', tree.GetName())
         # CountWithPU = input.Get("CountWithPU")
         # CountWithPU2011B = input.Get("CountWithPU2011B")
@@ -319,19 +330,22 @@ class TreeCache:
         try: sample.xsec = sample.xsec[0]
         except: pass
         anaTag=config.get('Analysis','tag')
-        theScale = 1. ##FIXME
+        theScale = 1.
         lumi = float(sample.lumi)
+        theScale = lumi*sample.xsec*sample.sf/(sample.count)
+        print("sample: ",sample,"xsec: ",sample.xsec,"sample.sf: ",sample.sf,"sample.count: ",sample.count," ---> using scale: ", theScale)
+
 #        if not lumi:
 #            lumi = float(sample.lumi)
 #        print(lumi,sample.xsec,sample.sf,sample.count_with_PU)
 #        print(type(lumi),type(sample.xsec),type(sample.sf),type(sample.count_with_PU))
-        if anaTag == '7TeV':
+#        if anaTag == '7TeV':
 # <<<<<<< HEAD
             # theScale = lumi*sample.xsec*sample.sf/(0.46502*sample.count_with_PU+0.53498*sample.count_with_PU2011B)
-            theScale = lumi*sample.xsec*sample.sf/(0.46502*sample.count+0.53498*sample.count)
+#            theScale = lumi*sample.xsec*sample.sf/(0.46502*sample.count+0.53498*sample.count)
         # elif anaTag == '8TeV':
-        else:
-            theScale = lumi*sample.xsec*sample.sf/(sample.count)
+#        else:
+#            theScale = lumi*sample.xsec*sample.sf/(sample.count)
 # =======
             # theScale = lumi*sample.xsec*sample.sf/(0.46502*sample.count_with_PU+0.53498*sample.count_with_PU2011B)
         # elif anaTag == '8TeV':

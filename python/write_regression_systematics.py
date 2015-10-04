@@ -186,7 +186,7 @@ for job in info:
           
     #Regression branches
     applyRegression = True
-    hJet_pt = array('f',[0]*2)
+#    hJet_pt = array('f',[0]*2)
 #    hJet_mass = array('f',[0]*2)
     newtree.Branch( 'H', H , 'HiggsFlag/I:mass/F:pt/F:eta/F:phi/F:dR/F:dPhi/F:dEta/F' )
     newtree.Branch( 'HNoReg', HNoReg , 'HiggsFlag/I:mass/F:pt/F:eta/F:phi/F:dR/F:dPhi/F:dEta/F' )
@@ -317,17 +317,18 @@ for job in info:
     if True:
         #CSV branches
         hJet_hadronFlavour = array('f',[0]*2)
-        hJet_btagnew = array('f',[0]*2)
-        hJet_btagnewOld = array('f',[0]*2)
-        hJet_btagnewUp = array('f',[0]*2)
-        hJet_btagnewDown = array('f',[0]*2)
-        hJet_btagnewFUp = array('f',[0]*2)
-        hJet_btagnewFDown = array('f',[0]*2)
-        newtree.Branch('hJet_btagnewOld',hJet_btagnewOld,'hJet_btagnewOld[2]/F')
-        newtree.Branch('hJet_btagnewUp',hJet_btagnewUp,'hJet_btagnewUp[2]/F')
-        newtree.Branch('hJet_btagnewDown',hJet_btagnewDown,'hJet_btagnewDown[2]/F')
-        newtree.Branch('hJet_btagnewFUp',hJet_btagnewFUp,'hJet_btagnewFUp[2]/F')
-        newtree.Branch('hJet_btagnewFDown',hJet_btagnewFDown,'hJet_btagnewFDown[2]/F')
+        hJet_btagCSV = array('f',[0]*2)
+        hJet_btagCSVOld = array('f',[0]*2)
+        hJet_btagCSVUp = array('f',[0]*2)
+        hJet_btagCSVDown = array('f',[0]*2)
+        hJet_btagCSVFUp = array('f',[0]*2)
+        hJet_btagCSVFDown = array('f',[0]*2)
+        newtree.Branch('hJet_btagCSV',hJet_btagCSV,'hJet_btagCSV[2]/F')
+        newtree.Branch('hJet_btagCSVOld',hJet_btagCSVOld,'hJet_btagCSVOld[2]/F')
+        newtree.Branch('hJet_btagCSVUp',hJet_btagCSVUp,'hJet_btagCSVUp[2]/F')
+        newtree.Branch('hJet_btagCSVDown',hJet_btagCSVDown,'hJet_btagCSVDown[2]/F')
+        newtree.Branch('hJet_btagCSVFUp',hJet_btagCSVFUp,'hJet_btagCSVFUp[2]/F')
+        newtree.Branch('hJet_btagCSVFDown',hJet_btagCSVFDown,'hJet_btagCSVFDown[2]/F')
         
         #JER branches
         hJet_pt_JER_up = array('f',[0]*2)
@@ -356,8 +357,8 @@ for job in info:
         hJet_ptOld = array('f',[0]*2)
         newtree.Branch('hJet_ptOld',hJet_ptOld,'hJet_ptOld[2]/F')
 
-        hJet_ptNew = array('f',[0]*2)
-        newtree.Branch('hJet_ptNew',hJet_ptNew,'hJet_ptNew[2]/F')
+        hJet_pt = array('f',[0]*2)
+        newtree.Branch('hJet_pt',hJet_pt,'hJet_pt[2]/F')
 
         hJet_ptMc = array('f',[0]*2)
         newtree.Branch('hJet_ptMc',hJet_ptMc,'hJet_ptMc[2]/F')
@@ -417,10 +418,29 @@ for job in info:
         #iter=0
         
         
-#    for entry in range(0,100):
+    ### Adding new variable from configuration ###
+    newVariableNames = []
+    try:
+        writeNewVariables = eval(config.get("Regression","writeNewVariables"))
+        newVariableNames = writeNewVariables.keys()
+        newVariables = {}
+        newVariableFormulas = {}
+        for variableName in newVariableNames:
+            newVariables[variableName] = array('f',[0])
+            newtree.Branch(variableName,newVariables[variableName],variableName+'/F')
+            newVariableFormulas[variableName] =ROOT.TTreeFormula(variableName,writeNewVariables[variableName],tree)
+            print "adding variable ",variableName,", using formula",writeNewVariables[variableName]," ."
+    except:
+        pass
+
     for entry in range(0,nEntries):
             tree.GetEntry(entry)
-
+            
+            ### Fill new variable from configuration ###
+            for variableName in newVariableNames:
+                newVariableFormulas[variableName].GetNdata()
+                newVariables[variableName][0] = newVariableFormulas[variableName].EvalInstance()
+            
             if tree.nJet<=tree.hJCidx[0] or tree.nJet<=tree.hJCidx[1]:
                 print('tree.nJet<=tree.hJCidx[0] or tree.nJet<=tree.hJCidx[1]',tree.nJet,tree.hJCidx[0],tree.hJCidx[1])
                 print('skip event')
@@ -458,10 +478,11 @@ for job in info:
                 print "tree.hJCidx[0]",tree.hJCidx[0]
                 print "tree.hJCidx[1]",tree.hJCidx[1]
                 if tree.hJCidx[1] >=tree.nJet : tree.hJCidx[1] =1
-                if tree.hJCidx[0] >=tree.nJet : tree.hJCidx[1] =0
+                if tree.hJCidx[0] >=tree.nJet : tree.hJCidx[0] =0
                 
 
-            hJet_pt = [hJet_pt0,hJet_pt1]
+            hJet_pt[0] = hJet_pt0
+            hJet_pt[1] = hJet_pt1
             hJet_mass0 = tree.Jet_mass[tree.hJCidx[0]]
             hJet_mass1 = tree.Jet_mass[tree.hJCidx[1]]
             hJet_mcPt0 = tree.Jet_mcPt[tree.hJCidx[0]]
@@ -596,8 +617,8 @@ for job in info:
 #                print "jetEt1: ",jetEt1
 #                print "hJet_pt0: ",hJet_pt0
 #                print "hJet_pt1: ",hJet_pt1
-                hJet_ptNew[0] = rPt0
-                hJet_ptNew[1] = rPt1
+                hJet_pt[0] = rPt0
+                hJet_pt[1] = rPt1
 
                 hJet_regWeight[0] = rPt0/hJet_pt0
                 hJet_regWeight[1] = rPt1/hJet_pt1
@@ -608,12 +629,10 @@ for job in info:
 #                print "hJet_rawPtArray[0]: ",hJet_rawPtArray[0]
 #                print "hJet_rawPtArray[1]: ",hJet_rawPtArray[1]
                 ##FIXME##########################################################################
-                rmass0 = hJet_mass0*hJet_regWeight[0]
-                rmass1 = hJet_mass1*hJet_regWeight[1]
-                rE0 = hJ0.E()*hJet_regWeight[0]
-                rE1 = hJ0.E()*hJet_regWeight[1]
-                hJ0.SetPtEtaPhiM(rPt0,hJet_eta0,hJet_phi0,hJet_mass0)
-                hJ1.SetPtEtaPhiM(rPt1,hJet_eta1,hJet_phi1,hJet_mass1)
+                hJ0 = hJ0 * hJet_regWeight[0]
+                hJ1 = hJ1 * hJet_regWeight[1]
+                rE0 = hJ0.E()
+                rE1 = hJ0.E()
                 #######################
                 #hJ0.SetPtEtaPhiE(rPt0,hJet_eta0,hJet_phi0,rE0)
                 #hJ1.SetPtEtaPhiE(rPt1,hJet_eta1,hJet_phi1,rE1)
@@ -713,28 +732,30 @@ for job in info:
                 continue
 
             for i in range(2):
-                flavour = int(tree.Jet_hadronFlavour[i])
-                pt = float(tree.Jet_pt[i])
-                eta = float(tree.Jet_eta[i])
-                csv = float(tree.Jet_btagnew[i])
-                hJet_btagnewOld[i] = csv 
+                flavour = int(tree.Jet_hadronFlavour[tree.hJCidx[i]])
+                pt = float(tree.Jet_pt[tree.hJCidx[i]])
+                eta = float(tree.Jet_eta[tree.hJCidx[i]])
+                csv = float(tree.Jet_btagCSV[tree.hJCidx[i]])
+                hJet_btagCSVOld[i] = csv 
+                ##FIXME## we have to add the CSV reshaping
+                hJet_btagCSV[i] = csv 
                 if anaTag == '7TeV':
-                    tree.Jet_btagnew[i] = corrCSV(btagNom,csv,flavour)
-                    hJet_btagnewDown[i] = corrCSV(btagDown,csv,flavour)
-                    hJet_btagnewUp[i] = corrCSV(btagUp,csv,flavour) 
-                    hJet_btagnewFDown[i] = corrCSV(btagFDown,csv,flavour)
-                    hJet_btagnewFUp[i] = corrCSV(btagFUp,csv,flavour)
+                    tree.Jet_btagCSV[tree.hJCidx[i]] = corrCSV(btagNom,csv,flavour)
+                    hJet_btagCSVDown[i] = corrCSV(btagDown,csv,flavour)
+                    hJet_btagCSVUp[i] = corrCSV(btagUp,csv,flavour) 
+                    hJet_btagCSVFDown[i] = corrCSV(btagFDown,csv,flavour)
+                    hJet_btagCSVFUp[i] = corrCSV(btagFUp,csv,flavour)
                 else:
-                    #tree.Jet_btagnew[i] = btagNom.reshape(eta,pt,csv,flavour)
-                    #hJet_btagnewDown[i] = btagDown.reshape(eta,pt,csv,flavour)
-                    #hJet_btagnewUp[i] = btagUp.reshape(eta,pt,csv,flavour) 
-                    #hJet_btagnewFDown[i] = btagFDown.reshape(eta,pt,csv,flavour)
-                    #hJet_btagnewFUp[i] = btagFUp.reshape(eta,pt,csv,flavour)
-#                    tree.Jet_btagnew[i] = tree.Jet_btagnew[i]
-                    hJet_btagnewDown[i] = tree.Jet_btagnew[i]
-                    hJet_btagnewUp[i] = tree.Jet_btagnew[i]
-                    hJet_btagnewFDown[i] = tree.Jet_btagnew[i]
-                    hJet_btagnewFUp[i] = tree.Jet_btagnew[i]
+                    #tree.Jet_btagCSV[i] = btagNom.reshape(eta,pt,csv,flavour)
+                    #hJet_btagCSVDown[i] = btagDown.reshape(eta,pt,csv,flavour)
+                    #hJet_btagCSVUp[i] = btagUp.reshape(eta,pt,csv,flavour) 
+                    #hJet_btagCSVFDown[i] = btagFDown.reshape(eta,pt,csv,flavour)
+                    #hJet_btagCSVFUp[i] = btagFUp.reshape(eta,pt,csv,flavour)
+#                    tree.Jet_btagCSV[i] = tree.Jet_btagCSV[i]
+                    hJet_btagCSVDown[i] = tree.Jet_btagCSV[tree.hJCidx[i]]
+                    hJet_btagCSVUp[i] = tree.Jet_btagCSV[tree.hJCidx[i]]
+                    hJet_btagCSVFDown[i] = tree.Jet_btagCSV[tree.hJCidx[i]]
+                    hJet_btagCSVFUp[i] = tree.Jet_btagCSV[tree.hJCidx[i]]
 
             for updown in ['up','down']:
                 #JER

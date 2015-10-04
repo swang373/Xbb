@@ -181,7 +181,7 @@ class StackMaker:
         print "self.typs",self.typs
         print "self.histos",self.histos
         print "self.setup",self.setup
-        histo_dict = HistoMaker.orderandadd([{self.typs[i]:self.histos[i]} for i in range(len(self.histos))],self.setup,self.jobnames)
+        histo_dict = HistoMaker.orderandadd([{self.typs[i]:self.histos[i]} for i in range(len(self.histos))],self.setup)
         #sort
         print "histo_dict",histo_dict
         for key in self.setup:
@@ -296,7 +296,7 @@ class StackMaker:
             overScale = 100000
             for _overlay in self.overlay:
                 stackMax = allStack.GetMaximum()
-                overMax = _overlay.GetMaximum()
+                overMax = _overlay.GetMaximum() + 1e-30 
                 print "overScale=",overScale,
                 print "stackMax/overMax=",stackMax/overMax,
                 print "overMax=",overMax,
@@ -318,6 +318,7 @@ class StackMaker:
                 elif overScale >= 5: overScale=5
                 elif overScale >= 2: overScale=2
                 else: overScale=1
+            for _overlay in self.overlay:
                 _overlay.Scale(overScale)
                 l_2.AddEntry(_overlay,self.typLegendDict[_overlay.GetTitle()]+" X"+str(overScale),'L')
 #                l_2.AddEntry(_overlay,self.typLegendDict[_overlay.GetTitle()],'L')
@@ -492,7 +493,7 @@ class StackMaker:
     def doSubPlot(self,signal):
         
         TdrStyles.tdrStyle()
-        histo_dict = HistoMaker.orderandadd([{self.typs[i]:self.histos[i]} for i in range(len(self.histos))],self.setup,self.jobnames)
+        histo_dict = HistoMaker.orderandadd([{self.typs[i]:self.histos[i]} for i in range(len(self.histos))],self.setup)
         #sort
         print 'histo_dict',histo_dict
         sig_histos=[]

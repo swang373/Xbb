@@ -98,6 +98,7 @@ class HistoMaker:
             
             hTree = ROOT.TH1F('%s'%name,'%s'%name,nBins,xMin,xMax)
             hTree.Sumw2()
+            hTree.SetTitle(job.name)
             print('hTree.name() 1 =',hTree.GetName())
             print('treeVar 1 =',treeVar)
             drawoption = ''
@@ -113,9 +114,8 @@ class HistoMaker:
               else: 
                   drawoption = '(%s)*(%s)'%(weightF,treeCut)
               print ('Draw: %s>>%s' %(treeVar,name), drawoption, "goff,e")
-              CuttedTree.Draw('%s>>%s' %(treeVar,name), drawoption, "goff,e")
-              print name
-              print('hTree.name() 2 =',hTree.GetName())
+              nevents = CuttedTree.Draw('%s>>%s' %(treeVar,name), drawoption, "goff,e")
+              print 'nevents:',hTree.GetEntries(),' hTree.name() 2 =',hTree.GetName()
               full=True
                     # if 'RTight' in treeVar or 'RMed' in treeVar: 
                         # drawoption = '(%s)*(%s & %s)'%(weightF,treeCut,BDT_add_cut)
@@ -295,7 +295,7 @@ class HistoMaker:
         print '\t > rebinning is set <\n'
 
     @staticmethod
-    def orderandadd(histo_dicts,setup,jobnames):
+    def orderandadd(histo_dicts,setup):
         '''
         Setup is defined in the plot conf file
         histo_dicts contains an array of dictionnary
@@ -316,9 +316,10 @@ class HistoMaker:
                 if histo_dict.has_key(sample):
                     integral = histo_dict[sample].Integral()
                     entries = histo_dict[sample].GetEntries()
+                    subsamplename = histo_dict[sample].GetTitle()
                     if nSample == 0:
                         ordered_histo_dict[sample] = histo_dict[sample].Clone()
-                    printc('magenta','','\t--> added %s to %s. Integral: %s. Entries: %s'%(jobnames[histo_dicts.index(histo_dict)],sample,integral,entries))
+                    printc('magenta','','\t--> added %s to %s. Integral: %s. Entries: %s'%(subsamplename,sample,integral,entries))
                     ordered_histo_dict[sample].Add(histo_dict[sample])
                     nSample += 1
         print "orderandadd-ordered_histo_dict",ordered_histo_dict

@@ -41,7 +41,7 @@ class RegressionTrainer():
             signalsTest.append(self.__tc.get_tree(job,'%s & %s'%(self.__cut,self.__testCut)))
         
         sWeight = 1.
-        fnameOutput='training_Reg_%s.root' %(self.__title)
+        fnameOutput='weights/training_Reg_%s.root' %(self.__title)
         print "Opening ",fnameOutput
         output = ROOT.TFile.Open(fnameOutput, "RECREATE")
 
