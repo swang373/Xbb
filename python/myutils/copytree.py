@@ -30,19 +30,18 @@ def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,whereToLaun
                 break
         if len(filenames)>0: break
     else:
-      for (dirpath_, dirnames, filenames_) in walk(pathIN+'/'+folderName):
-        FOLDER = pathIN+'/'+folderName
-        if FOLDER.startswith('dcap://t3se01.psi.ch:22125'):
-            FOLDER = FOLDER.replace('dcap://t3se01.psi.ch:22125','')
-            folder_prefix = 'dcap://t3se01.psi.ch:22125'
-        for (dirpath_, dirnames, filenames_) in walk(FOLDER):
-          for filename_ in filenames_:
-              if 'root' in filename_ and not 'failed' in dirpath_:
-                  dirpath = dirpath_
-                  filename = filename_
-                  filenames = filenames_
-                  break
-          if len(filenames)>0: break
+      FOLDER = pathIN+'/'+folderName
+      if FOLDER.startswith('dcap://t3se01.psi.ch:22125'):
+          FOLDER = FOLDER.replace('dcap://t3se01.psi.ch:22125','')
+          folder_prefix = 'dcap://t3se01.psi.ch:22125'
+      for (dirpath_, dirnames, filenames_) in walk(FOLDER):
+        for filename_ in filenames_:
+            if 'root' in filename_ and not 'failed' in dirpath_:
+                dirpath = dirpath_
+                filename = filename_
+                filenames = filenames_
+                break
+        if len(filenames)>0: break
 
     if dirpath == "":
         print "No .root files found in ",pathIN+'/'+folderName
@@ -52,8 +51,6 @@ def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,whereToLaun
       pathIN = dirpath
     else:
       pathIN = folder_prefix + dirpath
-
-    #pathIN = dirpath
 
 #    FileList = ROOT.TList();
     for filename in filenames:
