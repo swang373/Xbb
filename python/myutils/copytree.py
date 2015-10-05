@@ -1,7 +1,7 @@
 import ROOT,sys,os,subprocess
 from printcolor import printc
 
-def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut):
+def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,whereToLaunch):
     ''' 
     List of variables
     pathIN: path of the input file containing the data
@@ -18,13 +18,16 @@ def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut):
     dirpath = ""
     filename = ""
     filenames = []
-    FOLDER = pathIN+'/'+folderName
     folder_prefix = ''
-    if FOLDER.startswith('dcap://t3se01.psi.ch:22125'):
-        FOLDER = FOLDER.replace('dcap://t3se01.psi.ch:22125','')
-        folder_prefix = 'dcap://t3se01.psi.ch:22125'
     print "##### COPY TREE - BEGIN ######"
-    for (dirpath_, dirnames, filenames_) in walk(FOLDER):
+    if('pisa' in whereToLaunch):
+      for (dirpath_, dirnames, filenames_) in walk(pathIN+'/'+folderName):
+    else:
+      FOLDER = pathIN+'/'+folderName
+      if FOLDER.startswith('dcap://t3se01.psi.ch:22125'):
+          FOLDER = FOLDER.replace('dcap://t3se01.psi.ch:22125','')
+          folder_prefix = 'dcap://t3se01.psi.ch:22125'
+      for (dirpath_, dirnames, filenames_) in walk(FOLDER):
         for filename_ in filenames_:
             if 'root' in filename_ and not 'failed' in dirpath_:
                 dirpath = dirpath_
@@ -37,7 +40,10 @@ def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut):
         print "No .root files found in ",pathIN+'/'+folderName
         return
 
-    pathIN = folder_prefix + dirpath
+    if('pisa' in whereToLaunch):
+      pathIN = dirpath
+    else:
+      pathIN = folder_prefix + dirpath
 
     #pathIN = dirpath
 
