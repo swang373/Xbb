@@ -86,7 +86,9 @@ def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,whereToLaun
         del_protocol = del_protocol.replace('root://t3dcachedb03.psi.ch:1094/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
         print "cutting ",inputFile," ---> ",outputFile
         
-        if('PSI' in whereToLaunch):
+        if ('pisa' in whereToLaunch) and os.path.isfile(outputFile):
+            command = 'rm %s' %(outputFile)
+        elif('PSI' in whereToLaunch):
           if os.path.isfile(del_protocol.replace('srm://t3se01.psi.ch:8443/srm/managerv2?SFN=','')): 
             print 'File', del_protocol.replace('srm://t3se01.psi.ch:8443/srm/managerv2?SFN=',''), 'already exists.\n Gonna delete it.'
             #command = 'rm %s' %(outputFile)
@@ -94,8 +96,6 @@ def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,whereToLaun
             print(command)
             subprocess.call([command], shell=True)
           else: print 'FALSE'
-        elif ('pisa' in whereToLaunch) and os.path.isfile(outputFile):
-            command = 'rm %s' %(outputFile)
           
         output = ROOT.TFile.Open(outputFile,'create')
         print "Writing file:",outputFile
