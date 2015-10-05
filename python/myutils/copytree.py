@@ -132,22 +132,31 @@ def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,whereToLaun
         print "Closing input file"
         input.Close()
 
-    merged = pathOUT+'/'+newprefix+folderName+".root "
+    if ('pisa' in whereToLaunch):
+      fileToMerge = outputFile[:outputFile.rfind("tree_")+5]+"*"+outputFile[outputFile.rfind(".root"):]
+      # command = "hadd -f "+pathOUT+'/'+newprefix+vhbbfolder+".root "+fileToMerge
+      command = "hadd -f "+pathOUT+'/'+newprefix+folderName+".root "+fileToMerge
+      print command
+      os.system(command)
 
-    del_merged = merged
-    del_merged = del_merged.replace('gsidcap://t3se01.psi.ch:22128/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
-    del_merged = del_merged.replace('dcap://t3se01.psi.ch:22125/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
-    del_merged = del_merged.replace('root://t3dcachedb03.psi.ch:1094/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
-    command = 'srmrm %s' %(del_merged)
-    print command
-    subprocess.call([command], shell = True)
-    #else: print 'Does not exist'
-    t = ROOT.TFileMerger()
-    t.OutputFile(pathOUT+'/'+newprefix+folderName+".root ", "CREATE")
-    print 'outputFolder is', outputFolder 
-    for file in os.listdir(outputFolder.replace('root://t3dcachedb03.psi.ch:1094','')):
-        print 'file is', outputFolder+file
-        if file.startswith('tree'):
-            t.AddFile(outputFolder+file)
-    t.Merge()
+    else:
+      merged = pathOUT+'/'+newprefix+folderName+".root "
+
+      del_merged = merged
+      del_merged = del_merged.replace('gsidcap://t3se01.psi.ch:22128/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
+      del_merged = del_merged.replace('dcap://t3se01.psi.ch:22125/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
+      del_merged = del_merged.replace('root://t3dcachedb03.psi.ch:1094/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
+      command = 'srmrm %s' %(del_merged)
+      print command
+      subprocess.call([command], shell = True)
+      #else: print 'Does not exist'
+      t = ROOT.TFileMerger()
+      t.OutputFile(pathOUT+'/'+newprefix+folderName+".root ", "CREATE")
+      print 'outputFolder is', outputFolder 
+      for file in os.listdir(outputFolder.replace('root://t3dcachedb03.psi.ch:1094','')):
+          print 'file is', outputFolder+file
+          if file.startswith('tree'):
+              t.AddFile(outputFolder+file)
+      t.Merge()
+    
     print "##### COPY TREE - END ######"
