@@ -4,6 +4,8 @@ ROOT.gROOT.SetBatch(True)
 from optparse import OptionParser
 from myutils import BetterConfigParser, copytree, ParseInfo
 
+print 'start prepare_environment_with_config.py'
+
 argv = sys.argv
 
 #get files info from config
@@ -39,3 +41,4 @@ for job in info:
     if job.subsample:
         continue
     copytree(pathIN,pathOUT,prefix,job.prefix,job.identifier,'',job.addtreecut)
+print 'end prepare_environment_with_config.py'
