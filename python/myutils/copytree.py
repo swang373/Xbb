@@ -70,7 +70,7 @@ def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut):
 	    print '_output_folder is', _output_folder
 	    if os.path.exists(_output_folder): print 'exists'
 	    else: 
-	        print 'Folder', _output_folder, 'doesn\'t exist\n. Creating it now'
+		print 'Folder', _output_folder, 'doesn\'t exist\n. Creating it now'
 		command = 'srmmkdir srm://t3se01.psi.ch/' + _output_folder
 		subprocess.call([command], shell = True)
 	    if os.path.exists(_output_folder): print 'Folder', _output_folder, 'sucessfully created'
