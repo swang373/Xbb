@@ -21,9 +21,7 @@ def test_samples(run_on_fileList,__fileslist,config_sections):
 
 def check_correspondency(sample,list,config):
         '''Check the samples that are available in the PREPin directory and in the samples_nosplit file '''
-        if any( sample in file for file in list ):
-                print '@INFO: Sample %s is present'%(config.get(sample,'sampleName'))
-        else:
+        if not any( sample in file for file in list ):
                 warnings.warn('@INFO: Sample %s is NOT! present'%(config.get(sample,'sampleName')))
                 warnings.warn("@INFO: File %s not present"%(config.get(sample,'infile')))
 
@@ -31,7 +29,14 @@ def check_correspondency(sample,list,config):
 class ParseInfo:
     '''Class containing a list of Sample. Is filled during the prep stage.'''
     def __init__(self,samples_config,samples_path):
-	'''Methode filling a list of Sample "self._samplelist = []" contained in the class. "sample_path" contains the path where the samples are stored (PREPin). "samples_config" is the "samples_nosplit.cfg" file. Depending of the variable "run_on_files" defined in "samples_nosplit.cfg", the sample list are generated from the input folder (PREPin) or the list in "samples_nosplit.cfg" '''
+        '''
+        Methode filling a list of Sample "self._samplelist = []" contained in the class. 
+        "sample_path" contains the path where the samples are stored (PREPin). 
+        "samples_config" is the "samples_nosplit.cfg" file. Depending of the variable "run_on_files" defined in "samples_nosplit.cfg", 
+        the sample list are generated from the input folder (PREPin) or the list in "samples_nosplit.cfg" '''
+        
+        print "Start getting infos on all the samples (ParseInfo)"
+        print "==================================================\n"
         try:
             os.stat(samples_config)
         except:
@@ -41,7 +46,6 @@ class ParseInfo:
             T3 = True
             _,p2=samples_path.split('/pnfs/')
             t3_path = '/pnfs/'+p2.strip('\n')
-	    print 't3_path is ', t3_path
         else:
             T3 = False
 
@@ -62,34 +66,34 @@ class ParseInfo:
         else:
             ls = os.popen("ls "+samples_path)
     
-	print 'will start the loop over the lines.'
-	print ls.read()
+  #print 'will start the loop over the lines.'
+  #print ls.read()
         for line in ls.readlines():
-		print 'loop over the lines'
+    #print 'loop over the lines'
                 if('.root' in line):
                         truncated_line = line[line.rfind('/')+1:]
                         _p = findnth(truncated_line,'.',2)
                         self.__fileslist.append(truncated_line[_p+1:truncated_line.rfind('.')])
-			print 'added a new line !'
+      #print 'added a new line !'
 
         print '@DEBUG: ' + str(self.__fileslist)
 
-	#Deleteme: Do a loop to check on __fileslist
-	#Start the loop
-	for i in range(0,len(self.__fileslist)):
-	        print 'Is the ',i ,'th file None ? Answer:', (self.__fileslist[i] == None) 
+  #Deleteme: Do a loop to check on __fileslist
+  #Start the loop
+  #for i in range(0,len(self.__fileslist)):
+    #print 'Is the ',i ,'th file None ? Answer:', (self.__fileslist[i] == None) 
 
-	#End Deleteme
+  #End Deleteme
 
         run_on_fileList = eval(config.get('Samples_running','run_on_fileList'))#Evaluate run_on_fileList from samples_nosplit.cfg 
 
-	print 'Is Sample None ? Answer: ', (self.__fileslist == None)
+  #print 'Is Sample None ? Answer: ', (self.__fileslist == None)
 
         if( not test_samples(run_on_fileList,self.__fileslist,config.sections()) ): # stop if it finds None as sample
                 sys.exit('@ERROR: Sample == None. Check RunOnFileList flag in section General, the sample_config of the sample directory.')
 
         #!! Start to loop over the samples. If run_on_files list is true, use the sample from the PREPin folder (_listed_file). 
-	#!! Else use the sample from  samples_nosplit.cfg (_config_entry).
+  #!! Else use the sample from  samples_nosplit.cfg (_config_entry).
         #!! The sample description from samples_nosplit.cfg are then applied.
         for _listed_file,_config_entry in map(None,self.__fileslist,config.sections()):
             if( run_on_fileList ): 
@@ -110,7 +114,7 @@ class ParseInfo:
             sampleType = config.get(sample,'sampleType')
             cut = config.get(sample, 'cut')
 
-	    #fill the sample
+      #fill the sample
             newsample = Sample(sampleName,sampleType)
             newsample.addtreecut = cut
             newsample.identifier=infile
@@ -118,7 +122,7 @@ class ParseInfo:
             newsample.lumi=lumi
             newsample.prefix=newprefix
             
-	    #add and fills all the subsamples
+      #add and fills all the subsamples
             if eval(config.get(sample,'subsamples')):
                 subnames = eval((config.get(sample, 'subnames')))
                 subcuts = eval((config.get(sample, 'subcuts')))
@@ -145,6 +149,8 @@ class ParseInfo:
                     newsample.sf = eval((config.get(sample, 'SF')))
                 newsample.group = config.get(sample,'sampleGroup')
                 self._samplelist.append(newsample)
+        print "Finished getting infos on all the samples (ParseInfo)"
+        print "=====================================================\n"
 
     def __iter__(self):
         for sample in self._samplelist:
@@ -159,20 +165,23 @@ class ParseInfo:
         return None
     
     def get_samples(self, samplenames):
+        '''Samplenames is list of the samples names. Returns a list of samples corresponding to the names'''
         samples = []
         thenames = []
         #for splitted samples use the identifier. There is always only one. if list, they are all true
-        if (self.checkSplittedSampleName(samplenames[0])):
-                for sample in self._samplelist:
-                        if (sample.subsample): continue #avoid multiple submissions from subsamples
-                        print '@DEBUG: samplenames ' + samplenames[0]
-                        print '@DEBUG: sample identifier ' + sample.identifier
-                        if sample.identifier == samplenames[0]:
-                                samples.append(sample)
-                                thenames.append(sample.name)
+        if (len(samplenames)>0 and self.checkSplittedSampleName(samplenames[0])):
+          print "The samples is splitted"
+          for sample in self._samplelist:
+                  if (sample.subsample): continue #avoid multiple submissions from subsamples
+                  print '@DEBUG: samplenames ' + samplenames[0]
+                  print '@DEBUG: sample identifier ' + sample.identifier
+                  if sample.identifier == samplenames[0]:
+                          samples.append(sample)
+                          thenames.append(sample.name)
         #else check the name
         else:
                 for sample in self._samplelist:
+            #print "sample is", sample 
                         if sample.name in samplenames:
                                 #if (sample.subsample): continue #avoid multiple submissions from subsamples
                                 samples.append(sample)

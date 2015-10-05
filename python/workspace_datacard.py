@@ -9,7 +9,15 @@ warnings.filterwarnings( action='ignore', category=RuntimeWarning, message='crea
 from optparse import OptionParser
 from myutils import BetterConfigParser, Sample, progbar, printc, ParseInfo, Rebinner, HistoMaker
 
+print '_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_'
+print 'START DATACARD (workspace_datacard)'
+print '_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_\n'
+
 #--CONFIGURE---------------------------------------------------------------------
+
+print 'Reading configuration files'
+print '===========================\n'
+
 argv = sys.argv
 parser = OptionParser()
 parser.add_option("-V", "--variable", dest="variable", default="",
@@ -24,9 +32,13 @@ var=opts.variable
 
 #--read variables from config---------------------------------------------------
 # 7 or 8TeV Analysis
+
+print 'Assigne variables from  config'
+print '==============================\n'
+
 anaTag = config.get("Analysis","tag")
-if not any([anaTag == '7TeV',anaTag == '8TeV']):
-    raise Exception("anaTag %s unknown. Specify 8TeV or 7TeV in the general config"%anaTag)
+if not any([anaTag == '7TeV',anaTag == '8TeV',anaTag == '13TeV']):
+    raise Exception("anaTag %s unknown. Specify 8TeV or 7TeV or 13TeV in the general config"%anaTag)
 # Directories:
 Wdir=config.get('Directories','Wdir')
 vhbbpath=config.get('Directories','vhbbpath')
@@ -41,6 +53,7 @@ except:
 treevar = config.get('dc:%s'%var,'var')
 name = config.get('dc:%s'%var,'wsVarName')
 title = name
+# set binning
 nBins = int(config.get('dc:%s'%var,'range').split(',')[0])
 xMin = float(config.get('dc:%s'%var,'range').split(',')[1])
 xMax = float(config.get('dc:%s'%var,'range').split(',')[2])
@@ -51,6 +64,21 @@ datas = config.get('dc:%s'%var,'dcBin')
 Datacardbin=config.get('dc:%s'%var,'dcBin')
 anType = config.get('dc:%s'%var,'type')
 setup=eval(config.get('LimitGeneral','setup'))
+
+print "Using",('dc:%s'%var,'var')
+print name
+print title
+print nBins
+print xMin
+print xMax
+print ROOToutname
+print RCut
+print signals
+print datas
+print Datacardbin
+print anType
+print setup
+
 #Systematics:
 if config.has_option('LimitGeneral','addSample_sys'):
     addSample_sys = eval(config.get('LimitGeneral','addSample_sys'))
@@ -135,6 +163,9 @@ if not add_signal_as_bkg == 'None':
 
 #--Setup--------------------------------------------------------------------
 #Assign Pt region for sys factors
+print 'Assign Pt region for sys factors'
+print '================================\n'
+
 if 'HighPtLooseBTag' in ROOToutname:
     pt_region = 'HighPtLooseBTag'
 elif 'HighPt' in ROOToutname or 'highPt' in ROOToutname:
@@ -149,7 +180,8 @@ elif 'MJJ' in ROOToutname:
     pt_region = 'HighPt' 
 else:
     print "Unknown Pt region"
-    sys.exit("Unknown Pt region")
+    pt_region = 'NoSysRegion'
+    #sys.exit("Unknown Pt region")
 # Set rescale factor of 2 in case of TrainFalg
 if TrainFlag:
     MC_rescale_factor=2.
@@ -157,16 +189,38 @@ if TrainFlag:
 else: MC_rescale_factor = 1.
 #systematics up/down
 UD = ['Up','Down']
+
+print 'Parse the sample information'
+print '============================\n'
 #Parse samples configuration
 info = ParseInfo(samplesinfo,path)
 # get all the treeCut sets
 # create different sample Lists
+
+print 'Get the sample list'
+print '===================\n'
 all_samples = info.get_samples(signals+backgrounds+additionals)
+print 'workspace_datacard-all_samples:',[job.name for job in all_samples]
 
 signal_samples = info.get_samples(signals) 
+print 'signal samples:',[job.name for job in signal_samples]
+
 background_samples = info.get_samples(backgrounds) 
 data_sample_names = config.get('dc:%s'%var,'data').split(' ')
 data_samples = info.get_samples(data_sample_names)
+
+print 'The signal sample list is\n'
+for samp in signal_samples:
+    print samp
+    print ''
+print 'The background sample list is\n'
+for samp in background_samples:
+    print samp
+    print ''
+print 'The data samples are' 
+for samp in data_samples:
+    print samp
+    print '' 
 #-------------------------------------------------------------------------------------------------
 
 optionsList=[]
@@ -179,6 +233,9 @@ _treevar = treevar
 _name = title
 _weight = weightF
 appendList()
+
+print 'Assign the systematics'
+print '======================\n'
 
 #the 4 sys
 for syst in systematics:
@@ -213,6 +270,7 @@ for syst in systematics:
         appendList()
 
 #UEPS
+#Appends options for each weight 
 for weightF_sys in weightF_systematics:
     for _weight in [config.get('Weights','%s_UP' %(weightF_sys)),config.get('Weights','%s_DOWN' %(weightF_sys))]:
         _cut = treecut
@@ -220,11 +278,18 @@ for weightF_sys in weightF_systematics:
         _name = title
         appendList()
 
-#for option in optionsList:
-#    print option['cut']
+print '===================\n'
+print 'The option list is', optionsList
+
+
+print 'Preparations for Histograms (HistoMakeri)'
+print '=========================================\n'
 
 mc_hMaker = HistoMaker(all_samples,path,config,optionsList,GroupDict)
 data_hMaker = HistoMaker(data_samples,path,config,[optionsList[0]])
+
+print 'Calculate luminosity'
+print '====================\n'
 #Calculate lumi
 lumi = 0.
 nData = 0
@@ -246,6 +311,7 @@ if addBlindingCut:
 
 
 if rebin_active:
+    print "background_samples: ",background_samples
     mc_hMaker.calc_rebin(background_samples)
     #transfer rebinning info to data maker
     data_hMaker.norebin_nBins = copy(mc_hMaker.norebin_nBins)
@@ -257,18 +323,71 @@ if rebin_active:
 all_histos = {}
 data_histos = {}
 
-print '\n\t...fetching histos...'
+print '\n\t...fetching histos...\n'
 
+### ORIGINAL ###
+#for job in all_samples:
+#    print '\t- %s'%job
+#    if not GroupDict[job.name] in sys_cut_include:
+#        # manual overwrite
+#        if addBlindingCut:
+#            all_histos[job.name] = mc_hMaker.get_histos_from_tree(job,treecut+'& %s'%addBlindingCut)
+#        else:
+#            all_histos[job.name] = mc_hMaker.get_histos_from_tree(job,treecut)
+#    else:
+#        all_histos[job.name] = mc_hMaker.get_histos_from_tree(job)
+
+inputs=[]
 for job in all_samples:
-    print '\t- %s'%job
+#   print 'job.name'
+    cutOverWrite = None
     if not GroupDict[job.name] in sys_cut_include:
-        # manual overwrite
         if addBlindingCut:
-            all_histos[job.name] = mc_hMaker.get_histos_from_tree(job,treecut+'& %s'%addBlindingCut)
+            cutOverWrite = treecut +' & ' + addBlindingCut
         else:
-            all_histos[job.name] = mc_hMaker.get_histos_from_tree(job,treecut)
-    else:
-        all_histos[job.name] = mc_hMaker.get_histos_from_tree(job)
+            cutOverWrite = treecut
+    inputs.append((mc_hMaker,"get_histos_from_tree",(job,cutOverWrite)))
+
+multiprocess=0
+if('pisa' in config.get('Configuration','whereToLaunch')): multiprocess=int(config.get('Configuration','nprocesses'))
+outputs = []
+if multiprocess>0:
+    from multiprocessing import Pool
+    from myutils import GlobalFunction
+    p = Pool(multiprocess)
+    print 'launching get_histos_from_tree with ',multiprocess,' processes'
+    outputs = p.map(GlobalFunction, inputs)
+else:
+    print 'launching get_histos_from_tree with ',multiprocess,' processes'
+    for input_ in inputs:
+        outputs.append(getattr(input_[0],input_[1])(*input_[2])) #ie. mc_hMaker.get_histos_from_tree(job,cutOverWrite)
+
+for i,job in enumerate(all_samples):
+    all_histos[job.name] = outputs[i]
+
+#for job in all_samples:
+#    print '\t- %s'%job
+#    if not GroupDict[job.name] in sys_cut_include:
+#        # manual overwrite
+#        if addBlindingCut:
+#            all_histos[job.name] = mc_hMaker.get_histos_from_tree(job,treecut+'& %s'%addBlindingCut)
+#        else:
+#            all_histos[job.name] = mc_hMaker.get_histos_from_tree(job,treecut)
+#    else:
+#        all_histos[job.name] = mc_hMaker.get_histos_from_tree(job)
+
+
+
+#for job in all_samples:
+#    print '\t- %s'%job
+#    if not GroupDict[job.name] in sys_cut_include:
+#        # manual overwrite
+#        if addBlindingCut:
+#            all_histos[job.name] = mc_hMaker.get_histos_from_tree(job,treecut+'& %s'%addBlindingCut)
+#        else:
+#            all_histos[job.name] = mc_hMaker.get_histos_from_tree(job,treecut)
+#    else:
+#        all_histos[job.name] = mc_hMaker.get_histos_from_tree(job)
 
 for job in data_samples:
     print '\t- %s'%job
@@ -276,6 +395,8 @@ for job in data_samples:
 
 print '\t> done <\n'
 
+print 'Get the bkg histo'
+print '=================\n'
 i=0
 for job in background_samples: 
     print job.name
@@ -286,7 +407,7 @@ for job in background_samples:
         hDummy.Add(htree,1) 
     del htree 
     i+=1
-
+#?
 if signal_inject:
     signal_inject = info.get_samples([signal_inject])
     sig_hMaker = HistoMaker(signal_inject,path,config,optionsList,GroupDict)
@@ -298,11 +419,15 @@ if signal_inject:
         sig_hMaker._rebin = copy(mc_hMaker._rebin)
         sig_hMaker.mybinning = deepcopy(mc_hMaker.mybinning)
 
+print 'Get the signal histo'
+print '====================\n'
 for job in signal_inject: 
     htree = sig_hMaker.get_histos_from_tree(job)
     hDummy.Add(htree[0].values()[0],1) 
     del htree 
 
+print 'Get the data histo'
+print '==================\n'
 nData = 0
 for job in data_histos:
     if nData == 0:
@@ -312,6 +437,11 @@ for job in data_histos:
 
 #-- Write Files-----------------------------------------------------------------------------------
 # generate the TH outfile:
+print 'Start writing the files'
+print '=======================\n'
+
+print 'Creating output file'
+print '====================\n'
 outfile = ROOT.TFile(outpath+'vhbb_TH_'+ROOToutname+'.root', 'RECREATE')
 outfile.mkdir(Datacardbin,Datacardbin)
 outfile.cd(Datacardbin)
@@ -328,20 +458,32 @@ final_histos = {}
 
 print '\n\t--> Ordering and Adding Histos\n'
 
+print 'workspace_datacard-all_samples:',[all_histos['%s'%job][0] for job in all_samples]
+
+
 #NOMINAL:
 final_histos['nominal'] = HistoMaker.orderandadd([all_histos['%s'%job][0] for job in all_samples],setup) 
 
 #SYSTEMATICS:
 ind = 1
+#print 'systematics is', systematics
+
+print 'all_histos[job.name]',all_histos[job.name]
+print 'len(all_histos[job.name])',len(all_histos[job.name])
+
+print 'add UD sys'
+print '==========\n'
 for syst in systematics:
     for Q in UD:
         final_histos['%s_%s'%(systematicsnaming[syst],Q)] = HistoMaker.orderandadd([all_histos[job.name][ind] for job in all_samples],setup)
         ind+=1
+print 'add weight sys'
+print '==============\n'
 for weightF_sys in weightF_systematics: 
     for Q in UD:
         final_histos['%s_%s'%(systematicsnaming[weightF_sys],Q)]= HistoMaker.orderandadd([all_histos[job.name][ind] for job in all_samples],setup)
         ind+=1
-
+#?
 if change_shapes:
     for key in change_shapes:
         syst,val=change_shapes[key].split('*')
@@ -376,6 +518,8 @@ def get_alternate_shapes(all_histos,asample_dict,all_samples):
     return alternate_shapes_up, alternate_shapes_down
         
 if addSample_sys: 
+    print 'Adding the samples systematics'
+    print '==============================\n'
     aUp, aDown = get_alternate_shapes(all_histos,addSample_sys,all_samples)
     final_histos['%s_Up'%(systematicsnaming['model'])]= HistoMaker.orderandadd(aUp,setup)
     del aUp
@@ -384,6 +528,8 @@ if addSample_sys:
 
 if not ignore_stats:
     #make statistical shapes:
+    print 'Make the statistical shapes'
+    print '===========================\n'
     if not binstat:
         for Q in UD:
             final_histos['%s_%s'%(systematicsnaming['stats'],Q)] = {}
@@ -426,6 +572,8 @@ if not ignore_stats:
                         final_histos['%s_bin%s_%s'%(systematicsnaming['stats'],bin,Q)][job].SetBinContent(bin,max(0,hist.GetBinContent(bin)-hist.GetBinError(bin)))
 
 
+print 'Start writing shapes in WS'
+print '==========================\n'
 #write shapes in WS:
 for key in final_histos:
     for job, hist in final_histos[key].items():
@@ -508,10 +656,12 @@ for DCtype in ['WS','TH']:
     for c in setup: f.write('\t%s'%Dict[c])
     f.write('\n')
     f.write('process')
-    for c in range(0,columns): f.write('\t%s'%c)
+    for c in range(0,columns): f.write('\t%s'%(c-len(signals)+1))
     f.write('\n')
     # datacard yields
     f.write('rate')
+    print "workspace_datacard-setup: ", setup
+    print "workspace_datacard-final_histos: ", final_histos
     for c in setup: 
         f.write('\t%s'%final_histos['nominal'][c].Integral())
     f.write('\n')

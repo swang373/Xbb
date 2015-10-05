@@ -1,0 +1,19 @@
+python variableTranslator.py ZvvHbb13TeVconfig/cuts &
+python variableTranslator.py ZvvHbb13TeVconfig/general&
+python variableTranslator.py ZvvHbb13TeVconfig/paths&
+python variableTranslator.py ZvvHbb13TeVconfig/plots&
+python variableTranslator.py ZvvHbb13TeVconfig/regression&
+python variableTranslator.py ZvvHbb13TeVconfig/samples_nosplit.cfg&
+python variableTranslator.py ZvvHbb13TeVconfig/training&
+python variableTranslator.py ZvvHbb13TeVconfig/vhbbPlotDef.ini&
+python variableTranslator.py evaluateMVA.py&
+python variableTranslator.py mvainfos.py&
+python variableTranslator.py plot_systematics.py&
+python variableTranslator.py producePlots.py&
+python variableTranslator.py scaleFactorPlot.py&
+python variableTranslator.py train.py&
+python variableTranslator.py trainRegression.py&
+python variableTranslator.py tree_stack.py&
+python variableTranslator.py workspace_datacard.py&
+python variableTranslator.py write_regression_systematics.py&
+

@@ -53,7 +53,7 @@ if(debugPrintOUts): print 'timestamp',timestamp
 
 # the list of the config is taken from the path config
 pathconfig = BetterConfigParser()
-pathconfig.read('%sconfig/paths'%(en))
+pathconfig.read('%sconfig/paths.ini'%(en))
 _configs = pathconfig.get('Configuration','List').split(" ")
 configs = [ '%sconfig/'%(en) + c for c in _configs  ]
 
@@ -75,11 +75,11 @@ if not opts.ftag == '':
         except:
             os.mkdir(DirStruct[keys])
 
-    pathfile = open('%sconfig/paths'%(en))
+    pathfile = open('%sconfig/paths.ini'%(en))
     buffer = pathfile.readlines()
     pathfile.close()
-    os.rename('%sconfig/paths'%(en),'%sconfig/paths.bkp'%(en))
-    pathfile = open('%sconfig/paths'%(en),'w')
+    os.rename('%sconfig/paths.ini'%(en),'%sconfig/paths.ini.bkp'%(en))
+    pathfile = open('%sconfig/paths.ini'%(en),'w')
     for line in buffer:
         if line.startswith('plotpath'):
             line = 'plotpath: %s\n'%DirStruct['plotpath']
@@ -147,8 +147,9 @@ def compile_macro(config,macro):
         shutil.copyfile('/scratch/%s/%s'%(getpass.getuser(),os.path.basename(library)),library)
     os.chdir(submitDir)
         
-compile_macro(config,'BTagReshaping')
-compile_macro(config,'VHbbNameSpace')
+#comment for now
+#compile_macro(config,'BTagReshaping')
+#compile_macro(config,'VHbbNameSpace')
 
 logPath = config.get("Directories","logpath")
 logo = open('%s/data/submit.txt' %config.get('Directories','vhbbpath')).readlines()
@@ -171,9 +172,8 @@ def submit(job,repDict):
         repDict['name'] = '"%s"' %logo[nJob].strip()
     else:
         repDict['name'] = '%(job)s_%(en)s%(task)s' %repDict
-    command = 'qsub -V -cwd -q %(queue)s -l h_vmem=6G -N %(name)s -o %(logpath)s/%(timestamp)s_%(job)s_%(en)s_%(task)s.out -e %(logpath)s/%(timestamp)s_%(job)s_%(en)s_%(task)s.err runAll.sh %(job)s %(en)s ' %(repDict) + opts.task + ' ' + repDict['job_id'] + ' ' + repDict['additional']
+    command = 'qsub -V -cwd -q %(queue)s -l h_vmem=6G -N %(name)s -j y -o %(logpath)s/%(timestamp)s_%(job)s_%(en)s_%(task)s.out runAll.sh %(job)s %(en)s ' %(repDict) + opts.task + ' ' + repDict['job_id'] + ' ' + repDict['additional']
     print "thecommand is ", command
-    print command
     dump_config(configs,"%(logpath)s/%(timestamp)s_%(job)s_%(en)s_%(task)s.config" %(repDict))
     subprocess.call([command], shell=True)
 

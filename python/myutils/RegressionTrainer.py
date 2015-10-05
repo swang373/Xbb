@@ -26,15 +26,23 @@ class RegressionTrainer():
         
     
     def train(self):
+        print "AAAAAAAA"
+        print "__title=",self.__title
+        print "__signals=",self.__signals
+        print "__info=",self.__info
+        print "__samples=",self.__samples
+        
         signals = []
         signalsTest = []
         for job in self.__samples:
-            print '\tREADING IN %s AS SIG'%job.name
+            print '\tREADING IN %s AS SIG'%job.name,
+            print ' in ',job.identifier
             signals.append(self.__tc.get_tree(job,'%s & %s' %(self.__cut,self.__trainCut)))
             signalsTest.append(self.__tc.get_tree(job,'%s & %s'%(self.__cut,self.__testCut)))
         
         sWeight = 1.
-        fnameOutput='training_Reg_%s.root' %(self.__title)
+        fnameOutput='weights/training_Reg_%s.root' %(self.__title)
+        print "Opening ",fnameOutput
         output = ROOT.TFile.Open(fnameOutput, "RECREATE")
 
         factory = ROOT.TMVA.Factory('MVA', output, '!V:!Silent:!Color:!DrawProgressBar:Transformations=I:AnalysisType=Regression')
@@ -58,15 +66,15 @@ class RegressionTrainer():
         factory.EvaluateAllMethods()
         output.Write()
         regDict = dict(zip(self.__vars, self.__apply)) 
-        self.__config.set('Regression', 'regWeight', '../data/MVA_BDT_REG_%s.weights.xml' %self.__title)
+        self.__config.set('Regression', 'regWeight', '../weights/MVA_BDT_REG_%s.weights.xml' %self.__title)
         self.__config.set('Regression', 'regDict', '%s' %regDict)
         self.__config.set('Regression', 'regVars', '%s' %self.__vars)
         for section in self.__config.sections():
             if not section == 'Regression':
                 self.__config.remove_section(section)
-        with open('8TeVconfig/appReg', 'w') as configfile:
+        with open('weights/Config_BDT_REG_%s.ini'%self.__title, 'w') as configfile:
             self.__config.write(configfile)
-        with open('8TeVconfig/appReg', 'r') as configfile:
+        with open('weights/Config_BDT_REG_%s.ini'%self.__title, 'r') as configfile:
             for line in configfile:
                 print line.strip()
 

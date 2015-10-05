@@ -12,8 +12,9 @@ class Sample:
         self.weightexpression=1.0
         self.tree='tree'
         self.treecut=''
-        self.count_with_PU=1.
-        self.count_with_PU2011B=1.
+        self.count=1.
+        # self.count_with_PU=1.
+        # self.count_with_PU2011B=1.
         self.subsample=False
         self.subcut='1'
 

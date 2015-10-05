@@ -75,7 +75,21 @@ namespace VHbb {
 
     return (H + H3).M();
 
+  }
 
+
+  double GetEnergy(double pt, double eta, double mass){
+    TLorentzVector m1;
+    m1.SetPtEtaPhiM(pt, eta, 0, mass);
+    return(m1.Energy());
+  }
+
+  double HVMass(double pt, double eta, double phi, double mass, double pt2, double eta2, double phi2, double mass2){
+    TLorentzVector m1, m2, msum;
+    m1.SetPtEtaPhiM(pt, eta, phi, mass);
+    m2.SetPtEtaPhiM(pt2, eta2, phi2, mass2);
+    msum = m1 + m2;
+    return(msum.M());
   }
   
   double ANGLELZ(double pt, double eta, double phi, double mass, double pt2, double eta2, double phi2, double mass2){
@@ -106,6 +120,28 @@ namespace VHbb {
     TLorentzVector m1, m2, msum;
     m1.SetPtEtaPhiE(pt, eta, phi, e);
     m2.SetPtEtaPhiE(pt2, eta2, phi2, e2);
+    msum = m1 + m2;
+
+    TVector3 bZ =  msum.BoostVector();
+
+    m1.Boost(-bZ);
+    m2.Boost(-bZ);  
+
+    TVector3 b1;
+
+    if((int) (pt) % 2 == 0)
+      b1 =  m1.BoostVector();
+    else
+      b1 =  m2.BoostVector();
+
+    double cosTheta = b1.Dot(msum.BoostVector()) / (b1.Mag()*msum.BoostVector().Mag());
+    return(cosTheta);
+  }
+
+  double ANGLEHBWithM(double pt, double eta, double phi, double mass, double pt2, double eta2, double phi2, double mass2){
+    TLorentzVector m1, m2, msum;
+    m1.SetPtEtaPhiM(pt, eta, phi, mass);
+    m2.SetPtEtaPhiM(pt2, eta2, phi2, mass2);
     msum = m1 + m2;
 
     TVector3 bZ =  msum.BoostVector();
@@ -228,14 +264,24 @@ namespace VHbb {
     TLorentzVector j;
     j.SetPtEtaPhiE(pt,eta,phi, e );
     return j.Et(); 
+  }
 
+  double evalEtFromPtEtaPhiM( double pt, double eta, double phi, double m){
+    TLorentzVector j;
+    j.SetPtEtaPhiM(pt,eta,phi, m );
+    return j.Et(); 
   }
 
   double evalMt( double pt, double eta, double phi, double e){
     TLorentzVector j;
     j.SetPtEtaPhiE(pt,eta,phi, e );
     return j.Mt(); 
+}
 
+  double evalMtFromPtEtaPhiM( double pt, double eta, double phi, double m){
+    TLorentzVector j;
+    j.SetPtEtaPhiM(pt,eta,phi, m );
+    return j.Mt(); 
   }
   /*double evalJECUnc( double pt, double eta){
   // Total uncertainty for reference

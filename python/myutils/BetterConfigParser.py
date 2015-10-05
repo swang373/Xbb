@@ -1,5 +1,11 @@
 import os,re,ConfigParser
 
+ConfigParser.SafeConfigParser.readOld = ConfigParser.SafeConfigParser.read
+
+#def ConfigParser.SafeConfigParser.read(optionstr):
+#    print optionstr
+#    ConfigParser.SafeConfigParser.read(optionstr)
+
 class BetterConfigParser(ConfigParser.SafeConfigParser):
 
     # Workaround for python readline bug. Details in
@@ -30,3 +36,11 @@ class BetterConfigParser(ConfigParser.SafeConfigParser):
             result += self.get(groups[2], groups[3])
             result += self.__replaceSectionwideTemplates(groups[4])
         return result
+
+#    def read(self, optionstr):
+#        print 
+#        print "Reading configuration in ",optionstr
+#        print 
+#        config = ConfigParser.SafeConfigParser()
+#        return config.read('./${energy}config/paths')
+

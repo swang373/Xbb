@@ -16,8 +16,11 @@ if opts.config =="":
 
 #load config
 config = BetterConfigParser()
+print opts.config
 config.read(opts.config)
+print config
 
+print "Launching RegressionTrainer"
 RegTrainer = RegressionTrainer(config)
 RegTrainer.train()
 

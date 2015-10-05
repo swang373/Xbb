@@ -2,9 +2,9 @@
 import sys,os,shutil,ROOT
 
 # TO BE CUSTOMIZED
-outdir = '/scratch/perrozzi/VHbb13TeVntuples/V11'
+outdir = '/scratch/perrozzi/VHbb13TeVntuples/V12/V12all'
 
-filelist = '/shome/perrozzi/for_gael/CMSSW_5_3_22_patch1/src/Xbb/python/ntuple_filelist_V11.log'
+filelist = '/scratch/perrozzi/VHbb13TeVntuples/V12/V12all/ntuple_filelist_V12.log'
 
 datasets = os.popen('more '+filelist).read()
 
