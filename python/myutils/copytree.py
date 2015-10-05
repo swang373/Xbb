@@ -88,6 +88,8 @@ def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,whereToLaun
         
         if ('pisa' in whereToLaunch) and os.path.isfile(outputFile):
             command = 'rm %s' %(outputFile)
+            print(command)
+            subprocess.call([command], shell=True)
         elif('PSI' in whereToLaunch):
           if os.path.isfile(del_protocol.replace('srm://t3se01.psi.ch:8443/srm/managerv2?SFN=','')): 
             print 'File', del_protocol.replace('srm://t3se01.psi.ch:8443/srm/managerv2?SFN=',''), 'already exists.\n Gonna delete it.'
