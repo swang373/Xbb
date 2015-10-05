@@ -23,12 +23,7 @@ def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut):
         FOLDER = FOLDER.replace('dcap://t3se01.psi.ch:22125','')
         folder_prefix = 'dcap://t3se01.psi.ch:22125'
     print "##### COPY TREE - BEGIN ######"
-    print 'pathIN+foldername is', pathIN+'/'+folderName
-    print 'FOLDER is', FOLDER
     for (dirpath_, dirnames, filenames_) in walk(FOLDER):
-        print 'dirpath is', dirpath_
-        print 'dirnames is', dirnames
-        print 'filenames is', filenames_ 
         for filename_ in filenames_:
             if 'root' in filename_ and not 'failed' in dirpath_:
                 dirpath = dirpath_
