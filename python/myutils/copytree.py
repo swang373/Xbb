@@ -59,11 +59,13 @@ def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,whereToLaun
         outputFolder = "%s/%s/" %(pathOUT,folderName)
         outputFile = "%s/%s/%s" %(pathOUT,folderName,filename)
         if('PSI' in whereToLaunch):
-          #Create the ouput folder if not existing
+          print 'Create the ouput folder if not existing'
           mkdir_protocol = outputFolder.replace('root://t3dcachedb03.psi.ch:1094/','')
+          print 'mkdir_protocol',mkdir_protocol
           _output_folder = ''
           for _folder in mkdir_protocol.split('/'):
               #if mkdir_protocol.split('/').index(_folder) < 3: continue
+              print 'checking and/or creating folder',_output_folder
               _output_folder += '/'+_folder
               if os.path.exists(_output_folder): print 'exists'
               else: 
@@ -153,7 +155,7 @@ def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,whereToLaun
       t = ROOT.TFileMerger()
       t.OutputFile(pathOUT+'/'+newprefix+folderName+".root ", "CREATE")
       print 'outputFolder is', outputFolder 
-      for file in os.listdir(outputFolder.replace('root://t3dcachedb03.psi.ch:1094','')):
+      for file in os.listdir(outputFolder.replace('root://t3dcachedb03.psi.ch:1094','').replace('gsidcap://t3se01.psi.ch:22128/','').replace('dcap://t3se01.psi.ch:22125/','')):
           print 'file is', outputFolder+file
           if file.startswith('tree'):
               t.AddFile(outputFolder+file)
