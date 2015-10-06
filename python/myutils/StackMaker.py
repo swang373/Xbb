@@ -405,7 +405,7 @@ class StackMaker:
         l2.SetNColumns(2)
 
 
-        ratio, error = getRatio(d1,allMC,self.xMin,self.xMax,"",self.maxRatioUncert)
+        ratio, error = getRatio(d1,allMC,self.xMin,self.xMax,"",self.maxRatioUncert, False)
         ksScore = d1.KolmogorovTest( allMC )
         chiScore = d1.Chi2Test( allMC , "UWCHI2/NDF")
         print ksScore
