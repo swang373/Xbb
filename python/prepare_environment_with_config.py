@@ -29,6 +29,8 @@ samplesinfo=config.get('Directories','samplesinfo')
 sampleconf = BetterConfigParser()
 sampleconf.read(samplesinfo)
 
+whereToLaunch = config.get('Configuration','whereToLaunch')
+
 prefix=sampleconf.get('General','prefix')
 
 info = ParseInfo(samplesinfo,pathIN)
@@ -40,5 +42,5 @@ for job in info:
         continue
     if job.subsample:
         continue
-    copytree(pathIN,pathOUT,prefix,job.prefix,job.identifier,'',job.addtreecut)
+    copytree(pathIN,pathOUT,prefix,job.prefix,job.identifier,'',job.addtreecut,whereToLaunch)
 print 'end prepare_environment_with_config.py'
