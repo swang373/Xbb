@@ -123,7 +123,7 @@ class StackMaker:
 	        #addFlag2 = 'Z+HF enriched'
         elif 'Wbb' in self.region:
 	        self.addFlag2 = 'W+b#bar{b} enriched'
-        elif 'Wudscg' in self.region:
+        elif 'WLight' in self.region:
 	        self.addFlag2 = 'W+udscg enriched'
         #else:
             #addFlag2 = 'pp #rightarrow VH; H #rightarrow b#bar{b}'
@@ -266,7 +266,7 @@ class StackMaker:
 	        addFlag = 'W(#tau#nu)H(b#bar{b})'
 
         for i in range(0,len(self.datas)):
-            print self.datas[i]
+            print "Adding data ",self.datas[i]," with integral:",self.datas[i].Integral()," and entries:",self.datas[i].GetEntries()
             d1.Add(self.datas[i],1)
         print "\033[1;32m\n\tDATA integral = %s\033[1;m"%d1.Integral()
         flow = d1.GetEntries()-d1.Integral()
@@ -324,13 +324,15 @@ class StackMaker:
 #                l_2.AddEntry(_overlay,self.typLegendDict[_overlay.GetTitle()],'L')
     
         if self.normalize:
+            print "I'm normalizing MC to data integral"
             if MC_integral != 0:	stackscale=d1.Integral()/MC_integral
             if self.overlay:
                 for _overlay in self.overlay:
                     _overlay.Scale(stackscale)
-            stackhists=allStack.GetHists()
+            stackhists=allStack.GetHists()+allStack.GetStack()
             for blabla in stackhists:
-        	    if MC_integral != 0: blabla.Scale(stackscale)
+                if MC_integral != 0: blabla.Scale(stackscale)
+            print "new MC_integral: ",allStack.GetStack().Last().Integral()
    
         allMC=allStack.GetStack().Last().Clone()
 
@@ -386,7 +388,7 @@ class StackMaker:
             # tLumi = self.myText("#sqrt{s} =  %s, L = %.1f fb^{-1}"%(self.anaTag,(float(self.lumi)/1000.)),0.17,0.78)
         # else:
             # tLumi = self.myText("#sqrt{s} =  %s, L = %.1f fb^{-1}"%(self.anaTag,(float(self.lumi)/1000.)),0.17,0.83)
-        tLumi = self.myText("#sqrt{s} =  %s, L = %.1f fb^{-1}"%('13TeV',(float(self.lumi)/1000.)),0.17,0.83)
+        tLumi = self.myText("#sqrt{s} =  %s, L = %.1f pb^{-1}"%(self.anaTag,(float(self.lumi))),0.17,0.83) 
         tAddFlag = self.myText(addFlag,0.17,0.78)
         print 'Add Flag %s' %self.addFlag2
         if self.addFlag2:
@@ -574,7 +576,7 @@ class StackMaker:
         else:
                 addFlag = 'pp #rightarrow VH; H #rightarrow b#bar{b}'
         for i in range(0,len(self.datas)):
-            print self.datas[i]
+            print "Adding data ",self.datas[i]," with integral:",self.datas[i].Integral()," and entries:",self.datas[i].GetEntries()
             d1.Add(self.datas[i],1)
         print "\033[1;32m\n\tDATA integral = %s\033[1;m"%d1.Integral()
         flow = d1.GetEntries()-d1.Integral()
@@ -677,7 +679,7 @@ class StackMaker:
 
         tPrel = self.myText("CMS",0.17,0.9,1.04)
         tLumi = self.myText("#sqrt{s} =  7TeV, L = 5.0 fb^{-1}",0.17,0.85)
-        tLumi = self.myText("#sqrt{s} =  %s, L = %.1f fb^{-1}"%(self.anaTag,(float(self.lumi)/1000.)),0.17,0.80)
+        tLumi = self.myText("#sqrt{s} =  %s, L = %.1f pb^{-1}"%(self.anaTag,(float(self.lumi))),0.17,0.80)
         tAddFlag = self.myText(addFlag,0.17,0.75)
 
         ROOT.gPad.SetTicks(1,1)
