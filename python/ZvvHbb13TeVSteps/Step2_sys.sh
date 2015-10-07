@@ -42,5 +42,15 @@ bash runAll.sh	WZpythia		 ZvvHbb13TeV sys >& log/logSysWZpythia	&
 #bash runAll.sh	WZTo4Q		 ZvvHbb13TeV sys >& log/logSysWZTo4Q	&
 bash runAll.sh	ZZpythia		 ZvvHbb13TeV sys >& log/logSysZZpythia	&
 #bash runAll.sh	ZZTo2L2Q		 ZvvHbb13TeV sys >& log/logSysZZTo2L2Q	&
-#bash runAll.sh	ZZTo2Q2Nu		 ZvvHbb13TeV sys >& log/logSysZZTo2Q2Nu	&
+bash runAll.sh	ZZTo2Q2Nu		 ZvvHbb13TeV sys >& log/logSysZZTo2Q2Nu	&
+
+bash runAll.sh	SingleElectron		 ZvvHbb13TeV sys >& log/logSysSingleElectron	&
+bash runAll.sh	SingleMuon		 ZvvHbb13TeV sys >& log/logSysSingleMuon	&
+bash runAll.sh	DoubleEG		 ZvvHbb13TeV sys >& log/logSysDoubleEG	&
+bash runAll.sh	DoubleMuon		 ZvvHbb13TeV sys >& log/logSysDoubleMuon	&
+bash runAll.sh	HTMHT		 ZvvHbb13TeV sys >& log/logSysHTMHT	&
+bash runAll.sh	MET		 ZvvHbb13TeV sys >& log/logSysMET	&
+bash runAll.sh	JetHT		 ZvvHbb13TeV sys >& log/logSysJetHT	&
+bash runAll.sh	Jet		 ZvvHbb13TeV sys >& log/logSysJet	&
+bash runAll.sh	MuonEG		 ZvvHbb13TeV sys >& log/logSysMuonEG	&
 

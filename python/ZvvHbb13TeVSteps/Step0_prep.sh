@@ -44,6 +44,18 @@ bash runAll.sh	ZZpythia		 ZvvHbb13TeV prep >& log/logPrepZZpythia	&
 #bash runAll.sh	ZZTo2L2Q		 ZvvHbb13TeV prep >& log/logPrepZZTo2L2Q	&
 bash runAll.sh	ZZTo2Q2Nu		 ZvvHbb13TeV prep >& log/logPrepZZTo2Q2Nu	&
 
+bash runAll.sh	SingleElectron		 ZvvHbb13TeV prep >& log/logPrepSingleElectron	&
+bash runAll.sh	SingleMuon		 ZvvHbb13TeV prep >& log/logPrepSingleMuon	&
+bash runAll.sh	DoubleEG		 ZvvHbb13TeV prep >& log/logPrepDoubleEG	&
+bash runAll.sh	DoubleMuon		 ZvvHbb13TeV prep >& log/logPrepDoubleMuon	&
+bash runAll.sh	HTMHT		 ZvvHbb13TeV prep >& log/logPrepHTMHT	&
+bash runAll.sh	MET		 ZvvHbb13TeV prep >& log/logPrepMET	&
+bash runAll.sh	JetHT		 ZvvHbb13TeV prep >& log/logPrepJetHT	&
+bash runAll.sh	Jet		 ZvvHbb13TeV prep >& log/logPrepJet	&
+bash runAll.sh	MuonEG		 ZvvHbb13TeV prep >& log/logPrepMuonEG	&
+
+
+
 #sh runAll.sh ZH ZvvHbb13TeV prep >& log/logPrepZH &
 #sh runAll.sh WH ZvvHbb13TeV prep >& log/logPrepWH &
 #sh runAll.sh WJetsHT100 ZvvHbb13TeV prep >& log/logPrepWJetsHT100 &
