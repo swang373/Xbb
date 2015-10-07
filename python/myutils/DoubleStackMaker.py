@@ -35,6 +35,8 @@ class StackMaker:
                 self.setup.remove('ZH')
             if 'WH' in self.setup:
                 self.setup.remove('WH')
+            if 'ggZH' in self.setup:
+                self.setup.remove('ggZH')
         self.rebin = 1
         if config.has_option(section,'rebin'):
             self.rebin = eval(config.get(section,'rebin'))
