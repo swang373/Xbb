@@ -182,7 +182,9 @@ class TreeCache:
         try:
             CountPos = input.Get("CountPosWeight")
             CountNeg = input.Get("CountNegWeight")
+            CountWeighted = input.Get("CountWeighted")
             sample.count = CountPos.GetBinContent(1) - CountPos.GetBinContent(1)
+#            sample.count = CountWeighted.GetBinContent(1)
             # CountWithPU = input.Get("CountWithPU")
             # CountWithPU2011B = input.Get("CountWithPU2011B")
             # sample.count_with_PU = CountWithPU.GetBinContent(1) 
@@ -288,8 +290,10 @@ class TreeCache:
         try:
             CountPos = input.Get("CountPosWeight")
             CountNeg = input.Get("CountNegWeight")
+            CountWeighted = input.Get("CountWeighted")
             sample.count = CountPos.GetBinContent(1) - CountNeg.GetBinContent(1)
-            print('CountPos',CountPos.GetBinContent(1),'CountNeg',CountNeg.GetBinContent(1),'sample.count',sample.count)
+#            sample.count = CountWeighted.GetBinContent(1)
+            print('CountPos',CountPos.GetBinContent(1),'CountNeg',CountNeg.GetBinContent(1),'sample.count',sample.count,' CountWeighted',CountWeighted.GetBinContent(1))
             # CountWithPU = input.Get("CountWithPU")
             # CountWithPU2011B = input.Get("CountWithPU2011B")
             # sample.count_with_PU = CountWithPU.GetBinContent(1) 
