@@ -388,7 +388,7 @@ class StackMaker:
             # tLumi = self.myText("#sqrt{s} =  %s, L = %.1f fb^{-1}"%(self.anaTag,(float(self.lumi)/1000.)),0.17,0.78)
         # else:
             # tLumi = self.myText("#sqrt{s} =  %s, L = %.1f fb^{-1}"%(self.anaTag,(float(self.lumi)/1000.)),0.17,0.83)
-        tLumi = self.myText("#sqrt{s} =  %s, L = %.1f pb^{-1}"%(self.anaTag,(float(self.lumi))),0.17,0.83) 
+        tLumi = self.myText("#sqrt{s} =  %s, L = %.1f pb^{-1}"%(self.anaTag,(float(self.lumi))),0.17,0.83)
         tAddFlag = self.myText(addFlag,0.17,0.78)
         print 'Add Flag %s' %self.addFlag2
         if self.addFlag2:
@@ -407,7 +407,7 @@ class StackMaker:
         l2.SetNColumns(2)
 
 
-        ratio, error = getRatio(d1,allMC,self.xMin,self.xMax,"",self.maxRatioUncert)
+        ratio, error = getRatio(d1,allMC,self.xMin,self.xMax,"",self.maxRatioUncert, False)
         ksScore = d1.KolmogorovTest( allMC )
         chiScore = d1.Chi2Test( allMC , "UWCHI2/NDF")
         print ksScore
@@ -678,7 +678,6 @@ class StackMaker:
         l.Draw()
 
         tPrel = self.myText("CMS",0.17,0.9,1.04)
-        tLumi = self.myText("#sqrt{s} =  7TeV, L = 5.0 fb^{-1}",0.17,0.85)
         tLumi = self.myText("#sqrt{s} =  %s, L = %.1f pb^{-1}"%(self.anaTag,(float(self.lumi))),0.17,0.80)
         tAddFlag = self.myText(addFlag,0.17,0.75)
 

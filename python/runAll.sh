@@ -196,4 +196,6 @@ if [ $task = "mva_opt" ]; then
     ./train.py --name ${sample} --training ${job_id} --config ${energy}config/${configList} --setting ${additional_arg} --local False
 fi
 
+echo "end runAll.sh"
+
 # rm -rf $TMPDIR

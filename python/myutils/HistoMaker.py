@@ -105,31 +105,31 @@ class HistoMaker:
 #            print("START DRAWING")
             if job.type != 'DATA':
               print "the jobs is not data"
-            if CuttedTree and CuttedTree.GetEntries():
-              print 'hello'
-              if 'RTight' in treeVar or 'RMed' in treeVar: 
-                  drawoption = '(%s)*(%s & %s)'%(weightF,treeCut,BDT_add_cut)
-                  # drawoption = 'sign(genWeight)*(%s)*(%s & %s)'%(weightF,treeCut,BDT_add_cut)
-                  #print drawoption
-              else: 
-                  drawoption = '(%s)*(%s)'%(weightF,treeCut)
-              print ('Draw: %s>>%s' %(treeVar,name), drawoption, "goff,e")
-              nevents = CuttedTree.Draw('%s>>%s' %(treeVar,name), drawoption, "goff,e")
-              print 'nevents:',hTree.GetEntries(),' hTree.name() 2 =',hTree.GetName()
-              full=True
-                    # if 'RTight' in treeVar or 'RMed' in treeVar: 
-                        # drawoption = '(%s)*(%s & %s)'%(weightF,treeCut,BDT_add_cut)
-                        # print drawoption
-                    # else: 
-                        # drawoption = '(%s)*(%s)'%(weightF,treeCut)
-                    # print ('Draw: %s>>%s' %(treeVar,name), drawoption, "goff,e")
-                    # print
-                    # nevent = CuttedTree.Draw('%s>>%s' %(treeVar,name), drawoption, "goff,e")
-                    # print name
-                    # print('hTree.name() 2 =',hTree.GetName()," nevent=",nevent)
-                    # full=True
-              # else:
-                  # full=False
+              if CuttedTree and CuttedTree.GetEntries():
+                print 'hello'
+                if 'RTight' in treeVar or 'RMed' in treeVar: 
+                    drawoption = '(%s)*(%s & %s)'%(weightF,treeCut,BDT_add_cut)
+                    # drawoption = 'sign(genWeight)*(%s)*(%s & %s)'%(weightF,treeCut,BDT_add_cut)
+                    #print drawoption
+                else: 
+                    drawoption = '(%s)*(%s)'%(weightF,treeCut)
+                print ('Draw: %s>>%s' %(treeVar,name), drawoption, "goff,e")
+                nevents = CuttedTree.Draw('%s>>%s' %(treeVar,name), drawoption, "goff,e")
+                print 'nevents:',hTree.GetEntries(),' hTree.name() 2 =',hTree.GetName()
+                full=True
+                      # if 'RTight' in treeVar or 'RMed' in treeVar: 
+                          # drawoption = '(%s)*(%s & %s)'%(weightF,treeCut,BDT_add_cut)
+                          # print drawoption
+                      # else: 
+                          # drawoption = '(%s)*(%s)'%(weightF,treeCut)
+                      # print ('Draw: %s>>%s' %(treeVar,name), drawoption, "goff,e")
+                      # print
+                      # nevent = CuttedTree.Draw('%s>>%s' %(treeVar,name), drawoption, "goff,e")
+                      # print name
+                      # print('hTree.name() 2 =',hTree.GetName()," nevent=",nevent)
+                      # full=True
+                # else:
+                    # full=False
             elif job.type == 'DATA':
                 if options['blind']:
                     if treeVar == 'H.mass':
