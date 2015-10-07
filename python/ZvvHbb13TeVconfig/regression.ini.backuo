@@ -5,13 +5,15 @@
 ;signals = ZZTo2Q2Nu
 signals = ZH
 name = ZvvHbbRegression_<!TrainRegression|signals!>
+;options = H:V:NTrees=2000::BoostType=Grad:Shrinkage=0.1:SeparationType=RegressionVariance:UseBaggedGrad:GradBaggingFraction=0.7:nCuts=20:MaxDepth=3:NNodesMax=15 
+;options = !H:!V:NTrees=1000:BoostType=Grad:Shrinkage=0.30:UseBaggedGrad:GradBaggingFraction=0.6:SeparationType=GiniIndex:nCuts=20:PruneMethod=CostComplexity:PruneStrength=50:NNodesMax=5
 
-options = !H:V:NTrees=2000:BoostType=Grad:Shrinkage=0.10:UseBaggedGrad:GradBaggingFraction=0.7:nCuts=200:MaxDepth=3:NNodesMax=15
+options = !H:!V:NTrees=200:BoostType=Grad:Shrinkage=0.10:UseBaggedGrad:GradBaggingFraction=0.5:nCuts=20:MaxDepth=3:PruneMethod=CostComplexity:PruneStrength=30
+
+;options = !H:V:NTrees=2000:BoostType=Grad:Shrinkage=0.10:UseBaggedGrad:GradBaggingFraction=0.7:nCuts=200:MaxDepth=3:NNodesMax=15
 
 
-vars = Alt$(Jet_pt[hJCidx],0)   Alt$(Jet_rawPt[hJCidx],0)   Alt$(rho[hJCidx],0)   Alt$(Jet_eta[hJCidx],0)   VHbb::evalMtFromPtEtaPhiM(Alt$(Jet_pt[hJCidx],0),Alt$(Jet_eta[hJCidx],0),Alt$(Jet_phi[hJCidx],0),Alt$(Jet_mass[hJCidx],0)) Alt$(Jet_leadTrackPt[hJCidx],0)   max(Alt$(Jet_leptonPtRel[hJCidx],0),0)   max(Alt$(Jet_leptonPt[hJCidx],0),0)   max(Alt$(Jet_leptonDeltaR[hJCidx],0),0)   Alt$(Jet_chEmEF[hJCidx],0)   Alt$(Jet_chHEF[hJCidx],0)   Alt$(Jet_neHEF[hJCidx],0)   Alt$(Jet_neEmEF[hJCidx],0)   Alt$(Jet_chMult[hJCidx],0)   Alt$(Jet_vtxPt[hJCidx],0)   Alt$(Jet_vtxMass[hJCidx],0)   Alt$(Jet_vtx3DVal[hJCidx],0)   Alt$(Jet_vtxNtracks[hJCidx],0)   Alt$(Jet_vtx3DSig[hJCidx],0)
-
-; Alt$(dRaddJetsdR08[0]*(TVector2::Phi_mpi_pi(Jet_phi[hjidxaddJetsdR08[2]]-Jet_phi[hJCidx])<0.8&&abs(Jet_eta[hjidxaddJetsdR08[2]]-Jet_eta[hJCidx])<0.8),0) Alt$(Jet_pt[hjidxaddJetsdR08[2]]*(TVector2::Phi_mpi_pi(Jet_phi[hjidxaddJetsdR08[2]]-Jet_phi[hJCidx])<0.8&&abs(Jet_eta[hjidxaddJetsdR08[2]]-Jet_eta[hJCidx])<0.8),0)
+vars = Alt$(Jet_pt[hJCidx],0)   Alt$(Jet_rawPt[hJCidx],0)   Alt$(rho[hJCidx],0)   Alt$(Jet_eta[hJCidx],0)   VHbb::evalMtFromPtEtaPhiM(Alt$(Jet_pt[hJCidx],0),Alt$(Jet_eta[hJCidx],0),Alt$(Jet_phi[hJCidx],0),Alt$(Jet_mass[hJCidx],0)) Alt$(Jet_leadTrackPt[hJCidx],0)   max(Alt$(Jet_leptonPtRel[hJCidx],0),0)   max(Alt$(Jet_leptonPt[hJCidx],0),0)   max(Alt$(Jet_leptonDeltaR[hJCidx],0),0)   Alt$(Jet_chEmEF[hJCidx],0)   Alt$(Jet_chHEF[hJCidx],0)   Alt$(Jet_neHEF[hJCidx],0)   Alt$(Jet_neEmEF[hJCidx],0)   Alt$(Jet_chMult[hJCidx],0)   Alt$(Jet_vtxPt[hJCidx],0)   Alt$(Jet_vtxMass[hJCidx],0)   Alt$(Jet_vtx3DVal[hJCidx],0)   Alt$(Jet_vtxNtracks[hJCidx],0)   Alt$(Jet_vtx3DSig[hJCidx],0)  
 
  
 ;vars = Jet_pt[1] Jet_eta[1] Jet_leadTrackPt[1] max(0,(Jet_leptonPtRel[1])) max(0,(Jet_leptonPt[1])) max(0,(Jet_leptonDeltaR[1]))
@@ -29,7 +31,7 @@ vars = Alt$(Jet_pt[hJCidx],0)   Alt$(Jet_rawPt[hJCidx],0)   Alt$(rho[hJCidx],0) 
 
 ;cut = Jet_mcIdx[1]==1 && abs(Jet_mcFlavour[1])==5 && (Jet_mcMatchId[1]==23||Jet_mcMatchId[1]==25) && Sum$(Jet_mcIdx[hJCidx]==1)>0
 
-cut = Sum$(Jet_mcMatchId[hJCidx] ==25  && abs(Jet_mcFlavour[hJCidx] )==5 && Jet_mcIdx[hJCidx] >=0)==2
+cut = Sum$(Jet_mcPt[hJCidx] >10  && abs(Jet_mcFlavour[hJCidx] )==5 && Jet_pt[hJCidx] >20 && Jet_mcIdx[hJCidx] >0)==2
 
 
 ;cut = Jet_mcIdx[hJCidx[1]]>=0 & abs(Jet_eta[hJCidx[1]]) < 2.4 & Jet_btagCSV[hJCidx[1]] > 0.0 & Jet_chHEF[hJCidx[1]] > 0. & Jet_puId[hJCidx[1]]>0 & abs(Jet_mcFlavour[hJCidx[1]])==5 & (Jet_mcMatchId[hJCidx[1]]==23||Jet_mcMatchId[hJCidx[1]]==25)
@@ -42,8 +44,6 @@ trainCut = evt%8==0
 testCut = evt%8!=0 & evt%5==0
 weight = 1
 ;target = Jet_mcPt
-;target = Alt$(GenBQuarkFromH_pt[(5-Jet_mcFlavour[hJCidx])/10],0)
 target = Alt$(GenJet_wNuPt[Jet_mcIdx[hJCidx]],0)
-
 ;target = Jet_mcPt[0]
 
