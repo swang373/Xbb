@@ -299,6 +299,7 @@ def doPlot():
             Stacks[v].overlay = Overlaylist[v] ## from 
         Stacks[v].lumi = lumi
         Stacks[v].jobnames= Ljobnames[v]
+        Stacks[v].normalize = eval(config.get(section,'Normalize'))
         Stacks[v].doPlot()
         ##FIXME##
 #        Stacks[v].histos = Lhistos[v]
