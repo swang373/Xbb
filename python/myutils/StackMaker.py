@@ -183,13 +183,14 @@ class StackMaker:
         print "self.setup",self.setup
         histo_dict = HistoMaker.orderandadd([{self.typs[i]:self.histos[i]} for i in range(len(self.histos))],self.setup)
         #sort
+
         print "histo_dict",histo_dict
         for key in self.setup:
           print "The sample in setup are", key
 
         self.histos=[histo_dict[key] for key in self.setup]
         self.typs=self.setup
-    
+
         c = ROOT.TCanvas(self.var,'', 600, 600)
         c.SetFillStyle(4000)
         c.SetFrameFillStyle(1000)
@@ -230,6 +231,7 @@ class StackMaker:
         MC_entries=0
 
         for histo in self.histos:
+            print "histo name, title, integral: ",histo.GetName(),histo.GetTitle(),histo.Integral()
             MC_integral+=histo.Integral()
         print "\033[1;32m\n\tMC integral = %s\033[1;m"%MC_integral
 
@@ -362,8 +364,8 @@ class StackMaker:
         l_2.AddEntry(theErrorGraph,"MC uncert. (stat.)","fl")
         Ymax = max(allStack.GetMaximum(),d1.GetMaximum())*1.7
         if self.log:
-            allStack.SetMinimum(0.1)
-            Ymax = Ymax*ROOT.TMath.Power(10,1.2*(ROOT.TMath.Log(1.2*(Ymax/0.1))/ROOT.TMath.Log(10)))*(0.2*0.1)
+            allStack.SetMinimum(0.99)
+            Ymax = Ymax*ROOT.TMath.Power(10,1.2*(ROOT.TMath.Log(1.2*(Ymax))/ROOT.TMath.Log(10)))*(0.2*0.1)
             #Ymax = Ymax*ROOT.TMath.Power(10,1.3*(ROOT.TMath.Log(1.3*(Ymax/0.1))/ROOT.TMath.Log(10)))*(0.3*0.1)
             ROOT.gPad.SetLogy()
         allStack.SetMaximum(Ymax)
@@ -527,6 +529,7 @@ class StackMaker:
         MC_entries=0
 
         for histo in sub_histos:
+            print "histo name, title, integral: ",histo.GetName(),histo.GetTitle(),histo.Integral()
             MC_integral+=histo.Integral()
         print "\033[1;32m\n\tMC integral = %s\033[1;m"%MC_integral
 
