@@ -95,7 +95,7 @@ def corrCSV(btag,  csv, flav):
 
 
 def csvReshape(sh, pt, eta, csv, flav):
-	return sh.reshape(float(eta), float(pt), float(csv), int(flav))
+    return sh.reshape(float(eta), float(pt), float(csv), int(flav))
 
 
 for job in info:
@@ -459,7 +459,7 @@ for job in info:
                 print('tree.nJet<=tree.hJCidx[0] or tree.nJet<=tree.hJCidx[1]',tree.nJet,tree.hJCidx[0],tree.hJCidx[1])
                 print('skip event')
                 newtree.Fill()
-		continue
+                continue
             if job.type != 'DATA':
                 EventForTraining[0]=int(not TFlag.EvalInstance())
             if lhe_weight_map and 'DY' in job.name:
@@ -707,7 +707,7 @@ for job in info:
                 HaddJetsdR08.dEta = 0                
                 
                 if hJet_regWeight[0] > 2. or hJet_regWeight[1] > 2. or hJet_regWeight[0] < 0.5 or hJet_regWeight[1] < 0.5:
-		    print '### Debug event with 0.5<ptReg/ptNoReg<2 ###'
+                    print '### Debug event with 0.5<ptReg/ptNoReg<2 ###'
                     print 'Event %.0f' %(Event[0])
 #                    print "hJCidxX:",hJCidx
                     print 'MET %.2f' %(METet[0])

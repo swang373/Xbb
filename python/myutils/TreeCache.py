@@ -73,13 +73,13 @@ class TreeCache:
         self.config = config
         print("Init path",path," sampleList",sampleList)
         self._cutList = []
-	#! Make the cut lists from inputs
+        #! Make the cut lists from inputs
         for cut in cutList:
             self._cutList.append('(%s)'%cut.replace(' ',''))
         try:
             self.__tmpPath = os.environ["TMPDIR"]
-	    print('The TMPDIR is ', os.environ["TMPDIR"])
-	    
+            print('The TMPDIR is ', os.environ["TMPDIR"])
+            
         except KeyError:
             print("\x1b[32;5m %s \x1b[0m" %open('%s/data/vhbb.txt' %config.get('Directories','vhbbpath')).read())
             print("\x1b[31;5;1m\n\t>>> %s: Please set your TMPDIR and try again... <<<\n\x1b[0m" %os.getlogin())
@@ -157,7 +157,7 @@ class TreeCache:
             if my_user in mkdir_command:
               print ('mkdir_command',mkdir_command)
               subprocess.call(['srmmkdir '+mkdir_command], shell=True)# delete the files already created ?     
-	else:
+        else:
             print ('HELLO')
             mkdir_command = self.__tmpPath
             print('mkdir_command',mkdir_command)

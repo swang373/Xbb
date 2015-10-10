@@ -260,17 +260,17 @@ elif opts.task == 'eval':
 
 
 elif( opts.task == 'split' ):
-	path = config.get("Directories","SPLITin")
-	samplesinfo = config.get("Directories","samplesinfo")
-	repDict['job_id']=opts.nevents_split
-	info = ParseInfo(samplesinfo,path)
-	if ( opts.samples == "" ):
-		for job in info:
-			if (job.subsample): continue #avoid multiple submissions from subsamples
-			submit(job.name,repDict)
-	else:
-		for sample in samplesList:
-			submit(sample,repDict)
+    path = config.get("Directories","SPLITin")
+    samplesinfo = config.get("Directories","samplesinfo")
+    repDict['job_id']=opts.nevents_split
+    info = ParseInfo(samplesinfo,path)
+    if ( opts.samples == "" ):
+        for job in info:
+            if (job.subsample): continue #avoid multiple submissions from subsamples
+            submit(job.name,repDict)
+    else:
+        for sample in samplesList:
+            submit(sample,repDict)
 
 #BDT optimisation
 elif opts.task == 'mva_opt':

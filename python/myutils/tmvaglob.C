@@ -144,13 +144,13 @@ namespace TMVAGlob {
          gROOT->SetStyle("TMVA");
          return;
       }
-			
+                        
       TMVAStyle = new TStyle(*gROOT->GetStyle("Plain")); // our style is based on Plain
       TMVAStyle->SetName("TMVA");
       TMVAStyle->SetTitle("TMVA style based on \"Plain\" with modifications defined in tmvaglob.C");
       gROOT->GetListOfStyles()->Add(TMVAStyle);
       gROOT->SetStyle("TMVA");
-			
+                        
       TMVAStyle->SetLineStyleString( 5, "[52 12]" );
       TMVAStyle->SetLineStyleString( 6, "[22 12]" );
       TMVAStyle->SetLineStyleString( 7, "[22 10 7 10]" );

@@ -114,17 +114,17 @@ class StackMaker:
         self.jobnames = None
         self.addFlag2 = ''
         if 'TTbar' in self.region:
-	        self.addFlag2 = 't#bar{t} enriched'
+            self.addFlag2 = 't#bar{t} enriched'
         elif 'ZLight' in self.region:
-	        self.addFlag2 = 'Z+udscg enriched'
-	        #addFlag2 = 'Z+LF enriched'
+            self.addFlag2 = 'Z+udscg enriched'
+            #addFlag2 = 'Z+LF enriched'
         elif 'Zbb' in self.region:
-	        self.addFlag2 = 'Z+b#bar{b} enriched'
-	        #addFlag2 = 'Z+HF enriched'
+            self.addFlag2 = 'Z+b#bar{b} enriched'
+            #addFlag2 = 'Z+HF enriched'
         elif 'Wbb' in self.region:
-	        self.addFlag2 = 'W+b#bar{b} enriched'
+            self.addFlag2 = 'W+b#bar{b} enriched'
         elif 'WLight' in self.region:
-	        self.addFlag2 = 'W+udscg enriched'
+            self.addFlag2 = 'W+udscg enriched'
         #else:
             #addFlag2 = 'pp #rightarrow VH; H #rightarrow b#bar{b}'
         print self.setup
@@ -175,7 +175,7 @@ class StackMaker:
     def doPlot(self):
 
         print "Start performing stacked plot"
-	print "=============================\n"
+        print "=============================\n"
 
         TdrStyles.tdrStyle()
         print "self.typs",self.typs
@@ -253,19 +253,19 @@ class StackMaker:
         datatitle='Data'
         addFlag = ''
         if 'Zee' in self.datanames and 'Zmm' in self.datanames:
-	        addFlag = 'Z(l^{-}l^{+})H(b#bar{b})'
+            addFlag = 'Z(l^{-}l^{+})H(b#bar{b})'
         elif 'Zee' in self.datanames:
-	        addFlag = 'Z(e^{-}e^{+})H(b#bar{b})'
+            addFlag = 'Z(e^{-}e^{+})H(b#bar{b})'
         elif 'Zmm' in self.datanames:
-	        addFlag = 'Z(#mu^{-}#mu^{+})H(b#bar{b})'
+            addFlag = 'Z(#mu^{-}#mu^{+})H(b#bar{b})'
         elif 'Znn' in self.datanames:
-	        addFlag = 'Z(#nu#nu)H(b#bar{b})'
+            addFlag = 'Z(#nu#nu)H(b#bar{b})'
         elif 'Wmn' in self.datanames:
-	        addFlag = 'W(#mu#nu)H(b#bar{b})'
+            addFlag = 'W(#mu#nu)H(b#bar{b})'
         elif 'Wen' in self.datanames:
-	        addFlag = 'W(e#nu)H(b#bar{b})'
+            addFlag = 'W(e#nu)H(b#bar{b})'
         elif 'Wtn' in self.datanames:
-	        addFlag = 'W(#tau#nu)H(b#bar{b})'
+            addFlag = 'W(#tau#nu)H(b#bar{b})'
 
         for i in range(0,len(self.datas)):
             print "Adding data ",self.datas[i]," with integral:",self.datas[i].Integral()," and entries:",self.datas[i].GetEntries()
@@ -327,7 +327,7 @@ class StackMaker:
     
         if self.normalize:
             print "I'm normalizing MC to data integral"
-            if MC_integral != 0:	stackscale=d1.Integral()/MC_integral
+            if MC_integral != 0:        stackscale=d1.Integral()/MC_integral
             if self.overlay:
                 for _overlay in self.overlay:
                     _overlay.Scale(stackscale)
@@ -456,7 +456,7 @@ class StackMaker:
         t0.SetTextSize(ROOT.gStyle.GetLabelSize()*2.4)
         t0.SetTextFont(ROOT.gStyle.GetLabelFont())
         if not self.log:
-    	    t0.DrawTextNDC(0.1059,0.96, "0")
+                t0.DrawTextNDC(0.1059,0.96, "0")
         if not os.path.exists(self.plotDir):
             os.mkdir(self.plotDir)
         if not os.path.exists(self.plotDir+'/pdf'):
@@ -492,7 +492,7 @@ class StackMaker:
         self.doCompPlot(allStack,l)
 
         print "Finished performing stacked plot"
-	print "================================\n"
+        print "================================\n"
 
     def doSubPlot(self,signal):
         
@@ -565,19 +565,19 @@ class StackMaker:
         datatitle='Data'
         addFlag = ''
         if 'Zee' in self.datanames and 'Zmm' in self.datanames:
-	        addFlag = 'Z(l^{-}l^{+})H(b#bar{b})'
+            addFlag = 'Z(l^{-}l^{+})H(b#bar{b})'
         elif 'Zee' in self.datanames:
-	        addFlag = 'Z(e^{-}e^{+})H(b#bar{b})'
+            addFlag = 'Z(e^{-}e^{+})H(b#bar{b})'
         elif 'Zmm' in self.datanames:
-	        addFlag = 'Z(#mu^{-}#mu^{+})H(b#bar{b})'
+            addFlag = 'Z(#mu^{-}#mu^{+})H(b#bar{b})'
         elif 'Znn' in self.datanames:
-	        addFlag = 'Z(#nu#nu)H(b#bar{b})'
+            addFlag = 'Z(#nu#nu)H(b#bar{b})'
         elif 'Wmn' in self.datanames:
-	        addFlag = 'W(#mu#nu)H(b#bar{b})'
+            addFlag = 'W(#mu#nu)H(b#bar{b})'
         elif 'Wen' in self.datanames:
-                addFlag = 'W(e#nu)H(b#bar{b})'
+            addFlag = 'W(e#nu)H(b#bar{b})'
         else:
-                addFlag = 'pp #rightarrow VH; H #rightarrow b#bar{b}'
+            addFlag = 'pp #rightarrow VH; H #rightarrow b#bar{b}'
         for i in range(0,len(self.datas)):
             print "Adding data ",self.datas[i]," with integral:",self.datas[i].Integral()," and entries:",self.datas[i].GetEntries()
             d1.Add(self.datas[i],1)
@@ -603,13 +603,13 @@ class StackMaker:
                 l_2.AddEntry(_overlay,self.typLegendDict['Overlay'+_overlay.GetTitle()],'L')
     
         if self.normalize:
-            if MC_integral != 0:	stackscale=d1.Integral()/MC_integral
+            if MC_integral != 0:        stackscale=d1.Integral()/MC_integral
             if self.overlay:
                 for _overlay in self.overlay:
                     _overlay.Scale(stackscale)
             stackhists=allStack.GetHists()
             for blabla in stackhists:
-        	    if MC_integral != 0: blabla.Scale(stackscale)
+                    if MC_integral != 0: blabla.Scale(stackscale)
    
         allMC=allStack.GetStack().Last().Clone()
         bkgMC=bkgStack.GetStack().Last().Clone()
