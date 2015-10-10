@@ -337,7 +337,7 @@ class TreeCache:
         theScale = 1.
         lumi = float(sample.lumi)
         theScale = lumi*sample.xsec*sample.sf/(sample.count)
-        print("sample: ",sample,"xsec: ",sample.xsec,"sample.sf: ",sample.sf,"sample.count: ",sample.count," ---> using scale: ", theScale)
+        print("sample: ",sample,"lumi: ",lumi,"xsec: ",sample.xsec,"sample.sf: ",sample.sf,"sample.count: ",sample.count," ---> using scale: ", theScale)
 
 #        if not lumi:
 #            lumi = float(sample.lumi)
