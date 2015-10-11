@@ -182,13 +182,13 @@ fi
 
 if [ $task = "mva_opt" ]; then
     if [ $# -lt 5 ]
-	then
-	echo "@ERROR: You passed " $# "arguments while BDT optimisation needs at least 5 arguments."
-	echo "Exiting..."
-	echo " ---------------------------------- "
-	echo " Usage : ./runAll.sh sample energy task jo_id bdt_factory_settings"
-	echo " ---------------------------------- "
-	exit
+  then
+  echo "@ERROR: You passed " $# "arguments while BDT optimisation needs at least 5 arguments."
+  echo "Exiting..."
+  echo " ---------------------------------- "
+  echo " Usage : ./runAll.sh sample energy task jo_id bdt_factory_settings"
+  echo " ---------------------------------- "
+  exit
     fi
     echo "BDT factory settings"
     echo $additional_arg

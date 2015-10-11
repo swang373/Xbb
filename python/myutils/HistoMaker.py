@@ -16,7 +16,7 @@ class HistoMaker:
         #optionsList: Dictionnary containing information on vars, including the cuts
         #! Read arguments and initialise variables
 
-	print "Start Creating HistoMaker"
+        print "Start Creating HistoMaker"
         print "=========================\n"
         self.path = path
         self.config = config
@@ -92,6 +92,8 @@ class HistoMaker:
             else:
                 treeCut='%s'%(options['cut'])
 
+            treeCut = "("+treeCut+")&&"+job.addtreecut 
+#            print 'job.addtreecut ',job.addtreecut 
             #options
             print 'treeCut',treeCut
             print 'weightF',weightF
@@ -107,7 +109,7 @@ class HistoMaker:
               print "the jobs is not data"
               if CuttedTree and CuttedTree.GetEntries():
                 print 'hello'
-                if 'RTight' in treeVar or 'RMed' in treeVar: 
+                if 'BDT' in treeVar or 'bdt' in treeVar: 
                     drawoption = '(%s)*(%s & %s)'%(weightF,treeCut,BDT_add_cut)
                     # drawoption = 'sign(genWeight)*(%s)*(%s & %s)'%(weightF,treeCut,BDT_add_cut)
                     #print drawoption
@@ -132,11 +134,12 @@ class HistoMaker:
                     # full=False
             elif job.type == 'DATA':
                 if options['blind']:
-                    if treeVar == 'H.mass':
+                    if 'H' in treeVar and 'mass' in treeVar:
                         CuttedTree.Draw('%s>>%s' %(treeVar,name),' (%(var)s <90. || %(var)s > 150.) & %(cut)s' %options, "goff,e")
-                    else:
+                    elif 'BDT' in treeVar or 'bdt' in treeVar:
                         CuttedTree.Draw('%s>>%s' %(treeVar,name),'%(var)s < 0. & %(cut)s'%options, "goff,e")
-
+                    else:
+                        CuttedTree.Draw('%s>>%s' %(treeVar,name),'%s' %treeCut, "goff,e")
                 else:
                     CuttedTree.Draw('%s>>%s' %(treeVar,name),'%s' %treeCut, "goff,e")
                 full = True
@@ -152,10 +155,10 @@ class HistoMaker:
             # if full: print 'hTree',hTree.GetName()
               
             if job.type != 'DATA':
-                if 'RTight' in treeVar or 'RMed' in treeVar:
+                if 'BDT' in treeVar or 'bdt' in treeVar:
                     if TrainFlag:
-                        MC_rescale_factor=2.
-                        #print 'I RESCALE BY 2.0'
+                        MC_rescale_factor=2. ##FIXME## only dataset used for training must be rescaled!!
+                        print 'I RESCALE BY 2.0'
                     else: 
                         MC_rescale_factor = 1.
                     ScaleFactor = self.tc.get_scale(job,self.config,self.lumi)*MC_rescale_factor
@@ -168,14 +171,14 @@ class HistoMaker:
 #            print("END RESCALE")
 #            print("START addOverFlow")
             if addOverFlow:
-            	uFlow = hTree.GetBinContent(0)+hTree.GetBinContent(1)
-            	oFlow = hTree.GetBinContent(hTree.GetNbinsX()+1)+hTree.GetBinContent(hTree.GetNbinsX())
-            	uFlowErr = ROOT.TMath.Sqrt(ROOT.TMath.Power(hTree.GetBinError(0),2)+ROOT.TMath.Power(hTree.GetBinError(1),2))
-            	oFlowErr = ROOT.TMath.Sqrt(ROOT.TMath.Power(hTree.GetBinError(hTree.GetNbinsX()),2)+ROOT.TMath.Power(hTree.GetBinError(hTree.GetNbinsX()+1),2))
-            	hTree.SetBinContent(1,uFlow)
-            	hTree.SetBinContent(hTree.GetNbinsX(),oFlow)
-            	hTree.SetBinError(1,uFlowErr)
-            	hTree.SetBinError(hTree.GetNbinsX(),oFlowErr)
+                uFlow = hTree.GetBinContent(0)+hTree.GetBinContent(1)
+                oFlow = hTree.GetBinContent(hTree.GetNbinsX()+1)+hTree.GetBinContent(hTree.GetNbinsX())
+                uFlowErr = ROOT.TMath.Sqrt(ROOT.TMath.Power(hTree.GetBinError(0),2)+ROOT.TMath.Power(hTree.GetBinError(1),2))
+                oFlowErr = ROOT.TMath.Sqrt(ROOT.TMath.Power(hTree.GetBinError(hTree.GetNbinsX()),2)+ROOT.TMath.Power(hTree.GetBinError(hTree.GetNbinsX()+1),2))
+                hTree.SetBinContent(1,uFlow)
+                hTree.SetBinContent(hTree.GetNbinsX(),oFlow)
+                hTree.SetBinError(1,uFlowErr)
+                hTree.SetBinError(hTree.GetNbinsX(),oFlowErr)
             hTree.SetDirectory(0)
 #            print("STOP addOverFlow")
 #            print("START rebin")
@@ -301,12 +304,13 @@ class HistoMaker:
         histo_dicts contains an array of dictionnary
         '''
 
+        from array import array
+        doubleVariable = array('d',[0])
+        
         print "Start orderandadd"
         print "=================\n"
-
         print "Input dict is", histo_dicts
-	
-	
+
         ordered_histo_dict = {}
         print "orderandadd-setup",setup
         print "orderandadd-histo_dicts",histo_dicts
@@ -314,15 +318,16 @@ class HistoMaker:
             nSample = 0
             for histo_dict in histo_dicts:
                 if histo_dict.has_key(sample):
-                    integral = histo_dict[sample].Integral()
+                    integral = histo_dict[sample].IntegralAndError(0,histo_dict[sample].GetNbinsX(),doubleVariable)
+                    error = doubleVariable[0]
                     entries = histo_dict[sample].GetEntries()
                     subsamplename = histo_dict[sample].GetTitle()
                     if nSample == 0:
                         ordered_histo_dict[sample] = histo_dict[sample].Clone()
-                    printc('magenta','','\t--> added %s to %s. Integral: %s. Entries: %s'%(subsamplename,sample,integral,entries))
-                    ordered_histo_dict[sample].Add(histo_dict[sample])
+                    else:
+                        ordered_histo_dict[sample].Add(histo_dict[sample])
+                    printc('magenta','','\t--> added %s to %s Integral: %s Entries: %s Error: %s'%(subsamplename,sample,integral,entries,error))
                     nSample += 1
-        print "orderandadd-ordered_histo_dict",ordered_histo_dict
         del histo_dicts
         print "Output dict is", ordered_histo_dict
         return ordered_histo_dict 

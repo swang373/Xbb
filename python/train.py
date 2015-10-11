@@ -63,16 +63,16 @@ MVAtype=config.get(run,'MVAtype')
 #MVA name and settings. From local running or batch running different option
 print opts.local
 if(eval(opts.local)):
-	print 'Local run'
-	MVAname=run
-	MVAsettings=config.get(run,'MVAsettings')
+  print 'Local run'
+  MVAname=run
+  MVAsettings=config.get(run,'MVAsettings')
 elif(opts.set_name!='' and opts.MVAsettings!=''):
-	print 'Batch run'
-	MVAname=opts.set_name
-	MVAsettings=opts.MVAsettings
+  print 'Batch run'
+  MVAname=opts.set_name
+  MVAsettings=opts.MVAsettings
 else :
-	print 'Problem in configuration. Missing or inconsitent information Check input options'
-	sys.exit()	
+  print 'Problem in configuration. Missing or inconsitent information Check input options'
+  sys.exit()  
 print '@DEBUG: MVAname'
 print 'input : ' + opts.set_name
 print 'used : ' + MVAname
@@ -237,9 +237,9 @@ print ks_bkg
 import sqlite3 as lite
 con = lite.connect(MVAdir+'Trainings.db',timeout=10000) #timeout in milliseconds. default 5 sec
 with con: # here DB is locked
-	cur = con.cursor()
-	cur.execute("create table if not exists trainings (Roc_integral real, Separation real, Significance real, Ks_signal real, Ks_background real, Roc_integral_train real, Separation_train real, MVASettings text)");
-	cur.execute("insert into trainings values(?,?,?,?,?,?,?,?)",(roc_integral_test,separation_test,significance,ks_signal,ks_bkg,roc_integral_train,separation_train,MVAsettings));
+    cur = con.cursor()
+    cur.execute("create table if not exists trainings (Roc_integral real, Separation real, Significance real, Ks_signal real, Ks_background real, Roc_integral_train real, Separation_train real, MVASettings text)");
+    cur.execute("insert into trainings values(?,?,?,?,?,?,?,?)",(roc_integral_test,separation_test,significance,ks_signal,ks_bkg,roc_integral_train,separation_train,MVAsettings));
 #!! here is unlocked
 
 #!! Close the output file to avoid memory leak
