@@ -61,17 +61,18 @@ def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,whereToLaun
         if('PSI' in whereToLaunch):
           print 'Create the ouput folder if not existing'
           mkdir_protocol = outputFolder.replace('root://t3dcachedb03.psi.ch:1094/','')
-          print 'mkdir_protocol',mkdir_protocol
+          # print 'mkdir_protocol',mkdir_protocol
           _output_folder = ''
           for _folder in mkdir_protocol.split('/'):
               #if mkdir_protocol.split('/').index(_folder) < 3: continue
-              print 'checking and/or creating folder',_output_folder
+              # print 'checking and/or creating folder',_output_folder
               _output_folder += '/'+_folder
-              if os.path.exists(_output_folder): print 'exists'
-              else: 
+              # if os.path.exists(_output_folder): print 'exists'
+              # else:
+              if not os.path.exists(_output_folder):
                   command = 'srmmkdir srm://t3se01.psi.ch/' + _output_folder
                   subprocess.call([command], shell = True)
-              if os.path.exists(_output_folder): print 'Folder', _output_folder, 'sucessfully created'
+                  if os.path.exists(_output_folder): print 'Folder', _output_folder, 'sucessfully created'
 
         try:
             os.mkdir(outputFolder)
@@ -161,4 +162,17 @@ def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,whereToLaun
               t.AddFile(outputFolder+file)
       t.Merge()
     
+      print 'checking output file',pathOUT+'/'+newprefix+folderName+".root"
+      f = ROOT.TFile.Open(pathOUT+'/'+newprefix+folderName+".root",'read')
+      if f.GetNkeys() == 0 or f.TestBit(ROOT.TFile.kRecovered) or f.IsZombie():
+        print 'TERREMOTO AND TRAGEDIA: THE MERGED FILE IS CORRUPTED!!! ERROR: deleting it and exiting'
+        subprocess.call([command], shell = True)
+        sys.exit(1)
+      else:
+        for file in os.listdir(outputFolder.replace('root://t3dcachedb03.psi.ch:1094','').replace('gsidcap://t3se01.psi.ch:22128/','').replace('dcap://t3se01.psi.ch:22125/','')):
+          filename = outputFolder+file
+          filename = filename.replace('root://t3dcachedb03.psi.ch:1094','').replace('gsidcap://t3se01.psi.ch:22128/','').replace('dcap://t3se01.psi.ch:22125/','')
+          print("srmrm srm://t3se01.psi.ch:8443/srm/managerv2?SFN="+filename)
+          os.system("srmrm srm://t3se01.psi.ch:8443/srm/managerv2?SFN="+filename)
+
     print "##### COPY TREE - END ######"
