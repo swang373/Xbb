@@ -222,7 +222,6 @@ elif opts.task == 'prep':
         info = ParseInfo(samplesinfo,path)
         for job in info:
             submit(job.name,repDict)
-            print 'byebye';sys.exit(1)
     else:
         for sample in samplesList:
             submit(sample,repDict)
