@@ -296,7 +296,7 @@ class StackMaker:
                 l_2.AddEntry(self.histos[j],self.typLegendDict[self.typs[j]],'F')
         if self.overlay:
             overScale = 100000
-            for _overlay in self.overlay:
+            for _overlay in self.overlay: #find minimum scale to use for all overlays
                 stackMax = allStack.GetMaximum()
                 overMax = _overlay.GetMaximum() + 1e-30 
                 print "overScale=",overScale,

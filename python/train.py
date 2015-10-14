@@ -110,6 +110,8 @@ workdir=ROOT.gDirectory.GetPath()
 
 TrainCut='%s & EventForTraining==1'%TCut
 EvalCut='%s & EventForTraining==0'%TCut
+print "TrainCut:",TrainCut
+print "EvalCut:",EvalCut
 cuts = [TrainCut,EvalCut] 
 
 
