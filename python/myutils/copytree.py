@@ -57,19 +57,18 @@ def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config):
     from os import walk
     dirpath = ""
     filename = ""
-    filenames = []
+#    filenames = []
+    inputFiles = []
     folder_prefix = ''
     print "##### COPY TREE - BEGIN ######"
     whereToLaunch = config.get('Configuration','whereToLaunch')
+
+
     if('pisa' in whereToLaunch):
       for (dirpath_, dirnames, filenames_) in walk(pathIN+'/'+folderName):
         for filename_ in filenames_:
             if 'root' in filename_ and not 'failed' in dirpath_:
-                dirpath = dirpath_
-                filename = filename_
-                filenames = filenames_
-                break
-        if len(filenames)>0: break
+                inputFiles.append(dirpath_+'/'+filename_)
     else:
       FOLDER = pathIN+'/'+folderName
       if FOLDER.startswith('dcap://t3se01.psi.ch:22125'):
@@ -78,20 +77,11 @@ def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config):
       for (dirpath_, dirnames, filenames_) in walk(FOLDER):
         for filename_ in filenames_:
             if 'root' in filename_ and not 'failed' in dirpath_:
-                dirpath = dirpath_
-                filename = filename_
-                filenames = filenames_
-                break
-        if len(filenames)>0: break
+                inputFiles.append(dirpath_+'/'+filename_)
 
-    if dirpath == "":
+    if len(inputFiles) == 0 :
         print "No .root files found in ",pathIN+'/'+folderName
         return
-
-    if('pisa' in whereToLaunch):
-      pathIN = dirpath
-    else:
-      pathIN = folder_prefix + dirpath
 
     ## prepare output folder
     outputFolder = "%s/%s/" %(pathOUT,folderName)
@@ -116,8 +106,11 @@ def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config):
 
     ## prepare a list of input(inputFile,outputFile,Acut) for the files to be processed
     inputs=[]
-    for filename in filenames:
-        inputFile = '%s/%s ' %(pathIN,filename)
+    filenames=[]
+    for inputFile in inputFiles:
+        filename = inputFile.split('/')[-1]
+        if filename in filenames: continue 
+        filenames.append(filename)
         outputFile = "%s/%s/%s" %(pathOUT,folderName,filename)
         if('PSI' in whereToLaunch):
           del_protocol = outputFile
