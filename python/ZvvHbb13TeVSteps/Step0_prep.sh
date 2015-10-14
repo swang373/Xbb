@@ -17,7 +17,7 @@ bash runAll.sh	ZJetsMadHT200		 ZvvHbb13TeV prep >& log/logPrepZJetsMadHT200	&
 bash runAll.sh	ZJetsMadHT400		 ZvvHbb13TeV prep >& log/logPrepZJetsMadHT400	&
 bash runAll.sh	ZJetsMadHT600		 ZvvHbb13TeV prep >& log/logPrepZJetsMadHT600	&
 bash runAll.sh	TT		 ZvvHbb13TeV prep >& log/logPrepTT	&
-#bash runAll.sh	TTPow		 ZvvHbb13TeV prep >& log/logPrepTTPow	&
+bash runAll.sh	TTPow		 ZvvHbb13TeV prep >& log/logPrepTTPow	&
 bash runAll.sh	ST_s		 ZvvHbb13TeV prep >& log/logPrepST_s	&
 bash runAll.sh	ST_t		 ZvvHbb13TeV prep >& log/logPrepST_t	&
 bash runAll.sh	ST_tW_antitop		 ZvvHbb13TeV prep >& log/logPrepST_tW_antitop	&
