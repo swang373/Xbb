@@ -189,13 +189,14 @@ for job in info:
     #hFJ0 = ROOT.TLorentzVector()
     #hFJ1 = ROOT.TLorentzVector()
         
+    writeNewVariables = eval(config.get("Regression","writeNewVariables"))
     regWeight = config.get("Regression","regWeight")
     regDict = eval(config.get("Regression","regDict"))
     regVars = eval(config.get("Regression","regVars"))
     #regWeightFilterJets = config.get("Regression","regWeightFilterJets")
     #regDictFilterJets = eval(config.get("Regression","regDictFilterJets"))
     #regVarsFilterJets = eval(config.get("Regression","regVarsFilterJets"))
-          
+
     #Regression branches
     applyRegression = True
 #    hJet_pt = array('f',[0]*2)
@@ -429,9 +430,6 @@ for job in info:
         else:
             lheWeight[0] = 1.
         
-        #iter=0
-        
-        
     ### Adding new variable from configuration ###
     newVariableNames = []
     try:
@@ -454,7 +452,7 @@ for job in info:
             for variableName in newVariableNames:
                 newVariableFormulas[variableName].GetNdata()
                 newVariables[variableName][0] = newVariableFormulas[variableName].EvalInstance()
-            
+
             if tree.nJet<=tree.hJCidx[0] or tree.nJet<=tree.hJCidx[1]:
                 print('tree.nJet<=tree.hJCidx[0] or tree.nJet<=tree.hJCidx[1]',tree.nJet,tree.hJCidx[0],tree.hJCidx[1])
                 print('skip event')

@@ -461,9 +461,10 @@ print '\n\t--> Ordering and Adding Histos\n'
 
 print 'workspace_datacard-all_samples:',[all_histos['%s'%job][0] for job in all_samples]
 
+jobnames = [job.name for job in all_samples]
 
 #NOMINAL:
-final_histos['nominal'] = HistoMaker.orderandadd([all_histos['%s'%job][0] for job in all_samples],setup) 
+final_histos['nominal'] = HistoMaker.orderandadd([all_histos['%s'%job][0] for job in all_samples],setup,jobnames)
 
 #SYSTEMATICS:
 ind = 1
@@ -476,13 +477,13 @@ print 'add UD sys'
 print '==========\n'
 for syst in systematics:
     for Q in UD:
-        final_histos['%s_%s'%(systematicsnaming[syst],Q)] = HistoMaker.orderandadd([all_histos[job.name][ind] for job in all_samples],setup)
+        final_histos['%s_%s'%(systematicsnaming[syst],Q)] = HistoMaker.orderandadd([all_histos[job.name][ind] for job in all_samples],setup,jobnames)
         ind+=1
 print 'add weight sys'
 print '==============\n'
 for weightF_sys in weightF_systematics: 
     for Q in UD:
-        final_histos['%s_%s'%(systematicsnaming[weightF_sys],Q)]= HistoMaker.orderandadd([all_histos[job.name][ind] for job in all_samples],setup)
+        final_histos['%s_%s'%(systematicsnaming[weightF_sys],Q)]= HistoMaker.orderandadd([all_histos[job.name][ind] for job in all_samples],setup,jobnames)
         ind+=1
 #?
 if change_shapes:
@@ -522,9 +523,9 @@ if addSample_sys:
     print 'Adding the samples systematics'
     print '==============================\n'
     aUp, aDown = get_alternate_shapes(all_histos,addSample_sys,all_samples)
-    final_histos['%s_Up'%(systematicsnaming['model'])]= HistoMaker.orderandadd(aUp,setup)
+    final_histos['%s_Up'%(systematicsnaming['model'])]= HistoMaker.orderandadd(aUp,setup,jobnames)
     del aUp
-    final_histos['%s_Down'%(systematicsnaming['model'])]= HistoMaker.orderandadd(aDown,setup)
+    final_histos['%s_Down'%(systematicsnaming['model'])]= HistoMaker.orderandadd(aDown,setup,jobnames)
 
 
 if not ignore_stats:

@@ -107,14 +107,18 @@ class TreeCache:
               print ('mkdir_command',mkdir_command)
               subprocess.call(['mkdir '+mkdir_command], shell=True)# delete the files already created ?     
 
-        #! read the tree from the input
-        if forceReDo:
-            output = ROOT.TFile.Open(tmpSource,'recreate')
-        else:
-            output = ROOT.TFile.Open(tmpSource,'create')
+        try:
+            #! read the tree from the input
+            if forceReDo:
+                output = ROOT.TFile.Open(tmpSource,'recreate')
+            else:
+                output = ROOT.TFile.Open(tmpSource,'create')
+            output.cd()
+        except:
+            ## in case there are problems go to the next dataset [probably another process is working on this dataset]
+            return (theName,theHash)
         print ('reading',source)
         input = ROOT.TFile.Open(source,'read')
-        output.cd()
         tree = input.Get(sample.tree)
         try:
             CountPos = input.Get("CountPosWeight")
@@ -184,16 +188,16 @@ class TreeCache:
         print('input file %s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]))
         # print ('Opening %s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]))
         input = ROOT.TFile.Open('%s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]),'read')
-        try:
-            tree = input.Get(sample.tree)
-            print('type(tree) is ROOT.TTree? ',type(tree) is ROOT.TTree)
-            if not(type(tree) is ROOT.TTree): ##if the file is corrupted relaunch _trim_tree
-                raise NameError("%s/tmp_%s.root is corrupted. I'm relaunching _trim_tree"%(self.__tmpPath,self.__hashDict[sample.name]))
-        except:
+        print ('Opening %s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]))
+        tree = input.Get(sample.tree)
+        print("Type of sample.tree ROOT.TTree? ", type(tree) is ROOT.TTree)
+        if not(type(tree) is ROOT.TTree):
+            print ("%s/tmp_%s.root is corrupted. I'm relaunching _trim_tree"%(self.__tmpPath,self.__hashDict[sample.name]))
             self._trim_tree(sample, forceReDo=True)
             input = ROOT.TFile.Open('%s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]),'read')
             tree = input.Get(sample.tree)
-        #print('The name of the tree is ', tree.GetName())
+            print("Type of sample.tree ROOT.TTree? (again) ", type(tree) is ROOT.TTree)
+
         # CountWithPU = input.Get("CountWithPU")
         # CountWithPU2011B = input.Get("CountWithPU2011B")
         # sample.count_with_PU = CountWithPU.GetBinContent(1) 
@@ -299,7 +303,7 @@ class TreeCache:
         srmPath = 'srm://t3se01.psi.ch:8443/srm/managerv2?SFN='
         file_dummy = file_dummy.replace('root://t3dcachedb03.psi.ch:1094/','')
         file_dummy = file_dummy.replace('srm://t3se01.psi.ch:8443/srm/managerv2?SFN=','')
-        print('trying to check if exists:',file_dummy)
+#        print('trying to check if exists:',file_dummy)
         # if 'gsidcap' or 'srm' in file_dummy:
             # if TreeCache.get_slc_version() == 'SLC5':
               # command = 'lcg-ls %s' %file_dummy.replace('gsidcap://t3se01.psi.ch:22128/','%s/'%srmPath)
@@ -314,7 +318,8 @@ class TreeCache:
             # return not error_msg in line
               
         # else:
-        print('os.path.exists(',file_dummy,')',os.path.exists(file_dummy))
+        exist = os.path.exists(file_dummy)
+        print('os.path.exists(',file_dummy,')',exist)
         return os.path.exists(file_dummy)
 
 

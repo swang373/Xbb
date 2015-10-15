@@ -42,5 +42,5 @@ for job in info:
         continue
     if job.subsample:
         continue
-    copytree(pathIN,pathOUT,prefix,job.prefix,job.identifier,'',job.addtreecut, whereToLaunch)
+    copytree(pathIN,pathOUT,prefix,job.prefix,job.identifier,'',job.addtreecut, config)
 print 'end prepare_environment_with_config.py'
