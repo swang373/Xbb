@@ -348,10 +348,11 @@ for job in all_samples:
             cutOverWrite = treecut
     inputs.append((mc_hMaker,"get_histos_from_tree",(job,cutOverWrite)))
 
-multiprocess=0
-if('pisa' in config.get('Configuration','whereToLaunch')): multiprocess=int(config.get('Configuration','nprocesses'))
+# multiprocess=0
+# if('pisa' in config.get('Configuration','whereToLaunch')):
+multiprocess=int(config.get('Configuration','nprocesses'))
 outputs = []
-if multiprocess>0:
+if multiprocess>1:
     from multiprocessing import Pool
     from myutils import GlobalFunction
     p = Pool(multiprocess)
@@ -463,7 +464,7 @@ print 'workspace_datacard-all_samples:',[all_histos['%s'%job][0] for job in all_
 jobnames = [job.name for job in all_samples]
 
 #NOMINAL:
-final_histos['nominal'] = HistoMaker.orderandadd([all_histos['%s'%job][0] for job in all_samples],setup,jobnames) 
+final_histos['nominal'] = HistoMaker.orderandadd([all_histos['%s'%job][0] for job in all_samples],setup,jobnames)
 
 #SYSTEMATICS:
 ind = 1

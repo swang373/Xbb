@@ -162,7 +162,7 @@ if( not os.path.isdir(logPath) ):
     print 'Exit'
     sys.exit(-1)
     
-repDict = {'en':en,'logpath':logPath,'job':'','task':opts.task,'queue': 'all.q','timestamp':timestamp,'additional':'','job_id':''}
+repDict = {'en':en,'logpath':logPath,'job':'','task':opts.task,'queue': 'all.q','timestamp':timestamp,'additional':'','job_id':'','nprocesses':str(max(int(pathconfig.get('Configuration','nprocesses')),1))}
 def submit(job,repDict):
     global counter
     repDict['job'] = job
@@ -172,8 +172,8 @@ def submit(job,repDict):
         repDict['name'] = '"%s"' %logo[nJob].strip()
     else:
         repDict['name'] = '%(job)s_%(en)s%(task)s' %repDict
-    command = 'qsub -V -cwd -q %(queue)s -l h_vmem=6G -N %(name)s -j y -o %(logpath)s/%(timestamp)s_%(job)s_%(en)s_%(task)s.out runAll.sh %(job)s %(en)s ' %(repDict) + opts.task + ' ' + repDict['job_id'] + ' ' + repDict['additional']
-    print "thecommand is ", command
+    command = 'qsub -V -cwd -q %(queue)s -l h_vmem=6G -N %(name)s -j y -o %(logpath)s/%(timestamp)s_%(job)s_%(en)s_%(task)s.out -pe smp %(nprocesses)s runAll.sh %(job)s %(en)s ' %(repDict) + opts.task + ' ' + repDict['nprocesses']+ ' ' + repDict['job_id'] + ' ' + repDict['additional']
+    print "the command is ", command
     dump_config(configs,"%(logpath)s/%(timestamp)s_%(job)s_%(en)s_%(task)s.config" %(repDict))
     subprocess.call([command], shell=True)
 
@@ -260,17 +260,17 @@ elif opts.task == 'eval':
 
 
 elif( opts.task == 'split' ):
-	path = config.get("Directories","SPLITin")
-	samplesinfo = config.get("Directories","samplesinfo")
-	repDict['job_id']=opts.nevents_split
-	info = ParseInfo(samplesinfo,path)
-	if ( opts.samples == "" ):
-		for job in info:
-			if (job.subsample): continue #avoid multiple submissions from subsamples
-			submit(job.name,repDict)
-	else:
-		for sample in samplesList:
-			submit(sample,repDict)
+    path = config.get("Directories","SPLITin")
+    samplesinfo = config.get("Directories","samplesinfo")
+    repDict['job_id']=opts.nevents_split
+    info = ParseInfo(samplesinfo,path)
+    if ( opts.samples == "" ):
+        for job in info:
+            if (job.subsample): continue #avoid multiple submissions from subsamples
+            submit(job.name,repDict)
+    else:
+        for sample in samplesList:
+            submit(sample,repDict)
 
 #BDT optimisation
 elif opts.task == 'mva_opt':

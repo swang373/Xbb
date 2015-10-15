@@ -17,7 +17,7 @@ class StackMaker:
         self.normalize = eval(config.get(section,'Normalize'))# ?
         self.log = eval(config.get(section,'log')) #?
 
-	#! Read parameters of the fit region and the variable. They are then stored in the StackMaker.
+        #! Read parameters of the fit region and the variable. They are then stored in the StackMaker.
         if config.has_option('plotDef:%s'%var,'log') and not self.log:# i.e. if self.log is False and plotDef option in vhbbPlotDef.ini exists
             self.log = eval(config.get('plotDef:%s'%var,'log'))
         self.blind = eval(config.get(section,'blind'))
@@ -28,8 +28,8 @@ class StackMaker:
             self.setup=self.setup.split(',')
         else:
             self.setup=setup
-	
-	#! Signal region
+        
+        #! Signal region
         if not SignalRegion: 
             if 'ZH' in self.setup:
                 self.setup.remove('ZH')
@@ -142,7 +142,7 @@ class StackMaker:
 
         TdrStyles.tdrStyle()
         histo_dict = HistoMaker.orderandadd([{self.typs[i]:self.histos[i]} for i in range(len(self.histos))],self.setup)
-	print "The list of histos is ", histo_dict
+        print "The list of histos is ", histo_dict
         #sort
         self.histos=[histo_dict[key] for key in self.setup]
         self.typs=self.setup
@@ -216,19 +216,19 @@ class StackMaker:
         datatitle='Data'
         addFlag = ''
         if 'Zee' in self.datanames and 'Zmm' in self.datanames:
-	        addFlag = 'Z(l^{-}l^{+})H(b#bar{b})'
+            addFlag = 'Z(l^{-}l^{+})H(b#bar{b})'
         elif 'Zee' in self.datanames:
-	        addFlag = 'Z(e^{-}e^{+})H(b#bar{b})'
+            addFlag = 'Z(e^{-}e^{+})H(b#bar{b})'
         elif 'Zmm' in self.datanames:
-	        addFlag = 'Z(#mu^{-}#mu^{+})H(b#bar{b})'
+            addFlag = 'Z(#mu^{-}#mu^{+})H(b#bar{b})'
         elif 'Znn' in self.datanames:
-	        addFlag = 'Z(#nu#nu)H(b#bar{b})'
+            addFlag = 'Z(#nu#nu)H(b#bar{b})'
         elif 'Wmn' in self.datanames:
-	        addFlag = 'W(#mu#nu)H(b#bar{b})'
+            addFlag = 'W(#mu#nu)H(b#bar{b})'
         elif 'Wen' in self.datanames:
-	        addFlag = 'W(e#nu)H(b#bar{b})'
+            addFlag = 'W(e#nu)H(b#bar{b})'
         elif 'Wtn' in self.datanames:
-	        addFlag = 'W(#tau#nu)H(b#bar{b})'
+            addFlag = 'W(#tau#nu)H(b#bar{b})'
         else:
             addFlag = 'pp #rightarrow VH; H #rightarrow b#bar{b}'
         for i in range(0,len(self.datas)):
@@ -252,12 +252,12 @@ class StackMaker:
             l.AddEntry(self.overlay,self.typLegendDict['Overlay'],'L')
     
         if self.normalize:
-            if MC_integral != 0:	stackscale=d1.Integral()/MC_integral
+            if MC_integral != 0:        stackscale=d1.Integral()/MC_integral
             if self.overlay:
                 self.overlay.Scale(stackscale)
             stackhists=allStack.GetHists()
             for blabla in stackhists:
-        	    if MC_integral != 0: blabla.Scale(stackscale)
+                if MC_integral != 0: blabla.Scale(stackscale)
    
         #if self.SignalRegion:
         #    allMC=allStack.GetStack().At(allStack.GetStack().GetLast()-1).Clone()
@@ -417,7 +417,7 @@ class StackMaker:
         t0.SetTextSize(ROOT.gStyle.GetLabelSize()*2.4)
         t0.SetTextFont(ROOT.gStyle.GetLabelFont())
         if not self.log:
-    	    t0.DrawTextNDC(0.1059,0.96, "0")
+            t0.DrawTextNDC(0.1059,0.96, "0")
         if not os.path.exists(self.plotDir):
             os.makedirs(os.path.dirname(self.plotDir))
         name = '%s/%s' %(self.plotDir,self.options['pdfName'])

@@ -15,7 +15,7 @@ def SetVariable(tree,name,option='F',lenght=1):
     else:
         print 'option ',option,' not recognized.'
         return
-    
+
     variable = array(arraytype,[0]*lenght)
     if lenght>1: name = name + '['+str(lenght)+']'
     tree.Branch(name,variable,name+'/'+option)
@@ -34,21 +34,21 @@ def Sort(lorentzvectorswithcsv,method=''):
     (b1,b2,q1,q2) = [ROOT.TLorentzVector()]*4
     if len(lorentzvectorswithcsv)>=4:
         if method is '1BTagAndEta':
-            
+
             SortByPt(lorentzvectorswithcsv)
             maxElementsPt = 4
             lorentzvectorswithcsv = lorentzvectorswithcsv[:maxElementsPt]
             SortByCSV(lorentzvectorswithcsv)
             b1 = lorentzvectorswithcsv[0]
             del lorentzvectorswithcsv[0]
-            
+
             SortByEta(lorentzvectorswithcsv)
             q1 = lorentzvectorswithcsv[0]
             b2 = lorentzvectorswithcsv[1]
             q2 = lorentzvectorswithcsv[2]
-            
+
         elif method is '2BTagAndPt':
-            
+
             SortByPt(lorentzvectorswithcsv)
             maxElementsPt = 6
             lorentzvectorswithcsv = lorentzvectorswithcsv[:maxElementsPt]
@@ -57,13 +57,13 @@ def Sort(lorentzvectorswithcsv,method=''):
             b2 = lorentzvectorswithcsv[1]
             del lorentzvectorswithcsv[1]
             del lorentzvectorswithcsv[0]
-            
+
             SortByPt(lorentzvectorswithcsv)
             q1 = lorentzvectorswithcsv[0]
             q2 = lorentzvectorswithcsv[1]
-            
+
         elif method is 'Eta':
-            
+
             SortByPt(lorentzvectorswithcsv)
             maxElementsPt = 4
             lorentzvectorswithcsv = lorentzvectorswithcsv[:maxElementsPt]
@@ -72,24 +72,24 @@ def Sort(lorentzvectorswithcsv,method=''):
             b1 = lorentzvectorswithcsv[1]
             b2 = lorentzvectorswithcsv[2]
             q2 = lorentzvectorswithcsv[3]
-            
+
         elif method is 'Gen':
-            
+
             SortByPt(lorentzvectorswithcsv)
             for i,jet in enumerate(lorentzvectorswithcsv):
                 if jet.mcMatchId==25 and jet.mcFlavour==5:
                     break
-            
+
             b1_ = lorentzvectorswithcsv[i]
             del lorentzvectorswithcsv[i]
-            
+
             for i,jet in enumerate(lorentzvectorswithcsv):
                 if jet.mcMatchId==25 and jet.mcFlavour==-5:
                     break
-            
+
             b2_ = lorentzvectorswithcsv[i]
             del lorentzvectorswithcsv[i]
-            
+
             mjj = 0
             for i,jet in enumerate(lorentzvectorswithcsv):
                 if jet.mcFlavour!=0 and jet.mcFlavour!=21 and (abs(jet.mcFlavour)<=2):
@@ -99,19 +99,19 @@ def Sort(lorentzvectorswithcsv,method=''):
                                 mjj = (jet+jet2).M()
                                 q1_ = jet
                                 q2_ = jet2
-            
+
             try:
                 (b1,b2,q1,q2) = (b1_,b2_,q1_,q2_)
             except:
 #                print "excption"
                 pass
-            
+
         else:
             print 'method:',method,' not found'
     else:
 #        print 'less than 4 jets!'
         pass
-    
+
     if b2.Pt()>b1.Pt(): (b1,b2) = (b2,b1)
     if q2.Pt()>q1.Pt(): (q1,q2) = (q2,q1)
     return (b1,b2,q1,q2)
@@ -163,9 +163,9 @@ if maxEvents<0: maxEvents = nEntries
 nEntries = min(nEntries,maxEvents)
 for entry in range(0,nEntries):
     tree.GetEntry(entry)
-    
+
     if entry%1000==0: print "entry: ",entry
-    
+
     lorentzvectorswithcsv = []
     for i in range(tree.nJet):
         jet = ROOT.TLorentzVector()
@@ -173,12 +173,12 @@ for entry in range(0,nEntries):
         jet.csv = tree.Jet_btagCSV[i]
         if tree.Jet_pt[i]>30:
             lorentzvectorswithcsv.append(jet)
-    
+
     SortByCSV(lorentzvectorswithcsv)
     for i,jet in enumerate(lorentzvectorswithcsv):
         if i>=arrayMax: break
         CSV[i]=jet.csv
-    
+
     (b1,b2,q1,q2) = Sort(lorentzvectorswithcsv,'Eta')
     (Detaqq_eta[0],Dphibb_eta[0],Mqq_eta[0],Mbb_eta[0]) = GetVariablesToFill(b1,b2,q1,q2)
 
@@ -188,7 +188,7 @@ for entry in range(0,nEntries):
     (b1,b2,q1,q2) = Sort(lorentzvectorswithcsv,'2BTagAndPt')
     (Detaqq_2b[0],Dphibb_2b[0],Mqq_2b[0],Mbb_2b[0]) = GetVariablesToFill(b1,b2,q1,q2)
 
-    
+
     newtree.Fill()
 
 newtree.AutoSave()

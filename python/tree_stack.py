@@ -181,10 +181,10 @@ def doPlot():
             cutOverWrite = config.get('Cuts',region)+' & ' + addBlindingCut
         inputs.append((Plotter,"get_histos_from_tree",(job,cutOverWrite)))
     
-    multiprocess=0
-    if('pisa' in config.get('Configuration','whereToLaunch')): multiprocess=int(config.get('Configuration','nprocesses'))
+    # if('pisa' in config.get('Configuration','whereToLaunch')):
+    multiprocess=int(config.get('Configuration','nprocesses'))
     outputs = []
-    if multiprocess>0:
+    if multiprocess>1:
         from multiprocessing import Pool
         from myutils import GlobalFunction
         p = Pool(multiprocess)
@@ -273,7 +273,7 @@ def doPlot():
             dDictList = Plotter.get_histos_from_tree(job,config.get('Cuts',region)+' & ' + addBlindingCut)
         else:
             dDictList = Plotter.get_histos_from_tree(job)
-	    #! add the variables list for each job (Samples)
+        #! add the variables list for each job (Samples)
         for v in range(0,len(vars)):
             Ldatas[v].append(dDictList[v].values()[0])
             Ldatatyps[v].append(dDictList[v].keys()[0])

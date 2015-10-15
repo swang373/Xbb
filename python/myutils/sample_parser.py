@@ -23,7 +23,6 @@ def check_correspondency(sample,list,config):
         '''Check the samples that are available in the PREPin directory and in the samples_nosplit file '''
         if not any( sample in file for file in list ):
                 warnings.warn('@INFO: Sample %s is NOT! present'%(config.get(sample,'sampleName')))
-                warnings.warn("@INFO: File %s not present"%(config.get(sample,'infile')))
 
 
 class ParseInfo:
@@ -104,8 +103,9 @@ class ParseInfo:
                 self._list = config.sections()
 
             sample = self.checkSplittedSample(_sample)#Check if is splitted and remove the _
-            if not config.has_option(sample,'infile'): continue #Check if the sample has the infile parameter. If not skipp 
+            if not config.has_option(sample,'sampleName'): continue #Check if the sample has the infile parameter. If not skip
             infile = _sample
+            print 'infile',infile
             sampleName = config.get(sample,'sampleName')
             
             check_correspondency(sample,self._list,config)#Check if the sample exists, not fully understood yet                    

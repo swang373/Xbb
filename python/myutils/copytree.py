@@ -99,7 +99,7 @@ def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config):
           print 'checking and/or creating folder',_output_folder
           _output_folder += '/'+_folder
           if os.path.exists(_output_folder): print 'exists'
-          else: 
+          else:
               command = 'srmmkdir srm://t3se01.psi.ch/' + _output_folder
               subprocess.call([command], shell = True)
           if os.path.exists(_output_folder): print 'Folder', _output_folder, 'sucessfully created'
@@ -109,7 +109,7 @@ def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config):
     filenames=[]
     for inputFile in inputFiles:
         filename = inputFile.split('/')[-1]
-        if filename in filenames: continue 
+        if filename in filenames: continue
         filenames.append(filename)
         outputFile = "%s/%s/%s" %(pathOUT,folderName,filename)
         if('PSI' in whereToLaunch):
@@ -176,4 +176,17 @@ def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config):
               t.AddFile(outputFolder+file)
       t.Merge()
     
+      print 'checking output file',pathOUT+'/'+newprefix+folderName+".root"
+      f = ROOT.TFile.Open(pathOUT+'/'+newprefix+folderName+".root",'read')
+      if f.GetNkeys() == 0 or f.TestBit(ROOT.TFile.kRecovered) or f.IsZombie():
+        print 'TERREMOTO AND TRAGEDIA: THE MERGED FILE IS CORRUPTED!!! ERROR: deleting it and exiting'
+        subprocess.call([command], shell = True)
+        sys.exit(1)
+      else:
+        for file in os.listdir(outputFolder.replace('root://t3dcachedb03.psi.ch:1094','').replace('gsidcap://t3se01.psi.ch:22128/','').replace('dcap://t3se01.psi.ch:22125/','')):
+          filename = outputFolder+file
+          filename = filename.replace('root://t3dcachedb03.psi.ch:1094','').replace('gsidcap://t3se01.psi.ch:22128/','').replace('dcap://t3se01.psi.ch:22125/','')
+          print("srmrm srm://t3se01.psi.ch:8443/srm/managerv2?SFN="+filename)
+          os.system("srmrm srm://t3se01.psi.ch:8443/srm/managerv2?SFN="+filename)
+
     print "##### COPY TREE - END ######"

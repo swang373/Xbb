@@ -16,7 +16,7 @@ datasets = filter(None, datasets) # fastest
 count=1
 
 for dataset in datasets:
-    files = os.popen('python ./das_client.py --query=\"file dataset='+dataset+' instance=prod/phys03\"').read()
+    files = os.popen('python ./das_client.py --limit=0 --query=\"file dataset='+dataset+' instance=prod/phys03\"').read()
     files = files.split('\n')
     files = [w.replace('\r','') for w in files]
     files = filter(None, files) # fastest

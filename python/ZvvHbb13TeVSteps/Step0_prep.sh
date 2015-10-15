@@ -32,27 +32,27 @@ bash runAll.sh	QCDHT1500		 ZvvHbb13TeV prep >& log/logPrepQCDHT1500	&
 bash runAll.sh	QCDHT2000		 ZvvHbb13TeV prep >& log/logPrepQCDHT2000	&
 bash runAll.sh	FakeData		 ZvvHbb13TeV prep >& log/logPrepDataMET	&
 
-bash runAll.sh	WWpythia		 ZvvHbb13TeV prep >& log/logPrepWWpythia	&
-#bash runAll.sh	WWTo2L2Q		 ZvvHbb13TeV prep >& log/logPrepWWTo2L2Q	&
-#bash runAll.sh	WWTo4Q		 ZvvHbb13TeV prep >& log/logPrepWWTo4Q	&
-#bash runAll.sh	WWTo2L2Nu		 ZvvHbb13TeV prep >& log/logPrepWWTo2L2Nu	&
-bash runAll.sh	WZpythia		 ZvvHbb13TeV prep >& log/logPrepWZpythia	&
-#bash runAll.sh	WZTo2L2Q		 ZvvHbb13TeV prep >& log/logPrepWZTo2L2Q	&
-#bash runAll.sh	WZTo1L1Nu2Q		 ZvvHbb13TeV prep >& log/logPrepWZTo1L1Nu2Q	&
-#bash runAll.sh	WZTo4Q		 ZvvHbb13TeV prep >& log/logPrepWZTo4Q	&
-bash runAll.sh	ZZpythia		 ZvvHbb13TeV prep >& log/logPrepZZpythia	&
-#bash runAll.sh	ZZTo2L2Q		 ZvvHbb13TeV prep >& log/logPrepZZTo2L2Q	&
-bash runAll.sh	ZZTo2Q2Nu		 ZvvHbb13TeV prep >& log/logPrepZZTo2Q2Nu	&
+bash runAll.sh  WWpythia     ZvvHbb13TeV prep >& log/logPrepWWpythia  &
+#bash runAll.sh  WWTo2L2Q     ZvvHbb13TeV prep >& log/logPrepWWTo2L2Q  &
+#bash runAll.sh  WWTo4Q     ZvvHbb13TeV prep >& log/logPrepWWTo4Q  &
+#bash runAll.sh  WWTo2L2Nu     ZvvHbb13TeV prep >& log/logPrepWWTo2L2Nu  &
+bash runAll.sh  WZpythia     ZvvHbb13TeV prep >& log/logPrepWZpythia  &
+#bash runAll.sh  WZTo2L2Q     ZvvHbb13TeV prep >& log/logPrepWZTo2L2Q  &
+#bash runAll.sh  WZTo1L1Nu2Q     ZvvHbb13TeV prep >& log/logPrepWZTo1L1Nu2Q  &
+#bash runAll.sh  WZTo4Q     ZvvHbb13TeV prep >& log/logPrepWZTo4Q  &
+bash runAll.sh  ZZpythia     ZvvHbb13TeV prep >& log/logPrepZZpythia  &
+#bash runAll.sh  ZZTo2L2Q     ZvvHbb13TeV prep >& log/logPrepZZTo2L2Q  &
+bash runAll.sh  ZZTo2Q2Nu     ZvvHbb13TeV prep >& log/logPrepZZTo2Q2Nu  &
 
-bash runAll.sh	SingleElectron		 ZvvHbb13TeV prep >& log/logPrepSingleElectron	&
-bash runAll.sh	SingleMuon		 ZvvHbb13TeV prep >& log/logPrepSingleMuon	&
-bash runAll.sh	DoubleEG		 ZvvHbb13TeV prep >& log/logPrepDoubleEG	&
-bash runAll.sh	DoubleMuon		 ZvvHbb13TeV prep >& log/logPrepDoubleMuon	&
-bash runAll.sh	HTMHT		 ZvvHbb13TeV prep >& log/logPrepHTMHT	&
-bash runAll.sh	MET		 ZvvHbb13TeV prep >& log/logPrepMET	&
-bash runAll.sh	JetHT		 ZvvHbb13TeV prep >& log/logPrepJetHT	&
-bash runAll.sh	Jet		 ZvvHbb13TeV prep >& log/logPrepJet	&
-bash runAll.sh	MuonEG		 ZvvHbb13TeV prep >& log/logPrepMuonEG	&
+bash runAll.sh  SingleElectron     ZvvHbb13TeV prep >& log/logPrepSingleElectron  &
+bash runAll.sh  SingleMuon     ZvvHbb13TeV prep >& log/logPrepSingleMuon  &
+bash runAll.sh  DoubleEG     ZvvHbb13TeV prep >& log/logPrepDoubleEG  &
+bash runAll.sh  DoubleMuon     ZvvHbb13TeV prep >& log/logPrepDoubleMuon  &
+bash runAll.sh  HTMHT     ZvvHbb13TeV prep >& log/logPrepHTMHT  &
+bash runAll.sh  MET     ZvvHbb13TeV prep >& log/logPrepMET  &
+bash runAll.sh  JetHT     ZvvHbb13TeV prep >& log/logPrepJetHT  &
+bash runAll.sh  Jet     ZvvHbb13TeV prep >& log/logPrepJet  &
+bash runAll.sh  MuonEG     ZvvHbb13TeV prep >& log/logPrepMuonEG  &
 
 
 
