@@ -431,17 +431,6 @@ for job in info:
             lheWeight[0] = 1.
         
     ### Adding new variable from configuration ###
-    writeNewVariables = eval(config.get("Regression","writeNewVariables"))
-    newVariableNames = writeNewVariables.keys()
-    newVariables = {}
-    newVariableFormulas = {}
-    for variableName in newVariableNames:
-        newVariables[variableName] = array('f',[0])
-        newtree.Branch(variableName,newVariables[variableName],variableName+'/F')
-        newVariableFormulas[variableName] =ROOT.TTreeFormula(variableName,writeNewVariables[variableName],tree)
-        print "adding variable ",variableName,", using formula",writeNewVariables[variableName]," ."
-        
-    ### Adding new variable from configuration ###
     newVariableNames = []
     try:
         writeNewVariables = eval(config.get("Regression","writeNewVariables"))
