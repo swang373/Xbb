@@ -170,14 +170,18 @@ class TreeCache:
               print ('mkdir_command',mkdir_command)
               subprocess.call(['mkdir '+mkdir_command], shell=True)# delete the files already created ?     
 
-        #! read the tree from the input
-        if forceReDo:
-            output = ROOT.TFile.Open(tmpSource,'recreate')
-        else:
-            output = ROOT.TFile.Open(tmpSource,'create')
+        try:
+            #! read the tree from the input
+            if forceReDo:
+                output = ROOT.TFile.Open(tmpSource,'recreate')
+            else:
+                output = ROOT.TFile.Open(tmpSource,'create')
+            output.cd()
+        except:
+            ## in case there are problems go to the next dataset [probably another process is working on this dataset] 
+            return (theName,theHash)
         print ('reading',source)
         input = ROOT.TFile.Open(source,'read')
-        output.cd()
         tree = input.Get(sample.tree)
         try:
             CountPos = input.Get("CountPosWeight")
@@ -245,29 +249,6 @@ class TreeCache:
         for output in outputs:
             (theName,theHash) = output
             self.__hashDict[theName]=theHash
-
-#    ### MULTI-THREADING VERSION ###
-#    def __cache_samples(self):
-#        import copy
-#        multiprocess=16
-#        if multiprocess>0:
-#            from multiprocessing import Pool
-#            from myutils import GlobalFunction
-#            p = Pool(multiprocess)
-##            import pathos.multiprocessing as mp
-##            p = mp.ProcessingPool(multiprocess)
-#            myinputs = []
-#            for job in self.__sampleList:
-#                myoptions = self.putOptions()
-#                myinputs.append((myoptions,job))
-#                
-#            outputs = p.map(trim_treeMT, myinputs)
-#            for output in outputs:
-#                (theName,theHash) = output
-#                self.__hashDict[theName]=theHash
-#        else:
-#            for job in self.__sampleList:
-#                self._trim_tree(job)
 
     def get_tree(self, sample, cut):
         print('input file %s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]))
