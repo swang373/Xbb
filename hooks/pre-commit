@@ -14,11 +14,29 @@
 if git rev-parse --verify HEAD 2>/dev/null
 then
   git diff-index -p -M --cached HEAD
+  against=HEAD
 else
 	# NEEDSWORK: we should produce a diff with an empty tree here
 	# if we want to do the same verification for the initial import.
 	:
-fi |
+fi
+# Find files with trailing whitespace
+files=$(git diff-index --check --cached $against -- | sed '/^[+-]/d' | perl -pe 's/:[0-9]+:.*//' | uniq)
+for file in $files ; do
+    diff=$(git diff --cached $file)
+    if test "$(git config diff.noprefix)" = "true"; then
+        prefix=0
+    else
+        prefix=1
+    fi
+    echo "$diff" | patch -R -p$prefix
+    diff=$(echo "$diff" | perl -pe 's/[ \t]+$// if m{^\+}')
+    out=$(echo "$diff" | patch -p$prefix -f -s -t -o -)
+    if [ $? -eq 0 ]; then
+        echo "$diff" | patch -p$prefix -f -t -s
+    fi
+    git add $file
+done |
 perl -e '
     my $found_bad = 0;
     my $filename;

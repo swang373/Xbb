@@ -38,5 +38,6 @@ class MvaEvaluator:
             for j in range(len( self.MVA_Vars['Nominal'])):
                 if job.type == 'DATA' and not systematic == 'Nominal': 
                     continue
+                self.MVA_formulas[systematic][j].GetNdata()
                 self.MVA_var_buffer[j][0] = self.MVA_formulas[systematic][j].EvalInstance()                
             MVA_values[self.systematics.index(systematic)] = self.reader.EvaluateMVA(self.MVAname)
