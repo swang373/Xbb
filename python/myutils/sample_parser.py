@@ -36,12 +36,14 @@ class ParseInfo:
         
         print "Start getting infos on all the samples (ParseInfo)"
         print "==================================================\n"
+        print 'samples_config is', samples_config
         try:
             os.stat(samples_config)
         except:
             raise Exception('config file is wrong/missing')
           
         if '/pnfs/psi.ch/cms/' in samples_path:
+
             T3 = True
             _,p2=samples_path.split('/pnfs/')
             t3_path = '/pnfs/'+p2.strip('\n')
