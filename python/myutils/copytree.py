@@ -1,8 +1,13 @@
 import ROOT,sys,os,subprocess
 from printcolor import printc
 
-def copySingleFile(inputFile,outputFile,Acut):
-        input = ROOT.TFile.Open(inputFile,'read')
+def copySingleFile(whereToLaunch,inputFile,outputFile,Acut):
+        print 'inputFile',inputFile
+        if ('pisa' in whereToLaunch):
+          input = ROOT.TFile.Open(inputFile,'read')
+        else:
+          input = ROOT.TFile.Open('root://t3dcachedb03.psi.ch:1094/'+inputFile,'read')
+
         output = ROOT.TFile.Open(outputFile,'create')
         print "Writing file:",outputFile
 
@@ -36,8 +41,8 @@ def copySingleFile(inputFile,outputFile,Acut):
         print "Closing input file"
         input.Close()
 
-def copySingleFileOneInput(inputs):
-    return copySingleFile(*inputs)
+def copySingleFileOneInput(whereToLaunch,inputs):
+    return copySingleFile(whereToLaunch,*inputs)
 
 def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config):
     ''' 
@@ -137,15 +142,15 @@ def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config):
         inputs.append((inputFile,outputFile,Acut))
 
     ## process the input list (using multiprocess)
-    if('pisa' in whereToLaunch): multiprocess=int(config.get('Configuration','nprocesses'))
+    multiprocess=int(config.get('Configuration','nprocesses'))
     outputs = []
-    if multiprocess>0:
+    if multiprocess>1:
         from multiprocessing import Pool
         p = Pool(multiprocess)
         outputs = p.map(copySingleFileOneInput, inputs)
     else:
         for input_ in inputs:
-                output = copySingleFileOneInput(input_)
+                output = copySingleFileOneInput(whereToLaunch,input_)
                 outputs.append(output)
 
     ## finally do the hadd of the copied trees
