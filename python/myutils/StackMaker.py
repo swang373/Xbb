@@ -366,8 +366,8 @@ class StackMaker:
         l_2.AddEntry(theErrorGraph,"MC uncert. (stat.)","fl")
         Ymax = max(allStack.GetMaximum(),d1.GetMaximum())*1.7
         if self.log:
-            allStack.SetMinimum(0.99)
-            Ymax = Ymax*ROOT.TMath.Power(10,1.2*(ROOT.TMath.Log(1.2*(Ymax))/ROOT.TMath.Log(10)))*(0.2*0.1)
+            allStack.SetMinimum(0.1)
+            Ymax = Ymax*ROOT.TMath.Power(10,1.2*(ROOT.TMath.Log(1.2*(Ymax/0.2))/ROOT.TMath.Log(10)))*(0.2*0.1)
             #Ymax = Ymax*ROOT.TMath.Power(10,1.3*(ROOT.TMath.Log(1.3*(Ymax/0.1))/ROOT.TMath.Log(10)))*(0.3*0.1)
             ROOT.gPad.SetLogy()
         allStack.SetMaximum(Ymax)
