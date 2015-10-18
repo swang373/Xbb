@@ -1,6 +1,6 @@
 #include "TLorentzVector.h"
 
-double VH_pt(double V_pt,double V_eta,double V_phi,double V_mass, double H_pt,double H_eta,double H_phi,double H_mass){
+double VH_pt(Float_t V_pt,Float_t V_eta,Float_t V_phi,Float_t V_mass,Float_t H_pt,Float_t H_eta,Float_t H_phi,Float_t H_mass){
   
   TLorentzVector V,H,VH;
   V.SetPtEtaPhiM(V_pt,V_eta,V_phi,V_mass);
