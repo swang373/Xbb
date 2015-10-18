@@ -183,6 +183,7 @@ class StackMaker:
         print "self.typs",self.typs
         print "self.histos",self.histos
         print "self.setup",self.setup
+        #Groups all the subsample of the "Group" dictionnary into one sample
         histo_dict = HistoMaker.orderandadd([{self.typs[i]:self.histos[i]} for i in range(len(self.histos))],self.setup)
         #sort
 

@@ -180,6 +180,8 @@ def doPlot():
         if addBlindingCut:
             cutOverWrite = config.get('Cuts',region)+' & ' + addBlindingCut
         inputs.append((Plotter,"get_histos_from_tree",(job,cutOverWrite)))
+
+    print 'inputs are', inputs
     
     # if('pisa' in config.get('Configuration','whereToLaunch')):
     multiprocess=int(config.get('Configuration','nprocesses'))
@@ -192,7 +194,7 @@ def doPlot():
         outputs = p.map(GlobalFunction, inputs)
     else:
         print 'launching get_histos_from_tree with ',multiprocess,' processes'
-        for input_ in inputs:
+        for input_ in  inputs:
             outputs.append(getattr(input_[0],input_[1])(*input_[2])) #ie. Plotter.get_histos_from_tree(job,cutOverWrite)
     print 'get_histos_from_tree DONE'
     Overlaylist = []
@@ -216,6 +218,7 @@ def doPlot():
             Ljobnames[v].append(job.name)
     
     print "len(vars)=",len(vars)
+    print "Ltyps is", Ltyps
     ##invert Overlaylist[variable][job] -> Overlaylist[job][variable]
     print "len(Overlaylist) before: ",len(Overlaylist)
     print "Overlaylist",Overlaylist
