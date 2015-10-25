@@ -145,8 +145,8 @@ def compile_macro(config,macro):
         # os.system("gcc -shared -o "+library+" `root-config --glibs --libs --cflags` -fPIC "+scratchDir+_macro)
 
         shutil.copyfile('/scratch/%s/%s'%(getpass.getuser(),os.path.basename(library)),library)
+        print '@INFO: macro',macro,'compiled, exiting to avoid stupid ROOT crash, please resubmit!!!'
     os.chdir(submitDir)
-    print '@INFO: macro',macro,'compiled, exiting to avoid stupid ROOT crash, please resubmit!!!'
     sys.exit(1)
         
 #comment for now
