@@ -146,10 +146,12 @@ def compile_macro(config,macro):
 
         shutil.copyfile('/scratch/%s/%s'%(getpass.getuser(),os.path.basename(library)),library)
     os.chdir(submitDir)
+    print '@INFO: macro',macro,'compiled, exiting to avoid stupid ROOT crash, please resubmit!!!'
+    sys.exit(1)
         
 #comment for now
-#compile_macro(config,'BTagReshaping')
-#compile_macro(config,'VHbbNameSpace')
+compile_macro(config,'BTagReshaping')
+compile_macro(config,'VHbbNameSpace')
 
 logPath = config.get("Directories","logpath")
 logo = open('%s/data/submit.txt' %config.get('Directories','vhbbpath')).readlines()
