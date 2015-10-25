@@ -146,8 +146,8 @@ def compile_macro(config,macro):
 
         shutil.copyfile('/scratch/%s/%s'%(getpass.getuser(),os.path.basename(library)),library)
         print '@INFO: macro',macro,'compiled, exiting to avoid stupid ROOT crash, please resubmit!!!'
+        sys.exit(1)
     os.chdir(submitDir)
-    sys.exit(1)
         
 #comment for now
 compile_macro(config,'BTagReshaping')
