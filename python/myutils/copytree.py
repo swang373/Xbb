@@ -41,8 +41,8 @@ def copySingleFile(whereToLaunch,inputFile,outputFile,Acut):
         print "Closing input file"
         input.Close()
 
-def copySingleFileOneInput(whereToLaunch,inputs):
-    return copySingleFile(whereToLaunch,*inputs)
+def copySingleFileOneInput(inputs):
+    return copySingleFile(*inputs)
 
 def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config):
     ''' 
@@ -140,7 +140,7 @@ def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config):
             print(command)
             subprocess.call([command], shell=True)
           else: print 'FALSE'
-        inputs.append((inputFile,outputFile,Acut))
+        inputs.append((whereToLaunch,inputFile,outputFile,Acut))
 
     ## process the input list (using multiprocess)
     multiprocess=int(config.get('Configuration','nprocesses'))
@@ -151,7 +151,7 @@ def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config):
         outputs = p.map(copySingleFileOneInput, inputs)
     else:
         for input_ in inputs:
-                output = copySingleFileOneInput(whereToLaunch,input_)
+                output = copySingleFileOneInput(input_)
                 outputs.append(output)
 
     ## finally do the hadd of the copied trees
