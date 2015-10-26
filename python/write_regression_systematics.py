@@ -473,12 +473,12 @@ for job in info:
             #Has fat higgs
             #fatHiggsFlag=fFatHFlag.EvalInstance()*fFatHnFilterJets.EvalInstance()
 
-            #get
+            # get
             vect.SetPtEtaPhiM(fVpt.EvalInstance(),fVeta.EvalInstance(),fVphi.EvalInstance(),fVmass.EvalInstance())
-#            print tree.Jet_pt
-#            print tree.hJCidx
-#            hJet_pt = tree.Jet_pt[tree.hJCidx]
-#            hJet_mass = tree.Jet_mass[tree.hJCidx]
+            # print tree.Jet_pt
+            # print tree.hJCidx
+            # hJet_pt = tree.Jet_pt[tree.hJCidx]
+            # hJet_mass = tree.Jet_mass[tree.hJCidx]
 
             ##FIXME##
             try:
@@ -520,16 +520,16 @@ for job in info:
             hJet_mass[1] = tree.Jet_mass[tree.hJCidx[1]]
 
 
-            #Filterjets
-            #if fatHiggsFlag:
-            #    fathFilterJets_pt0 = tree.fathFilterJets_pt[tree.hJCidx[0]]
-            #    fathFilterJets_pt1 = tree.fathFilterJets_pt[tree.hJCidx[1]]
-            #    fathFilterJets_eta0 = tree.fathFilterJets_eta[tree.hJCidx[0]]
-            #    fathFilterJets_eta1 = tree.fathFilterJets_eta[tree.hJCidx[1]]
-            #    fathFilterJets_phi0 = tree.fathFilterJets_phi[tree.hJCidx[0]]
-            #    fathFilterJets_phi1 = tree.fathFilterJets_phi[tree.hJCidx[1]]
-            #    fathFilterJets_e0 = tree.fathFilterJets_e[tree.hJCidx[0]]
-            #    fathFilterJets_e1 = tree.fathFilterJets_e[tree.hJCidx[1]]
+            # Filterjets
+            # if fatHiggsFlag:
+               # fathFilterJets_pt0 = tree.fathFilterJets_pt[tree.hJCidx[0]]
+               # fathFilterJets_pt1 = tree.fathFilterJets_pt[tree.hJCidx[1]]
+               # fathFilterJets_eta0 = tree.fathFilterJets_eta[tree.hJCidx[0]]
+               # fathFilterJets_eta1 = tree.fathFilterJets_eta[tree.hJCidx[1]]
+               # fathFilterJets_phi0 = tree.fathFilterJets_phi[tree.hJCidx[0]]
+               # fathFilterJets_phi1 = tree.fathFilterJets_phi[tree.hJCidx[1]]
+               # fathFilterJets_e0 = tree.fathFilterJets_e[tree.hJCidx[0]]
+               # fathFilterJets_e1 = tree.fathFilterJets_e[tree.hJCidx[1]]
             Event[0]=fEvent.EvalInstance()
             METet[0]=fMETet.EvalInstance()
             rho[0]=frho.EvalInstance()
@@ -540,10 +540,10 @@ for job in info:
                     theForms["form_reg_%s_1" %(key)].GetNdata();
                     theVars0[key][0] = theForms["form_reg_%s_0" %(key)].EvalInstance()
                     theVars1[key][0] = theForms["form_reg_%s_1" %(key)].EvalInstance()
-            #for key, value in regDictFilterJets.items():
-            #    if not (value == 'hJet_MET_dPhi' or value == 'METet' or value == "rho" or value == "hJet_et" or value == 'hJet_mt' or value == 'hJet_rawPt'):
-            #        theVars0FJ[key][0] = theFormsFJ["form_reg_%s_0" %(key)].EvalInstance()
-            #        theVars1FJ[key][0] = theFormsFJ["form_reg_%s_1" %(key)].EvalInstance()
+            # for key, value in regDictFilterJets.items():
+               # if not (value == 'hJet_MET_dPhi' or value == 'METet' or value == "rho" or value == "hJet_et" or value == 'hJet_mt' or value == 'hJet_rawPt'):
+                   # theVars0FJ[key][0] = theFormsFJ["form_reg_%s_0" %(key)].EvalInstance()
+                   # theVars1FJ[key][0] = theFormsFJ["form_reg_%s_1" %(key)].EvalInstance()
             hJet_MET_dPhi[0] = deltaPhi(METphi[0],hJet_phi0)
             hJet_MET_dPhi[1] = deltaPhi(METphi[0],hJet_phi1)
             hJet_MET_dPhiArray[0][0] = deltaPhi(METphi[0],hJet_phi0)
@@ -587,99 +587,99 @@ for job in info:
                 HaddJetsdR08NoReg.dPhi = 0
                 HaddJetsdR08NoReg.dEta = 0                
                 
-#                HaddJetsdR08NoReg.HiggsFlag = 1
-#                HaddJetsdR08NoReg.mass = tree.HaddJetsdR08_mass
-#                HaddJetsdR08NoReg.pt = tree.HaddJetsdR08_pt
-#                HaddJetsdR08NoReg.eta = tree.HaddJetsdR08_eta
-#                HaddJetsdR08NoReg.phi = tree.HaddJetsdR08_phi
-#                HaddJetsdR08NoReg.dR = 0
-#                HaddJetsdR08NoReg.dPhi = 0
-#                HaddJetsdR08NoReg.dEta = 0
+                # HaddJetsdR08NoReg.HiggsFlag = 1
+                # HaddJetsdR08NoReg.mass = tree.HaddJetsdR08_mass
+                # HaddJetsdR08NoReg.pt = tree.HaddJetsdR08_pt
+                # HaddJetsdR08NoReg.eta = tree.HaddJetsdR08_eta
+                # HaddJetsdR08NoReg.phi = tree.HaddJetsdR08_phi
+                # HaddJetsdR08NoReg.dR = 0
+                # HaddJetsdR08NoReg.dPhi = 0
+                # HaddJetsdR08NoReg.dEta = 0
 
                 hJet_MtArray[0][0] = hJ0.Mt()
                 hJet_MtArray[1][0] = hJ1.Mt()
                 hJet_etarray[0][0] = hJ0.Et()
                 hJet_etarray[1][0] = hJ1.Et()
                 
-#                print "tree.hJCidx[0]", tree.hJCidx[0]
-#                print "tree.hJCidx[1]", tree.hJCidx[1]
-#                print "v1", tree.Jet_pt[tree.hJCidx[0]]
-##                print "v2", VHbb::evalJERBias(hJet_rawPt[hJCidx[0]],hJet_mcPt[hJCidx[0]],hJet_eta[hJCidx[0]])
-#                print "v3", tree.Jet_mass[tree.hJCidx[0]]
-##                print "v4", VHbb::evalEtFromPtEtaPhiM(hJet_pt[hJCidx],hJet_eta[hJCidx],hJet_phi[hJCidx],hJet_mass[hJCidx]) with VHbb::evalEt(hJet_pt[hJCidx[0]],hJet_eta[hJCidx[0]],hJet_phi[hJCidx[0]],VHbb::GetEnergy(hJet_pt[hJCidx[0]],hJet_eta[hJCidx[0]],hJet_mass[hJCidx[0]]))
-##                print "v5", VHbb::evalMtFromPtEtaPhiM(hJet_pt[hJCidx],hJet_eta[hJCidx],hJet_phi[hJCidx],hJet_mass[hJCidx]) with VHbb::evalMt(hJet_pt[hJCidx[0]],hJet_eta[hJCidx[0]],hJet_phi[hJCidx[0]],VHbb::GetEnergy(hJet_pt[hJCidx[0]],hJet_eta[hJCidx[0]],hJet_mass[hJCidx[0]]))
-#                print "v6", tree.Jet_leadTrackPt[tree.hJCidx[0]]
-#                print "v7", max(0,(tree.Jet_leptonPtRel[tree.hJCidx[0]]))
-#                print "v8", max(0,(tree.Jet_leptonDeltaR[tree.hJCidx[0]]))
-#                print "v9", max(0,(tree.Jet_leptonPt[tree.hJCidx[0]]))
-#                print "v10", tree.Jet_chEmEF[tree.hJCidx[0]]
-#                print "v11", tree.Jet_mult[tree.hJCidx[0]]
-#                print "v12", max(0,tree.Jet_vtxPt[tree.hJCidx[0]])
-#                print "v13", max(0,tree.Jet_vtxMass[tree.hJCidx[0]])
-#                print "v14", max(0,tree.Jet_vtx3DVal[tree.hJCidx[0]])
-#                print "v15", max(0,tree.Jet_vtx3DSig[tree.hJCidx[0]])
-#                
-#                print "w1", tree.Jet_pt[tree.hJCidx[1]]
-##                print "w2", VHbb::evalJERBias(hJet_rawPt[hJCidx[1]],hJet_mcPt[hJCidx[1]],hJet_eta[hJCidx[1]])
-#                print "w3", tree.Jet_mass[tree.hJCidx[1]]
-##                print "w4", VHbb::evalEtFromPtEtaPhiM(hJet_pt[hJCidx],hJet_eta[hJCidx],hJet_phi[hJCidx],hJet_mass[hJCidx]) with VHbb::evalEt(hJet_pt[hJCidx[1]],hJet_eta[hJCidx[1]],hJet_phi[hJCidx[1]],VHbb::GetEnergy(hJet_pt[hJCidx[1]],hJet_eta[hJCidx[1]],hJet_mass[hJCidx[1]]))
-##                print "w5", VHbb::evalMtFromPtEtaPhiM(hJet_pt[hJCidx],hJet_eta[hJCidx],hJet_phi[hJCidx],hJet_mass[hJCidx]) with VHbb::evalMt(hJet_pt[hJCidx[1]],hJet_eta[hJCidx[1]],hJet_phi[hJCidx[1]],VHbb::GetEnergy(hJet_pt[hJCidx[1]],hJet_eta[hJCidx[1]],hJet_mass[hJCidx[1]]))
-#                print "w6", tree.Jet_leadTrackPt[tree.hJCidx[1]]
-#                print "w7", max(0,(tree.Jet_leptonPtRel[tree.hJCidx[1]]))
-#                print "w8", max(0,(tree.Jet_leptonDeltaR[tree.hJCidx[1]]))
-#                print "w9", max(0,(tree.Jet_leptonPt[tree.hJCidx[1]]))
-#                print "w10", tree.Jet_chEmEF[tree.hJCidx[1]]
-#                print "w11", tree.Jet_mult[tree.hJCidx[1]]
-#                print "w12", max(0,tree.Jet_vtxPt[tree.hJCidx[1]])
-#                print "w13", max(0,tree.Jet_vtxMass[tree.hJCidx[1]])
-#                print "w14", max(0,tree.Jet_vtx3DVal[tree.hJCidx[1]])
-#                print "w15", max(0,tree.Jet_vtx3DSig[tree.hJCidx[1]])
+                # print "tree.hJCidx[0]", tree.hJCidx[0]
+                # print "tree.hJCidx[1]", tree.hJCidx[1]
+                # print "v1", tree.Jet_pt[tree.hJCidx[0]]
+                # # print "v2", VHbb::evalJERBias(hJet_rawPt[hJCidx[0]],hJet_mcPt[hJCidx[0]],hJet_eta[hJCidx[0]])
+                # print "v3", tree.Jet_mass[tree.hJCidx[0]]
+                # # print "v4", VHbb::evalEtFromPtEtaPhiM(hJet_pt[hJCidx],hJet_eta[hJCidx],hJet_phi[hJCidx],hJet_mass[hJCidx]) with VHbb::evalEt(hJet_pt[hJCidx[0]],hJet_eta[hJCidx[0]],hJet_phi[hJCidx[0]],VHbb::GetEnergy(hJet_pt[hJCidx[0]],hJet_eta[hJCidx[0]],hJet_mass[hJCidx[0]]))
+                # # print "v5", VHbb::evalMtFromPtEtaPhiM(hJet_pt[hJCidx],hJet_eta[hJCidx],hJet_phi[hJCidx],hJet_mass[hJCidx]) with VHbb::evalMt(hJet_pt[hJCidx[0]],hJet_eta[hJCidx[0]],hJet_phi[hJCidx[0]],VHbb::GetEnergy(hJet_pt[hJCidx[0]],hJet_eta[hJCidx[0]],hJet_mass[hJCidx[0]]))
+                # print "v6", tree.Jet_leadTrackPt[tree.hJCidx[0]]
+                # print "v7", max(0,(tree.Jet_leptonPtRel[tree.hJCidx[0]]))
+                # print "v8", max(0,(tree.Jet_leptonDeltaR[tree.hJCidx[0]]))
+                # print "v9", max(0,(tree.Jet_leptonPt[tree.hJCidx[0]]))
+                # print "v10", tree.Jet_chEmEF[tree.hJCidx[0]]
+                # print "v11", tree.Jet_mult[tree.hJCidx[0]]
+                # print "v12", max(0,tree.Jet_vtxPt[tree.hJCidx[0]])
+                # print "v13", max(0,tree.Jet_vtxMass[tree.hJCidx[0]])
+                # print "v14", max(0,tree.Jet_vtx3DVal[tree.hJCidx[0]])
+                # print "v15", max(0,tree.Jet_vtx3DSig[tree.hJCidx[0]])
+
+                # print "w1", tree.Jet_pt[tree.hJCidx[1]]
+                # # print "w2", VHbb::evalJERBias(hJet_rawPt[hJCidx[1]],hJet_mcPt[hJCidx[1]],hJet_eta[hJCidx[1]])
+                # print "w3", tree.Jet_mass[tree.hJCidx[1]]
+                # # print "w4", VHbb::evalEtFromPtEtaPhiM(hJet_pt[hJCidx],hJet_eta[hJCidx],hJet_phi[hJCidx],hJet_mass[hJCidx]) with VHbb::evalEt(hJet_pt[hJCidx[1]],hJet_eta[hJCidx[1]],hJet_phi[hJCidx[1]],VHbb::GetEnergy(hJet_pt[hJCidx[1]],hJet_eta[hJCidx[1]],hJet_mass[hJCidx[1]]))
+                # # print "w5", VHbb::evalMtFromPtEtaPhiM(hJet_pt[hJCidx],hJet_eta[hJCidx],hJet_phi[hJCidx],hJet_mass[hJCidx]) with VHbb::evalMt(hJet_pt[hJCidx[1]],hJet_eta[hJCidx[1]],hJet_phi[hJCidx[1]],VHbb::GetEnergy(hJet_pt[hJCidx[1]],hJet_eta[hJCidx[1]],hJet_mass[hJCidx[1]]))
+                # print "w6", tree.Jet_leadTrackPt[tree.hJCidx[1]]
+                # print "w7", max(0,(tree.Jet_leptonPtRel[tree.hJCidx[1]]))
+                # print "w8", max(0,(tree.Jet_leptonDeltaR[tree.hJCidx[1]]))
+                # print "w9", max(0,(tree.Jet_leptonPt[tree.hJCidx[1]]))
+                # print "w10", tree.Jet_chEmEF[tree.hJCidx[1]]
+                # print "w11", tree.Jet_mult[tree.hJCidx[1]]
+                # print "w12", max(0,tree.Jet_vtxPt[tree.hJCidx[1]])
+                # print "w13", max(0,tree.Jet_vtxMass[tree.hJCidx[1]])
+                # print "w14", max(0,tree.Jet_vtx3DVal[tree.hJCidx[1]])
+                # print "w15", max(0,tree.Jet_vtx3DSig[tree.hJCidx[1]])
 
                 rPt0 = max(0.0001,readerJet0.EvaluateRegression( "jet0Regression" )[0])
                 rPt1 = max(0.0001,readerJet1.EvaluateRegression( "jet1Regression" )[0])
-                
-#                print "hJCidx0-hJCidx1",tree.hJCidx[0],tree.hJCidx[1]
-#                print "rPt0-rPt1",rPt0,rPt1
-#                print "hJet_pt0-hJet_pt1",tree.Jet_pt[tree.hJCidx[0]],tree.Jet_pt[tree.hJCidx[1]]
-#                print "Jet_pt0-1-2",tree.Jet_pt[0],tree.Jet_pt[1],
-#                if tree.nJet>2:
-#                    print tree.Jet_pt[2]
-#                else:
-#                    print
-#                print 'Event %.0f' %(Event[0])
-#                print "rPt0: ",rPt0
-#                print "rPt1: ",rPt1
-#                print "jetEt0: ",jetEt0
-#                print "jetEt1: ",jetEt1
-#                print "hJet_pt0: ",hJet_pt0
-#                print "hJet_pt1: ",hJet_pt1
+
+                # print "hJCidx0-hJCidx1",tree.hJCidx[0],tree.hJCidx[1]
+                # print "rPt0-rPt1",rPt0,rPt1
+                # print "hJet_pt0-hJet_pt1",tree.Jet_pt[tree.hJCidx[0]],tree.Jet_pt[tree.hJCidx[1]]
+                # print "Jet_pt0-1-2",tree.Jet_pt[0],tree.Jet_pt[1],
+                # if tree.nJet>2:
+                   # print tree.Jet_pt[2]
+                # else:
+                   # print
+                # print 'Event %.0f' %(Event[0])
+                # print "rPt0: ",rPt0
+                # print "rPt1: ",rPt1
+                # print "jetEt0: ",jetEt0
+                # print "jetEt1: ",jetEt1
+                # print "hJet_pt0: ",hJet_pt0
+                # print "hJet_pt1: ",hJet_pt1
                 hJet_pt[0] = rPt0
                 hJet_pt[1] = rPt1
 
                 hJet_regWeight[0] = rPt0/hJet_pt0
                 hJet_regWeight[1] = rPt1/hJet_pt1
-#                print "hJet_regWeight[0]: ",hJet_regWeight[0]
-#                print "hJet_regWeight[1]: ",hJet_regWeight[1]
-#                print "hJet_etarray[0]: ",hJet_etarray[0]
-#                print "hJet_etarray[1]: ",hJet_etarray[1]
-#                print "hJet_rawPtArray[0]: ",hJet_rawPtArray[0]
-#                print "hJet_rawPtArray[1]: ",hJet_rawPtArray[1]
+                # print "hJet_regWeight[0]: ",hJet_regWeight[0]
+                # print "hJet_regWeight[1]: ",hJet_regWeight[1]
+                # print "hJet_etarray[0]: ",hJet_etarray[0]
+                # print "hJet_etarray[1]: ",hJet_etarray[1]
+                # print "hJet_rawPtArray[0]: ",hJet_rawPtArray[0]
+                # print "hJet_rawPtArray[1]: ",hJet_rawPtArray[1]
                 ##FIXME##########################################################################
                 hJ0.SetPtEtaPhiM(rPt0,hJ0.Eta(),hJ0.Phi(),hJ0.M())
                 hJ1.SetPtEtaPhiM(rPt1,hJ1.Eta(),hJ1.Phi(),hJ1.M())
-#                hJ0 = hJ0 * hJet_regWeight[0]
-#                hJ1 = hJ1 * hJet_regWeight[1]
+                # hJ0 = hJ0 * hJet_regWeight[0]
+                # hJ1 = hJ1 * hJet_regWeight[1]
                 rE0 = hJ0.E()
                 rE1 = hJ1.E()
                 #######################
-                #hJ0.SetPtEtaPhiE(rPt0,hJet_eta0,hJet_phi0,rE0)
-                #hJ1.SetPtEtaPhiE(rPt1,hJet_eta1,hJet_phi1,rE1)
-                #print '###new####'
-                #print 'First regression %s' %rPt0
-#                tree.Jet_pt[tree.hJCidx[0]] = rPt0
-#                tree.Jet_pt[tree.hJCidx[1]] = rPt1
-#                tree.Jet_mass[tree.hJCidx[0]] = rmass0
-#                tree.Jet_mass[tree.hJCidx[1]] = rmass1
+                # hJ0.SetPtEtaPhiE(rPt0,hJet_eta0,hJet_phi0,rE0)
+                # hJ1.SetPtEtaPhiE(rPt1,hJet_eta1,hJet_phi1,rE1)
+                # print '###new####'
+                # print 'First regression %s' %rPt0
+                # tree.Jet_pt[tree.hJCidx[0]] = rPt0
+                # tree.Jet_pt[tree.hJCidx[1]] = rPt1
+                # tree.Jet_mass[tree.hJCidx[0]] = rmass0
+                # tree.Jet_mass[tree.hJCidx[1]] = rmass1
                 H.HiggsFlag = 1
                 H.mass = (hJ0+hJ1).M()
                 H.pt = (hJ0+hJ1).Pt()
@@ -704,10 +704,11 @@ for job in info:
                 HaddJetsdR08.dPhi = 0
                 HaddJetsdR08.dEta = 0                
                 
-                if hJet_regWeight[0] > 2. or hJet_regWeight[1] > 2. or hJet_regWeight[0] < 0.5 or hJet_regWeight[1] < 0.5:
+                ## REMOVE 'FALSE AND' TO ALLOW THE PRINTOUTS
+                if False and (hJet_regWeight[0] > 2. or hJet_regWeight[1] > 2. or hJet_regWeight[0] < 0.5 or hJet_regWeight[1] < 0.5):
                     print '### Debug event with 0.5<ptReg/ptNoReg<2 ###'
                     print 'Event %.0f' %(Event[0])
-#                    print "hJCidxX:",hJCidx
+                    # print "hJCidxX:",hJCidx
                     print 'MET %.2f' %(METet[0])
                     print 'rho %.2f' %(rho[0])
                     for key, value in regDict.items():
@@ -732,53 +733,53 @@ for job in info:
                     
                     print 'hJet_pt0: ',hJet_pt0
                     print 'hJet_pt1: ',hJet_pt1
-                #if fatHiggsFlag:
-                    #hFJ0.SetPtEtaPhiE(fathFilterJets_pt0,fathFilterJets_eta0,fathFilterJets_phi0,fathFilterJets_e0)
-                    #hFJ1.SetPtEtaPhiE(fathFilterJets_pt1,fathFilterJets_eta1,fathFilterJets_phi1,fathFilterJets_e1)
-                    #rFJPt0 = max(0.0001,readerFJ0.EvaluateRegression( "jet0RegressionFJ" )[0])
-                    #rFJPt1 = max(0.0001,readerFJ1.EvaluateRegression( "jet1RegressionFJ" )[0])
-                    #fathFilterJets_regWeight[0] = rPt0/fathFilterJets_pt0
-                    #fathFilterJets_regWeight[1] = rPt1/fathFilterJets_pt1
-                    #rFJE0 = fathFilterJets_e0*fathFilterJets_regWeight[0]
-                    #rFJE1 = fathFilterJets_e1*fathFilterJets_regWeight[1]
-                    #hFJ0.SetPtEtaPhiE(rFJPt0,fathFilterJets_eta0,fathFilterJets_phi0,rFJE0)
-                    #hFJ1.SetPtEtaPhiE(rFJPt1,fathFilterJets_eta1,fathFilterJets_phi1,rFJE1)
-                    #FatHReg[0] = (hFJ0+hFJ1).M()
-                    #FatHReg[1] = (hFJ0+hFJ1).Pt()
-                #else:
-                    #FatHReg[0] = 0.
-                    #FatHReg[1] = 0.
+                # if fatHiggsFlag:
+                    # hFJ0.SetPtEtaPhiE(fathFilterJets_pt0,fathFilterJets_eta0,fathFilterJets_phi0,fathFilterJets_e0)
+                    # hFJ1.SetPtEtaPhiE(fathFilterJets_pt1,fathFilterJets_eta1,fathFilterJets_phi1,fathFilterJets_e1)
+                    # rFJPt0 = max(0.0001,readerFJ0.EvaluateRegression( "jet0RegressionFJ" )[0])
+                    # rFJPt1 = max(0.0001,readerFJ1.EvaluateRegression( "jet1RegressionFJ" )[0])
+                    # fathFilterJets_regWeight[0] = rPt0/fathFilterJets_pt0
+                    # fathFilterJets_regWeight[1] = rPt1/fathFilterJets_pt1
+                    # rFJE0 = fathFilterJets_e0*fathFilterJets_regWeight[0]
+                    # rFJE1 = fathFilterJets_e1*fathFilterJets_regWeight[1]
+                    # hFJ0.SetPtEtaPhiE(rFJPt0,fathFilterJets_eta0,fathFilterJets_phi0,rFJE0)
+                    # hFJ1.SetPtEtaPhiE(rFJPt1,fathFilterJets_eta1,fathFilterJets_phi1,rFJE1)
+                    # FatHReg[0] = (hFJ0+hFJ1).M()
+                    # FatHReg[1] = (hFJ0+hFJ1).Pt()
+                # else:
+                    # FatHReg[0] = 0.
+                    # FatHReg[1] = 0.
 
-                    #print rFJPt0
-                    #print rFJPt1
+                    # print rFJPt0
+                    # print rFJPt1
             
             angleHB[0]=fAngleHB.EvalInstance()
             angleLZ[0]=fAngleLZ.EvalInstance()
             angleZZS[0]=fAngleZZS.EvalInstance()
 
-#            for i, angLikeBkg in enumerate(AngLikeBkgs):
-#                likeSBH[i] = math.fabs(SigBH[i].Eval(angleHB[0]))
-#                likeBBH[i] = math.fabs(BkgBH[i].Eval(angleHB[0]))
+           # for i, angLikeBkg in enumerate(AngLikeBkgs):
+               # likeSBH[i] = math.fabs(SigBH[i].Eval(angleHB[0]))
+               # likeBBH[i] = math.fabs(BkgBH[i].Eval(angleHB[0]))
 
-#                likeSZZS[i] = math.fabs(SigZZS[i].Eval(angleZZS[0]))
-#                likeBZZS[i] = math.fabs(BkgZZS[i].Eval(angleZZS[0]))         
-#                                   
-#                likeSLZ[i] = math.fabs(SigLZ[i].Eval(angleLZ[0]))         
-#                likeBLZ[i] = math.fabs(BkgLZ[i].Eval(angleLZ[0]))
-#                                                
-#                likeSMassZS[i] = math.fabs(SigMassZS[i].Eval(fHVMass.EvalInstance()))
-#                likeBMassZS[i] = math.fabs(BkgMassZS[i].Eval(fHVMass.EvalInstance()))
+               # likeSZZS[i] = math.fabs(SigZZS[i].Eval(angleZZS[0]))
+               # likeBZZS[i] = math.fabs(BkgZZS[i].Eval(angleZZS[0]))
 
-#                scaleSig  = float( ang_yield['Sig'] / (ang_yield['Sig'] + ang_yield[angLikeBkg]))
-#                scaleBkg  = float( ang_yield[angLikeBkg] / (ang_yield['Sig'] + ang_yield[angLikeBkg]) )
+               # likeSLZ[i] = math.fabs(SigLZ[i].Eval(angleLZ[0]))
+               # likeBLZ[i] = math.fabs(BkgLZ[i].Eval(angleLZ[0]))
 
-#                numerator = (likeSBH[i]*likeSZZS[i]*likeSLZ[i]*likeSMassZS[i]);
-#                denominator = ((scaleBkg*likeBLZ[i]*likeBZZS[i]*likeBBH[i]*likeBMassZS[i])+(scaleSig*likeSBH[i]*likeSZZS[i]*likeSLZ[i]*likeSMassZS[i]))
+               # likeSMassZS[i] = math.fabs(SigMassZS[i].Eval(fHVMass.EvalInstance()))
+               # likeBMassZS[i] = math.fabs(BkgMassZS[i].Eval(fHVMass.EvalInstance()))
 
-#                if denominator > 0:
-#                    kinLikeRatio[i] = numerator/denominator;
-#                else:
-#                    kinLikeRatio[i] = 0;
+               # scaleSig  = float( ang_yield['Sig'] / (ang_yield['Sig'] + ang_yield[angLikeBkg]))
+               # scaleBkg  = float( ang_yield[angLikeBkg] / (ang_yield['Sig'] + ang_yield[angLikeBkg]) )
+
+               # numerator = (likeSBH[i]*likeSZZS[i]*likeSLZ[i]*likeSMassZS[i]);
+               # denominator = ((scaleBkg*likeBLZ[i]*likeBZZS[i]*likeBBH[i]*likeBMassZS[i])+(scaleSig*likeSBH[i]*likeSZZS[i]*likeSLZ[i]*likeSMassZS[i]))
+
+               # if denominator > 0:
+                   # kinLikeRatio[i] = numerator/denominator;
+               # else:
+                   # kinLikeRatio[i] = 0;
 
             if job.type == 'DATA':
                 for i in range(2):
@@ -803,12 +804,12 @@ for job in info:
                     hJet_btagCSVFDown[i] = corrCSV(btagFDown,csv,flavour)
                     hJet_btagCSVFUp[i] = corrCSV(btagFUp,csv,flavour)
                 else:
-                    #tree.Jet_btagCSV[i] = btagNom.reshape(eta,pt,csv,flavour)
-                    #hJet_btagCSVDown[i] = btagDown.reshape(eta,pt,csv,flavour)
-                    #hJet_btagCSVUp[i] = btagUp.reshape(eta,pt,csv,flavour) 
-                    #hJet_btagCSVFDown[i] = btagFDown.reshape(eta,pt,csv,flavour)
-                    #hJet_btagCSVFUp[i] = btagFUp.reshape(eta,pt,csv,flavour)
-#                    tree.Jet_btagCSV[i] = tree.Jet_btagCSV[i]
+                    # tree.Jet_btagCSV[i] = btagNom.reshape(eta,pt,csv,flavour)
+                    # hJet_btagCSVDown[i] = btagDown.reshape(eta,pt,csv,flavour)
+                    # hJet_btagCSVUp[i] = btagUp.reshape(eta,pt,csv,flavour)
+                    # hJet_btagCSVFDown[i] = btagFDown.reshape(eta,pt,csv,flavour)
+                    # hJet_btagCSVFUp[i] = btagFUp.reshape(eta,pt,csv,flavour)
+                    # tree.Jet_btagCSV[i] = tree.Jet_btagCSV[i]
                     hJet_btagCSVDown[i] = tree.Jet_btagCSV[tree.hJCidx[i]]
                     hJet_btagCSVUp[i] = tree.Jet_btagCSV[tree.hJCidx[i]]
                     hJet_btagCSVFDown[i] = tree.Jet_btagCSV[tree.hJCidx[i]]
@@ -961,12 +962,12 @@ for job in info:
             angleZZS_JES_up[0]=fAngleZZS_JES_up.EvalInstance()
             angleZZS_JES_down[0]=fAngleZZS_JES_down.EvalInstance()
 
-#            print "hJet_eta[0]",hJet_eta[0] 
-#            print "hJet_eta[1]",hJet_eta[1] 
-#            print "hJet_phi[0]",hJet_phi[0] 
-#            print "hJet_phi[1]",hJet_phi[1] 
-#            print "hJet_mass[0]",hJet_mass[0] 
-#            print "hJet_mass[1]",hJet_mass[1] 
+           # print "hJet_eta[0]",hJet_eta[0]
+           # print "hJet_eta[1]",hJet_eta[1]
+           # print "hJet_phi[0]",hJet_phi[0]
+           # print "hJet_phi[1]",hJet_phi[1]
+           # print "hJet_mass[0]",hJet_mass[0]
+           # print "hJet_mass[1]",hJet_mass[1]
             
             newtree.Fill()
                    
@@ -976,20 +977,20 @@ for job in info:
     output.Close()
     print 'Close'
     targetStorage = pathOUT.replace('gsidcap://t3se01.psi.ch:22128/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')+'/'+job.prefix+job.identifier+'.root'
-    if True:
-#        command = 'lcg-del -b -D srmv2 -l %s' %(targetStorage)
-#        print(command)
-#        subprocess.call([command], shell=True)
+    if('pisa' in self.config.get('Configuration','whereToLaunch')):
+       # command = 'lcg-del -b -D srmv2 -l %s' %(targetStorage)
+       # print(command)
+       # subprocess.call([command], shell=True)
         command = 'cp %s %s' %(tmpDir+'/'+job.prefix+job.identifier+'.root',targetStorage)
         print(command)
         subprocess.call([command], shell=True)
-    elif TreeCache.get_slc_version() == '111SLC5': # NOT WORKING !!! ALWAYS USE SRM
-        command = 'lcg-del -b -D srmv2 -l %s' %(targetStorage)
-        print(command)
-        subprocess.call([command], shell=True)
-        command = 'lcg-cp -b -D srmv2 file:///%s %s' %(tmpDir+'/'+job.prefix+job.identifier+'.root',targetStorage)
-        print(command)
-        subprocess.call([command], shell=True)
+    # elif TreeCache.get_slc_version() == '111SLC5': # NOT WORKING !!! ALWAYS USE SRM
+        # command = 'lcg-del -b -D srmv2 -l %s' %(targetStorage)
+        # print(command)
+        # subprocess.call([command], shell=True)
+        # command = 'lcg-cp -b -D srmv2 file:///%s %s' %(tmpDir+'/'+job.prefix+job.identifier+'.root',targetStorage)
+        # print(command)
+        # subprocess.call([command], shell=True)
     else:
         command = 'srmrm %s' %(targetStorage)
         print(command)
