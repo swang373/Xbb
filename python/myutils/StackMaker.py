@@ -187,7 +187,7 @@ class StackMaker:
         histo_dict = HistoMaker.orderandadd([{self.typs[i]:self.histos[i]} for i in range(len(self.histos))],self.setup)
         #sort
 
-        print "histo_dict",histo_dict
+	print "histo_dict",histo_dict
         for key in self.setup:
           print "The sample in setup are", key
 
@@ -233,8 +233,11 @@ class StackMaker:
         MC_integral=0
         MC_entries=0
 
-        for histo in self.histos:
-            print "histo name, title, integral: ",histo.GetName(),histo.GetTitle(),histo.Integral()
+        from array import array
+        doubleVariable = array('d',[0])
+
+	for histo in self.histos:
+            print "histo name, title, integral,error: ",histo.GetName(),histo.GetTitle(),histo.IntegralAndError(0,histo.GetNbinsX(),doubleVariable),doubleVariable[0]
             MC_integral+=histo.Integral()
         print "\033[1;32m\n\tMC integral = %s\033[1;m"%MC_integral
 
