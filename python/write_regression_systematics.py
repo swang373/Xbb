@@ -977,7 +977,7 @@ for job in info:
     output.Close()
     print 'Close'
     targetStorage = pathOUT.replace('gsidcap://t3se01.psi.ch:22128/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')+'/'+job.prefix+job.identifier+'.root'
-    if('pisa' in self.config.get('Configuration','whereToLaunch')):
+    if('pisa' in config.get('Configuration','whereToLaunch')):
        # command = 'lcg-del -b -D srmv2 -l %s' %(targetStorage)
        # print(command)
        # subprocess.call([command], shell=True)
@@ -992,10 +992,20 @@ for job in info:
         # print(command)
         # subprocess.call([command], shell=True)
     else:
-        command = 'srmrm %s' %(targetStorage)
+        command = 'srmrm %s' %(targetStorage.replace('root://t3dcachedb03.psi.ch:1094/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=/'))
         print(command)
         subprocess.call([command], shell=True)
-        command = 'srmcp -2 -globus_tcp_port_range 20000,25000 file:///%s %s' %(tmpDir+'/'+job.prefix+job.identifier+'.root',targetStorage)
+        # command = 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib64/dcap'
+        # print(command)
+        # subprocess.call([command], shell=True)
+        command = 'srmcp -2 -globus_tcp_port_range 20000,25000 file:///%s %s' %(tmpDir+'/'+job.prefix+job.identifier+'.root',targetStorage.replace('root://t3dcachedb03.psi.ch:1094/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=/'))
         print(command)
-        subprocess.call([command], shell=True)
+        os.system(command)
+        # command = 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib64/dcap; gfal-copy file:///%s %s' %(tmpDir+'/'+job.prefix+job.identifier+'.root',targetStorage.replace('root://t3dcachedb03.psi.ch:1094/','srm://t3se01.psi.ch/'))
+        # print(command)
+        # os.system(command)
+        # command = 'lcg-cp -b -D srmv2  %s %s' %(tmpDir+'/'+job.prefix+job.identifier+'.root',targetStorage.replace('root://t3dcachedb03.psi.ch:1094/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN='))
+        # print(command)
+        # os.system(command)
+        # # subprocess.call([command], shell=True)
 
