@@ -6,12 +6,12 @@ bash runAll.sh	ggZH		 ZvvHbb13TeV prep >& log/logPrepggZH	&
 bash runAll.sh	WH		 ZvvHbb13TeV prep >& log/logPrepWH	&
 #bash runAll.sh	WplusHpow		 ZvvHbb13TeV prep >& log/logPrepWplusHpow	&
 #bash runAll.sh	WminusHpow		 ZvvHbb13TeV prep >& log/logPrepWminusHpow	&
-#bash runAll.sh	WJets		 ZvvHbb13TeV prep >& log/logPrepWJets	&
+bash runAll.sh	WJetsHT0		 ZvvHbb13TeV prep >& log/logPrepWJetsHT0	&
 bash runAll.sh	WJetsMadHT100		 ZvvHbb13TeV prep >& log/logPrepWJetsMadHT100	&
 bash runAll.sh	WJetsMadHT200		 ZvvHbb13TeV prep >& log/logPrepWJetsMadHT200	&
 bash runAll.sh	WJetsMadHT400		 ZvvHbb13TeV prep >& log/logPrepWJetsMadHT400	&
 bash runAll.sh	WJetsMadHT600		 ZvvHbb13TeV prep >& log/logPrepWJetsMadHT600	&
-#bash runAll.sh	ZJets		 ZvvHbb13TeV prep >& log/logPrepZJets	&
+bash runAll.sh	ZJetsHT0		 ZvvHbb13TeV prep >& log/logPrepZJetsHT0	&
 bash runAll.sh	ZJetsMadHT100		 ZvvHbb13TeV prep >& log/logPrepZJetsMadHT100	&
 bash runAll.sh	ZJetsMadHT200		 ZvvHbb13TeV prep >& log/logPrepZJetsMadHT200	&
 bash runAll.sh	ZJetsMadHT400		 ZvvHbb13TeV prep >& log/logPrepZJetsMadHT400	&
