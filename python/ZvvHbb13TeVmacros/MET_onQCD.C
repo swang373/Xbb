@@ -7,7 +7,7 @@ gStyle->SetLineWidth(2);
 gROOT->ForceStyle();
 
 TChain* tree = new TChain("tree");
-tree->Add("/gpfs/ddn/srm/cms/store/user/arizzi/VHBBHeppyV13/QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/VHBB_HEPPY_V13_QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8__RunIISpring15DR74-Asympt25ns_MCRUN2_74_V9-v1/151002_055711/0000/tree_1.root");
+tree->Add("/gpfs/ddn/srm/cms/store/user/arizzi/VHBBHeppyV14/QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/VHBB_HEPPY_V14_QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8__RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/151025_083726/0000/tree_1.root");
 //TFile *_file0 = TFile::Open("../../env/ZvvHighPt_V12_QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root");
 //tree = (TTree*) _file0->Get("tree");
 
