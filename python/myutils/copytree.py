@@ -114,7 +114,9 @@ def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config):
     inputs=[]
     filenames=[]
     for inputFile in inputFiles:
+        subfolder = inputFile.split('/')[-4]
         filename = inputFile.split('/')[-1]
+        filename = filename.split('_')[0]+'_'+subfolder+'_'+filename.split('_')[1]
         if filename in filenames: continue
         filenames.append(filename)
         outputFile = "%s/%s/%s" %(pathOUT,folderName,filename)
