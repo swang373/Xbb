@@ -185,6 +185,7 @@ def doPlot():
     
     # if('pisa' in config.get('Configuration','whereToLaunch')):
     multiprocess=int(config.get('Configuration','nprocesses'))
+#    multiprocess=0
     outputs = []
     if multiprocess>1:
         from multiprocessing import Pool
