@@ -505,8 +505,9 @@ for job in info:
             hJet_phi1 = tree.Jet_phi[tree.hJCidx[1]]
             hJet_eta0 = tree.Jet_eta[tree.hJCidx[0]]
             hJet_eta1 = tree.Jet_eta[tree.hJCidx[1]]
-            hJet_mass0 = tree.Jet_mass[tree.hJCidx[0]]
-            hJet_mass1 = tree.Jet_mass[tree.hJCidx[1]]
+            ## NB. Jet_corr_JECUp - Jet_corr = Jet_corr - Jet_corr_JECDown
+            hJet_JECUnc0 = tree.Jet_corr_JECUp[tree.hJCidx[0]] - tree.Jet_corr[tree.hJCidx[0]]
+            hJet_JECUnc1 = tree.Jet_corr_JECUp[tree.hJCidx[1]] - tree.Jet_corr[tree.hJCidx[1]]
 
             hJet_ptOld[0] = tree.Jet_pt[tree.hJCidx[0]]
             hJet_ptOld[1] = tree.Jet_pt[tree.hJCidx[1]]
@@ -889,10 +890,10 @@ for job in info:
                 if updown == 'down':
                     variation=-1
                 #calculate
-                rPt0 = hJet_pt0*(1+variation*hJet_mass0)
-                rPt1 = hJet_pt1*(1+variation*hJet_mass1)
-                rE0 = hJet_mass0*(1+variation*hJet_mass0)
-                rE1 = hJet_mass1*(1+variation*hJet_mass1)
+                rPt0 = hJet_pt0*(1+variation*hJet_JECUnc0)
+                rPt1 = hJet_pt1*(1+variation*hJet_JECUnc1)
+                rE0 = hJet_mass0*(1+variation*hJet_JECUnc0)
+                rE1 = hJet_mass1*(1+variation*hJet_JECUnc1)
                 #print 'res %s: %s' %(updown,rPt0)
                 if applyRegression:
                     hJ0.SetPtEtaPhiE(rPt0,hJet_eta0,hJet_phi0,rE0)
@@ -906,11 +907,11 @@ for job in info:
                         var = regDict[key]
                         if key == 'hJet_pt' or key == 'hJet_e' or key == 'hJet_pt' or key == 'hJet_mass' or key == 'hJet_rawPt' or key =='VHbb::evalEtFromPtEtaPhiM(hJet_pt,hJet_eta,hJet_phi,hJet_mass)' or key =='VHbb::evalMtFromPtEtaPhiM(hJet_pt,hJet_eta,hJet_phi,hJet_mass)' or key == 'VHbb::evalJERBias(hJet_rawPt,hJet_mcPt[hJCidx],hJet_eta)':
                             if key == 'hJet_rawPt':
-                                hJet_rawPtArray[0][0] = hJet_rawPt0*(1+variation*hJet_mass0)
-                                hJet_rawPtArray[1][0] = hJet_rawPt1*(1+variation*hJet_mass1)
+                                hJet_rawPtArray[0][0] = hJet_rawPt0*(1+variation*hJet_JECUnc0)
+                                hJet_rawPtArray[1][0] = hJet_rawPt1*(1+variation*hJet_JECUnc1)
                             elif key == 'VHbb::evalJERBias(hJet_rawPt,hJet_mcPt[hJCidx],hJet_eta)':
-                                theVars0[key][0] = hJet_rawPt0*(1+variation*hJet_mass0)
-                                theVars1[key][0] = hJet_rawPt1*(1+variation*hJet_mass1)
+                                theVars0[key][0] = hJet_rawPt0*(1+variation*hJet_JECUnc0)
+                                theVars1[key][0] = hJet_rawPt1*(1+variation*hJet_JECUnc1)
                             elif var == 'hJet_pt' or var == 'hJet_pt[0]' or var == 'hJet_pt[1]' :
                                 theVars0[key][0] = rPt0
                                 theVars1[key][0] = rPt1
