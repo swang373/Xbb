@@ -121,6 +121,7 @@ class TreeCache:
         print ('reading',source)
         input = ROOT.TFile.Open(source,'read')
         tree = input.Get(sample.tree)
+        assert type(tree) is ROOT.TTree
         try:
             CountPos = input.Get("CountPosWeight")
             CountNeg = input.Get("CountNegWeight")
