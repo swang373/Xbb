@@ -41,8 +41,8 @@ def copySingleFile(whereToLaunch,inputFile,outputFile,Acut):
         print "Closing input file"
         input.Close()
 
-def copySingleFileOneInput(whereToLaunch,inputs):
-    return copySingleFile(whereToLaunch,*inputs)
+def copySingleFileOneInput(inputs):
+    return copySingleFile(*inputs)
 
 def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config):
     ''' 
@@ -114,7 +114,9 @@ def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config):
     inputs=[]
     filenames=[]
     for inputFile in inputFiles:
+        subfolder = inputFile.split('/')[-4]
         filename = inputFile.split('/')[-1]
+        filename = filename.split('_')[0]+'_'+subfolder+'_'+filename.split('_')[1]
         if filename in filenames: continue
         filenames.append(filename)
         outputFile = "%s/%s/%s" %(pathOUT,folderName,filename)
@@ -140,7 +142,7 @@ def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config):
             print(command)
             subprocess.call([command], shell=True)
           else: print 'FALSE'
-        inputs.append((inputFile,outputFile,Acut))
+        inputs.append((whereToLaunch,inputFile,outputFile,Acut))
 
     ## process the input list (using multiprocess)
     multiprocess=int(config.get('Configuration','nprocesses'))
@@ -151,7 +153,7 @@ def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config):
         outputs = p.map(copySingleFileOneInput, inputs)
     else:
         for input_ in inputs:
-                output = copySingleFileOneInput(whereToLaunch,input_)
+                output = copySingleFileOneInput(input_)
                 outputs.append(output)
 
     ## finally do the hadd of the copied trees

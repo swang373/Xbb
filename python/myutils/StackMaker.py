@@ -233,8 +233,11 @@ class StackMaker:
         MC_integral=0
         MC_entries=0
 
-        for histo in self.histos:
-            print "histo name, title, integral: ",histo.GetName(),histo.GetTitle(),histo.Integral()
+        from array import array
+        doubleVariable = array('d',[0])
+
+	for histo in self.histos:
+            print "histo name, title, integral,error: ",histo.GetName(),histo.GetTitle(),histo.IntegralAndError(0,histo.GetNbinsX(),doubleVariable),doubleVariable[0]
             MC_integral+=histo.Integral()
         print "\033[1;32m\n\tMC integral = %s\033[1;m"%MC_integral
 
@@ -412,7 +415,7 @@ class StackMaker:
         l2.SetNColumns(2)
 
 
-        ratio, error = getRatio(d1,allMC,self.xMin,self.xMax,"",self.maxRatioUncert, False)
+        ratio, error = getRatio(d1,allMC,self.xMin,self.xMax,"",self.maxRatioUncert, True)
         ksScore = d1.KolmogorovTest( allMC )
         chiScore = d1.Chi2Test( allMC , "UWCHI2/NDF")
         print ksScore

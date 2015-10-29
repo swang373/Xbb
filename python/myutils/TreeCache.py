@@ -121,12 +121,13 @@ class TreeCache:
         print ('reading',source)
         input = ROOT.TFile.Open(source,'read')
         tree = input.Get(sample.tree)
+        assert type(tree) is ROOT.TTree
         try:
             CountPos = input.Get("CountPosWeight")
             CountNeg = input.Get("CountNegWeight")
             CountWeighted = input.Get("CountWeighted")
-            sample.count = CountPos.GetBinContent(1) - CountNeg.GetBinContent(1)
-#            sample.count = CountWeighted.GetBinContent(1)
+#            sample.count = CountPos.GetBinContent(1) - CountNeg.GetBinContent(1)
+            sample.count = CountWeighted.GetBinContent(1)
             # CountWithPU = input.Get("CountWithPU")
             # CountWithPU2011B = input.Get("CountWithPU2011B")
             # sample.count_with_PU = CountWithPU.GetBinContent(1) 
@@ -190,9 +191,10 @@ class TreeCache:
         # print ('Opening %s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]))
         input = ROOT.TFile.Open('%s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]),'read')
         print ('Opening %s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]))
-        tree = input.Get(sample.tree)
-        print("Type of sample.tree ROOT.TTree? ", type(tree) is ROOT.TTree)
-        if not(type(tree) is ROOT.TTree):
+        try:
+            tree = input.Get(sample.tree)
+            assert type(tree) is ROOT.TTree
+        except:
             print ("%s/tmp_%s.root is corrupted. I'm relaunching _trim_tree"%(self.__tmpPath,self.__hashDict[sample.name]))
             self._trim_tree(sample, forceReDo=True)
             input = ROOT.TFile.Open('%s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]),'read')
@@ -207,8 +209,8 @@ class TreeCache:
             CountPos = input.Get("CountPosWeight")
             CountNeg = input.Get("CountNegWeight")
             CountWeighted = input.Get("CountWeighted")
-            sample.count = CountPos.GetBinContent(1) - CountNeg.GetBinContent(1)
-#            sample.count = CountWeighted.GetBinContent(1)
+#            sample.count = CountPos.GetBinContent(1) - CountNeg.GetBinContent(1)
+            sample.count = CountWeighted.GetBinContent(1)
             print('CountPos',CountPos.GetBinContent(1),'CountNeg',CountNeg.GetBinContent(1),'sample.count',sample.count,' CountWeighted',CountWeighted.GetBinContent(1))
             # CountWithPU = input.Get("CountWithPU")
             # CountWithPU2011B = input.Get("CountWithPU2011B")
