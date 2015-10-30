@@ -170,6 +170,14 @@ class StackMaker:
         if not os.path.exists(self.plotDir+'/pdf'):
             os.mkdir(self.plotDir+'/pdf')
         name = '%s/pdf/comp_%s' %(self.plotDir,self.options['pdfName'])
+        ##avoid bad characters!
+        name = name.replace('\\',"_")
+        name = name.replace('/',"_")
+        name = name.replace("'","_")
+        name = name.replace('"',"_")
+        name = name.replace('"',"_")
+        name = name.replace('.',"_")
+        name = name.replace(' ',"_")
         c.Print(name)
         c.Print((name.replace('.pdf','.png')).replace("/pdf",""))
 
