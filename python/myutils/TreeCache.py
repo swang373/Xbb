@@ -190,9 +190,10 @@ class TreeCache:
         # print ('Opening %s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]))
         input = ROOT.TFile.Open('%s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]),'read')
         print ('Opening %s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]))
-        tree = input.Get(sample.tree)
-        print("Type of sample.tree ROOT.TTree? ", type(tree) is ROOT.TTree)
-        if not(type(tree) is ROOT.TTree):
+        try:
+            tree = input.Get(sample.tree)
+            assert type(tree) is ROOT.TTree
+        except:
             print ("%s/tmp_%s.root is corrupted. I'm relaunching _trim_tree"%(self.__tmpPath,self.__hashDict[sample.name]))
             self._trim_tree(sample, forceReDo=True)
             input = ROOT.TFile.Open('%s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]),'read')
