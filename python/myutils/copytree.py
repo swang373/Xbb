@@ -1,5 +1,8 @@
-import ROOT,sys,os,subprocess
+import ROOT,sys,os,subprocess,random,string
 from printcolor import printc
+
+def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
 
 def copySingleFile(whereToLaunch,inputFile,outputFile,Acut):
         print 'inputFile',inputFile
@@ -119,7 +122,8 @@ def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config):
         filename = filename.split('_')[0]+'_'+subfolder+'_'+filename.split('_')[1]
         if filename in filenames: continue
         filenames.append(filename)
-        outputFile = "%s/%s/%s" %(pathOUT,folderName,filename)
+        outputFile = "%s/%s/%s" %(pathOUT,folderName,filename.replace('.root','')+'_'+id_generator()+'.root')
+        # print 'inputFile',inputFile,'outputFile',outputFile
         if('PSI' in whereToLaunch):
           del_protocol = outputFile
         else:
