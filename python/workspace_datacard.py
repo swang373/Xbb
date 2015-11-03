@@ -464,7 +464,7 @@ print 'workspace_datacard-all_samples:',[all_histos['%s'%job][0] for job in all_
 jobnames = [job.name for job in all_samples]
 
 #NOMINAL:
-final_histos['nominal'] = HistoMaker.orderandadd([all_histos['%s'%job][0] for job in all_samples],setup,jobnames)
+final_histos['nominal'] = HistoMaker.orderandadd([all_histos['%s'%job][0] for job in all_samples],setup)
 
 #SYSTEMATICS:
 ind = 1
@@ -477,13 +477,13 @@ print 'add UD sys'
 print '==========\n'
 for syst in systematics:
     for Q in UD:
-        final_histos['%s_%s'%(systematicsnaming[syst],Q)] = HistoMaker.orderandadd([all_histos[job.name][ind] for job in all_samples],setup,jobnames)
+        final_histos['%s_%s'%(systematicsnaming[syst],Q)] = HistoMaker.orderandadd([all_histos[job.name][ind] for job in all_samples],setup)
         ind+=1
 print 'add weight sys'
 print '==============\n'
 for weightF_sys in weightF_systematics: 
     for Q in UD:
-        final_histos['%s_%s'%(systematicsnaming[weightF_sys],Q)]= HistoMaker.orderandadd([all_histos[job.name][ind] for job in all_samples],setup,jobnames)
+        final_histos['%s_%s'%(systematicsnaming[weightF_sys],Q)]= HistoMaker.orderandadd([all_histos[job.name][ind] for job in all_samples],setup)
         ind+=1
 #?
 if change_shapes:
@@ -523,9 +523,9 @@ if addSample_sys:
     print 'Adding the samples systematics'
     print '==============================\n'
     aUp, aDown = get_alternate_shapes(all_histos,addSample_sys,all_samples)
-    final_histos['%s_Up'%(systematicsnaming['model'])]= HistoMaker.orderandadd(aUp,setup,jobnames)
+    final_histos['%s_Up'%(systematicsnaming['model'])]= HistoMaker.orderandadd(aUp,setup)
     del aUp
-    final_histos['%s_Down'%(systematicsnaming['model'])]= HistoMaker.orderandadd(aDown,setup,jobnames)
+    final_histos['%s_Down'%(systematicsnaming['model'])]= HistoMaker.orderandadd(aDown,setup)
 
 
 if not ignore_stats:
@@ -555,6 +555,7 @@ if not ignore_stats:
                         else:
                             final_histos['%s_%s'%(systematicsnaming['stats'],Q)][job].SetBinContent(j,max(0,hist.GetBinContent(j)-hist.GetBinError(j)))
     else:
+        threshold =  0 #stat error / sqrt(value). It was 0.5
         binsBelowThreshold = {}
         for bin in range(0,nBins):
             for Q in UD:
@@ -562,9 +563,9 @@ if not ignore_stats:
             for job,hist in final_histos['nominal'].items():
                 binsBelowThreshold[job] = []
                 if hist.GetBinContent(bin) > 0.:
-                    if hist.GetBinError(bin)/sqrt(hist.GetBinContent(bin)) > 0.5 and hist.GetBinContent(bin) >= 1.:
+                    if hist.GetBinError(bin)/sqrt(hist.GetBinContent(bin)) > threshold and hist.GetBinContent(bin) >= 1.:
                         binsBelowThreshold[job].append(bin)
-                    elif hist.GetBinError(bin)/(hist.GetBinContent(bin)) > 0.5 and hist.GetBinContent(bin) < 1.:
+                    elif hist.GetBinError(bin)/(hist.GetBinContent(bin)) > threshold and hist.GetBinContent(bin) < 1.:
                         binsBelowThreshold[job].append(bin)
                 for Q in UD:
                     final_histos['%s_bin%s_%s'%(systematicsnaming['stats'],bin,Q)][job] = hist.Clone()

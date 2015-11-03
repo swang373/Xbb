@@ -19,7 +19,7 @@ bash runAll.sh  ZJetsMadHT200     ZvvHbb13TeV eval >& log/logEvalZJetsMadHT200  
 bash runAll.sh  ZJetsMadHT400     ZvvHbb13TeV eval >& log/logEvalZJetsMadHT400  &
 bash runAll.sh  ZJetsMadHT600     ZvvHbb13TeV eval >& log/logEvalZJetsMadHT600  &
 bash runAll.sh  TT     ZvvHbb13TeV eval >& log/logEvalTT  &
-#bash runAll.sh  TTPow     ZvvHbb13TeV eval >& log/logEvalTTPow  &
+bash runAll.sh  TTPow     ZvvHbb13TeV eval >& log/logEvalTTPow  &
 bash runAll.sh  ST_s     ZvvHbb13TeV eval >& log/logEvalST_s  &
 bash runAll.sh  ST_t     ZvvHbb13TeV eval >& log/logEvalST_t  &
 bash runAll.sh  ST_tW_antitop     ZvvHbb13TeV eval >& log/logEvalST_tW_antitop  &

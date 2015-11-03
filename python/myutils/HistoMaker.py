@@ -134,10 +134,20 @@ class HistoMaker:
                     # full=False
             elif job.type == 'DATA':
                 if options['blind']:
+                    lowLimitBlindingMass = 90
+                    highLimitBlindingMass = 140
+                    lowLimitBlindingBDT = 0
                     if 'H' in treeVar and 'mass' in treeVar:
-                        CuttedTree.Draw('%s>>%s' %(treeVar,name),' (%(var)s <90. || %(var)s > 150.) & %(cut)s' %options, "goff,e")
+                        lowLimitBlindingMass =hTree.GetBinLowEdge(hTree.FindBin(lowLimitBlindingMass))
+                        highLimitBlindingMass =hTree.GetBinLowEdge(hTree.FindBin(highLimitBlindingMass))+ hTree.GetBinWidth(hTree.GetBin(highLimitBlindingMass))
+                        veto = ("(%s <%s || %s > %s)" %(treeVar,lowLimitBlindingMass,treeVar,highLimitBlindingMass))
+                        print "Using veto:",veto
+                        CuttedTree.Draw('%s>>%s' %(treeVar,name),veto +'&'+' %(cut)s' %options, "goff,e")
                     elif 'BDT' in treeVar or 'bdt' in treeVar:
-                        CuttedTree.Draw('%s>>%s' %(treeVar,name),'%(var)s < 0. & %(cut)s'%options, "goff,e")
+                        lowLimitBlindingBDT = hTree.GetBinLowEdge(hTree.FindBin(lowLimitBlindingBDT))
+                        veto = "(%s <%s)" %(treeVar,lowLimitBlindingBDT)
+                        print "Using veto:",veto
+                        CuttedTree.Draw('%s>>%s' %(treeVar,name),veto +'&'+' %(cut)s'%options, "goff,e")
                     else:
                         CuttedTree.Draw('%s>>%s' %(treeVar,name),'%s' %treeCut, "goff,e")
                 else:
