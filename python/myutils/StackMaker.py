@@ -170,6 +170,14 @@ class StackMaker:
         if not os.path.exists(self.plotDir+'/pdf'):
             os.mkdir(self.plotDir+'/pdf')
         name = '%s/pdf/comp_%s' %(self.plotDir,self.options['pdfName'])
+        ##avoid bad characters!
+        name = name.replace('\\',"_")
+        name = name.replace('/',"_")
+        name = name.replace("'","_")
+        name = name.replace('"',"_")
+        name = name.replace('"',"_")
+        name = name.replace('.',"_")
+        name = name.replace(' ',"_")
         c.Print(name)
         c.Print((name.replace('.pdf','.png')).replace("/pdf",""))
 
@@ -415,7 +423,7 @@ class StackMaker:
         l2.SetNColumns(2)
 
 
-        ratio, error = getRatio(d1,allMC,self.xMin,self.xMax,"",self.maxRatioUncert, False)
+        ratio, error = getRatio(d1,allMC,self.xMin,self.xMax,"",self.maxRatioUncert, True)
         ksScore = d1.KolmogorovTest( allMC )
         chiScore = d1.Chi2Test( allMC , "UWCHI2/NDF")
         print ksScore
