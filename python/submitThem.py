@@ -101,6 +101,24 @@ print configs
 config = BetterConfigParser()
 config.read(configs)
 
+# CREATE DIRECTORIES FOR PSI
+if 'PSI' in config.get('Configuration','whereToLaunch'):
+  print 'Create the ouput folders PREPout, SYSout, MVAout if not existing'
+  mkdir_list = [
+                config.get('Directories','PREPout').replace('root://t3dcachedb03.psi.ch:1094/',''),
+                config.get('Directories','SYSout').replace('root://t3dcachedb03.psi.ch:1094/',''),
+                config.get('Directories','MVAout').replace('root://t3dcachedb03.psi.ch:1094/',''),
+                config.get('Directories','tmpSamples').replace('root://t3dcachedb03.psi.ch:1094/',''),
+                ]
+  for mkdir_protocol in mkdir_list:
+    print 'checking',mkdir_protocol
+    _output_folder = ''
+    for _folder in mkdir_protocol.split('/'):
+        _output_folder += '/'+_folder
+        if not os.path.exists(_output_folder):
+            command = 'srmmkdir srm://t3se01.psi.ch/' + _output_folder
+            subprocess.call([command], shell = True)
+
 def dump_config(configs,output_file):
     """
     Dump all the configs in a output file
