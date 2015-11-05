@@ -169,17 +169,23 @@ class StackMaker:
             os.mkdir(self.plotDir)
         if not os.path.exists(self.plotDir+'/pdf'):
             os.mkdir(self.plotDir+'/pdf')
+        if not os.path.exists(self.plotDir+'/root'):
+            os.mkdir(self.plotDir+'/root')
         name = '%s/pdf/comp_%s' %(self.plotDir,self.options['pdfName'])
         ##avoid bad characters!
         name = name.replace('\\',"_")
-        name = name.replace('/',"_")
+#        name = name.replace('/',"_")
         name = name.replace("'","_")
         name = name.replace('"',"_")
         name = name.replace('"',"_")
-        name = name.replace('.',"_")
+#        name = name.replace('.',"_")
+        name = name.replace(',',"_")
         name = name.replace(' ',"_")
+        pngName = (name.replace('.pdf','.png')).replace("/pdf","")
+        rootName = (name.replace('.pdf','.root')).replace("/pdf","/root")
         c.Print(name)
-        c.Print((name.replace('.pdf','.png')).replace("/pdf",""))
+        c.Print(pngName)
+        c.Print(rootName)
 
 
     def doPlot(self):
@@ -476,8 +482,20 @@ class StackMaker:
         if not os.path.exists(self.plotDir+'/pdf'):
             os.mkdir(self.plotDir+'/pdf')
         name = '%s/pdf/%s' %(self.plotDir,self.options['pdfName'])
+        name = name.replace('\\',"_")
+#        name = name.replace('/',"_")
+        name = name.replace("'","_")
+        name = name.replace('"',"_")
+        name = name.replace('"',"_")
+#        name = name.replace('.',"_")
+        name = name.replace(',',"_")
+        name = name.replace(' ',"_")
+        pngName = (name.replace('.pdf','.png')).replace("/pdf","")
+        rootName = (name.replace('.pdf','.root')).replace("/pdf","/root")
         c.Print(name)
-        c.Print((name.replace('.pdf','.png')).replace("/pdf",""))
+        c.Print(pngName)
+        c.Print(rootName)
+
         #print "DATA INTEGRAL: %s" %d1.Integral(d1.GetNbinsX()-2,d1.GetNbinsX()) 
         #fOut = ROOT.TFile.Open(name.replace('.pdf','.root'),'RECREATE')
         #for theHist in allStack.GetHists():
@@ -725,5 +743,9 @@ class StackMaker:
             os.mkdir(self.plotDir+'/pdf')
         name = '%s/pdf/%s' %(self.plotDir,self.options['pdfName'])
         c.Print(name)
-        c.Print((name.replace('.pdf','.png')).replace("/pdf",""))
+        pngName = (name.replace('.pdf','.png')).replace("/pdf","")
+        rootName = (name.replace('.pdf','.root')).replace("/pdf","/root")
+        c.Print(name)
+        c.Print(pngName)
+        c.Print(rootName)
 
