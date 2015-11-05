@@ -237,6 +237,11 @@ appendList()
 print 'Assign the systematics'
 print '======================\n'
 
+import os
+if os.path.exists("../interface/DrawFunctions_C.so"):
+    print 'ROOT.gROOT.LoadMacro("../interface/DrawFunctions_C.so")'
+    ROOT.gROOT.LoadMacro("../interface/DrawFunctions_C.so")
+
 #the 4 sys
 for syst in systematics:
     for Q in UD:
