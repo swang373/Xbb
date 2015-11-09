@@ -668,7 +668,7 @@ for job in info:
                 HaddJetsdR08.dPhi = 0
                 HaddJetsdR08.dEta = 0                
                 
-                if hJet_regWeight[0] > 3. or hJet_regWeight[1] > 3. or hJet_regWeight[0] < 0.3 or hJet_regWeight[1] < 0.3:
+                if False:#hJet_regWeight[0] > 3. or hJet_regWeight[1] > 3. or hJet_regWeight[0] < 0.3 or hJet_regWeight[1] < 0.3:
                     print '### Debug event with ptReg/ptNoReg>0.3 or ptReg/ptNoReg<3 ###'
                     print 'Event %.0f' %(Event[0])
                     print 'MET %.2f' %(METet[0])
