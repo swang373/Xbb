@@ -22,17 +22,20 @@ def trunc(f, n):
     '''Truncates/pads a float f to n decimal places without rounding'''
     slen = len('%.*f' % (n, f))
     return str(f)[:slen]
-        
+
 
 def removeDouble(seq):
+#    print "@removeDouble:",seq
     seen = set()
     seen_add = seen.add
-    return [ x for x in seq if x not in seen and not seen_add(x)]
+    output = [ x for x in seq if x not in seen and not seen_add(x)]
+#    print "@removeDouble:",output
+    return output
 
 
 def getInputSigma(options):
     opts = copy(options)
-    
+
     file = open(opts.dc, "r")
 #    os.chdir(os.path.dirname(opts.dc))
     opts.bin = True
@@ -48,6 +51,7 @@ def getInputSigma(options):
     b = DC.bins[0]
     exps = {}
     expNui = {}
+    print "@getInputSigma - DC.exp[b].items():",DC.exp[b].items()
     for (p,e) in DC.exp[b].items(): # so that we get only self.DC.processes contributing to this bin
         exps[p] = [ e, [] ]
         expNui[p] = [ e, [] ]
@@ -57,23 +61,24 @@ def getInputSigma(options):
         # begin skip systematics
         skipme = False
         for xs in opts.excludeSyst:
-            if not re.search(xs, lsyst): 
+            if not re.search(xs, lsyst):
                 skipme = True
         if skipme: continue
         # end skip systematics
         counter = 0
         for p in DC.exp[b].keys(): # so that we get only self.DC.processes contributing to this bin
             if errline[b][p] == 0: continue
-            if p == 'QCD': continue
+            if p == 'QCDscale': continue
             if pdf == 'gmN':
                 exps[p][1].append(1/sqrt(pdfargs[0]+1));
             elif pdf == 'gmM':
                 exps[p][1].append(errline[b][p]);
-            elif type(errline[b][p]) == list: 
+            elif type(errline[b][p]) == list:
                 kmax = max(errline[b][p][0], errline[b][p][1], 1.0/errline[b][p][0], 1.0/errline[b][p][1]);
                 exps[p][1].append(kmax-1.);
             elif pdf == 'lnN':
                 exps[p][1].append(max(errline[b][p], 1.0/errline[b][p])-1.);
+    print "@getInputSigma - exps:",exps
     return exps
 
 
@@ -84,21 +89,23 @@ def get_scale_factors(channel,labels,shift,v_b,input_sigma,nuisances):
     sf_e=[]
 #   correspondency_dictionary = {"TT":"TT","s_Top":"s_Top","Zj0b":"Z0b","Zj1b":"Z1b","Zj2b":"Z2b","Wj0b":"Wj0b","Wj1b":"Wj1b","Wj2b":"Wj2b","Zj1HF":"Z1b","Zj2HF":"Z2b","ZjLF":"Z0b"}
 #   correspondency_dictionary = {"TT":"TT","s_Top":"s_Top","Zj0b":"Zj0b","Zj1b":"Zj1b","Zj2b":"Zj2b","Wj0b":"Wj0b","Wj1b":"Wj1b","Wj2b":"Wj2b","Zj1HF":"Z1b","Zj2HF":"Z2b","ZjLF":"Z0b","s_Top":"s_Top"}
-    correspondency_dictionary = {"TT":"TT","s_Top":"s_Top","Zj0b":"Zj0b","Zj1b":"Zj1b","Zj2b":"Zj2b","Wj0b":"Wj0b","Wj1b":"Wj1b","Wj2b":"Wj2b","Zj1HF":"Z1b","Zj2HF":"Z2b","ZjLF":"Z0b","s_Top":"s_Top"}
+    correspondency_dictionary = {"TT":"TT","s_Top":"s_Top","Zj0b":"Zj0b","Zj1b":"Zj1b","Zj2b":"Zj2b","Wj0b":"Wj0b","Wj1b":"Wj1b","Wj2b":"Wj2b","Zj1HF":"Z1b","Zj2HF":"Z2b","ZjLF":"Z0b","s_Top":"s_Top", "WJets_0b":"WJets_light","WJets_1b":"WJets_1b","WJets_2b":"WJets_2b","ZJets_0b":"ZJets_light","ZJets_1b":"ZJets_1b","ZJets_2b":"ZJets_2b","QCD":"QCD"}
 #    print input_sigma
 #    print input_sigma['TT'][1][0]
 #    initial_uncertainty=0.2 # initial uncertainty. @TO FIX: this can go in a config or as input arg
     count=0
-    print labels
+    print "labels:",labels
 #    channels = ['high','High','low','Low','Med','med']
 #    channels = ['Zee','Zmm']
-    channels = ['Zll']
+#    channels = ['Zll']
+    channels = ['Zvv']
     for i in v_b:
         print 'Nuisances ' + nuisances[count]
         for h in channels:
             if h in channel and h in re.sub('M','m',re.sub('L','l',re.sub('H','h',nuisances[count]))):
                 print count
-                try:
+#                try:
+                if True:
                     print 'Label : ' + str(labels[count])
                     print 'Relative SF : ' + i[0]
                     print 'Relative Error : ' + i[1]
@@ -109,17 +116,18 @@ def get_scale_factors(channel,labels,shift,v_b,input_sigma,nuisances):
                     sf_e.append(input_sigma[correspondency_dictionary[labels[count]]][1][0]*eval(i[1])) # calculate the actula value for the uncertainties
                     print sf
                     print sf_e
-                except:
-                    print 'Problem evaluating the SF or the SF errors'
+#                except:
+#                    print 'Problem evaluating the SF or the SF errors'
         count+=1
-    print sf
-    print sf_e
+    print "SFs:",sf
+    print "SFs errors:",sf_e
     return [sf,sf_e]
 
 
 
 def getGraph(channel,labels,shift,v_b,input_sigma,x_position,y_position,nuisances):
 
+    print "Launching getGraph:",channel,labels,shift,v_b,input_sigma,x_position,y_position,nuisances
     sf = get_scale_factors(channel,labels,shift,v_b,input_sigma,nuisances)[0]
     sf_e = get_scale_factors(channel,labels,shift,v_b,input_sigma,nuisances)[1]
     d = numpy.array(sf) # store scale factors in array
@@ -127,20 +135,14 @@ def getGraph(channel,labels,shift,v_b,input_sigma,x_position,y_position,nuisance
     p = numpy.array(y_position)
     zero = numpy.array(x_position)
 
-#    for i in range(len(labels)):
-#        print 'CMSSW_vhbb_'+labels[i]+'_Zll_SF_8TeV '+ str(d[i]) + ' +/- ' + str(e[i])
-
     markerStyle = 20
-    if ('high' in channel or 'High' in channel ):
-        markerStyle = 21
-    if ('med' in channel or 'Med' in channel ):
-        markerStyle = 22
-    if ('Zee' in channel ):
+    if ('Zvv' in channel ):
         markerStyle = 21
 
     for i in range(len(p)): p[i] = p[i]+shift
     print 'POSITIONS: '
     print p
+    print n,d,p,e,zero
     g = ROOT.TGraphErrors(n,d,p,e,zero)
     g.SetFillColor(0)
     g.SetLineColor(2)
@@ -251,7 +253,7 @@ for i in range(fpf_s.getSize()):
         _nuis_b = fpf_b.at(j)
         _name   = _nuis_b.GetName();
         if name.find('SF') > 0 and ( _name.find('SF') > 0 or options.all ) :
-            #          print name + '  __CORR__  ' + _name 
+            #          print name + '  __CORR__  ' + _name
             #          print fit_b.correlation(name,_name)
 #            print _nuis_b.getError()
 #            print fit_b.correlation(name,_name)*_nuis_b.getError()
@@ -374,6 +376,7 @@ if options.plotfile:
 
 import numpy
 if options.plotsf and options.dc:
+    print "Running scale factors"
     n=0
     labels=[]
     v_s=[] # dX/sigma_in values
@@ -391,7 +394,7 @@ if options.plotsf and options.dc:
             n+=1
             #!! take the values
             #!! the usual order is: dX/sigma_in for background only - sigma_out/sigma_in for background only - dX/sigma_in for background+signal - sigma_out/sigma_in for background+signal - rho
-            v = table[name] 
+            v = table[name]
             #!! forget about the flag
             v = [ re.sub('!','',i) for i in v ]
             v = [ re.sub('\*','',i) for i in v ]
@@ -405,38 +408,13 @@ if options.plotsf and options.dc:
             sys.append(0.1) #@TO FIX: need to decide how to quote the systematics and where to take them from
 
     # count the number of different channels
-    channels = [0.,0.,0.,0.,0.]
-    ch={'Zll':0.,'Zll low Pt':0.,'Zll high Pt':0.,'Wln':0.,'Wln low Pt':0.,'Wln high Pt':0.,'Znn':0.,'Znn low Pt':0.,'Znn high Pt':0.,'Znn med Pt':0.,'Zee':0.,'Zmm':0.}
-    print labels
+    channels = [0.]
+    ch={'Zvv':0.}
+    print "labels",labels
     for label in labels:
         #!! create channel list and labels for legend
-        if label.find('Zee') > 0. :
-                ch['Zee'] = 1.
-        if label.find('Zmm') > 0. :
-                ch['Zmm'] = 1.
-        if label.find('Zll') > 0. :
-            if label.find('lowPt') > 0.:
-                ch['Zll low Pt'] = 1.
-            elif label.find('highPt') > 0.:
-                ch['Zll high Pt'] = 1.
-            else:
-                ch['Zll'] = 1.
-        if label.find('Wln') > 0. :
-            if label.find('lowPt') > 0.:
-                ch['Wln low Pt'] = 1.
-            elif label.find('highPt') > 0.:
-                ch['Wln high Pt'] = 1.
-            else:
-                ch['Wln'] = 1.
-        if label.find('Znunu') > 0. :
-            if label.find('LowPt') > 0.:
-                ch['Znunu low Pt'] = 1.
-            elif label.find('MedPt') > 0.:
-                ch['Znunu med Pt'] = 1.
-            elif label.find('HighPt') > 0.:
-                ch['Znunu high Pt'] = 1.
-            else:
-                ch['Znunu'] = 1.
+        if label.find('Zvv') > 0. :
+                ch['Zvv'] = 1.
 
     # calculate the shift on the y position
     shift=0.
@@ -446,29 +424,31 @@ if options.plotsf and options.dc:
     #shift the elements in the array
 #    for i in range(0,len(y_position)): y_position[i]+=shift
 
-    print 'Y_POSITION' 
+    print 'Y_POSITION'
     print y_position
     # clean the labels
     nuisances = labels
     labels = [re.sub('CMS_vhbb_','',label) for label in labels ]
     try:
-        labels = [re.sub('_Zll_SF_','',label) for label in labels ]
-        labels = [re.sub('_Wln_SF_','',label) for label in labels ]
-        labels = [re.sub('_Zee_SF_','',label) for label in labels ]
-        labels = [re.sub('_Zmm_SF_','',label) for label in labels ]
-        labels = [re.sub('_SF_Znunu','',label) for label in labels ]
-        labels = [re.sub('lowPt_8TeV','',label) for label in labels ]
-        labels = [re.sub('highPt_8TeV','',label) for label in labels ]
-        labels = [re.sub('medPt_8TeV','',label) for label in labels ]
-        labels = [re.sub('_Zll_lowPt_SF_8TeV','',label) for label in labels ]
-        labels = [re.sub('_Zll_highPt_SF_8TeV','',label) for label in labels ]
-        labels = [re.sub('_LowPt','',label) for label in labels ]
-        labels = [re.sub('_HighPt','',label) for label in labels ]
-        labels = [re.sub('LowPt_8TeV','',label) for label in labels ]
-        labels = [re.sub('MedPt_8TeV','',label) for label in labels ]
-        labels = [re.sub('HighPt_8TeV','',label) for label in labels ]
-        labels = [re.sub('8TeV','',label) for label in labels ]
-        labels = [re.sub('8TeV','',label) for label in labels ]
+
+        labels = [re.sub('_SF_Zvv_13TeV','',label) for label in labels ]
+#        labels = [re.sub('_Zll_SF_','',label) for label in labels ]
+#        labels = [re.sub('_Wln_SF_','',label) for label in labels ]
+#        labels = [re.sub('_Zee_SF_','',label) for label in labels ]
+#        labels = [re.sub('_Zmm_SF_','',label) for label in labels ]
+#        labels = [re.sub('_SF_Znunu','',label) for label in labels ]
+#        labels = [re.sub('lowPt_8TeV','',label) for label in labels ]
+#        labels = [re.sub('highPt_8TeV','',label) for label in labels ]
+#        labels = [re.sub('medPt_8TeV','',label) for label in labels ]
+#        labels = [re.sub('_Zll_lowPt_SF_8TeV','',label) for label in labels ]
+#        labels = [re.sub('_Zll_highPt_SF_8TeV','',label) for label in labels ]
+#        labels = [re.sub('_LowPt','',label) for label in labels ]
+#        labels = [re.sub('_HighPt','',label) for label in labels ]
+#        labels = [re.sub('LowPt_8TeV','',label) for label in labels ]
+#        labels = [re.sub('MedPt_8TeV','',label) for label in labels ]
+#        labels = [re.sub('HighPt_8TeV','',label) for label in labels ]
+#        labels = [re.sub('8TeV','',label) for label in labels ]
+#        labels = [re.sub('8TeV','',label) for label in labels ]
     except:
         print '@WARNING: No usual naming for datacard scale factors nuisances'
         print labels
@@ -478,12 +458,12 @@ if options.plotsf and options.dc:
 #CMS_vhbb_ZjLF_Zll_SF_8TeV                     ! +3.51, 0.94!     ! +3.42, 0.95!       -0.00
 
     print n
-    print labels
+    print "labels",labels
     print v_s
     print v_b
     print rho
 
-    label_dictionary = {"TT":"t#bar{t}","ZjHF":"Z+bX","ZjLF":"Z+udscg","Zj1HF":"Z+b","Zj2HF":"Z+b#bar{b}","Wj0b":"W+light","Wj1b":"W+b","Wj2b":"W+b#bar{b}","Zj0b":"Z+light","Zj1b":"Z+b","Zj2b":"Z+b#bar{b}","s_Top":"t"}
+    label_dictionary = {"TT":"t#bar{t}","ZjHF":"Z+bX","ZjLF":"Z+udscg","Zj1HF":"Z+b","Zj2HF":"Z+b#bar{b}","Wj0b":"W+light","Wj1b":"W+b","Wj2b":"W+b#bar{b}","Zj0b":"Z+light","Zj1b":"Z+b","Zj2b":"Z+b#bar{b}","s_Top":"t", "WJets_0b":"WJets_0b","WJets_1b":"WJets_1b","WJets_2b":"WJets_2b","ZJets_0b":"ZJets_0b","ZJets_1b":"ZJets_1b","ZJets_2b":"ZJets_2b","QCD":"QCD"}
     c = ROOT.TCanvas("c","c",600,600)
 
     input_sigma = getInputSigma(options)
@@ -497,15 +477,20 @@ if options.plotsf and options.dc:
         print channel
         print active
         if active > 0.:
+            print "GRAPHS launched!"
             graphs[channel] = getGraph(channel,labels,j*shift,v_b,input_sigma,x_position,y_position,nuisances) # create the graph with the scale factors
+            print "GRAPHS done!"
             sf = get_scale_factors(channel,labels,shift,v_b,input_sigma,nuisances)[0]
             sf_e = get_scale_factors(channel,labels,shift,v_b,input_sigma,nuisances)[1]
+            print "labels",labels
+            print "I'm printing the SFs:"
             for i in range(0,len(sf)):
                 latex[labels[i]] = [labels[i],sf[i],sf_e[i],y_position[i]+0.35*shift]
                 print "%s %s pm %s" %(labels[i],sf[i],sf_e[i])
             j+=1
-            
+
     print graphs
+    print "latex:",latex
 
     #xmin = 0.25
     #xmax = 2.5
@@ -513,13 +498,14 @@ if options.plotsf and options.dc:
     xmax = 1
     labels = removeDouble(labels)
     n= len(labels)
-    h2 = ROOT.TH2F("h2","",1,xmin,xmax,n,0,n) # x min - max values.
+    h2 = ROOT.TH2F("h2","",1,xmin,xmax,n,0,n*1.2) # x min - max values.
     h2.GetXaxis().SetTitle("Scale factor")
-    
+
+    print "label_dictionary:",label_dictionary
     for i in range(n):
         h2.GetYaxis().SetBinLabel(i+1,label_dictionary[labels[i]])
 
-    
+
     drawSys=False
     if(drawSys):
         #for the moment just random systematics
@@ -528,14 +514,14 @@ if options.plotsf and options.dc:
         g2 = ROOT.TGraphErrors(n,d,p,sys_e,zero)
         g2.SetFillColor(0)
         g2.SetLineWidth(3);
-    
+
     h2.Draw(); ROOT.gStyle.SetOptStat(0);
     h2.GetXaxis().SetTitleSize(0.04);
     h2.GetXaxis().SetLabelSize(0.04);
     h2.GetYaxis().SetLabelSize(0.06);
     #h2.SetFillStyle(4000)
     c.SetFillStyle(4000)
-    
+
     globalFitBand = ROOT.TBox(1.0, 0., 1.5, n);
     globalFitBand.SetFillStyle(3013);
     globalFitBand.SetFillColor(65);
@@ -562,6 +548,7 @@ if options.plotsf and options.dc:
     l2.SetTextSize(0.035)
 #    l2.SetNColumns(3)
     l2.Draw("same")
+    print "latex:",latex
     for channel,g in graphs.iteritems():
         print channel
         g.Draw("P same")
