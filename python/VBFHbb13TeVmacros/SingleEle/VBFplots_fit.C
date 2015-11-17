@@ -6,7 +6,7 @@ TCanvas* c1 = new TCanvas("c1","c1");
 c1->SetGridx();
 c1->SetGridy();
 
-TFile *_file0 = TFile::Open("newTree5.root");
+TFile *_file0 = TFile::Open("newTreeSilvio2.root");
 TTree* tree = (TTree*) _file0->Get("tree");
 
 TFile* file = new TFile("test.root","recreate");
@@ -71,9 +71,9 @@ turnonDphi->SetParameters(1.6,0.01,1,-0.01);
 
 
 //TFile *_tmpFile = TFile::Open("tmp.root","recreate");
-//TTree* tree = (TTree*) tree->CopyTree("(HLT_DiPFJetAve60_v2 || HLT_DiPFJetAve40_v2)");
+//TTree* tree = (TTree*) tree->CopyTree("(HLT_Ele23_WPLoose_Gsf_v2)");
 
-tree->Draw("(hltQuadJet15>=0):offJet_pt[0]+offJet_pt[1]+offJet_pt[2]  >> h(100,0,400)"," ( HLT_PFJet40_v3)  ","prof,B");
+tree->Draw("(hltQuadJet15>=0):offJet_pt[0]+offJet_pt[1]+offJet_pt[2]  >> h(100,0,400)"," ( HLT_Ele23_WPLoose_Gsf_v2)  ","prof,B");
 h->GetYaxis()->SetTitle("Efficiency");h->SetTitle("L1 trigger turn-on");
 h->GetXaxis()->SetTitle("p^{T}_{1}+p^{T}_{2}+p^{T}_{3}");
 TF1* tnL1Pt1PtPt3 = (TF1*) turnonPt->Clone("tnL1Pt1PtPt3");
@@ -82,7 +82,7 @@ c1->SaveAs("L1Pt1PtPt3.png");
 c1->SaveAs("L1Pt1PtPt3.C");
 
 
-tree->Draw("(hltQuadJet15>=4):offJet_pt[3] >> h(80,0,160)"," (HLT_DiPFJetAve60_v2 || HLT_DiPFJetAve40_v2) && (hltQuadJet15>=0)","prof");
+tree->Draw("(hltQuadJet15>=4):offJet_pt[3] >> h(160,0,160)"," (HLT_Ele23_WPLoose_Gsf_v2) && (hltQuadJet15>=0)","prof");
 h->GetYaxis()->SetTitle("Efficiency");h->SetTitle("Calo p^{T}_{4} turn-on");
 h->GetXaxis()->SetTitle("p^{T}_{4}");
 TF1* tnCaloPt4 = (TF1*) turnonPt->Clone("tnCaloPt4");
@@ -90,15 +90,16 @@ h->Fit(tnCaloPt4,"","",20,2000);
 c1->SaveAs("CaloPt4.png");
 c1->SaveAs("CaloPt4.C");
 
-tree->Draw("(hltTripleJet50>=3):offJet_pt[2] >> h(80,0,160)"," (HLT_DiPFJetAve60_v2 || HLT_DiPFJetAve40_v2) && (hltQuadJet15>=4) && (hltTripleJet50>=0) ","prof");
+tree->Draw("(hltTripleJet50>=3):offJet_pt[2] >> h(160,0,160)"," (HLT_Ele23_WPLoose_Gsf_v2) && (hltQuadJet15>=4) && (hltTripleJet50>=0) ","prof");
 h->GetYaxis()->SetTitle("Efficiency");h->SetTitle("");
 h->GetXaxis()->SetTitle("p^{T}_{3}");
 TF1* tnCaloPt3 = (TF1*) turnonPt->Clone("Calo p^{T}_{3} turn-on");
-h->Fit(tnCaloPt3,"","",40,2000);
+tnCaloPt3->SetParameters(50,20,12,0,1,12);
+h->Fit(tnCaloPt3,"","",30,2000);
 c1->SaveAs("CaloPt3.png");
 c1->SaveAs("CaloPt3.C");
 
-tree->Draw("(hltDoubleJet65>=2):offJet_pt[1] >> h(80,0,160)"," (HLT_DiPFJetAve60_v2 || HLT_DiPFJetAve40_v2) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=0) ","prof");
+tree->Draw("(hltDoubleJet65>=2):offJet_pt[1] >> h(160,0,160)"," (HLT_Ele23_WPLoose_Gsf_v2) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=0) ","prof");
 h->GetYaxis()->SetTitle("Efficiency");h->SetTitle("Calo p^{T}_{2} turn-on");
 h->GetXaxis()->SetTitle("p^{T}_{2}");
 TF1* tnCaloPt2 = (TF1*) turnonPt->Clone("tnCaloPt2");
@@ -106,15 +107,15 @@ h->Fit(tnCaloPt2,"","",50,2000);
 c1->SaveAs("CaloPt2.png");
 c1->SaveAs("CaloPt2.C");
 
-tree->Draw("(hltSingleJet80>=1):offJet_pt[0] >> h(80,0,160)"," (HLT_DiPFJetAve60_v2 || HLT_DiPFJetAve40_v2) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=0) ","prof");
+tree->Draw("(hltSingleJet80>=1):offJet_pt[0] >> h(160,0,160)"," (HLT_Ele23_WPLoose_Gsf_v2) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=0) ","prof");
 h->GetYaxis()->SetTitle("Efficiency");h->SetTitle("Calo p^{T}_{1} turn-on");
 h->GetXaxis()->SetTitle("p^{T}_{1}");
 TF1* tnCaloPt1 = (TF1*) turnonPt->Clone("tnCaloPt1");
-h->Fit(tnCaloPt1,"","",70,2000);
+h->Fit(tnCaloPt1,"","",60,2000);
 c1->SaveAs("CaloPt1.png");
 c1->SaveAs("CaloPt1.C");
 
-//tree->Draw("(hltVBFCaloJetEtaSortedMqq150Deta1p5>=4):MaxIf$(offJet_eta,offJet_pt>30)-MinIf$(offJet_eta,offJet_pt>30) >> h(100,0,5)"," (HLT_DiPFJetAve60_v2 || HLT_DiPFJetAve40_v2) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=0) && Mqq_single>250","prof");
+//tree->Draw("(hltVBFCaloJetEtaSortedMqq150Deta1p5>=4):MaxIf$(offJet_eta,offJet_pt>30)-MinIf$(offJet_eta,offJet_pt>30) >> h(100,0,5)"," (HLT_Ele23_WPLoose_Gsf_v2) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=0) && Mqq_single>250","prof");
 //h->GetYaxis()->SetTitle("Efficiency");h->SetTitle("");
 //h->GetXaxis()->SetTitle("#Delta #eta (qq)");
 //TF1* tnDeltaEtaCalo = (TF1*) turnonPt->Clone("tnDeltaEtaCalo");
@@ -124,8 +125,8 @@ c1->SaveAs("CaloPt1.C");
 //c1->SaveAs("DeltaEtaCalo.C");
 
 //FIXME: we should use as variables Mqq_eta:bDetaqq_eta !!
-tree->Draw("(hltVBFCaloJetEtaSortedMqq150Deta1p5>=4):bDetaqq_eta:bMqq_eta >> h(160,0,800,120,0,6)"," (HLT_DiPFJetAve60_v2 || HLT_DiPFJetAve40_v2 ) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=0)","prof,COLZ");
-//tree->Draw("(hltVBFCaloJetEtaSortedMqq150Deta1p5>=4):bDetaqq_eta:bMqq_eta >> h(20,0,800,60,0,6)"," (HLT_DiPFJetAve60_v2 || HLT_DiPFJetAve40_v2 ) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=0)","prof,COLZ");
+tree->Draw("(hltVBFCaloJetEtaSortedMqq150Deta1p5>=4):bDetaqq_eta:bMqq_eta >> h(160,0,800,120,0,6)"," (HLT_Ele23_WPLoose_Gsf_v2 ) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=0)","prof,COLZ");
+//tree->Draw("(hltVBFCaloJetEtaSortedMqq150Deta1p5>=4):bDetaqq_eta:bMqq_eta >> h(20,0,800,60,0,6)"," (HLT_Ele23_WPLoose_Gsf_v2 ) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=0)","prof,COLZ");
 h->GetYaxis()->SetTitle("#Delta#eta (qq)");h->SetTitle("Calo VBF cut turn-on");
 h->GetXaxis()->SetTitle("M (qq)");
 TF2* tn2D_eta = (TF2*) turnon2D->Clone("tn2D_eta");
@@ -142,7 +143,7 @@ c1->SaveAs("tn2D_eta_funct.png");
 c1->SaveAs("tn2D_eta_funct.C");
 
 
-tree->Draw("(hltVBFCaloJetEtaSortedMqq150Deta1p5>=4):bMqq_eta >> h(20,0,800)"," (HLT_DiPFJetAve60_v2 || HLT_DiPFJetAve40_v2 ) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=0) && bDetaqq_eta>1.6","prof,COLZ");
+tree->Draw("(hltVBFCaloJetEtaSortedMqq150Deta1p5>=4):bMqq_eta >> h(20,0,800)"," (HLT_Ele23_WPLoose_Gsf_v2 ) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=0) && bDetaqq_eta>1.6","prof,COLZ");
 h->GetYaxis()->SetTitle("#Delta#eta (qq)");h->SetTitle("Calo VBF cut turn-on");
 h->GetXaxis()->SetTitle("M (qq)");
 //TF2* tn2D_eta = (TF2*) turnon2D->Clone("tn2D_eta");
@@ -152,7 +153,7 @@ h->GetXaxis()->SetTitle("M (qq)");
 c1->SaveAs("tnMqq_eta.png");
 c1->SaveAs("tnMqq_eta.C");
 
-tree->Draw("(hltVBFCaloJetEtaSortedMqq150Deta1p5>=4):bDetaqq_eta >> h(60,0,6)"," (HLT_DiPFJetAve60_v2 || HLT_DiPFJetAve40_v2 ) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=0) && bMqq_eta>1.6","prof,COLZ");
+tree->Draw("(hltVBFCaloJetEtaSortedMqq150Deta1p5>=4):bDetaqq_eta >> h(80,0,8)"," (HLT_Ele23_WPLoose_Gsf_v2 ) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=0) && bMqq_eta>1.6","prof,COLZ");
 h->GetYaxis()->SetTitle("#Delta#eta (qq)");h->SetTitle("Calo VBF cut turn-on");
 h->GetXaxis()->SetTitle("M (qq)");
 //TF2* tn2D_eta = (TF2*) turnon2D->Clone("tn2D_eta");
@@ -162,7 +163,7 @@ h->GetXaxis()->SetTitle("M (qq)");
 c1->SaveAs("tnDetaqq_eta.png");
 c1->SaveAs("tnDetaqq_eta.C");
 
-tree->Draw("hltCSVL30p74>0:-log(1-Max$(offJet_csv)) >> h(60,0,6)","(HLT_DiPFJetAve60_v2 || HLT_DiPFJetAve40_v2) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=4) && (hltCSVL30p74>=0) ","prof");
+tree->Draw("hltCSVL30p74>0:-log(1-Max$(offJet_csv)) >> h(80,0,8)","(HLT_Ele23_WPLoose_Gsf_v2) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=4) && (hltCSVL30p74>=0) ","prof");
 h->GetYaxis()->SetTitle("Efficiency");h->SetTitle("Calo CSV1 turn-on");
 h->GetXaxis()->SetTitle("CSV");
 TF1* tnCaloCSV1 = (TF1*) turnonCSV->Clone("tnCaloCSV1");
@@ -171,16 +172,16 @@ h->Fit(tnCaloCSV1,"","",0.2,2000);
 c1->SaveAs("CaloCSV1.png");
 c1->SaveAs("CaloCSV1.C");
 
-tree->Draw("(hltPFQuadJetLooseID15>=4):offJet_pt[3] >> h(80,0,160)"," (HLT_DiPFJetAve60_v2 || HLT_DiPFJetAve40_v2) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=4) && (hltCSVL30p74>=1) && (hltPFQuadJetLooseID15>=0) ","prof");
+tree->Draw("(hltPFQuadJetLooseID15>=4):offJet_pt[3] >> h(160,0,160)"," (HLT_Ele23_WPLoose_Gsf_v2) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=4) && (hltCSVL30p74>=1) && (hltPFQuadJetLooseID15>=0) ","prof");
 h->GetYaxis()->SetTitle("Efficiency");h->SetTitle("PF p^{T}_{4} turn-on");
 h->GetXaxis()->SetTitle("p^{T}_{4}");
 TF1* tnPFPt4 = (TF1*) turnonPt->Clone("tnPFPt4");
-tnPFPt4->SetParameters(6.7,14,0,0,0);
+tnPFPt4->SetParameters(20,10,10,0,1,0);
 h->Fit(tnPFPt4,"","",20,2000);
 c1->SaveAs("PFPt4.png");
 c1->SaveAs("PFPt4.C");
 
-tree->Draw("(hltPFTripleJetLooseID64>=3):offJet_pt[2] >> h(80,0,160)"," (HLT_DiPFJetAve60_v2 || HLT_DiPFJetAve40_v2) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=4) && (hltCSVL30p74>=1) && (hltPFQuadJetLooseID15>=4) && (hltPFTripleJetLooseID64>=0)","prof");
+tree->Draw("(hltPFTripleJetLooseID64>=3):offJet_pt[2] >> h(160,0,160)"," (HLT_Ele23_WPLoose_Gsf_v2) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=4) && (hltCSVL30p74>=1) && (hltPFQuadJetLooseID15>=4) && (hltPFTripleJetLooseID64>=0)","prof");
 h->GetYaxis()->SetTitle("Efficiency");h->SetTitle("PF p^{T}_{3} turn-on");
 h->GetXaxis()->SetTitle("p^{T}_{3}");
 TF1* tnPFPt3 = (TF1*) turnonPt->Clone("tnPFPt3");
@@ -188,7 +189,7 @@ h->Fit(tnPFPt3,"","",45,2000);
 c1->SaveAs("PFPt3.png");
 c1->SaveAs("PFPt3.C");
 
-tree->Draw("(hltPFDoubleJetLooseID76>=2):offJet_pt[1] >> h(80,0,160)"," (HLT_DiPFJetAve60_v2 || HLT_DiPFJetAve40_v2) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=4) && (hltCSVL30p74>=1) && (hltPFQuadJetLooseID15>=4) && (hltPFTripleJetLooseID64>=3) && (hltPFDoubleJetLooseID76>=0)","prof");
+tree->Draw("(hltPFDoubleJetLooseID76>=2):offJet_pt[1] >> h(160,0,160)"," (HLT_Ele23_WPLoose_Gsf_v2) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=4) && (hltCSVL30p74>=1) && (hltPFQuadJetLooseID15>=4) && (hltPFTripleJetLooseID64>=3) && (hltPFDoubleJetLooseID76>=0)","prof");
 h->GetYaxis()->SetTitle("Efficiency");h->SetTitle("PF p^{T}_{2} turn-on");
 h->GetXaxis()->SetTitle("p^{T}_{2}");
 TF1* tnPFPt2 = (TF1*) turnonPt->Clone("tnPFPt2");
@@ -196,7 +197,7 @@ h->Fit(tnPFPt2,"","",65,2000);
 c1->SaveAs("PFPt2.png");
 c1->SaveAs("PFPt2.C");
 
-tree->Draw("(hltPFSingleJetLooseID92>=1):offJet_pt[0] >> h(80,0,160)"," (HLT_DiPFJetAve60_v2 || HLT_DiPFJetAve40_v2) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=4) && (hltCSVL30p74>=1) && (hltPFQuadJetLooseID15>=4) && (hltPFTripleJetLooseID64>=3) && (hltPFDoubleJetLooseID76>=2) && (hltPFSingleJetLooseID92>=0) ","prof");
+tree->Draw("(hltPFSingleJetLooseID92>=1):offJet_pt[0] >> h(160,0,160)"," (HLT_Ele23_WPLoose_Gsf_v2) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=4) && (hltCSVL30p74>=1) && (hltPFQuadJetLooseID15>=4) && (hltPFTripleJetLooseID64>=3) && (hltPFDoubleJetLooseID76>=2) && (hltPFSingleJetLooseID92>=0) ","prof");
 h->GetYaxis()->SetTitle("Efficiency");h->SetTitle("PF p^{T}_{1} turn-on");
 h->GetXaxis()->SetTitle("p^{T}_{1}");
 TF1* tnPFPt1 = (TF1*) turnonPt->Clone("tnPFPt1");
@@ -204,13 +205,13 @@ h->Fit(tnPFPt1,"","",80,2000);
 c1->SaveAs("PFPt1.png");
 c1->SaveAs("PFPt1.C");
 
-//tree->Draw("pfJet_hltCSVPF0p78>0:offJet_csv[pfJet_offmatch] >> h(100,0,1)","pfJet_offmatch>=0 && (HLT_DiPFJetAve60_v2 || HLT_DiPFJetAve40_v2) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=4) && (hltCSVL30p74>=1) && (hltPFQuadJetLooseID15>=4) && (hltPFTripleJetLooseID64>=3) && (hltPFDoubleJetLooseID76>=2) && (hltPFSingleJetLooseID92>=1) ","prof");
+//tree->Draw("pfJet_hltCSVPF0p78>0:offJet_csv[pfJet_offmatch] >> h(100,0,1)","pfJet_offmatch>=0 && (HLT_Ele23_WPLoose_Gsf_v2) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=4) && (hltCSVL30p74>=1) && (hltPFQuadJetLooseID15>=4) && (hltPFTripleJetLooseID64>=3) && (hltPFDoubleJetLooseID76>=2) && (hltPFSingleJetLooseID92>=1) ","prof");
 //h->GetYaxis()->SetTitle("Efficiency");h->SetTitle("");
 //h->GetXaxis()->SetTitle("CSV");
 //c1->SaveAs("PFCSV1.png");
 //c1->SaveAs("PFCSV1.C");
 
-//tree->Draw("pfJet_hltDoubleCSVPF0p58>0:offJet_csv[pfJet_offmatch] >> h(100,0,1)","pfJet_offmatch>=0 && (HLT_DiPFJetAve60_v2 || HLT_DiPFJetAve40_v2) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=4) && (hltCSVL30p74>=1) && (hltPFQuadJetLooseID15>=4) && (hltPFTripleJetLooseID64>=3) && (hltPFDoubleJetLooseID76>=2) && (hltPFSingleJetLooseID92>=1) ","prof");
+//tree->Draw("pfJet_hltDoubleCSVPF0p58>0:offJet_csv[pfJet_offmatch] >> h(100,0,1)","pfJet_offmatch>=0 && (HLT_Ele23_WPLoose_Gsf_v2) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=4) && (hltCSVL30p74>=1) && (hltPFQuadJetLooseID15>=4) && (hltPFTripleJetLooseID64>=3) && (hltPFDoubleJetLooseID76>=2) && (hltPFSingleJetLooseID92>=1) ","prof");
 //h->GetYaxis()->SetTitle("Efficiency");h->SetTitle("");
 //h->GetXaxis()->SetTitle("CSV");
 //c1->SaveAs("PFCSV2.png");
@@ -218,7 +219,7 @@ c1->SaveAs("PFPt1.C");
 
 //Double CSV path hltDoubleCSVPF0p58, hltCSVPF0p78, hltVBFPFJetCSVSortedMqq200Detaqq1p2
 
-tree->Draw("hltDoubleCSVPF0p58>=2:-log(1-MaxIf$(offJet_csv,offJet_csv!=Max$(offJet_csv))) >> h(60,0,6)","(HLT_DiPFJetAve60_v2 || HLT_DiPFJetAve40_v2 || HLT_QuadPFJet_VBF_v3) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=4) && (hltCSVL30p74>=1) && (hltPFQuadJetLooseID15>=4) && (hltPFTripleJetLooseID64>=3) && (hltPFDoubleJetLooseID76>=2) && (hltPFSingleJetLooseID92>=1) && (hltDoubleCSVPF0p58>=0) ","prof");
+tree->Draw("hltDoubleCSVPF0p58>=2:-log(1-MaxIf$(offJet_csv,offJet_csv!=Max$(offJet_csv))) >> h(80,0,8)","(HLT_Ele23_WPLoose_Gsf_v2) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=4) && (hltCSVL30p74>=1) && (hltPFQuadJetLooseID15>=4) && (hltPFTripleJetLooseID64>=3) && (hltPFDoubleJetLooseID76>=2) && (hltPFSingleJetLooseID92>=1) && (hltDoubleCSVPF0p58>=0) ","prof");
 h->GetYaxis()->SetTitle("Efficiency");h->SetTitle("PF CSV2 turn-on (double b-tag path)");
 h->GetXaxis()->SetTitle("CSV");
 TF1* tnPFCSV2_double = (TF1*) turnonCSV->Clone("tnPFCSV2_double");
@@ -227,7 +228,7 @@ h->Fit(tnPFCSV2_double,"","",0.2,2000);
 c1->SaveAs("PFCSV2_double.png");
 c1->SaveAs("PFCSV2_double.C");
 
-tree->Draw("hltCSVPF0p78>=1:-log(1-Max$(offJet_csv)) >> h(60,0,6)","(HLT_DiPFJetAve60_v2 || HLT_DiPFJetAve40_v2 || HLT_QuadPFJet_VBF_v3) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=4) && (hltCSVL30p74>=1) && (hltPFQuadJetLooseID15>=4) && (hltPFTripleJetLooseID64>=3) && (hltPFDoubleJetLooseID76>=2) && (hltPFSingleJetLooseID92>=1) && (hltDoubleCSVPF0p58>=2) && (hltCSVPF0p78>=0)","prof");
+tree->Draw("hltCSVPF0p78>=1:-log(1-Max$(offJet_csv)) >> h(80,0,8)","(HLT_Ele23_WPLoose_Gsf_v2) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=4) && (hltCSVL30p74>=1) && (hltPFQuadJetLooseID15>=4) && (hltPFTripleJetLooseID64>=3) && (hltPFDoubleJetLooseID76>=2) && (hltPFSingleJetLooseID92>=1) && (hltDoubleCSVPF0p58>=2) && (hltCSVPF0p78>=0)","prof");
 h->GetYaxis()->SetTitle("Efficiency");h->SetTitle("PF CSV1 turn-on (double b-tag path)");
 h->GetXaxis()->SetTitle("CSV");
 TF1* tnPFCSV1_double = (TF1*) turnonCSV->Clone("tnPFCSV1_double");
@@ -236,7 +237,7 @@ h->Fit(tnPFCSV1_double,"","",0.2,2000);
 c1->SaveAs("PFCSV1_double.png");
 c1->SaveAs("PFCSV1_double.C");
 
-tree->Draw("(hltVBFPFJetCSVSortedMqq200Detaqq1p2>=4):bMqq_double:bDetaqq_double >> h(20,0,8,20,0,800)"," (HLT_DiPFJetAve60_v2 || HLT_DiPFJetAve40_v2 || HLT_QuadPFJet_VBF_v3) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=4) && (hltCSVL30p74>=1) && (hltPFQuadJetLooseID15>=4) && (hltPFTripleJetLooseID64>=3) && (hltPFDoubleJetLooseID76>=2) && (hltPFSingleJetLooseID92>=1) && (hltDoubleCSVPF0p58>=2) && (hltCSVPF0p78>=1) && (hltVBFPFJetCSVSortedMqq200Detaqq1p2>=0)","prof,COLZ");
+tree->Draw("(hltVBFPFJetCSVSortedMqq200Detaqq1p2>=4):bMqq_double:bDetaqq_double >> h(20,0,8,20,0,800)"," (HLT_Ele23_WPLoose_Gsf_v2) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=4) && (hltCSVL30p74>=1) && (hltPFQuadJetLooseID15>=4) && (hltPFTripleJetLooseID64>=3) && (hltPFDoubleJetLooseID76>=2) && (hltPFSingleJetLooseID92>=1) && (hltDoubleCSVPF0p58>=2) && (hltCSVPF0p78>=1) && (hltVBFPFJetCSVSortedMqq200Detaqq1p2>=0)","prof,COLZ");
 h->GetYaxis()->SetTitle("#Delta#eta (qq)");h->SetTitle("PF VBF cut turn-on (double b-tag path)");
 h->GetXaxis()->SetTitle("M (qq)");
 TF2* tn2D_double = (TF2*) turnon2D->Clone("tn2D_double");
@@ -253,7 +254,7 @@ c1->SaveAs("tn2D_double_funct.png");
 c1->SaveAs("tn2D_double_funct.C");
 
 
-//tree->Draw("(hltVBFPFJetCSVSortedMqq200Detaqq1p2>=4):bMqq_double >> h(20,0,400)"," (HLT_DiPFJetAve60_v2 || HLT_DiPFJetAve40_v2 || HLT_QuadPFJet_VBF_v3) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=4) && (hltCSVL30p74>=1) && (hltPFQuadJetLooseID15>=4) && (hltPFTripleJetLooseID64>=3) && (hltPFDoubleJetLooseID76>=2) && (hltPFSingleJetLooseID92>=1) && (hltDoubleCSVPF0p58>=2) && (hltCSVPF0p78>=1) && (hltVBFPFJetCSVSortedMqq200Detaqq1p2>=0) && bDetaqq_double>1.3","prof");
+//tree->Draw("(hltVBFPFJetCSVSortedMqq200Detaqq1p2>=4):bMqq_double >> h(20,0,400)"," (HLT_Ele23_WPLoose_Gsf_v2) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=4) && (hltCSVL30p74>=1) && (hltPFQuadJetLooseID15>=4) && (hltPFTripleJetLooseID64>=3) && (hltPFDoubleJetLooseID76>=2) && (hltPFSingleJetLooseID92>=1) && (hltDoubleCSVPF0p58>=2) && (hltCSVPF0p78>=1) && (hltVBFPFJetCSVSortedMqq200Detaqq1p2>=0) && bDetaqq_double>1.3","prof");
 //h->GetYaxis()->SetTitle("Efficiency");h->SetTitle("");
 //h->GetXaxis()->SetTitle("M (qq)");
 //TF1* tnMqqdouble = (TF1*) turnonPt->Clone("tnMqqdouble");
@@ -262,7 +263,7 @@ c1->SaveAs("tn2D_double_funct.C");
 //c1->SaveAs("MqqPF200_double.png");
 //c1->SaveAs("MqqPF200_double.C");
 
-//tree->Draw("(hltVBFPFJetCSVSortedMqq200Detaqq1p2>=4):bDetaqq_double >> h(20,0,4)"," (HLT_DiPFJetAve60_v2 || HLT_DiPFJetAve40_v2 || HLT_QuadPFJet_VBF_v3) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=4) && (hltCSVL30p74>=1) && (hltPFQuadJetLooseID15>=4) && (hltPFTripleJetLooseID64>=3) && (hltPFDoubleJetLooseID76>=2) && (hltPFSingleJetLooseID92>=1) && (hltDoubleCSVPF0p58>=2) && (hltCSVPF0p78>=1) && (hltVBFPFJetCSVSortedMqq200Detaqq1p2>=0) && Mqq_double>220","prof");
+//tree->Draw("(hltVBFPFJetCSVSortedMqq200Detaqq1p2>=4):bDetaqq_double >> h(20,0,4)"," (HLT_Ele23_WPLoose_Gsf_v2) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=4) && (hltCSVL30p74>=1) && (hltPFQuadJetLooseID15>=4) && (hltPFTripleJetLooseID64>=3) && (hltPFDoubleJetLooseID76>=2) && (hltPFSingleJetLooseID92>=1) && (hltDoubleCSVPF0p58>=2) && (hltCSVPF0p78>=1) && (hltVBFPFJetCSVSortedMqq200Detaqq1p2>=0) && Mqq_double>220","prof");
 //h->GetYaxis()->SetTitle("Efficiency");h->SetTitle("");
 //h->GetXaxis()->SetTitle("#Delta #eta (qq)");
 //TF1* tnDeltaEtadouble = (TF1*) turnonPt->Clone("tnDeltaEtadouble");
@@ -273,7 +274,7 @@ c1->SaveAs("tn2D_double_funct.C");
 
 //Single CSV path hltDoubleCSVPF0p58, hltCSVPF0p78, hltVBFPFJetCSVSortedMqq200Detaqq1p2
 
-tree->Draw("hltCSVPF0p78>=1:-log(1-Max$(offJet_csv)) >> h(60,0,6)","(HLT_DiPFJetAve60_v2 || HLT_DiPFJetAve40_v2 || HLT_QuadPFJet_VBF_v3) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=4) && (hltCSVL30p74>=1) && (hltPFQuadJetLooseID15>=4) && (hltPFTripleJetLooseID64>=3) && (hltPFDoubleJetLooseID76>=2) && (hltPFSingleJetLooseID92>=1) && (hltCSVPF0p78>=0)","prof");
+tree->Draw("hltCSVPF0p78>=1:-log(1-Max$(offJet_csv)) >> h(80,0,8)","(HLT_Ele23_WPLoose_Gsf_v2) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=4) && (hltCSVL30p74>=1) && (hltPFQuadJetLooseID15>=4) && (hltPFTripleJetLooseID64>=3) && (hltPFDoubleJetLooseID76>=2) && (hltPFSingleJetLooseID92>=1) && (hltCSVPF0p78>=0)","prof");
 h->GetYaxis()->SetTitle("Efficiency");h->SetTitle("PF CSV1 turn-on (single b-tag path)");
 h->GetXaxis()->SetTitle("CSV");
 TF1* tnPFCSV1_single = (TF1*) turnonCSV->Clone("tnPFCSV1_single");
@@ -282,7 +283,7 @@ h->Fit(tnPFCSV1_single,"","",0.2,2000);
 c1->SaveAs("PFCSV1_single.png");
 c1->SaveAs("PFCSV1_single.C");
 
-tree->Draw("(hltVBFPFJetCSVSortedMqq460Detaqq4p1>=4):bDetaqq_single:bDphibb_single >> h(16,0,3.2,10,0,6)"," (HLT_DiPFJetAve60_v2 || HLT_DiPFJetAve40_v2 || HLT_QuadPFJet_VBF_v3) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=4) && (hltCSVL30p74>=1) && (hltPFQuadJetLooseID15>=4) && (hltPFTripleJetLooseID64>=3) && (hltPFDoubleJetLooseID76>=2) && (hltPFSingleJetLooseID92>=1) && (hltCSVPF0p78>=1) && (hltVBFPFJetCSVSortedMqq460Detaqq4p1>=0)","prof,COLZ");
+tree->Draw("(hltVBFPFJetCSVSortedMqq460Detaqq4p1>=4):bDetaqq_single:bDphibb_single >> h(16,0,3.2,10,0,6)"," (HLT_Ele23_WPLoose_Gsf_v2) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=4) && (hltCSVL30p74>=1) && (hltPFQuadJetLooseID15>=4) && (hltPFTripleJetLooseID64>=3) && (hltPFDoubleJetLooseID76>=2) && (hltPFSingleJetLooseID92>=1) && (hltCSVPF0p78>=1) && (hltVBFPFJetCSVSortedMqq460Detaqq4p1>=0)","prof,COLZ");
 h->GetYaxis()->SetTitle("#Delta#eta (qq)");h->SetTitle("PF VBF cut turn-on (single b-tag path)");
 h->GetXaxis()->SetTitle("#Delta#phi (bb)");
 TF2* tn2D_single = (TF2*) turnon2D->Clone("tn2D_single");
@@ -299,7 +300,7 @@ tn2D_single->Draw("COLZ");
 c1->SaveAs("tn2D_single_funct.png");
 c1->SaveAs("tn2D_single_funct.C");
 
-//tree->Draw("(hltVBFPFJetCSVSortedMqq460Detaqq4p1>=4):bDphibb_single >> h(16,0,3.2)"," (HLT_DiPFJetAve60_v2 || HLT_DiPFJetAve40_v2 || HLT_QuadPFJet_VBF_v3) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=4) && (hltCSVL30p74>=1) && (hltPFQuadJetLooseID15>=4) && (hltPFTripleJetLooseID64>=3) && (hltPFDoubleJetLooseID76>=2) && (hltPFSingleJetLooseID92>=1) && (hltCSVPF0p78>=1) && (hltVBFPFJetCSVSortedMqq460Detaqq4p1>=0) && bDetaqq_single>4.2 ","prof");
+//tree->Draw("(hltVBFPFJetCSVSortedMqq460Detaqq4p1>=4):bDphibb_single >> h(16,0,3.2)"," (HLT_Ele23_WPLoose_Gsf_v2) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=4) && (hltCSVL30p74>=1) && (hltPFQuadJetLooseID15>=4) && (hltPFTripleJetLooseID64>=3) && (hltPFDoubleJetLooseID76>=2) && (hltPFSingleJetLooseID92>=1) && (hltCSVPF0p78>=1) && (hltVBFPFJetCSVSortedMqq460Detaqq4p1>=0) && bDetaqq_single>4.2 ","prof");
 //h->GetYaxis()->SetTitle("Efficiency");h->SetTitle("");
 //h->GetXaxis()->SetTitle("#Delta #eta (qq)");
 //TF1* tnDeltaEta_single = (TF1*) turnonPt->Clone("tnDeltaEta_single");
@@ -308,7 +309,7 @@ c1->SaveAs("tn2D_single_funct.C");
 //c1->SaveAs("DeltaEtaPF460_single.png");
 //c1->SaveAs("DeltaEtaPF460_single.C");
 
-//tree->Draw("(hltVBFPFJetCSVSortedMqq460Detaqq4p1>=4):bDetaqq_single >> h(50,0,10)"," (HLT_DiPFJetAve60_v2 || HLT_DiPFJetAve40_v2 || HLT_QuadPFJet_VBF_v3) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=4) && (hltCSVL30p74>=1) && (hltPFQuadJetLooseID15>=4) && (hltPFTripleJetLooseID64>=3) && (hltPFDoubleJetLooseID76>=2) && (hltPFSingleJetLooseID92>=1) && (hltCSVPF0p78>=1) && (hltVBFPFJetCSVSortedMqq460Detaqq4p1>=0) && bDphibb_single<1.5 ","prof");
+//tree->Draw("(hltVBFPFJetCSVSortedMqq460Detaqq4p1>=4):bDetaqq_single >> h(50,0,10)"," (HLT_Ele23_WPLoose_Gsf_v2) && (hltQuadJet15>=4) && (hltTripleJet50>=3) && (hltDoubleJet65>=2) && (hltSingleJet80>=1) && (hltVBFCaloJetEtaSortedMqq150Deta1p5>=4) && (hltCSVL30p74>=1) && (hltPFQuadJetLooseID15>=4) && (hltPFTripleJetLooseID64>=3) && (hltPFDoubleJetLooseID76>=2) && (hltPFSingleJetLooseID92>=1) && (hltCSVPF0p78>=1) && (hltVBFPFJetCSVSortedMqq460Detaqq4p1>=0) && bDphibb_single<1.5 ","prof");
 //h->GetYaxis()->SetTitle("Efficiency");h->SetTitle("");
 //h->GetXaxis()->SetTitle("#Delta #phi (bb)");
 //TF1* tnDeltaPhi_single = (TF1*) turnonDphi->Clone("tnDeltaPhi_single");
