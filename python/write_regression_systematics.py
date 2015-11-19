@@ -751,31 +751,35 @@ for job in info:
                 newtree.Fill()
                 continue
 
+#Jet_bTagWeightJESUp
+#Jet_bTagWeightJESDown
+#Jet_bTagWeightLFUp
+#Jet_bTagWeightLFDown
+#Jet_bTagWeightHFUp
+#Jet_bTagWeightHFDown
+#Jet_bTagWeightStats1Up
+#Jet_bTagWeightStats1Down
+#Jet_bTagWeightStats1Up
+#Jet_bTagWeightStats2Down
+#Jet_bTagWeightcErr1Up
+#Jet_bTagWeightcErr1Down
+#Jet_bTagWeightcErr2Up
+#Jet_bTagWeightcErr2Down
+#Jet_bTagWeight
+
             for i in range(2):
                 flavour = int(tree.Jet_hadronFlavour[tree.hJCidx[i]])
                 pt = float(tree.Jet_pt[tree.hJCidx[i]])
                 eta = float(tree.Jet_eta[tree.hJCidx[i]])
                 csv = float(tree.Jet_btagCSV[tree.hJCidx[i]])
-                hJet_btagCSVOld[i] = csv 
                 ##FIXME## we have to add the CSV reshaping
-                hJet_btagCSV[i] = csv 
-                if anaTag == '7TeV':
-                    tree.Jet_btagCSV[tree.hJCidx[i]] = corrCSV(btagNom,csv,flavour)
-                    hJet_btagCSVDown[i] = corrCSV(btagDown,csv,flavour)
-                    hJet_btagCSVUp[i] = corrCSV(btagUp,csv,flavour) 
-                    hJet_btagCSVFDown[i] = corrCSV(btagFDown,csv,flavour)
-                    hJet_btagCSVFUp[i] = corrCSV(btagFUp,csv,flavour)
-                else:
-                    # tree.Jet_btagCSV[i] = btagNom.reshape(eta,pt,csv,flavour)
-                    # hJet_btagCSVDown[i] = btagDown.reshape(eta,pt,csv,flavour)
-                    # hJet_btagCSVUp[i] = btagUp.reshape(eta,pt,csv,flavour)
-                    # hJet_btagCSVFDown[i] = btagFDown.reshape(eta,pt,csv,flavour)
-                    # hJet_btagCSVFUp[i] = btagFUp.reshape(eta,pt,csv,flavour)
-                    # tree.Jet_btagCSV[i] = tree.Jet_btagCSV[i]
-                    hJet_btagCSVDown[i] = tree.Jet_btagCSV[tree.hJCidx[i]]
-                    hJet_btagCSVUp[i] = tree.Jet_btagCSV[tree.hJCidx[i]]
-                    hJet_btagCSVFDown[i] = tree.Jet_btagCSV[tree.hJCidx[i]]
-                    hJet_btagCSVFUp[i] = tree.Jet_btagCSV[tree.hJCidx[i]]
+                hJet_btagCSVOld[i] = tree.Jet_btagCSV[tree.hJCidx[i]]*tree.Jet_bTagWeight[tree.hJCidx[i]]
+                hJet_btagCSV[i] = tree.Jet_btagCSV[tree.hJCidx[i]]*tree.Jet_bTagWeight[tree.hJCidx[i]]
+                hJet_btagCSVDown[i] = tree.Jet_btagCSV[tree.hJCidx[i]]*tree.Jet_bTagWeightLFDown[tree.hJCidx[i]]
+                hJet_btagCSVUp[i] = tree.Jet_btagCSV[tree.hJCidx[i]]*tree.Jet_bTagWeightHFUp[tree.hJCidx[i]]
+                hJet_btagCSVFDown[i] = tree.Jet_btagCSV[tree.hJCidx[i]]*tree.Jet_bTagWeightLFDown[tree.hJCidx[i]]
+                hJet_btagCSVFUp[i] = tree.Jet_btagCSV[tree.hJCidx[i]]*tree.Jet_bTagWeightLFUp[tree.hJCidx[i]]
+
 
 ############################################
             if job.type != 'DATA':

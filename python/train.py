@@ -31,6 +31,11 @@ if opts.config =="":
 #Import after configure to get help message
 from myutils import BetterConfigParser, mvainfo, ParseInfo, TreeCache
 
+import os
+if os.path.exists("../interface/DrawFunctions_C.so"):
+    print 'ROOT.gROOT.LoadMacro("../interface/DrawFunctions_C.so")'
+    ROOT.gROOT.LoadMacro("../interface/DrawFunctions_C.so")
+
 #load config
 config = BetterConfigParser()
 config.read(opts.config)
