@@ -146,29 +146,29 @@ for job in info:
     print
 
     input.cd()
-    if lhe_weight_map and 'DY' in job.name:
-        inclusiveJob = info.get_sample('DY')
-        print inclusiveJob.name
-        inclusive = ROOT.TFile.Open(pathIN+inclusiveJob.get_path,'read')
-        inclusive.cd()
-        obj = ROOT.TObject
-        for key in ROOT.gDirectory.GetListOfKeys():
-            input.cd()
-            obj = key.ReadObj()
-            if obj.GetName() == job.tree:
-                continue
-            output.cd()
-            obj.Write(key.GetName())
-        inclusive.Close()
-    else:
-        obj = ROOT.TObject
-        for key in ROOT.gDirectory.GetListOfKeys():
-            input.cd()
-            obj = key.ReadObj()
-            if obj.GetName() == job.tree:
-                continue
-            output.cd()
-            obj.Write(key.GetName())
+    # if lhe_weight_map and 'DY' in job.name:
+        # inclusiveJob = info.get_sample('DY')
+        # print inclusiveJob.name
+        # inclusive = ROOT.TFile.Open(pathIN+inclusiveJob.get_path,'read')
+        # inclusive.cd()
+        # obj = ROOT.TObject
+        # for key in ROOT.gDirectory.GetListOfKeys():
+            # input.cd()
+            # obj = key.ReadObj()
+            # if obj.GetName() == job.tree:
+                # continue
+            # output.cd()
+            # obj.Write(key.GetName())
+        # inclusive.Close()
+    # else:
+    obj = ROOT.TObject
+    for key in ROOT.gDirectory.GetListOfKeys():
+        input.cd()
+        obj = key.ReadObj()
+        if obj.GetName() == job.tree:
+            continue
+        output.cd()
+        obj.Write(key.GetName())
         
     input.cd()
     tree = input.Get(job.tree)
