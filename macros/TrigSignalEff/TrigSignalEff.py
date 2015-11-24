@@ -24,13 +24,20 @@ HLT_val = [0]*len(HLT)
 t.SetBranchStatus("*",0)
 for hlt in HLT:
     t.SetBranchStatus(hlt,1)
+t.SetBranchStatus('vLeptons_relIso04',1)
+t.SetBranchStatus('V_pt',1)
 
-#for n in  xrange (t.GetEntries()):
-for n in  xrange (1000):
+for n in  xrange (t.GetEntries()):
+    t.GetEntry(n)
     if n % 1000 == 0:
         print "Event number %d out of %d " % (n, t.GetEntries())
         print 'hlt val is', HLT_val
-    t.GetEntry(n)
+        print 'V pt is', t.V_pt
+        print 'reliso 0 is',  t.vLeptons_relIso04[0]
+        print 'reliso 1 is',  t.vLeptons_relIso04[1]
+    if (t.vLeptons_relIso04[0] > 0.25) or (t.vLeptons_relIso04[1] > 0.25): continue
+    if not (abs(t.V_pt) > 100 ): continue
+
     for hlt, index, hlt_val in zip(HLT, range(len(HLT)), HLT_val):
         exec ('hlt_val += t.%s' % (hlt))
         HLT_val[index] = hlt_val
