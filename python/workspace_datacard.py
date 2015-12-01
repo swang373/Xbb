@@ -283,8 +283,8 @@ for weightF_sys in weightF_systematics:
         _name = title
         appendList()
 
-print '===================\n'
-print 'The option list is', optionsList
+#print '===================\n'
+#print 'The option list is', optionsList
 
 
 print 'Preparations for Histograms (HistoMakeri)'
