@@ -143,7 +143,7 @@ class HistoMaker:
                         veto = ("(%s <%s || %s > %s)" %(treeVar,lowLimitBlindingMass,treeVar,highLimitBlindingMass))
                         print "Using veto:",veto
                         CuttedTree.Draw('%s>>%s' %(treeVar,name),veto +'&'+' %(cut)s' %options, "goff,e")
-                    elif 'BDT' in treeVar or 'bdt' in treeVar:
+                    elif 'BDT' in treeVar or 'bdt' in treeVar or 'nominal' in treeVar:
                         lowLimitBlindingBDT = hTree.GetBinLowEdge(hTree.FindBin(lowLimitBlindingBDT))
                         veto = "(%s <%s)" %(treeVar,lowLimitBlindingBDT)
                         print "Using veto:",veto
