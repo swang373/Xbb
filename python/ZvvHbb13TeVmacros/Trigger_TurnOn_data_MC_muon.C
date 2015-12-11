@@ -1,4 +1,4 @@
-void Trigger_TurnOn_data_MC(){
+void Trigger_TurnOn_data_MC_muon(){
 gROOT->SetBatch();
 gStyle->SetPadGridX(1);
 gStyle->SetPadGridY(1);
@@ -12,12 +12,12 @@ TCanvas* c1 = new TCanvas("c1","c1",1280,768);
 
 //const char* preselection = "HLT_BIT_HLT_IsoMu20_v && json && max(Max$(vLeptons_pt),Max$(aLeptons_pt))<60 && max(Max$(vLeptons_pt),Max$(aLeptons_pt))>30 && Flag_hbheFilterNew &&Flag_hbheIsoFilter && Flag_goodVertices &&Flag_eeBadScFilter &&Flag_CSCTightHaloFilter && MinIf$(abs(TVector2::Phi_mpi_pi(Jet_phi-met_phi)),Jet_pt>30 && Jet_eta<5.2)>0.5 ";
 //const char* preselection_data = preselection;
-const char* preselection = "HLT_BIT_HLT_Ele27_WP85_Gsf_v         && json && max(Max$(vLeptons_pt),Max$(aLeptons_pt))<60 && max(Max$(vLeptons_pt),Max$(aLeptons_pt))>30 && Flag_hbheFilterNew &&Flag_hbheIsoFilter && Flag_goodVertices &&Flag_eeBadScFilter &&Flag_CSCTightHaloFilter && MinIf$(abs(TVector2::Phi_mpi_pi(Jet_phi-met_phi)),Jet_pt>30 && Jet_eta<5.2)>0.5 ";
-const char* preselection_data = "HLT_BIT_HLT_Ele27_WPLoose_Gsf_v && json && max(Max$(vLeptons_pt),Max$(aLeptons_pt))<60 && max(Max$(vLeptons_pt),Max$(aLeptons_pt))>30 && Flag_hbheFilterNew &&Flag_hbheIsoFilter && Flag_goodVertices &&Flag_eeBadScFilter &&Flag_CSCTightHaloFilter && MinIf$(abs(TVector2::Phi_mpi_pi(Jet_phi-met_phi)),Jet_pt>30 && Jet_eta<5.2)>0.5 ";
+const char* preselection = "HLT_BIT_HLT_IsoMu20_v         && json && max(Max$(vLeptons_pt),Max$(aLeptons_pt))<60 && max(Max$(vLeptons_pt),Max$(aLeptons_pt))>30 && Flag_hbheFilterNew &&Flag_hbheIsoFilter && Flag_goodVertices &&Flag_eeBadScFilter &&Flag_CSCTightHaloFilter && MinIf$(abs(TVector2::Phi_mpi_pi(Jet_phi-met_phi)),Jet_pt>30 && Jet_eta<5.2)>0.5 ";
+const char* preselection_data = "HLT_BIT_HLT_IsoMu20_v && json && max(Max$(vLeptons_pt),Max$(aLeptons_pt))<60 && max(Max$(vLeptons_pt),Max$(aLeptons_pt))>30 && Flag_hbheFilterNew &&Flag_hbheIsoFilter && Flag_goodVertices &&Flag_eeBadScFilter &&Flag_CSCTightHaloFilter && MinIf$(abs(TVector2::Phi_mpi_pi(Jet_phi-met_phi)),Jet_pt>30 && Jet_eta<5.2)>0.5 ";
 
 tree->Reset();
 //tree->Add("../../env/ZvvHighPt_V14_SingleElectron.root");
-tree->Add("/gpfs/ddn/srm/cms/store/user/arizzi/VHBBHeppyV15/SingleElectron/VHBB_HEPPY_V15_SingleElectron__Run2015D-05Oct2015-v1/151027_145709/0000/tree_**.root");
+tree->Add("/gpfs/ddn/srm/cms/store/user/arizzi/VHBBHeppyV15/SingleMuon/VHBB_HEPPY_V15_SingleMuon__Run2015D-05Oct2015-v1/151027_145808/0000/tree_**.root");
 //tree->Add("../../env/ZvvHighPt_V14_SingleMuon.root");
 //tree->Add("/gpfs/ddn/srm/cms/store/user/arizzi/VHBBHeppyV15/SingleMuon/VHBB_HEPPY_V15_SingleMuon__Run2015D-05Oct2015-v1/151027_145808/0000/tree_99*");
 tree->Draw("HLT_BIT_HLT_PFMET90_PFMHT90_IDTight_v :min(met_pt,mhtJet30) >> PFMET90_data(100,0,400)",preselection_data,"prof");
@@ -87,11 +87,6 @@ TF1* turnon2 = (TF1*) turnon1->Clone("turnon1");
 TF1* turnon3 = (TF1*) turnon1->Clone("turnon1");
 TF1* turnon4 = (TF1*) turnon1->Clone("turnon1");
 
-turnon1->SetParameters(100,0.01,1);
-turnon2->SetParameters(100,0.01,1);
-turnon3->SetParameters(100,0.01,1);
-turnon4->SetParameters(100,0.01,1);
-
 turnon1->SetLineColor(PFMET90_data->GetLineColor());
 turnon2->SetLineColor(PFMET90_WjetsHT100->GetLineColor());
 turnon3->SetLineColor(PFMET90_WjetsHT200->GetLineColor());
@@ -118,7 +113,7 @@ PFMET90_WjetsHT200->Fit(turnon3,"","",sigmam*turnon3->GetParameter(1)-turnon3->G
 cout<<endl<< "Fitting PFMET90_WjetsHT400"<<endl;
 PFMET90_WjetsHT400->Fit(turnon4,"","",sigmam*turnon4->GetParameter(1)-turnon4->GetParameter(2),turnon4->GetParameter(1)+sigmap*turnon4->GetParameter(2));
 
-c1->SaveAs("trigger_turnon_data_MC.png");
-c1->SaveAs("trigger_turnon_data_MC.C");
+c1->SaveAs("trigger_turnon_data_MC_muon.png");
+c1->SaveAs("trigger_turnon_data_MC_muon.C");
 }
 
