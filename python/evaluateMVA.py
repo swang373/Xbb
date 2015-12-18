@@ -15,7 +15,6 @@ import pickle
 
 #CONFIGURE
 ROOT.gROOT.SetBatch(True)
-print('hello')
 #load config
 argv = sys.argv
 parser = OptionParser()

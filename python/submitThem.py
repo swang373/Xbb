@@ -25,6 +25,7 @@ parser.add_option("-V", "--verbose", dest="verbose", action="store_true", defaul
                       help="Activate verbose flag for debug printouts")
 
 (opts, args) = parser.parse_args(sys.argv)
+#print 'opts.mass is', opts.mass
 
 import os,shutil,pickle,subprocess,ROOT,re
 ROOT.gROOT.SetBatch(True)
@@ -166,6 +167,9 @@ def compile_macro(config,macro):
     os.chdir(submitDir)
         
 #comment for now
+print '===============================\n'
+print 'Comiling the macros'
+print '===============================\n'
 compile_macro(config,'BTagReshaping')
 compile_macro(config,'VHbbNameSpace')
 
@@ -228,11 +232,11 @@ if opts.task == 'trainReg':
 elif opts.task == 'dc':
     repDict['queue'] = 'all.q'
     for item in DC_vars:
-        if 'ZH%s'%opts.mass in item:
-            submit(item,repDict) 
-        elif opts.mass == 'all':
-            submit(item,repDict)
-            
+        #item here contains the dc name
+        submit(item,repDict)
+        #if 'ZH%s'%opts.mass in item:
+        #    submit(item,repDict)
+
 elif opts.task == 'prep':
     if ( opts.samples == ""):
         path = config.get("Directories","PREPin")
