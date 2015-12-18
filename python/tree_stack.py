@@ -58,6 +58,7 @@ ROOT.gSystem.CompileMacro("../plugins/SimpleDeltaR.C")
 ROOT.gSystem.CompileMacro("../plugins/HJetPt.C")
 ROOT.gSystem.CompileMacro("../plugins/OtherJets.C")
 ROOT.gSystem.CompileMacro("../plugins/VHj_Pt.C")
+ROOT.gSystem.CompileMacro("../plugins/PU.C")
 
 #get locations:
 Wdir=config.get('Directories','Wdir')# working direcoty containing the ouput
