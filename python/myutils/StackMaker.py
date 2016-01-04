@@ -206,6 +206,7 @@ class StackMaker:
           print "The sample in setup are", key
 
         self.histos=[histo_dict[key] for key in self.setup]
+        print "again, self.histos is",self.histos
         self.typs=self.setup
 
         c = ROOT.TCanvas(self.var,'', 600, 600)

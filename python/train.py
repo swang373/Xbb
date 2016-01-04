@@ -40,11 +40,11 @@ gui=opts.verbose
 
 print 'opts is', opts
 
-print "Compile external macros"
-print "=======================\n"
+#print "Compile external macros"
+#print "=======================\n"
 
 ## compile external macros to compute variables on the fly
-ROOT.gSystem.CompileMacro("../plugins/PU.C")
+#ROOT.gSystem.CompileMacro("../plugins/PU.C")
 
 #GLOABAL rescale from Train/Test Spliiting:
 global_rescale=2.
@@ -201,7 +201,7 @@ factory.SetBackgroundWeightExpression(weightF)
 factory.Verbose()
 my_methodBase_bdt = factory.BookMethod(MVAtype,MVAname,MVAsettings)
 my_methodBase_bdt.TrainMethod()
-#factory.TrainAllMethods()
+factory.TrainAllMethods()
 factory.TestAllMethods()
 factory.EvaluateAllMethods()
 output.Write()
