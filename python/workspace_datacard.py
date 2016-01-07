@@ -33,6 +33,12 @@ var=opts.variable
 #--read variables from config---------------------------------------------------
 # 7 or 8TeV Analysis
 
+print "Compile external macros"
+print "=======================\n"
+
+# compile external macros to compute variables on the fly
+#ROOT.gSystem.CompileMacro("../plugins/PU.C")
+
 print 'Assigne variables from  config'
 print '==============================\n'
 
@@ -283,8 +289,8 @@ for weightF_sys in weightF_systematics:
         _name = title
         appendList()
 
-print '===================\n'
-print 'The option list is', optionsList
+#print '===================\n'
+#print 'The option list is', optionsList
 
 
 print 'Preparations for Histograms (HistoMakeri)'

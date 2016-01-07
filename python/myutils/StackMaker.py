@@ -206,6 +206,7 @@ class StackMaker:
           print "The sample in setup are", key
 
         self.histos=[histo_dict[key] for key in self.setup]
+        print "again, self.histos is",self.histos
         self.typs=self.setup
 
         c = ROOT.TCanvas(self.var,'', 600, 600)
@@ -405,12 +406,13 @@ class StackMaker:
         l_2.Draw()
 
         tPrel = self.myText("CMS",0.17,0.88,1.04)
+        print 'self.lumi is', self.lumi
         # if not d1.GetSumOfWeights() % 1 == 0.0:
             # tLumi = self.myText("#sqrt{s} =  %s, L = %.1f fb^{-1}"%('7TeV',(float(5000.)/1000.)),0.17,0.83)
             # tLumi = self.myText("#sqrt{s} =  %s, L = %.1f fb^{-1}"%(self.anaTag,(float(self.lumi)/1000.)),0.17,0.78)
         # else:
             # tLumi = self.myText("#sqrt{s} =  %s, L = %.1f fb^{-1}"%(self.anaTag,(float(self.lumi)/1000.)),0.17,0.83)
-        tLumi = self.myText("#sqrt{s} =  %s, L = %.1f pb^{-1}"%(self.anaTag,(float(self.lumi))),0.17,0.83)
+        tLumi = self.myText("#sqrt{s} =  %s, L = %.3f fb^{-1}"%(self.anaTag,(float(self.lumi/1000.0))),0.17,0.83)
         tAddFlag = self.myText(addFlag,0.17,0.78)
         print 'Add Flag %s' %self.addFlag2
         if self.addFlag2:
