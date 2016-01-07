@@ -43,6 +43,14 @@ anaTag = config.get("Analysis","tag")
 run=opts.training
 gui=opts.verbose
 
+print 'opts is', opts
+
+#print "Compile external macros"
+#print "=======================\n"
+
+## compile external macros to compute variables on the fly
+#ROOT.gSystem.CompileMacro("../plugins/PU.C")
+
 #GLOABAL rescale from Train/Test Spliiting:
 global_rescale=2.
 
@@ -95,6 +103,7 @@ TCut=config.get('Cuts',TCutname)
 #signals
 signals=config.get(run,'signals')
 signals=eval(signals)
+print 'signals are', signals
 #backgrounds
 backgrounds=config.get(run,'backgrounds')
 backgrounds=eval(backgrounds)
@@ -121,6 +130,7 @@ cuts = [TrainCut,EvalCut]
 
 
 samples = []
+print 'agains, signals is', signals
 samples = info.get_samples(signals+backgrounds)
 
 print "XXXXXXXXXXXXXXXX"
