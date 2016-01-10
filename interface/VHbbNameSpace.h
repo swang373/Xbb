@@ -754,7 +754,17 @@ float weight2_down(int i){
   };
   return data2_M[i]/mc2[i];
 }
-
-
 }
 
+
+float triggerMet(float x){
+    return ((0.5+(0.5*erf((x-77.7235)/47.6344)))*0.994699)-0.00492778;
+}
+
+float triggerMetUp(float x){
+    return ((0.5+(0.5*erf((x-71.6922)/47.6344)))*0.998982)-0.00492778;
+}
+
+float triggerMetDown(float x){
+    return ((0.5+(0.5*erf((x-83.7549)/47.6344)))*0.990415)-0.00492778;
+}
