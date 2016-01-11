@@ -15,6 +15,8 @@ def DivideTGraph(num,den):
     EYLs_den = den.GetEYlow()
     EYHs_den = den.GetEYhigh()
 
+    print "den.GetN()",den.GetN()
+    print "num.GetN()",num.GetN()
 
     Ys_num   = num.GetY()
     EYLs_num = num.GetEYlow()
@@ -73,6 +75,7 @@ def getMCAndData(fileName):
     data.SetMarkerColor(ROOT.kBlack)
     MC = copy.copy(MC)
     data = copy.copy(data)
+    file_.Close()
     return MC,data
 
 def doRatio(num, den, option=""):
@@ -179,7 +182,6 @@ def doPlots(ped,fileNum,fileDen):
 
     function = ROOT.TF1("turnonPt","(0.5+0.5*erf( (x-[0])/[1]))*[3]+[2] ",130,500)
     function.SetLineWidth(2)
-    ratioFit.SetParameters(100,50,0,1)
 
 
     TurnOnMC = function.Clone("TurnOnMC")
@@ -355,45 +357,62 @@ ROOT.gStyle.SetOptFit(0)
 
 ##############################################
 
-fileNum = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnMuNum_minMETMHT_125.root"
-fileDen = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnMuDen_minMETMHT_125.root"
-ped="mu"
+#fileNum = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnMuNum_minMETMHT_125.root"
+#fileDen = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnMuDen_minMETMHT_125.root"
+#ped="mu"
+#doPlots(ped,fileNum,fileDen)
+
+#fileNum = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnEleNum_minMETMHT_125.root"
+#fileDen = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnEleDen_minMETMHT_125.root"
+#ped="ele"
+#doPlots(ped,fileNum,fileDen)
+
+#fileNum = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnTTMuNum_minMETMHT_125.root"
+#fileDen = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnTTMuDen_minMETMHT_125.root"
+#ped="mu_TT"
+#doPlots(ped,fileNum,fileDen)
+
+#fileNum = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnTTEleNum_minMETMHT_125.root"
+#fileDen = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnTTEleDen_minMETMHT_125.root"
+#ped="ele_TT"
+#doPlots(ped,fileNum,fileDen)
+
+######################
+
+#fileNum = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnQCDMuNum_minMETMHT_125.root"
+#fileDen = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnQCDMuDen_minMETMHT_125.root"
+#ped="mu_QCD"
+#doPlots(ped,fileNum,fileDen)
+
+#fileNum = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnQCDEleNum_minMETMHT_125.root"
+#fileDen = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnQCDEleDen_minMETMHT_125.root"
+#ped="ele_QCD"
+#doPlots(ped,fileNum,fileDen)
+
+#fileNum = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnQCDTTMuNum_minMETMHT_125.root"
+#fileDen = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnQCDTTMuDen_minMETMHT_125.root"
+#ped="mu_TT_QCD"
+#doPlots(ped,fileNum,fileDen)
+
+#fileNum = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnQCDTTEleNum_minMETMHT_125.root"
+#fileDen = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnQCDTTEleDen_minMETMHT_125.root"
+#ped="ele_TT_QCD"
+#doPlots(ped,fileNum,fileDen)
+
+
+###############################
+
+fileNum = "/scratch/sdonato/VHbbRun2/V14_forPreApproval/triggerMET/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnEleNum_minMETMHT_125.root"
+fileDen = "/scratch/sdonato/VHbbRun2/V14_forPreApproval/triggerMET/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnEleDen_minMETMHT_125.root"
+ped="ele_std"
 doPlots(ped,fileNum,fileDen)
 
-fileNum = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnEleNum_minMETMHT_125.root"
-fileDen = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnEleDen_minMETMHT_125.root"
-ped="ele"
+fileNum = "/scratch/sdonato/VHbbRun2/V14_forPreApproval/triggerMET/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnMuNum_minMETMHT_125.root"
+fileDen = "/scratch/sdonato/VHbbRun2/V14_forPreApproval/triggerMET/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnMuDen_minMETMHT_125.root"
+ped="mu_std"
 doPlots(ped,fileNum,fileDen)
 
-fileNum = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnTTMuNum_minMETMHT_125.root"
-fileDen = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnTTMuDen_minMETMHT_125.root"
-ped="mu_TT"
-doPlots(ped,fileNum,fileDen)
 
-fileNum = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnTTEleNum_minMETMHT_125.root"
-fileDen = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnTTEleDen_minMETMHT_125.root"
-ped="ele_TT"
-doPlots(ped,fileNum,fileDen)
 
-#####################
 
-fileNum = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnQCDMuNum_minMETMHT_125.root"
-fileDen = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnQCDMuDen_minMETMHT_125.root"
-ped="mu_QCD"
-doPlots(ped,fileNum,fileDen)
-
-fileNum = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnQCDEleNum_minMETMHT_125.root"
-fileDen = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnQCDEleDen_minMETMHT_125.root"
-ped="ele_QCD"
-doPlots(ped,fileNum,fileDen)
-
-fileNum = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnQCDTTMuNum_minMETMHT_125.root"
-fileDen = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnQCDTTMuDen_minMETMHT_125.root"
-ped="mu_TT_QCD"
-doPlots(ped,fileNum,fileDen)
-
-fileNum = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnQCDTTEleNum_minMETMHT_125.root"
-fileDen = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnQCDTTEleDen_minMETMHT_125.root"
-ped="ele_TT_QCD"
-doPlots(ped,fileNum,fileDen)
 
