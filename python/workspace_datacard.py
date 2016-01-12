@@ -568,7 +568,7 @@ if not ignore_stats:
                         else:
                             final_histos['%s_%s'%(systematicsnaming['stats'],Q)][job].SetBinContent(j,max(0,hist.GetBinContent(j)-hist.GetBinError(j)))
     else:
-        threshold =  0 #stat error / sqrt(value). It was 0.5
+        threshold =  0.5 #stat error / sqrt(value). It was 0.5
         binsBelowThreshold = {}
         for bin in range(0,nBins):
             for Q in UD:
