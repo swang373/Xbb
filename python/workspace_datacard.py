@@ -273,10 +273,12 @@ for syst in systematics:
             else:
                 _treevar = treevar
         elif cr == True:
-            if syst == 'beff' or syst == 'bmis' or syst == 'beff1':
-                _treevar = treevar.replace(old_str,new_str.replace('?',Q))
-            else:
-                _treevar = treevar            
+            #commented out, since shape sys are done using weights
+            #if syst == 'beff' or syst == 'bmis' or syst == 'beff1':
+            #    _treevar = treevar.replace(old_str,new_str.replace('?',Q))
+            #else:
+            #    _treevar = treevar
+            _treevar = treevar
         #append
         appendList()
 
@@ -572,7 +574,8 @@ if not ignore_stats:
             for Q in UD:
                 final_histos['%s_bin%s_%s'%(systematicsnaming['stats'],bin,Q)] = {}
             for job,hist in final_histos['nominal'].items():
-                binsBelowThreshold[job] = []
+                #binsBelowThreshold[job] = []
+                if not job in binsBelowThreshold.keys(): binsBelowThreshold[job] = []
                 if hist.GetBinContent(bin) > 0.:
                     if hist.GetBinError(bin)/sqrt(hist.GetBinContent(bin)) > threshold and hist.GetBinContent(bin) >= 1.:
                         binsBelowThreshold[job].append(bin)
