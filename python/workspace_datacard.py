@@ -597,13 +597,18 @@ if not ignore_stats:
                         else:
                             final_histos['%s_%s'%(systematicsnaming['stats'],Q)][job].SetBinContent(j,max(0,hist.GetBinContent(j)-hist.GetBinError(j)))
     else:
-        threshold =  0. #stat error / sqrt(value). It was 0.5
+        print "Running Statistical uncertainty"
+        threshold =  0.5 #stat error / sqrt(value). It was 0.5
+        print "threshold",threshold
         binsBelowThreshold = {}
         for bin in range(0,nBins):
             for Q in UD:
                 final_histos['%s_bin%s_%s'%(systematicsnaming['stats'],bin,Q)] = {}
             for job,hist in final_histos['nominal'].items():
-                binsBelowThreshold[job] = []
+                if not job in binsBelowThreshold.keys(): binsBelowThreshold[job] = []
+                print "binsBelowThreshold",binsBelowThreshold
+                print "hist.GetBinContent(bin)",hist.GetBinContent(bin)
+                print "hist.GetBinError(bin)",hist.GetBinError(bin)
                 if hist.GetBinContent(bin) > 0.:
                     if hist.GetBinError(bin)/sqrt(hist.GetBinContent(bin)) > threshold and hist.GetBinContent(bin) >= 1.:
                         binsBelowThreshold[job].append(bin)
@@ -617,6 +622,7 @@ if not ignore_stats:
                         final_histos['%s_bin%s_%s'%(systematicsnaming['stats'],bin,Q)][job].SetBinContent(bin,max(0,hist.GetBinContent(bin)-hist.GetBinError(bin)))
 
 
+print "binsBelowThreshold:",binsBelowThreshold
 print 'Start writing shapes in WS'
 print '==========================\n'
 #write shapes in WS:

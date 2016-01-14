@@ -514,7 +514,7 @@ if options.plotsf and options.dc:
     print rho
     print "##############################"
 
-    label_dictionary = {"TT":"t#bar{t}","Wj0b":"W+light","Wj1b":"W+b","Wj2b":"W+b#bar{b}","Zj0b":"Z+light","Zj1b":"Z+b","Zj2b":"Z+b#bar{b}","s_Top":"t"}
+    label_dictionary = {"TT":"t#bar{t}","Wj0b":"W+0b","Wj1b":"W+b","Wj2b":"W+b#bar{b}","Zj0b":"Z+0b","Zj1b":"Z+b","Zj2b":"Z+b#bar{b}","s_Top":"t"}
     c = ROOT.TCanvas("c","c",600,600)
 
     input_sigma = getInputSigma(options)
@@ -538,10 +538,10 @@ if options.plotsf and options.dc:
             
     print graphs
 
-    #xmin = 0.25
-    #xmax = 2.5
-    xmin = 0
-    xmax = 1
+#    xmin = 0.25
+#    xmax = 2.5
+    xmin = 0.5
+    xmax = 1.5
     labels = removeDouble(labels)
     n= len(labels)
     h2 = ROOT.TH2F("h2","",1,xmin,xmax,n,0,n) # x min - max values.
@@ -578,7 +578,7 @@ if options.plotsf and options.dc:
     globalFitLine.Draw("same");
 
     #!! Legend
-    l2 = ROOT.TLegend(0.68, 0.80,0.80,0.85)
+    l2 = ROOT.TLegend(0.28, 0.80,0.40,0.85)
     l2.SetLineWidth(2)
     l2.SetBorderSize(0)
     l2.SetFillColor(0)
@@ -586,7 +586,8 @@ if options.plotsf and options.dc:
     l2.SetTextFont(62)
     for channel,g in graphs.iteritems():
         print channel
-        l2.AddEntry(g,'ZH, Z#rightarrowl^{+}l^{-}',"pl")
+#        l2.AddEntry(g,'ZH, Z#rightarrowl^{+}l^{-}',"pl")
+        l2.AddEntry(g,'ZH, Z#rightarrow#nu#nu',"pl")
 #        l2.AddEntry(g,channel,"pl")
     #l2.AddEntry(g,"Stat.","l")
     if(drawSys) : l2.AddEntry(g2,"Syst.","l")
@@ -597,10 +598,10 @@ if options.plotsf and options.dc:
         print channel
         g.Draw("P same")
         for label in labels:
-            StackMaker.myText("%.2f #pm %.2f" %(latex[label][1],latex[label][2]),conversion_x(xmin)-0.02,conversion_y(latex[label][3]),0.5)
+            StackMaker.myText("%.2f #pm %.2f" %(latex[label][1],latex[label][2]),conversion_x(xmin)-0.02,conversion_y(latex[label][3])-0.005,0.5)
     if(drawSys) : g2.Draw("[] same")
     StackMaker.myText("CMS Preliminary",conversion_x(xmin)+0.1,0.95,0.6)
-    StackMaker.myText("#sqrt{s} =  8TeV, L = 19.0 fb^{-1}",conversion_x(xmin)+0.1,0.92,0.6)
+    StackMaker.myText("#sqrt{s} =  13TeV, L = 2.19 fb^{-1}",conversion_x(xmin)+0.1,0.92,0.6)
 
     ROOT.gPad.SetLeftMargin(0.2)
     ROOT.gPad.Update()

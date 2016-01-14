@@ -9,6 +9,13 @@ import warnings
 warnings.filterwarnings( action='ignore', category=RuntimeWarning, message='creating converter.*' )
 ROOT.gROOT.SetBatch(True)
 from optparse import OptionParser
+from btag_reweight import *
+csvpath = "./"
+bweightcalc = BTagWeightCalculator(
+    csvpath + "/csv_rwt_fit_hf_2015_11_20.root",
+    csvpath + "/csv_rwt_fit_lf_2015_11_20.root"
+)
+bweightcalc.btag = "btagCSV"
 
 #usage: ./write_regression_systematic.py path
 
@@ -217,7 +224,7 @@ for job in info:
     fFatHnFilterJets = ROOT.TTreeFormula("FatHnFilterJets",'nFatjetCA15ungroomed',tree)
     fMETet = ROOT.TTreeFormula("METet",'met_pt',tree)
     fMETphi = ROOT.TTreeFormula("METphi",'met_phi',tree)
-    fHVMass = ROOT.TTreeFormula("HVMass",'VHbb::HV_mass(H_pt,H_eta,H_phi,H_mass,V_pt,V_eta,V_phi,V_mass)',tree)
+#    fHVMass = ROOT.TTreeFormula("HVMass",'VHbb::HV_mass(H_pt,H_eta,H_phi,H_mass,V_pt,V_eta,V_phi,V_mass)',tree)
     hJet_MtArray = [array('f',[0]),array('f',[0])]
     hJet_etarray = [array('f',[0]),array('f',[0])]
     hJet_MET_dPhi = array('f',[0]*2)
@@ -320,6 +327,54 @@ for job in info:
     EventForTraining[0]=0
 
     TFlag=ROOT.TTreeFormula("EventForTraining","evt%2",tree)
+
+    bTagWeight_new = array('f',[0])
+    bTagWeightJESUp_new = array('f',[0])
+    bTagWeightJESDown_new = array('f',[0])
+    bTagWeightLFUp_new = array('f',[0])
+    bTagWeightLFDown_new = array('f',[0])
+    bTagWeightHFUp_new = array('f',[0])
+    bTagWeightHFDown_new = array('f',[0])
+    bTagWeightStats1Up_new = array('f',[0])
+    bTagWeightStats1Down_new = array('f',[0])
+    bTagWeightStats2Up_new = array('f',[0])
+    bTagWeightStats2Down_new = array('f',[0])
+    bTagWeightcErr1Up_new = array('f',[0])
+    bTagWeightcErr1Down_new = array('f',[0])
+    bTagWeightcErr2Up_new = array('f',[0])
+    bTagWeightcErr2Down_new = array('f',[0])
+    
+    bTagWeight_new[0] = 1
+    bTagWeightJESUp_new[0] = 1
+    bTagWeightJESDown_new[0] = 1
+    bTagWeightLFUp_new[0] = 1
+    bTagWeightLFDown_new[0] = 1
+    bTagWeightHFUp_new[0] = 1
+    bTagWeightHFDown_new[0] = 1
+    bTagWeightStats1Up_new[0] = 1
+    bTagWeightStats1Down_new[0] = 1
+    bTagWeightStats2Up_new[0] = 1
+    bTagWeightStats2Down_new[0] = 1
+    bTagWeightcErr1Up_new[0] = 1
+    bTagWeightcErr1Down_new[0] = 1
+    bTagWeightcErr2Up_new[0] = 1
+    bTagWeightcErr2Down_new[0] = 1
+
+    newtree.Branch('bTagWeight_new',bTagWeight_new,'bTagWeight_new/F')
+    newtree.Branch('bTagWeightJESUp_new',bTagWeightJESUp_new,'bTagWeightJESUp_new/F')
+    newtree.Branch('bTagWeightJESDown_new',bTagWeightJESDown_new,'bTagWeightJESDown_new/F')
+    newtree.Branch('bTagWeightLFUp_new',bTagWeightLFUp_new,'bTagWeightLFUp_new/F')
+    newtree.Branch('bTagWeightLFDown_new',bTagWeightLFDown_new,'bTagWeightLFDown_new/F')
+    newtree.Branch('bTagWeightHFUp_new',bTagWeightHFUp_new,'bTagWeightHFUp_new/F')
+    newtree.Branch('bTagWeightHFDown_new',bTagWeightHFDown_new,'bTagWeightHFDown_new/F')
+    newtree.Branch('bTagWeightStats1Up_new',bTagWeightStats1Up_new,'bTagWeightStats1Up_new/F')
+    newtree.Branch('bTagWeightStats1Down_new',bTagWeightStats1Down_new,'bTagWeightStats1Down_new/F')
+    newtree.Branch('bTagWeightStats2Up_new',bTagWeightStats2Up_new,'bTagWeightStats2Up_new/F')
+    newtree.Branch('bTagWeightStats2Down_new',bTagWeightStats2Down_new,'bTagWeightStats2Down_new/F')
+    newtree.Branch('bTagWeightcErr1Up_new',bTagWeightcErr1Up_new,'bTagWeightcErr1Up_new/F')
+    newtree.Branch('bTagWeightcErr1Down_new',bTagWeightcErr1Down_new,'bTagWeightcErr1Down_new/F')
+    newtree.Branch('bTagWeightcErr2Up_new',bTagWeightcErr2Up_new,'bTagWeightcErr2Up_new/F')
+    newtree.Branch('bTagWeightcErr2Down_new',bTagWeightcErr2Down_new,'bTagWeightcErr2Down_new/F')
 
     #Angular Likelihood
     angleHB = array('f',[0])
@@ -480,6 +535,7 @@ for job in info:
         pass
 
     for entry in range(0,nEntries):
+            if entry>10000: break
             tree.GetEntry(entry)
             
             ### Fill new variable from configuration ###
@@ -599,6 +655,36 @@ for job in info:
             jetEt1 = hJ1.Et()
             hJet_mt0 = hJ0.Mt()
             hJet_mt1 = hJ1.Mt()
+            if not job.type == 'DATA':
+                jetsForBtagWeight = []
+                for i in range(tree.nJet):
+#                    if tree.Jet_mcFlavour[i]==0: print "tree.Jet_mcFlavour[i]=",tree.Jet_mcFlavour[i]
+                    jetsForBtagWeight.append(Jet(tree.Jet_pt[i], tree.Jet_eta[i], tree.Jet_hadronFlavour[i], tree.Jet_btagCSV[i], bweightcalc.btag))
+                    
+                bTagWeight_new[0] = bweightcalc.calcEventWeight(
+                    jetsForBtagWeight, kind="final", systematic="nominal",
+                )
+                weights = {}
+                for syst in ["JES", "LF", "HF", "Stats1", "Stats2", "cErr1", "cErr2"]:
+                    for sdir in ["Up", "Down"]:
+                        weights[syst+sdir] = bweightcalc.calcEventWeight(
+                            jetsForBtagWeight, kind="final", systematic=syst+sdir
+                            )
+                bTagWeightJESUp_new[0] = weights["JESUp"]
+                bTagWeightJESDown_new[0] = weights["JESDown"]
+                bTagWeightLFUp_new[0] = weights["LFUp"]
+                bTagWeightLFDown_new[0] = weights["LFDown"]
+                bTagWeightHFUp_new[0] = weights["HFUp"]
+                bTagWeightHFDown_new[0] = weights["HFDown"]
+                bTagWeightStats1Up_new[0] = weights["Stats1Up"]
+                bTagWeightStats1Down_new[0] = weights["Stats1Down"]
+                bTagWeightStats2Up_new[0] = weights["Stats2Up"]
+                bTagWeightStats2Down_new[0] = weights["Stats2Down"]
+                bTagWeightcErr1Up_new[0] = weights["cErr1Up"]
+                bTagWeightcErr1Down_new[0] = weights["cErr1Down"]
+                bTagWeightcErr2Up_new[0] = weights["cErr2Up"]
+                bTagWeightcErr2Down_new[0] = weights["cErr2Down"]
+                
             
             
             if applyRegression:
@@ -668,13 +754,13 @@ for job in info:
                 HaddJetsdR08.dPhi = 0
                 HaddJetsdR08.dEta = 0                
                 
-                if False:#hJet_regWeight[0] > 3. or hJet_regWeight[1] > 3. or hJet_regWeight[0] < 0.3 or hJet_regWeight[1] < 0.3:
+                if hJet_regWeight[0] > 3. or hJet_regWeight[1] > 3. or hJet_regWeight[0] < 0.3 or hJet_regWeight[1] < 0.3:
                     print '### Debug event with ptReg/ptNoReg>0.3 or ptReg/ptNoReg<3 ###'
                     print 'Event %.0f' %(Event[0])
                     print 'MET %.2f' %(METet[0])
                     print 'rho %.2f' %(rho[0])
                     for key, value in regDict.items():
-                        if not (value == 'hJet_MET_dPhi' or value == 'METet' or value == "rho" or value == "hJet_et" or value == 'hJet_mt' or value == 'hJet_rawPt'):
+                        if not (value == 'hJet_MET_dPhi' or value == 'METet' or value == "rho"):
                             print '%s 0: %.2f'%(key, theVars0[key][0])
                             print '%s 1: %.2f'%(key, theVars1[key][0])
                     for i in range(2):
