@@ -535,7 +535,6 @@ for job in info:
         pass
 
     for entry in range(0,nEntries):
-            if entry>10000: break
             tree.GetEntry(entry)
             
             ### Fill new variable from configuration ###
