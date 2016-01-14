@@ -570,11 +570,10 @@ if not ignore_stats:
     else:
         threshold =  0.5 #stat error / sqrt(value). It was 0.5
         binsBelowThreshold = {}
-        for bin in range(0,nBins):
+        for bin in range(1,nBins+1):
             for Q in UD:
                 final_histos['%s_bin%s_%s'%(systematicsnaming['stats'],bin,Q)] = {}
             for job,hist in final_histos['nominal'].items():
-                #binsBelowThreshold[job] = []
                 if not job in binsBelowThreshold.keys(): binsBelowThreshold[job] = []
                 if hist.GetBinContent(bin) > 0.:
                     if hist.GetBinError(bin)/sqrt(hist.GetBinContent(bin)) > threshold and hist.GetBinContent(bin) >= 1.:
