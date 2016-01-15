@@ -6,6 +6,15 @@ import array
 ROOT.gROOT.LoadMacro("tdrstyleTrigger.C")
 ROOT.setTDRStyle()
 
+minTurnOn   = 0
+maxTurnOn   = 1
+
+minRatio    = 0.8
+maxRatio    = 1.2
+
+functionMin = 80
+functionMax = 500
+
 def DivideTGraph(num,den):
     Ns_den   = den.GetN()
     Xs_den   = den.GetX()
@@ -15,6 +24,8 @@ def DivideTGraph(num,den):
     EYLs_den = den.GetEYlow()
     EYHs_den = den.GetEYhigh()
 
+    print "den.GetN()",den.GetN()
+    print "num.GetN()",num.GetN()
 
     Ys_num   = num.GetY()
     EYLs_num = num.GetEYlow()
@@ -73,6 +84,7 @@ def getMCAndData(fileName):
     data.SetMarkerColor(ROOT.kBlack)
     MC = copy.copy(MC)
     data = copy.copy(data)
+    file_.Close()
     return MC,data
 
 def doRatio(num, den, option=""):
@@ -135,27 +147,62 @@ def confidenceInterval(graph, function):
     tightRange=10.
     
     print "Up/down fit"
-    ## Up
+
+    ## FixParameters
     for i in range(4):
         fit.ReleaseParameter(i)
-        if i in [0]: #  x0 can go down 
-            pass
-        elif i in [3]: # global efficiency can go up
+#        if i in [0]: #  x0 can go down 
+#            pass
+#        elif i in [3]: # global efficiency can go up
+#            pass
+        if i in [0,2]: #  x0 can go down 
             pass
         else: # fix the other parameters
             fit.FixParameter( i, parameters[i] )
-    graph.Fit(fit,"E","",fit.GetXmin(),fit.GetXmax())
+    fitResult = graph.Fit(fit,"SEV0","",fit.GetXmin(),fit.GetXmax())
+    ## Up
     for i in range(4):
+        print "XXXXXXXXX"
+        print "i=",i
+        print fitResult.UpperError(i)
+        print fitResult.LowerError(i)
+        
+        parameters[i] = fit.GetParameter(i)
+        nsigma = 2
         if i in [0]: #  x0 can go down 
-            parametersUp[i] = fit.GetParameter(i) - fit.GetParError(i)
-            parametersDown[i] = fit.GetParameter(i) + fit.GetParError(i)
+            parametersUp[i] = fit.GetParameter(i) + fitResult.LowerError(i)*nsigma
+            parametersDown[i] = fit.GetParameter(i) + fitResult.UpperError(i)*nsigma
+        elif i in [1]: # check-me!
+            parametersUp[i] = fit.GetParameter(i) + fitResult.UpperError(i)*nsigma
+            parametersDown[i] = fit.GetParameter(i) + fitResult.LowerError(i)*nsigma
+        elif i in [2]: # check-me!
+            parametersUp[i] = fit.GetParameter(i) + fitResult.LowerError(i)*nsigma
+            parametersDown[i] = fit.GetParameter(i) + fitResult.UpperError(i)*nsigma
         elif i in [3]: # global efficiency can go up
-            parametersUp[i] = fit.GetParameter(i) + fit.GetParError(i)
-            parametersDown[i] = fit.GetParameter(i) - fit.GetParError(i)
+            parametersUp[i] = fit.GetParameter(i) + fitResult.LowerError(i)*nsigma
+            parametersDown[i] = fit.GetParameter(i) + fitResult.UpperError(i)*nsigma
         else: # fix the other parameters
             parametersUp[i] = fit.GetParameter(i)
             parametersDown[i] = fit.GetParameter(i)
-            
+        
+        print "fit.GetParameter(1)*fit.GetParameter(2)"
+        print fit.GetParameter(1)*fit.GetParameter(2)
+        print "(fit.GetParameter(1)*fit.GetParameter(2))<0"
+        print (fit.GetParameter(1)*fit.GetParameter(2))<0
+        print "fit.GetParameter(1)"
+        print fit.GetParameter(1)
+        print "fit.GetParameter(2)"
+        print fit.GetParameter(2)
+        
+    if (fit.GetParameter(3)<0): ##if [3]<0, I have to exchange [0],[1] min/max
+        for i in [0,1]:
+            print "CHANGE"
+            print parametersUp[i],parametersDown[i]
+            tmp = parametersUp[i]
+            parametersUp[i] = parametersDown[i]
+            parametersDown[i] = tmp
+            print parametersUp[i],parametersDown[i]
+
     ## end
     for i in range(4):
         print "i=,",i,"\t",parameters[i],"\t",parametersUp[i],"\t",parametersDown[i]
@@ -177,9 +224,11 @@ def doPlots(ped,fileNum,fileDen):
 
 #    DataMC = doRatio(turnOnData,turnOnMC)
 
-    function = ROOT.TF1("turnonPt","(0.5+0.5*erf( (x-[0])/[1]))*[3]+[2] ",130,500)
+    function = ROOT.TF1("turnonPt","1-(0.5-0.5*erf( (x-[0])/[1]))*([3])-[2] ",functionMin,functionMax)
+    function.SetParameters(105,45,0.01,1)
+    function.SetParLimits(0,0,200)
+    function.SetParLimits(1,0,100)
     function.SetLineWidth(2)
-    ratioFit.SetParameters(100,50,0,1)
 
 
     TurnOnMC = function.Clone("TurnOnMC")
@@ -189,8 +238,8 @@ def doPlots(ped,fileNum,fileDen):
     
     TurnOnMC,TurnOnMCUp,TurnOnMCDown = confidenceInterval(turnOnMC,TurnOnMC)
 
-    turnOnMC.SetMaximum(1.01)
-    turnOnMC.SetMinimum(0.75)
+    turnOnMC.SetMaximum(maxTurnOn)
+    turnOnMC.SetMinimum(minTurnOn)
 
     turnOnMC.Draw("AP")
     TurnOnMC.Draw("same")
@@ -202,8 +251,8 @@ def doPlots(ped,fileNum,fileDen):
 
     TurnOnData,TurnOnDataUp,TurnOnDataDown = confidenceInterval(turnOnData,TurnOnData)
 
-    turnOnData.SetMaximum(1.01)
-    turnOnData.SetMinimum(0.75)
+    turnOnData.SetMaximum(maxTurnOn)
+    turnOnData.SetMinimum(minTurnOn)
 
     turnOnData.Draw("AP")
     TurnOnData.Draw("same")
@@ -218,12 +267,12 @@ def doPlots(ped,fileNum,fileDen):
     print "Ratio done"
     
     ratioFit=function.Clone("ratioFit")
-    ratioFit.SetParameters(100,50,0,1)
+    ratioFit.SetParameters(50,50,0,1)
 
     ratioFit,ratioFitUp,ratioFitDown = confidenceInterval(ratio,ratioFit)
 
-    ratio.SetMaximum(1.2)
-    ratio.SetMinimum(0.8)
+    ratio.SetMaximum(maxRatio)
+    ratio.SetMinimum(minRatio)
 
     ratio.SetTitle("Data/MC efficiency ratio")
     ratio.GetXaxis().SetTitle("min(MET,MHT) [GeV]")
@@ -232,6 +281,10 @@ def doPlots(ped,fileNum,fileDen):
     ratioFit.Draw("same")
     ratioFitUp.Draw("same")
     ratioFitDown.Draw("same")
+
+    print 'TF1 ratioFit = TF1("ratioFit","', ratioFit.GetExpFormula("P"),'",50,500)'
+    print 'TF1 ratioFitUp = TF1("ratioFitUp","', ratioFitUp.GetExpFormula("P"),'",50,500)'
+    print 'TF1 ratioFitDown = TF1("ratioFitDown","', ratioFitDown.GetExpFormula("P"),'",50,500)'
 
     c1.SaveAs("ratio_"+ped+".png")
     c1.SaveAs("ratio_"+ped+".root")
@@ -267,10 +320,19 @@ def doPlots(ped,fileNum,fileDen):
 
     c1.SaveAs("both_"+ped+".png")
     c1.SaveAs("both_"+ped+".root")
+    
+    function.Delete()
+    TurnOnMC.Delete()
+    TurnOnMCDown.Delete()
+    TurnOnMCUp.Delete()
+    TurnOnData.Delete()
+    TurnOnDataDown.Delete()
+    TurnOnDataUp.Delete()
+    ratioFit.Delete()
 ################################
 
-#    turnOnData.SetMaximum(1.01)
-#    turnOnData.SetMinimum(0.75)
+#    turnOnData.SetMaximum(maxTurnOn)
+#    turnOnData.SetMinimum(minTurnOn)
 #    turnOnData.GetYaxis().SetTitle("Efficiency")
 #    turnOnData.Fit(TurnOnData,"WW")
 #    turnOnData.Fit(TurnOnData,"")
@@ -302,8 +364,8 @@ def doPlots(ped,fileNum,fileDen):
 ################################
 
 
-#    DataMC.SetMaximum(1.2)
-#    DataMC.SetMinimum(0.8)
+#    DataMC.SetMaximum(maxRatio)
+#    DataMC.SetMinimum(minRatio)
 #    DataMC.GetYaxis().SetTitle("Scale factor (data/MC)")
 #    DataMC.Draw()
 #    DataMC.Fit(function)
@@ -355,45 +417,62 @@ ROOT.gStyle.SetOptFit(0)
 
 ##############################################
 
-fileNum = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnMuNum_minMETMHT_125.root"
-fileDen = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnMuDen_minMETMHT_125.root"
-ped="mu"
+#fileNum = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnMuNum_minMETMHT_125.root"
+#fileDen = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnMuDen_minMETMHT_125.root"
+#ped="mu"
+#doPlots(ped,fileNum,fileDen)
+
+#fileNum = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnEleNum_minMETMHT_125.root"
+#fileDen = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnEleDen_minMETMHT_125.root"
+#ped="ele"
+#doPlots(ped,fileNum,fileDen)
+
+#fileNum = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnTTMuNum_minMETMHT_125.root"
+#fileDen = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnTTMuDen_minMETMHT_125.root"
+#ped="mu_TT"
+#doPlots(ped,fileNum,fileDen)
+
+#fileNum = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnTTEleNum_minMETMHT_125.root"
+#fileDen = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnTTEleDen_minMETMHT_125.root"
+#ped="ele_TT"
+#doPlots(ped,fileNum,fileDen)
+
+######################
+
+#fileNum = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnQCDMuNum_minMETMHT_125.root"
+#fileDen = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnQCDMuDen_minMETMHT_125.root"
+#ped="mu_QCD"
+#doPlots(ped,fileNum,fileDen)
+
+#fileNum = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnQCDEleNum_minMETMHT_125.root"
+#fileDen = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnQCDEleDen_minMETMHT_125.root"
+#ped="ele_QCD"
+#doPlots(ped,fileNum,fileDen)
+
+#fileNum = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnQCDTTMuNum_minMETMHT_125.root"
+#fileDen = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnQCDTTMuDen_minMETMHT_125.root"
+#ped="mu_TT_QCD"
+#doPlots(ped,fileNum,fileDen)
+
+#fileNum = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnQCDTTEleNum_minMETMHT_125.root"
+#fileDen = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnQCDTTEleDen_minMETMHT_125.root"
+#ped="ele_TT_QCD"
+#doPlots(ped,fileNum,fileDen)
+
+
+###############################
+
+fileNum = "/scratch/sdonato/VHbbRun2/V14_forPreApproval/triggerMET/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnEleNum_minMETMHT_125.root"
+fileDen = "/scratch/sdonato/VHbbRun2/V14_forPreApproval/triggerMET/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnEleDen_minMETMHT_125.root"
+ped="ele_std"
 doPlots(ped,fileNum,fileDen)
 
-fileNum = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnEleNum_minMETMHT_125.root"
-fileDen = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnEleDen_minMETMHT_125.root"
-ped="ele"
+fileNum = "/scratch/sdonato/VHbbRun2/V14_forPreApproval/triggerMET/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnMuNum_minMETMHT_125.root"
+fileDen = "/scratch/sdonato/VHbbRun2/V14_forPreApproval/triggerMET/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnMuDen_minMETMHT_125.root"
+ped="mu_std"
 doPlots(ped,fileNum,fileDen)
 
-fileNum = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnTTMuNum_minMETMHT_125.root"
-fileDen = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnTTMuDen_minMETMHT_125.root"
-ped="mu_TT"
-doPlots(ped,fileNum,fileDen)
 
-fileNum = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnTTEleNum_minMETMHT_125.root"
-fileDen = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnTTEleDen_minMETMHT_125.root"
-ped="ele_TT"
-doPlots(ped,fileNum,fileDen)
 
-#####################
 
-fileNum = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnQCDMuNum_minMETMHT_125.root"
-fileDen = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnQCDMuDen_minMETMHT_125.root"
-ped="mu_QCD"
-doPlots(ped,fileNum,fileDen)
-
-fileNum = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnQCDEleNum_minMETMHT_125.root"
-fileDen = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnQCDEleDen_minMETMHT_125.root"
-ped="ele_QCD"
-doPlots(ped,fileNum,fileDen)
-
-fileNum = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnQCDTTMuNum_minMETMHT_125.root"
-fileDen = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnQCDTTMuDen_minMETMHT_125.root"
-ped="mu_TT_QCD"
-doPlots(ped,fileNum,fileDen)
-
-fileNum = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnQCDTTEleNum_minMETMHT_125.root"
-fileDen = "/scratch/sdonato/VHbbRun2/V14/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnQCDTTEleDen_minMETMHT_125.root"
-ped="ele_TT_QCD"
-doPlots(ped,fileNum,fileDen)
 
