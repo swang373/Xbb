@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 import re
-from sys import argv, stdout, stderr, exit
 from myutils import StackMaker
 from optparse import OptionParser
 from HiggsAnalysis.CombinedLimit.DatacardParser import *
 from HiggsAnalysis.CombinedLimit.ShapeTools     import *
 from copy import copy,deepcopy
 from numpy import matrix
+from sys import argv, stdout, stderr, exit
 
 
 def conversion_y(y):
@@ -144,13 +144,19 @@ def getGraph(channel,labels,shift,v_b,input_sigma,x_position,y_position,nuisance
 
     for i in range(len(p)): p[i] = p[i]+shift
     print 'POSITIONS: '
-    print p
+    print n,d,p,e,zero
     g = ROOT.TGraphErrors(n,d,p,e,zero)
+    print "X"
     g.SetFillColor(0)
+    print "X"
     g.SetLineColor(2)
+    print "X"
     g.SetLineWidth(3)
+    print "X"
     g.SetMarkerStyle(markerStyle)
+    print "X"
     print 'Ok'
+    print "X"
     return g
 
 
@@ -163,9 +169,6 @@ for X in ("-h", "-?", "--help"):
         hasHelp = True
         argv.remove(X)
 argv.append( '-b-' )
-import ROOT
-ROOT.gROOT.SetBatch(True)
-ROOT.gSystem.Load("libHiggsAnalysisCombinedLimit.so")
 argv.remove( '-b-' )
 if hasHelp: argv.append("-h")
 
@@ -186,6 +189,10 @@ parser.add_option("-D", "--datacard", dest="dc", default="", help="Datacard to b
 if len(args) == 0:
     parser.print_usage()
     exit(1)
+
+#import ROOT
+#ROOT.gROOT.SetBatch(True)
+#ROOT.gSystem.Load("libHiggsAnalysisCombinedLimit.so")
 
 file = ROOT.TFile(args[0])
 #file is the root file provided in the last arg
@@ -213,6 +220,7 @@ for i in range(fpf_s.getSize()):
     name   = nuis_s.GetName();
     nuis_b = fpf_b.find(name)
     nuis_p = prefit.find(name)
+    print nuis_b,nuis_s
     if( name.find('SF') > 0. ):
         correlation_matrix_name.append(name)
     row = []
@@ -259,6 +267,7 @@ for i in range(fpf_s.getSize()):
     print "row is", row
     row += [ "%+4.2f"  % fit_s.correlation(name, options.poi) ]
     print "again, row is", row
+    print "name,flag:",name,flag
     if flag or options.all: table[name] = row
     print "table[name] is", table[name]
     # filling correlation table
@@ -271,23 +280,29 @@ for i in range(fpf_s.getSize()):
             #          print fit_b.correlation(name,_name)
 #            print _nuis_b.getError()
 #            print fit_b.correlation(name,_name)*_nuis_b.getError()
-            print name
-            print _name
-            print fit_b.correlation(name,_name)
+#            print name
+#            print _name
+#            print fit_b.correlation(name,_name)
             correlation_matrix_line.append(trunc(fit_b.correlation(name,_name),2))
     if len(correlation_matrix_line) > 0:
         correlation_matrix.append(correlation_matrix_line)
 
+print
+print "#### Correlation Matrix ######"
 print correlation_matrix_name
-print correlation_matrix[1]
-print correlation_matrix[2]
-print correlation_matrix[3]
-print correlation_matrix[4]
+for cmatrix in correlation_matrix:
+    print cmatrix
+#print correlation_matrix[1]
+#print correlation_matrix[2]
+#print correlation_matrix[3]
+#print correlation_matrix[4]
 
 fmtstring = "%-40s     %15s    %15s  %10s"
 highlight = "*%s*"
 morelight = "!%s!"
 pmsub, sigsub = None, None
+print
+print "###############################"
 if options.format == 'text':
     if options.abs:
         fmtstring = "%-40s     %15s    %30s    %30s  %10s"
@@ -344,8 +359,11 @@ elif options.format == 'html':
         print "<tr><th>nuisance</th><th>background fit<br/>%s </th><th>signal fit<br/>%s</th><th>&rho;(&mu;, &theta;)</tr>" % (what,what)
         fmtstring = "<tr><td><tt>%-40s</tt> </td><td> %-15s </td><td> %-15s </td><td> %-15s </td></tr>"
 
+print "################# AAAA ############################"
+
 names = table.keys()
 names.sort()
+print "Names: ",names
 highlighters = { 1:highlight, 2:morelight };
 for n in names:
     v = table[n]
@@ -363,6 +381,8 @@ if options.format == "latex":
     print " \\hline\n\end{tabular}"
 elif options.format == "html":
     print "</table></body></html>"
+
+print "################# Plot ############################"
 
 if options.plotfile:
     import ROOT
@@ -390,6 +410,7 @@ if options.plotfile:
 #############################################
 
 import numpy
+print "#############################################"
 if options.plotsf and options.dc:
     n=0
     labels=[]
@@ -425,7 +446,7 @@ if options.plotsf and options.dc:
     # count the number of different channels
     channels = [0.,0.,0.,0.,0.]
     ch={'Zll':0.,'Zll low Pt':0.,'Zll high Pt':0.,'Wln':0.,'Wln low Pt':0.,'Wln high Pt':0.,'Znn':0.,'Znn low Pt':0.,'Znn high Pt':0.,'Znn med Pt':0.,'Zee':0.,'Zmm':0.}
-    print labels
+    print "LABELS: ",labels
     for label in labels:
         #!! create channel list and labels for legend
         if label.find('Zee') > 0. :
@@ -439,6 +460,13 @@ if options.plotsf and options.dc:
                 ch['Zll high Pt'] = 1.
             else:
                 ch['Zll'] = 1.
+        if label.find('Znn') > 0. :
+            if label.find('lowPt') > 0.:
+                ch['Znn low Pt'] = 1.
+            elif label.find('highPt') > 0.:
+                ch['Znn high Pt'] = 1.
+            else:
+                ch['Znn'] = 1.
         if label.find('Wln') > 0. :
             if label.find('lowPt') > 0.:
                 ch['Wln low Pt'] = 1.
@@ -472,6 +500,7 @@ if options.plotsf and options.dc:
     try:
         labels = [re.sub('_Zll_SF_','',label) for label in labels ]
         labels = [re.sub('_Wln_SF_','',label) for label in labels ]
+        labels = [re.sub('_Znn_SF_','',label) for label in labels ]
         labels = [re.sub('_Zee_SF_','',label) for label in labels ]
         labels = [re.sub('_Zmm_SF_','',label) for label in labels ]
         labels = [re.sub('_SF_Znunu','',label) for label in labels ]
@@ -486,7 +515,7 @@ if options.plotsf and options.dc:
         labels = [re.sub('MedPt_8TeV','',label) for label in labels ]
         labels = [re.sub('HighPt_8TeV','',label) for label in labels ]
         labels = [re.sub('8TeV','',label) for label in labels ]
-        labels = [re.sub('8TeV','',label) for label in labels ]
+        labels = [re.sub('_SF_Znn_13TeV','',label) for label in labels ]
     except:
         print '@WARNING: No usual naming for datacard scale factors nuisances'
         print labels
@@ -495,11 +524,13 @@ if options.plotsf and options.dc:
 #CMS_vhbb_ZjHF_Zll_SF_8TeV                        +1.79, 1.14        +1.80, 1.13       +0.00
 #CMS_vhbb_ZjLF_Zll_SF_8TeV                     ! +3.51, 0.94!     ! +3.42, 0.95!       -0.00
 
+    print "############# n , labels, ... #################"
     print n
     print labels
     print v_s
     print v_b
     print rho
+    print "##############################"
 
 #    label_dictionary = {"TT":"t#bar{t}","ZjHF":"Z+bX","ZjLF":"Z+udscg","Zj1HF":"Z+b","Zj2HF":"Z+b#bar{b}","Wj0b":"W+light","Wj1b":"W+b","Wj2b":"W+b#bar{b}","Zj0b":"Z+light","Zj1b":"Z+b","Zj2b":"Z+b#bar{b}","s_Top":"t"}
     label_dictionary = {"TT_SF_Zll_13TeV":"t#bar{t}","ZjHF":"Z+bX","ZjLF":"Z+udscg","Zj1HF":"Z+b","Zj2HF":"Z+b#bar{b}","Wj0b":"W+light","Wj1b":"W+b","Wj2b":"W+b#bar{b}","Zj0b_SF_Zll_13TeV":"Z+light","Zj1b_SF_Zll_13TeV":"Z+b","Zj2b_SF_Zll_13TeV":"Z+b#bar{b}","s_Top":"t"}
@@ -566,7 +597,7 @@ if options.plotsf and options.dc:
     globalFitLine.Draw("same");
 
     #!! Legend
-    l2 = ROOT.TLegend(0.68, 0.80,0.80,0.85)
+    l2 = ROOT.TLegend(0.28, 0.80,0.40,0.85)
     l2.SetLineWidth(2)
     l2.SetBorderSize(0)
     l2.SetFillColor(0)
@@ -574,7 +605,8 @@ if options.plotsf and options.dc:
     l2.SetTextFont(62)
     for channel,g in graphs.iteritems():
         print channel
-        l2.AddEntry(g,'ZH, Z#rightarrowl^{+}l^{-}',"pl")
+#        l2.AddEntry(g,'ZH, Z#rightarrowl^{+}l^{-}',"pl")
+        l2.AddEntry(g,'ZH, Z#rightarrow#nu#nu',"pl")
 #        l2.AddEntry(g,channel,"pl")
     #l2.AddEntry(g,"Stat.","l")
     if(drawSys) : l2.AddEntry(g2,"Syst.","l")
@@ -585,10 +617,10 @@ if options.plotsf and options.dc:
         print channel
         g.Draw("P same")
         for label in labels:
-            StackMaker.myText("%.2f #pm %.2f" %(latex[label][1],latex[label][2]),conversion_x(xmin)-0.02,conversion_y(latex[label][3]),0.5)
+            StackMaker.myText("%.2f #pm %.2f" %(latex[label][1],latex[label][2]),conversion_x(xmin)-0.02,conversion_y(latex[label][3])-0.005,0.5)
     if(drawSys) : g2.Draw("[] same")
     StackMaker.myText("CMS Preliminary",conversion_x(xmin)+0.1,0.95,0.6)
-    StackMaker.myText("#sqrt{s} =  8TeV, L = 19.0 fb^{-1}",conversion_x(xmin)+0.1,0.92,0.6)
+    StackMaker.myText("#sqrt{s} =  13TeV, L = 2.19 fb^{-1}",conversion_x(xmin)+0.1,0.92,0.6)
 
     ROOT.gPad.SetLeftMargin(0.2)
     ROOT.gPad.Update()
