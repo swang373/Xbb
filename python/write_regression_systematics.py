@@ -146,29 +146,29 @@ for job in info:
     print
 
     input.cd()
-    if lhe_weight_map and 'DY' in job.name:
-        inclusiveJob = info.get_sample('DY')
-        print inclusiveJob.name
-        inclusive = ROOT.TFile.Open(pathIN+inclusiveJob.get_path,'read')
-        inclusive.cd()
-        obj = ROOT.TObject
-        for key in ROOT.gDirectory.GetListOfKeys():
-            input.cd()
-            obj = key.ReadObj()
-            if obj.GetName() == job.tree:
-                continue
-            output.cd()
-            obj.Write(key.GetName())
-        inclusive.Close()
-    else:
-        obj = ROOT.TObject
-        for key in ROOT.gDirectory.GetListOfKeys():
-            input.cd()
-            obj = key.ReadObj()
-            if obj.GetName() == job.tree:
-                continue
-            output.cd()
-            obj.Write(key.GetName())
+    # if lhe_weight_map and 'DY' in job.name:
+        # inclusiveJob = info.get_sample('DY')
+        # print inclusiveJob.name
+        # inclusive = ROOT.TFile.Open(pathIN+inclusiveJob.get_path,'read')
+        # inclusive.cd()
+        # obj = ROOT.TObject
+        # for key in ROOT.gDirectory.GetListOfKeys():
+            # input.cd()
+            # obj = key.ReadObj()
+            # if obj.GetName() == job.tree:
+                # continue
+            # output.cd()
+            # obj.Write(key.GetName())
+        # inclusive.Close()
+    # else:
+    obj = ROOT.TObject
+    for key in ROOT.gDirectory.GetListOfKeys():
+        input.cd()
+        obj = key.ReadObj()
+        if obj.GetName() == job.tree:
+            continue
+        output.cd()
+        obj.Write(key.GetName())
         
     input.cd()
     tree = input.Get(job.tree)
@@ -632,7 +632,7 @@ for job in info:
 
                 rPt0 = max(0.0001,readerJet0.EvaluateRegression( "jet0Regression" )[0])
                 rPt1 = max(0.0001,readerJet1.EvaluateRegression( "jet1Regression" )[0])
-                
+
                 hJet_pt[0] = rPt0
                 hJet_pt[1] = rPt1
 
@@ -668,7 +668,7 @@ for job in info:
                 HaddJetsdR08.dPhi = 0
                 HaddJetsdR08.dEta = 0                
                 
-                if hJet_regWeight[0] > 3. or hJet_regWeight[1] > 3. or hJet_regWeight[0] < 0.3 or hJet_regWeight[1] < 0.3:
+                if False:#hJet_regWeight[0] > 3. or hJet_regWeight[1] > 3. or hJet_regWeight[0] < 0.3 or hJet_regWeight[1] < 0.3:
                     print '### Debug event with ptReg/ptNoReg>0.3 or ptReg/ptNoReg<3 ###'
                     print 'Event %.0f' %(Event[0])
                     print 'MET %.2f' %(METet[0])

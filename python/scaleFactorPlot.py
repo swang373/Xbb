@@ -32,6 +32,7 @@ def removeDouble(seq):
 
 def getInputSigma(options):
     opts = copy(options)
+    print 'opts.dc is', opts.dc
     
     file = open(opts.dc, "r")
 #    os.chdir(os.path.dirname(opts.dc))
@@ -80,19 +81,21 @@ def getInputSigma(options):
 
 def get_scale_factors(channel,labels,shift,v_b,input_sigma,nuisances):
     print 'Channel ' +  channel
+    print 'v_b is', v_b
     sf=[]
     sf_e=[]
-#   correspondency_dictionary = {"TT":"TT","s_Top":"s_Top","Zj0b":"Z0b","Zj1b":"Z1b","Zj2b":"Z2b","Wj0b":"Wj0b","Wj1b":"Wj1b","Wj2b":"Wj2b","Zj1HF":"Z1b","Zj2HF":"Z2b","ZjLF":"Z0b"}
 #   correspondency_dictionary = {"TT":"TT","s_Top":"s_Top","Zj0b":"Zj0b","Zj1b":"Zj1b","Zj2b":"Zj2b","Wj0b":"Wj0b","Wj1b":"Wj1b","Wj2b":"Wj2b","Zj1HF":"Z1b","Zj2HF":"Z2b","ZjLF":"Z0b","s_Top":"s_Top"}
-    correspondency_dictionary = {"TT":"TT","s_Top":"s_Top","Zj0b":"Zj0b","Zj1b":"Zj1b","Zj2b":"Zj2b","Wj0b":"Wj0b","Wj1b":"Wj1b","Wj2b":"Wj2b","Zj1HF":"Z1b","Zj2HF":"Z2b","ZjLF":"Z0b","s_Top":"s_Top"}
-#    print input_sigma
+    correspondency_dictionary = {"TT_SF_Zll_13TeV":"TT","s_Top":"s_Top","Zj0b_SF_Zll_13TeV":"Zj0b","Zj1b_SF_Zll_13TeV":"Zj1b","Zj2b_SF_Zll_13TeV":"Zj2b","Wj0b":"Wj0b","Wj1b":"Wj1b","Wj2b":"Wj2b","Zj1HF":"Z1b","Zj2HF":"Z2b","ZjLF":"Z0b","s_Top":"s_Top"}
+    print '@DEBUG: input_sigma is',  input_sigma
 #    print input_sigma['TT'][1][0]
 #    initial_uncertainty=0.2 # initial uncertainty. @TO FIX: this can go in a config or as input arg
     count=0
+#Labels here contains all the SF nuisance parameters e.g. ['TT_SF_Zll_13TeV', 'Zj0b_SF_Zll_13TeV', 'Zj1b_SF_Zll_13TeV', 'Zj2b_SF_Zll_13TeV']
     print labels
 #    channels = ['high','High','low','Low','Med','med']
 #    channels = ['Zee','Zmm']
     channels = ['Zll']
+#Loop over all the nuisance parameters
     for i in v_b:
         print 'Nuisances ' + nuisances[count]
         for h in channels:
@@ -103,6 +106,7 @@ def get_scale_factors(channel,labels,shift,v_b,input_sigma,nuisances):
                     print 'Relative SF : ' + i[0]
                     print 'Relative Error : ' + i[1]
                     print 'Correspondance : ' + str(correspondency_dictionary[labels[count]])
+#input_sigma seems to contain the different rates
                     print 'Input sigma list : ' + str(input_sigma[correspondency_dictionary[labels[count]]])
                     print 'Input sigma value : ' + str(input_sigma[correspondency_dictionary[labels[count]]][1][0])
                     sf.append(1+input_sigma[correspondency_dictionary[labels[count]]][1][0]*eval(i[0])) # calculate the actual value for the scale factors
@@ -184,10 +188,12 @@ if len(args) == 0:
     exit(1)
 
 file = ROOT.TFile(args[0])
+#file is the root file provided in the last arg
 if file == None: raise RuntimeError, "Cannot open file %s" % args[0]
 fit_s  = file.Get("fit_s")
 fit_b  = file.Get("fit_b")
 prefit = file.Get("nuisances_prefit")
+print 'The ROOT file is', args[0]
 if fit_s == None or fit_s.ClassName()   != "RooFitResult": raise RuntimeError, "File %s does not contain the output of the signal fit 'fit_s'"     % args[0]
 if fit_b == None or fit_b.ClassName()   != "RooFitResult": raise RuntimeError, "File %s does not contain the output of the background fit 'fit_b'" % args[0]
 if prefit == None or prefit.ClassName() != "RooArgSet":    raise RuntimeError, "File %s does not contain the prefit nuisances 'nuisances_prefit'"  % args[0]
@@ -201,6 +207,7 @@ pulls = []
 correlation_matrix_name=[]
 correlation_matrix=[[]]
 
+#loop over all the nuis parameters
 for i in range(fpf_s.getSize()):
     nuis_s = fpf_s.at(i)
     name   = nuis_s.GetName();
@@ -243,8 +250,17 @@ for i in range(fpf_s.getSize()):
                     flag = True
                 elif options.all:
                     flag = True
+    print""
+    print"Gonna get the row"
+    print"name is", name
+    print"options.poi is", options.poi
+    print"value is", fit_s.correlation(name, options.poi)
+#row is the correlations between r and the nuisance parameter
+    print "row is", row
     row += [ "%+4.2f"  % fit_s.correlation(name, options.poi) ]
+    print "again, row is", row
     if flag or options.all: table[name] = row
+    print "table[name] is", table[name]
     # filling correlation table
     correlation_matrix_line=[]
     for j in range(fpf_b.getSize()):
@@ -356,6 +372,7 @@ if options.plotfile:
     for pull in pulls:
         histogram.Fill(pull)
     canvas = ROOT.TCanvas("asdf", "asdf", 800, 800)
+    c = ROOT.TCanvas("c","c",600,600)
     histogram.GetXaxis().SetTitle("pull")
     histogram.SetTitle("Post-fit nuisance pull distribution")
     histogram.SetMarkerStyle(20)
@@ -392,6 +409,7 @@ if options.plotsf and options.dc:
             #!! take the values
             #!! the usual order is: dX/sigma_in for background only - sigma_out/sigma_in for background only - dX/sigma_in for background+signal - sigma_out/sigma_in for background+signal - rho
             v = table[name] 
+            print "asdf, v is", v
             #!! forget about the flag
             v = [ re.sub('!','',i) for i in v ]
             v = [ re.sub('\*','',i) for i in v ]
@@ -483,7 +501,8 @@ if options.plotsf and options.dc:
     print v_b
     print rho
 
-    label_dictionary = {"TT":"t#bar{t}","ZjHF":"Z+bX","ZjLF":"Z+udscg","Zj1HF":"Z+b","Zj2HF":"Z+b#bar{b}","Wj0b":"W+light","Wj1b":"W+b","Wj2b":"W+b#bar{b}","Zj0b":"Z+light","Zj1b":"Z+b","Zj2b":"Z+b#bar{b}","s_Top":"t"}
+#    label_dictionary = {"TT":"t#bar{t}","ZjHF":"Z+bX","ZjLF":"Z+udscg","Zj1HF":"Z+b","Zj2HF":"Z+b#bar{b}","Wj0b":"W+light","Wj1b":"W+b","Wj2b":"W+b#bar{b}","Zj0b":"Z+light","Zj1b":"Z+b","Zj2b":"Z+b#bar{b}","s_Top":"t"}
+    label_dictionary = {"TT_SF_Zll_13TeV":"t#bar{t}","ZjHF":"Z+bX","ZjLF":"Z+udscg","Zj1HF":"Z+b","Zj2HF":"Z+b#bar{b}","Wj0b":"W+light","Wj1b":"W+b","Wj2b":"W+b#bar{b}","Zj0b_SF_Zll_13TeV":"Z+light","Zj1b_SF_Zll_13TeV":"Z+b","Zj2b_SF_Zll_13TeV":"Z+b#bar{b}","s_Top":"t"}
     c = ROOT.TCanvas("c","c",600,600)
 
     input_sigma = getInputSigma(options)
@@ -510,7 +529,7 @@ if options.plotsf and options.dc:
     #xmin = 0.25
     #xmax = 2.5
     xmin = 0
-    xmax = 1
+    xmax = 2
     labels = removeDouble(labels)
     n= len(labels)
     h2 = ROOT.TH2F("h2","",1,xmin,xmax,n,0,n) # x min - max values.

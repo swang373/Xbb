@@ -33,6 +33,12 @@ var=opts.variable
 #--read variables from config---------------------------------------------------
 # 7 or 8TeV Analysis
 
+print "Compile external macros"
+print "=======================\n"
+
+# compile external macros to compute variables on the fly
+#ROOT.gSystem.CompileMacro("../plugins/PU.C")
+
 print 'Assigne variables from  config'
 print '==============================\n'
 
@@ -99,6 +105,9 @@ elif str(anType) == 'Mjj':
 elif str(anType) == 'cr':
     cr = True
     systematics = eval(config.get('LimitGeneral','sys_cr'))
+else:
+    print 'EXIT: please specify if your datacards are BDT, Mjj or cr.'
+    sys.exit()
 
 sys_cut_suffix=eval(config.get('LimitGeneral','sys_cut_suffix'))
 sys_cut_include=[]
@@ -109,7 +118,8 @@ sys_factor_dict = eval(config.get('LimitGeneral','sys_factor'))
 sys_affecting = eval(config.get('LimitGeneral','sys_affecting'))
 # weightF:
 weightF = config.get('Weights','weightF')
-weightF_systematics = eval(config.get('LimitGeneral','weightF_sys'))
+if str(anType) == 'cr': weightF_systematics = eval(config.get('LimitGeneral','weightF_sys_CR'))
+else: weightF_systematics = eval(config.get('LimitGeneral','weightF_sys'))
 # rescale stat shapes by sqrtN
 rescaleSqrtN=eval(config.get('LimitGeneral','rescaleSqrtN'))
 # get nominal cutstring:
@@ -267,10 +277,12 @@ for syst in systematics:
             else:
                 _treevar = treevar
         elif cr == True:
-            if syst == 'beff' or syst == 'bmis' or syst == 'beff1':
-                _treevar = treevar.replace(old_str,new_str.replace('?',Q))
-            else:
-                _treevar = treevar            
+            #commented out, since shape sys are done using weights
+            #if syst == 'beff' or syst == 'bmis' or syst == 'beff1':
+            #    _treevar = treevar.replace(old_str,new_str.replace('?',Q))
+            #else:
+            #    _treevar = treevar
+            _treevar = treevar
         #append
         appendList()
 
@@ -283,8 +295,8 @@ for weightF_sys in weightF_systematics:
         _name = title
         appendList()
 
-print '===================\n'
-print 'The option list is', optionsList
+#print '===================\n'
+#print 'The option list is', optionsList
 
 
 print 'Preparations for Histograms (HistoMakeri)'
@@ -438,8 +450,22 @@ nData = 0
 for job in data_histos:
     if nData == 0:
         theData = data_histos[job]
+        nData = 1
     else:
-        theData.Add(data_histos[i])
+        theData.Add(data_histos[job])
+
+#print 'theData is', theData
+#theData.Print()
+#print 'First theData element'
+#theData['data_SM_2015C'].Print()
+#print 'Second theData element'
+#theData['data_SM_2015D_topup'].Print()
+#print 'Third theData element'
+#theData['data_SM_2015D_1280'].Print()
+
+
+print 'END DEBUG'
+
 
 #-- Write Files-----------------------------------------------------------------------------------
 # generate the TH outfile:
@@ -560,13 +586,13 @@ if not ignore_stats:
                         else:
                             final_histos['%s_%s'%(systematicsnaming['stats'],Q)][job].SetBinContent(j,max(0,hist.GetBinContent(j)-hist.GetBinError(j)))
     else:
-        threshold =  0 #stat error / sqrt(value). It was 0.5
+        threshold =  0.5 #stat error / sqrt(value). It was 0.5
         binsBelowThreshold = {}
-        for bin in range(0,nBins):
+        for bin in range(1,nBins+1):
             for Q in UD:
                 final_histos['%s_bin%s_%s'%(systematicsnaming['stats'],bin,Q)] = {}
             for job,hist in final_histos['nominal'].items():
-                binsBelowThreshold[job] = []
+                if not job in binsBelowThreshold.keys(): binsBelowThreshold[job] = []
                 if hist.GetBinContent(bin) > 0.:
                     if hist.GetBinError(bin)/sqrt(hist.GetBinContent(bin)) > threshold and hist.GetBinContent(bin) >= 1.:
                         binsBelowThreshold[job].append(bin)
@@ -674,7 +700,7 @@ for DCtype in ['WS','TH']:
         f.write('\t%s'%final_histos['nominal'][c].Integral())
     f.write('\n')
     # get list of systematics in use
-    InUse=eval(config.get('Datacard','InUse_%s'%pt_region))
+    InUse=eval(config.get('Datacard','InUse_%s_%s'%(str(anType), pt_region)))
     # write non-shape systematics
     for item in InUse:
         f.write(item)
