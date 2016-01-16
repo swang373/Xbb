@@ -146,6 +146,11 @@ echo ${configList}
 #Run the scripts
 #------------------------------------
 
+echo "============================"
+echo "Will Lauch the script"
+echo "============================"
+echo "The command is"
+
 if [ $task = "prep" ]; then
     # ./prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList}
 #    print "./prepare_environment_with_config.py --samples" $sample "--config "${energy}"config/"${configList}" --config "${energy}"config/samples_nosplit.cfg #sometime"
@@ -154,12 +159,15 @@ if [ $task = "prep" ]; then
 fi
 if [ $task = "trainReg" ]; then
     # ./trainRegression.py --config ${energy}config/${configList}
+    print ./trainRegression.py --config ${energy}config/${configList} --config ${energy}config/regression.ini
     ./trainRegression.py --config ${energy}config/${configList} --config ${energy}config/regression.ini
 fi
 if [ $task = "sys" ]; then
+    print ./write_regression_systematics.py --samples $sample --config ${energy}config/${configList}
     ./write_regression_systematics.py --samples $sample --config ${energy}config/${configList}
 fi
 if [ $task = "eval" ]; then
+    print ./evaluateMVA.py --discr $MVAList --samples $sample --config ${energy}config/${configList}
     ./evaluateMVA.py --discr $MVAList --samples $sample --config ${energy}config/${configList}
 fi
 if [ $task = "syseval" ]; then
