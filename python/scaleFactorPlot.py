@@ -529,7 +529,7 @@ if options.plotsf and options.dc:
     #xmin = 0.25
     #xmax = 2.5
     xmin = 0
-    xmax = 1
+    xmax = 2
     labels = removeDouble(labels)
     n= len(labels)
     h2 = ROOT.TH2F("h2","",1,xmin,xmax,n,0,n) # x min - max values.
