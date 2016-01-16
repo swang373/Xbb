@@ -31,6 +31,10 @@ bash runAll.sh  QCDHT1000     ZvvHbb13TeV sys >& log/logSysQCDHT1000  &
 bash runAll.sh  QCDHT1500     ZvvHbb13TeV sys >& log/logSysQCDHT1500  &
 bash runAll.sh  QCDHT2000     ZvvHbb13TeV sys >& log/logSysQCDHT2000  &
 bash runAll.sh  DataMET     ZvvHbb13TeV sys >& log/logSysDataMET  &
+bash runAll.sh  ZJetsLLHT100     ZvvHbb13TeV sys >& log/logSysZJetsLLHT100  &
+bash runAll.sh  ZJetsLLHT200     ZvvHbb13TeV sys >& log/logSysZJetsLLHT200  &
+bash runAll.sh  ZJetsLLHT400     ZvvHbb13TeV sys >& log/logSysZJetsLLHT400  &
+bash runAll.sh  ZJetsLLHT600     ZvvHbb13TeV sys >& log/logSysZJetsLLHT600  &
 
 bash runAll.sh  WWpythia     ZvvHbb13TeV sys >& log/logSysWWpythia  &
 #bash runAll.sh  WWTo2L2Q     ZvvHbb13TeV sys >& log/logSysWWTo2L2Q  &

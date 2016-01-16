@@ -1,5 +1,5 @@
-bash runAll.sh	ZH		ZvvHbb13TeV  prep >& log/logPrepZH	&
-bash runAll.sh	ZH_mini		ZvvHbb13TeV  prep >& log/logPrepZH_mini	&
+bash runAll.sh	ZH		 ZvvHbb13TeV  prep >& log/logPrepZH	&
+bash runAll.sh	ZH_mini		 ZvvHbb13TeV  prep >& log/logPrepZH_mini	&
 #bash runAll.sh	ZHpow		 ZvvHbb13TeV prep >& log/logPrepZHpow	&
 bash runAll.sh	ggZH		 ZvvHbb13TeV prep >& log/logPrepggZH	&
 #bash runAll.sh	ggZHpow		 ZvvHbb13TeV prep >& log/logPrepggZHpow	&
@@ -31,6 +31,10 @@ bash runAll.sh	QCDHT1000		 ZvvHbb13TeV prep >& log/logPrepQCDHT1000	&
 bash runAll.sh	QCDHT1500		 ZvvHbb13TeV prep >& log/logPrepQCDHT1500	&
 bash runAll.sh	QCDHT2000		 ZvvHbb13TeV prep >& log/logPrepQCDHT2000	&
 bash runAll.sh	FakeData		 ZvvHbb13TeV prep >& log/logPrepDataMET	&
+bash runAll.sh	ZJetsLLHT100		 ZvvHbb13TeV prep >& log/logPrepZJetsLLHT100	&
+bash runAll.sh	ZJetsLLHT200		 ZvvHbb13TeV prep >& log/logPrepZJetsLLHT200	&
+bash runAll.sh	ZJetsLLHT400		 ZvvHbb13TeV prep >& log/logPrepZJetsLLHT400	&
+bash runAll.sh	ZJetsLLHT600		 ZvvHbb13TeV prep >& log/logPrepZJetsLLHT600	&
 
 bash runAll.sh  WWpythia     ZvvHbb13TeV prep >& log/logPrepWWpythia  &
 #bash runAll.sh  WWTo2L2Q     ZvvHbb13TeV prep >& log/logPrepWWTo2L2Q  &

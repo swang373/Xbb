@@ -9,6 +9,37 @@ warnings.filterwarnings( action='ignore', category=RuntimeWarning, message='crea
 from optparse import OptionParser
 from myutils import BetterConfigParser, Sample, progbar, printc, ParseInfo, Rebinner, HistoMaker
 
+def useSpacesInDC(fileName):
+    file_ = open(fileName,"r+")
+
+    old = file_.read()
+    ## get the maximum width of each colum (excluding the first lines)
+    lineN = 0
+    maxColumnWidth = [0]
+    for line in old.split('\n'):
+        lineN += 1
+        if lineN<10: continue #skip the first 10 lines
+        words = line.split('\t')
+        for i in range(len(words)):
+            if i>=len(maxColumnWidth): maxColumnWidth.append(0)
+            if len(words[i])>maxColumnWidth[i]: maxColumnWidth[i]=len(words[i])
+    ## replace the tabs with the new formatting (excluding the first lines)
+    #newfile = open("newFile.txt","w+")
+    lineN = 0
+    file_.seek(0)
+    for line in old.split('\n'):
+        lineN += 1
+        if lineN<10: #in the first 10 lines just replace '\t' with ' '
+            file_.write(line.replace('\t',' ')+'\n')
+            continue
+        words = line.split('\t')
+        newLine=""
+        for i in range(len(words)): #use the new format!
+            newLine += words[i].ljust(maxColumnWidth[i]+1)
+        file_.write(newLine+'\n')
+    file_.close()
+    return
+
 print '_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_'
 print 'START DATACARD (workspace_datacard)'
 print '_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_*_\n'
@@ -586,13 +617,18 @@ if not ignore_stats:
                         else:
                             final_histos['%s_%s'%(systematicsnaming['stats'],Q)][job].SetBinContent(j,max(0,hist.GetBinContent(j)-hist.GetBinError(j)))
     else:
+        print "Running Statistical uncertainty"
         threshold =  0.5 #stat error / sqrt(value). It was 0.5
+        print "threshold",threshold
         binsBelowThreshold = {}
         for bin in range(1,nBins+1):
             for Q in UD:
                 final_histos['%s_bin%s_%s'%(systematicsnaming['stats'],bin,Q)] = {}
             for job,hist in final_histos['nominal'].items():
                 if not job in binsBelowThreshold.keys(): binsBelowThreshold[job] = []
+                print "binsBelowThreshold",binsBelowThreshold
+                print "hist.GetBinContent(bin)",hist.GetBinContent(bin)
+                print "hist.GetBinError(bin)",hist.GetBinError(bin)
                 if hist.GetBinContent(bin) > 0.:
                     if hist.GetBinError(bin)/sqrt(hist.GetBinContent(bin)) > threshold and hist.GetBinContent(bin) >= 1.:
                         binsBelowThreshold[job].append(bin)
@@ -606,6 +642,7 @@ if not ignore_stats:
                         final_histos['%s_bin%s_%s'%(systematicsnaming['stats'],bin,Q)][job].SetBinContent(bin,max(0,hist.GetBinContent(bin)-hist.GetBinError(bin)))
 
 
+print "binsBelowThreshold:",binsBelowThreshold
 print 'Start writing shapes in WS'
 print '==========================\n'
 #write shapes in WS:
@@ -671,7 +708,8 @@ DCprocessseparatordict = {'WS':':','TH':'/'}
 # create two datacards: for TH an WS
 for DCtype in ['WS','TH']:
     columns=len(setup)
-    f = open(outpath+'vhbb_DC_%s_%s.txt'%(DCtype,ROOToutname),'w')
+    fileName = outpath+'vhbb_DC_%s_%s.txt'%(DCtype,ROOToutname)
+    f = open(fileName,'w')
     f.write('imax\t1\tnumber of channels\n')
     f.write('jmax\t%s\tnumber of backgrounds (\'*\' = automatic)\n'%(columns-1))
     f.write('kmax\t*\tnumber of nuisance parameters (sources of systematical uncertainties)\n\n')
@@ -682,18 +720,18 @@ for DCtype in ['WS','TH']:
     else:
         f.write('observation\t%s\n\n'%(theData.Integral()))
     # datacard bin
-    f.write('bin')
+    f.write('bin\t')
     for c in range(0,columns): f.write('\t%s'%Datacardbin)
     f.write('\n')
     # datacard process
-    f.write('process')
+    f.write('process\t')
     for c in setup: f.write('\t%s'%Dict[c])
     f.write('\n')
-    f.write('process')
+    f.write('process\t')
     for c in range(0,columns): f.write('\t%s'%(c-len(signals)+1))
     f.write('\n')
     # datacard yields
-    f.write('rate')
+    f.write('rate\t')
     print "workspace_datacard-setup: ", setup
     print "workspace_datacard-final_histos: ", final_histos
     for c in setup: 
@@ -764,12 +802,14 @@ for DCtype in ['WS','TH']:
         sys_factor=sys_factor_dict[sys]
         f.write('%s\tshape'%systematicsnaming[sys])
         for c in setup:
-            if c in sys_affecting[sys]:
+            if c in sys_affecting[sys] or 'all' in sys_affecting[sys]:
                 f.write('\t%s'%sys_factor)
             else:
                 f.write('\t-')
         f.write('\n')
     f.close()
+    useSpacesInDC(fileName)
+
 # --------------------------------------------------------------------------
 
 
