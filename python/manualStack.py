@@ -77,9 +77,16 @@ def get_s_over_sb(fName,binmin,binmax):
 def get_th1(fName):
     infile = ROOT.TFile.Open(fName,'read')
     th1 = []
-    for key in ROOT.gDirectory.GetListOfKeys():
-        infile.cd()
-        th1.append(key.ReadObj())
+    for folder in infile.GetListOfKeys():
+        print "folder is", folder.GetName()
+        ROOT.gDirectory.cd(folder.GetName())
+        for key in ROOT.gDirectory.GetListOfKeys():
+            infile.cd()
+            th1.append(key.ReadObj())
+            #print "the class name is", key.GetClassName()
+            #print 'the key is'
+            #ROOT.gDirectory.GetListOfKeys().Print()
+
     return th1
 
 
@@ -94,6 +101,7 @@ def log_s_over_b(fileList):
         print file
         name = '%s' %file
         histosL[name] = []
+        print 'file is', file
         for th1 in get_th1(file):
             #th1.Sumw2()
             if 'VVLF' in th1.GetName():
@@ -284,120 +292,128 @@ def plot(fileList):
 #### ____ main _____ #####
 ##########################
 fileList = []
-fileList += [ '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_v0.1/MJJ_Zll_ZmmMedPt_PostFit_s.root',
-                 '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_v0.1/MJJ_Zll_ZeeMedPt_PostFit_s.root',
-                 '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_v0.1/MJJ_Znn_MedPt_ZnunuMedPt_8TeV_PostFit_s.root',
-                 '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_v0.1/MJJ_Wln_ch2_Wmunu2_PostFit_s.root']
-    #LowPt    
-fileList += [ '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_v0.1/MJJ_Znn_LowPt_ZnunuLowPt_8TeV_PostFit_s.root',
-                  '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_v0.1/MJJ_Zll_ZmmLowPt_PostFit_s.root',
-                  '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_v0.1/MJJ_Zll_ZeeLowPt_PostFit_s.root',
-                  '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_v0.1/MJJ_Wln_ch1_Wenu_PostFit_s.root',
-                  '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_v0.1/MJJ_Wln_ch2_Wmunu_PostFit_s.root']
-    #highPt    
-fileList += [ '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_v0.1/MJJ_Wln_ch1_WenuHighPt_PostFit_s.root',
-                  '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_v0.1/MJJ_Zll_ZeeHighPt_PostFit_s.root',
-                  '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_v0.1/MJJ_Znn_HighPt_ZnunuHighPt_8TeV_PostFit_s.root',
-                  '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_v0.1/MJJ_Wln_ch2_WmunuHighPt_PostFit_s.root',
-                  '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_v0.1/MJJ_Zll_ZmmHighPt_PostFit_s.root',
-                  '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_v0.1/MJJ_Wtn_Wtn_PostFit_s.root']
-        
-    # 7tev
-fileList += ['ZeeLowPt_7TeV.root','ZmmLowPt_7TeV.root','WmnLowPt_7TeV.root','ZnnLowPt_7TeV.root']
-fileList += ['ZeeHighPt_7TeV.root','ZmmHighPt_7TeV.root','WmnHighPt_7TeV.root','ZnnHighPt_7TeV.root']
+#fileList += [ '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_v0.1/MJJ_Zll_ZmmMedPt_PostFit_s.root',
+#                 '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_v0.1/MJJ_Zll_ZeeMedPt_PostFit_s.root',
+#                 '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_v0.1/MJJ_Znn_MedPt_ZnunuMedPt_8TeV_PostFit_s.root',
+#                 '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_v0.1/MJJ_Wln_ch2_Wmunu2_PostFit_s.root']
+#    #LowPt
+#fileList += [ '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_v0.1/MJJ_Znn_LowPt_ZnunuLowPt_8TeV_PostFit_s.root',
+#                  '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_v0.1/MJJ_Zll_ZmmLowPt_PostFit_s.root',
+#                  '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_v0.1/MJJ_Zll_ZeeLowPt_PostFit_s.root',
+#                  '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_v0.1/MJJ_Wln_ch1_Wenu_PostFit_s.root',
+#                  '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_v0.1/MJJ_Wln_ch2_Wmunu_PostFit_s.root']
+#    #highPt
+#fileList += [ '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_v0.1/MJJ_Wln_ch1_WenuHighPt_PostFit_s.root',
+#                  '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_v0.1/MJJ_Zll_ZeeHighPt_PostFit_s.root',
+#                  '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_v0.1/MJJ_Znn_HighPt_ZnunuHighPt_8TeV_PostFit_s.root',
+#                  '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_v0.1/MJJ_Wln_ch2_WmunuHighPt_PostFit_s.root',
+#                  '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_v0.1/MJJ_Zll_ZmmHighPt_PostFit_s.root',
+#                  '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_v0.1/MJJ_Wtn_Wtn_PostFit_s.root']
+#
+#    # 7tev
+#fileList += ['ZeeLowPt_7TeV.root','ZmmLowPt_7TeV.root','WmnLowPt_7TeV.root','ZnnLowPt_7TeV.root']
+#fileList += ['ZeeHighPt_7TeV.root','ZmmHighPt_7TeV.root','WmnHighPt_7TeV.root','ZnnHighPt_7TeV.root']
+fileList += [
+    '/shome/gaperrin/VHbb/CMSSW_7_4_3/src/Xbb/python/logs_v14/dc_DEBUG_nBinsbbb_v2/Limits/vhbb_TH_ZmmHighPt_13TeV.root',
+        ]
 
 
 bdt_fileList = []
+
+#13 TeV
+bdt_fileList += [
+    '/shome/gaperrin/VHbb/CMSSW_7_4_3/src/Xbb/python/logs_v14/dc_DEBUG_nBinsbbb_v2/Limits/vhbb_TH_ZmmHighPt_13TeV.root',
+        ]
+
 # 7tev
 #bdt_fileList += ['ZeeLowPt_7TeV.root','ZmmLowPt_7TeV.root','WmnLowPt_7TeV.root','ZnnLowPt_7TeV.root']
 #bdt_fileList += ['ZeeHighPt_7TeV.root','ZmmHighPt_7TeV.root','WmnHighPt_7TeV.root','ZnnHighPt_7TeV.root']
 
-bdt_fileList+=[
-                '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_BDT_v0.0/BDT_Wln_ch1_Wenu2_PostFit_s.root',
-                '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_BDT_v0.0/BDT_Wln_ch1_Wenu3_PostFit_s.root',
-                '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_BDT_v0.0/BDT_Wln_ch1_Wenu_PostFit_s.root',
-                '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_BDT_v0.0/BDT_Wln_ch2_Wmunu2_PostFit_s.root',
-                '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_BDT_v0.0/BDT_Wln_ch2_Wmunu3_PostFit_s.root',
-                '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_BDT_v0.0/BDT_Wln_ch2_Wmunu_PostFit_s.root',
-                '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_BDT_v0.0/BDT_Wtn_Wtn_PostFit_s.root',
-                '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_BDT_v0.0/BDT_Zll_ZeeHighPt_PostFit_s.root',
-                '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_BDT_v0.0/BDT_Zll_ZeeLowPt_PostFit_s.root',
-                '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_BDT_v0.0/BDT_Zll_ZmmHighPt_PostFit_s.root',
-                '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_BDT_v0.0/BDT_Zll_ZmmLowPt_PostFit_s.root',
-                '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_BDT_v0.0/BDT_Znn_HighPt_ZnunuHighPt_8TeV_PostFit_s.root',
-                '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_BDT_v0.0/BDT_Znn_LowPt_ZnunuLowPt_8TeV_PostFit_s.root',
-                '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_BDT_v0.0/BDT_Znn_MedPt_ZnunuMedPt_8TeV_PostFit_s.root',
-                ]
-bdt_fileList_7TeV=[
-        '/shome/bortigno//VHbbAnalysis/postPreApp/stack_from_dc_7TeV/BDT_Wln_VH_7TeV_Wln_7TeV_ch1_Wenu2_PostFit_s.root',
-        '/shome/bortigno//VHbbAnalysis/postPreApp/stack_from_dc_7TeV/BDT_Wln_VH_7TeV_Wln_7TeV_ch1_Wenu_PostFit_s.root',
-        '/shome/bortigno//VHbbAnalysis/postPreApp/stack_from_dc_7TeV/BDT_Wln_VH_7TeV_Wln_7TeV_ch2_Wmunu2_PostFit_s.root',
-        '/shome/bortigno//VHbbAnalysis/postPreApp/stack_from_dc_7TeV/BDT_Wln_VH_7TeV_Wln_7TeV_ch2_Wmunu_PostFit_s.root',
-         '/shome/bortigno//VHbbAnalysis/postPreApp/stack_from_dc_7TeV/BDT_Zll_VH_7TeV_Zll_7TeV_card1_PostFit_s.root',
-        '/shome/bortigno//VHbbAnalysis/postPreApp/stack_from_dc_7TeV/BDT_Zll_VH_7TeV_Zll_7TeV_card2_PostFit_s.root',
-        '/shome/bortigno//VHbbAnalysis/postPreApp/stack_from_dc_7TeV/BDT_Zll_VH_7TeV_Zll_7TeV_card3_PostFit_s.root',
-        '/shome/bortigno//VHbbAnalysis/postPreApp/stack_from_dc_7TeV/BDT_Zll_VH_7TeV_Zll_7TeV_card4_PostFit_s.root',
-        '/shome/bortigno//VHbbAnalysis/postPreApp/stack_from_dc_7TeV/BDT_Znn_VH_7TeV_Znn_7TeV_ch1_PostFit_s.root',
-        '/shome/bortigno//VHbbAnalysis/postPreApp/stack_from_dc_7TeV/BDT_Znn_VH_7TeV_Znn_7TeV_ch2_PostFit_s.root'
-         ]
+#bdt_fileList+=[
+#                '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_BDT_v0.0/BDT_Wln_ch1_Wenu2_PostFit_s.root',
+#                '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_BDT_v0.0/BDT_Wln_ch1_Wenu3_PostFit_s.root',
+#                '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_BDT_v0.0/BDT_Wln_ch1_Wenu_PostFit_s.root',
+#                '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_BDT_v0.0/BDT_Wln_ch2_Wmunu2_PostFit_s.root',
+#                '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_BDT_v0.0/BDT_Wln_ch2_Wmunu3_PostFit_s.root',
+#                '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_BDT_v0.0/BDT_Wln_ch2_Wmunu_PostFit_s.root',
+#                '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_BDT_v0.0/BDT_Wtn_Wtn_PostFit_s.root',
+#                '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_BDT_v0.0/BDT_Zll_ZeeHighPt_PostFit_s.root',
+#                '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_BDT_v0.0/BDT_Zll_ZeeLowPt_PostFit_s.root',
+#                '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_BDT_v0.0/BDT_Zll_ZmmHighPt_PostFit_s.root',
+#                '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_BDT_v0.0/BDT_Zll_ZmmLowPt_PostFit_s.root',
+#                '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_BDT_v0.0/BDT_Znn_HighPt_ZnunuHighPt_8TeV_PostFit_s.root',
+#                '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_BDT_v0.0/BDT_Znn_LowPt_ZnunuLowPt_8TeV_PostFit_s.root',
+#                '/shome/bortigno/VHbbAnalysis/postPreApp//LHCP_PostFit_BDT_v0.0/BDT_Znn_MedPt_ZnunuMedPt_8TeV_PostFit_s.root',
+#                ]
+#bdt_fileList_7TeV=[
+#        '/shome/bortigno//VHbbAnalysis/postPreApp/stack_from_dc_7TeV/BDT_Wln_VH_7TeV_Wln_7TeV_ch1_Wenu2_PostFit_s.root',
+#        '/shome/bortigno//VHbbAnalysis/postPreApp/stack_from_dc_7TeV/BDT_Wln_VH_7TeV_Wln_7TeV_ch1_Wenu_PostFit_s.root',
+#        '/shome/bortigno//VHbbAnalysis/postPreApp/stack_from_dc_7TeV/BDT_Wln_VH_7TeV_Wln_7TeV_ch2_Wmunu2_PostFit_s.root',
+#        '/shome/bortigno//VHbbAnalysis/postPreApp/stack_from_dc_7TeV/BDT_Wln_VH_7TeV_Wln_7TeV_ch2_Wmunu_PostFit_s.root',
+#         '/shome/bortigno//VHbbAnalysis/postPreApp/stack_from_dc_7TeV/BDT_Zll_VH_7TeV_Zll_7TeV_card1_PostFit_s.root',
+#        '/shome/bortigno//VHbbAnalysis/postPreApp/stack_from_dc_7TeV/BDT_Zll_VH_7TeV_Zll_7TeV_card2_PostFit_s.root',
+#        '/shome/bortigno//VHbbAnalysis/postPreApp/stack_from_dc_7TeV/BDT_Zll_VH_7TeV_Zll_7TeV_card3_PostFit_s.root',
+#        '/shome/bortigno//VHbbAnalysis/postPreApp/stack_from_dc_7TeV/BDT_Zll_VH_7TeV_Zll_7TeV_card4_PostFit_s.root',
+#        '/shome/bortigno//VHbbAnalysis/postPreApp/stack_from_dc_7TeV/BDT_Znn_VH_7TeV_Znn_7TeV_ch1_PostFit_s.root',
+#        '/shome/bortigno//VHbbAnalysis/postPreApp/stack_from_dc_7TeV/BDT_Znn_VH_7TeV_Znn_7TeV_ch2_PostFit_s.root'
+#         ]
+#
+#bdt_fileList+=bdt_fileList_7TeV
+#
+#bdt_fileList1 = []
+#bdt_fileList1+=[
+#'/shome/nmohr/VHbb/lhcp/PrePost/mBDTVV/BDT_Wln_VV_ch1_Wenu2_PostFit_s.root',
+#'/shome/nmohr/VHbb/lhcp/PrePost/mBDTVV/BDT_Wln_VV_ch1_Wenu3_PostFit_s.root',
+#'/shome/nmohr/VHbb/lhcp/PrePost/mBDTVV/BDT_Wln_VV_ch1_Wenu_PostFit_s.root',
+#'/shome/nmohr/VHbb/lhcp/PrePost/mBDTVV/BDT_Wln_VV_ch2_Wmunu2_PostFit_s.root',
+#'/shome/nmohr/VHbb/lhcp/PrePost/mBDTVV/BDT_Wln_VV_ch2_Wmunu3_PostFit_s.root',
+#'/shome/nmohr/VHbb/lhcp/PrePost/mBDTVV/BDT_Wln_VV_ch2_Wmunu_PostFit_s.root',
+#'/shome/nmohr/VHbb/lhcp/PrePost/mBDTVV/BDT_Wtn_VV_Wtn_PostFit_s.root',
+#'/shome/nmohr/VHbb/lhcp/PrePost/mBDTVV/BDT_Zll_VV_ZeeHighPt_PostFit_s.root',
+#'/shome/nmohr/VHbb/lhcp/PrePost/mBDTVV/BDT_Zll_VV_ZeeLowPt_PostFit_s.root',
+#'/shome/nmohr/VHbb/lhcp/PrePost/mBDTVV/BDT_Zll_VV_ZmmHighPt_PostFit_s.root',
+#'/shome/nmohr/VHbb/lhcp/PrePost/mBDTVV/BDT_Zll_VV_ZmmLowPt_PostFit_s.root',
+#'/shome/nmohr/VHbb/lhcp/PrePost/mBDTVV/BDT_Znn_VV_HighPt_ZnunuHighPt_PostFit_s.root',
+#'/shome/nmohr/VHbb/lhcp/PrePost/mBDTVV/BDT_Znn_VV_LowPt_ZnunuLowPt_PostFit_s.root',
+#'/shome/nmohr/VHbb/lhcp/PrePost/mBDTVV/BDT_Znn_VV_MedPt_ZnunuMedPt_PostFit_s.root'
+#]
+#bdt_fileList2 = []
+#bdt_fileList2+=[
+#'/shome/nmohr/VHbb/lhcp/PrePost/mBDT/BDT_Wln_ch1_Wenu2_PostFit_s.root',
+#'/shome/nmohr/VHbb/lhcp/PrePost/mBDT/BDT_Wln_ch1_Wenu3_PostFit_s.root',
+#'/shome/nmohr/VHbb/lhcp/PrePost/mBDT/BDT_Wln_ch1_Wenu_PostFit_s.root',
+#'/shome/nmohr/VHbb/lhcp/PrePost/mBDT/BDT_Wln_ch2_Wmunu2_PostFit_s.root',
+#'/shome/nmohr/VHbb/lhcp/PrePost/mBDT/BDT_Wln_ch2_Wmunu3_PostFit_s.root',
+#'/shome/nmohr/VHbb/lhcp/PrePost/mBDT/BDT_Wln_ch2_Wmunu_PostFit_s.root',
+#'/shome/nmohr/VHbb/lhcp/PrePost/mBDT/BDT_Wtn_Wtn_PostFit_s.root',
+#'/shome/nmohr/VHbb/lhcp/PrePost/mBDT/BDT_Zll_ZeeHighPt_PostFit_s.root',
+#'/shome/nmohr/VHbb/lhcp/PrePost/mBDT/BDT_Zll_ZeeLowPt_PostFit_s.root',
+#'/shome/nmohr/VHbb/lhcp/PrePost/mBDT/BDT_Zll_ZmmHighPt_PostFit_s.root',
+#'/shome/nmohr/VHbb/lhcp/PrePost/mBDT/BDT_Zll_ZmmLowPt_PostFit_s.root',
+#'/shome/nmohr/VHbb/lhcp/PrePost/mBDT/BDT_Znn_HighPt_ZnunuHighPt_8TeV_PostFit_s.root',
+#'/shome/nmohr/VHbb/lhcp/PrePost/mBDT/BDT_Znn_LowPt_ZnunuLowPt_8TeV_PostFit_s.root',
+#'/shome/nmohr/VHbb/lhcp/PrePost/mBDT/BDT_Znn_MedPt_ZnunuMedPt_8TeV_PostFit_s.root'
+#]
+#
+#bdt_fix = [
+#'/shome/nmohr/VHbb/lhcp/PrePost/BDT7TeV/BDT_Wln_ch1_Wenu2_PostFit_s.root',
+#'/shome/nmohr/VHbb/lhcp/PrePost/BDT7TeV/BDT_Wln_ch1_Wenu_PostFit_s.root',
+#'/shome/nmohr/VHbb/lhcp/PrePost/BDT7TeV/BDT_Wln_ch2_Wmunu2_PostFit_s.root',
+#'/shome/nmohr/VHbb/lhcp/PrePost/BDT7TeV/BDT_Wln_ch2_Wmunu_PostFit_s.root',
+#'/shome/nmohr/VHbb/lhcp/PrePost/BDT7TeV/BDT_Zll_card1_PostFit_s.root',
+#'/shome/nmohr/VHbb/lhcp/PrePost/BDT7TeV/BDT_Zll_card2_PostFit_s.root',
+#'/shome/nmohr/VHbb/lhcp/PrePost/BDT7TeV/BDT_Zll_card3_PostFit_s.root',
+#'/shome/nmohr/VHbb/lhcp/PrePost/BDT7TeV/BDT_Zll_card4_PostFit_s.root',
+#'/shome/nmohr/VHbb/lhcp/PrePost/BDT7TeV/BDT_Znn_ch1_PostFit_s.root',
+#'/shome/nmohr/VHbb/lhcp/PrePost/BDT7TeV/BDT_Znn_ch2_PostFit_s.root' ]
 
-bdt_fileList+=bdt_fileList_7TeV
-
-bdt_fileList1 = []
-bdt_fileList1+=[
-'/shome/nmohr/VHbb/lhcp/PrePost/mBDTVV/BDT_Wln_VV_ch1_Wenu2_PostFit_s.root',
-'/shome/nmohr/VHbb/lhcp/PrePost/mBDTVV/BDT_Wln_VV_ch1_Wenu3_PostFit_s.root',
-'/shome/nmohr/VHbb/lhcp/PrePost/mBDTVV/BDT_Wln_VV_ch1_Wenu_PostFit_s.root',
-'/shome/nmohr/VHbb/lhcp/PrePost/mBDTVV/BDT_Wln_VV_ch2_Wmunu2_PostFit_s.root',
-'/shome/nmohr/VHbb/lhcp/PrePost/mBDTVV/BDT_Wln_VV_ch2_Wmunu3_PostFit_s.root',
-'/shome/nmohr/VHbb/lhcp/PrePost/mBDTVV/BDT_Wln_VV_ch2_Wmunu_PostFit_s.root',
-'/shome/nmohr/VHbb/lhcp/PrePost/mBDTVV/BDT_Wtn_VV_Wtn_PostFit_s.root',
-'/shome/nmohr/VHbb/lhcp/PrePost/mBDTVV/BDT_Zll_VV_ZeeHighPt_PostFit_s.root',
-'/shome/nmohr/VHbb/lhcp/PrePost/mBDTVV/BDT_Zll_VV_ZeeLowPt_PostFit_s.root',
-'/shome/nmohr/VHbb/lhcp/PrePost/mBDTVV/BDT_Zll_VV_ZmmHighPt_PostFit_s.root',
-'/shome/nmohr/VHbb/lhcp/PrePost/mBDTVV/BDT_Zll_VV_ZmmLowPt_PostFit_s.root',
-'/shome/nmohr/VHbb/lhcp/PrePost/mBDTVV/BDT_Znn_VV_HighPt_ZnunuHighPt_PostFit_s.root',
-'/shome/nmohr/VHbb/lhcp/PrePost/mBDTVV/BDT_Znn_VV_LowPt_ZnunuLowPt_PostFit_s.root',
-'/shome/nmohr/VHbb/lhcp/PrePost/mBDTVV/BDT_Znn_VV_MedPt_ZnunuMedPt_PostFit_s.root'
-]
-bdt_fileList2 = []
-bdt_fileList2+=[
-'/shome/nmohr/VHbb/lhcp/PrePost/mBDT/BDT_Wln_ch1_Wenu2_PostFit_s.root',
-'/shome/nmohr/VHbb/lhcp/PrePost/mBDT/BDT_Wln_ch1_Wenu3_PostFit_s.root',
-'/shome/nmohr/VHbb/lhcp/PrePost/mBDT/BDT_Wln_ch1_Wenu_PostFit_s.root',
-'/shome/nmohr/VHbb/lhcp/PrePost/mBDT/BDT_Wln_ch2_Wmunu2_PostFit_s.root',
-'/shome/nmohr/VHbb/lhcp/PrePost/mBDT/BDT_Wln_ch2_Wmunu3_PostFit_s.root',
-'/shome/nmohr/VHbb/lhcp/PrePost/mBDT/BDT_Wln_ch2_Wmunu_PostFit_s.root',
-'/shome/nmohr/VHbb/lhcp/PrePost/mBDT/BDT_Wtn_Wtn_PostFit_s.root',
-'/shome/nmohr/VHbb/lhcp/PrePost/mBDT/BDT_Zll_ZeeHighPt_PostFit_s.root',
-'/shome/nmohr/VHbb/lhcp/PrePost/mBDT/BDT_Zll_ZeeLowPt_PostFit_s.root',
-'/shome/nmohr/VHbb/lhcp/PrePost/mBDT/BDT_Zll_ZmmHighPt_PostFit_s.root',
-'/shome/nmohr/VHbb/lhcp/PrePost/mBDT/BDT_Zll_ZmmLowPt_PostFit_s.root',
-'/shome/nmohr/VHbb/lhcp/PrePost/mBDT/BDT_Znn_HighPt_ZnunuHighPt_8TeV_PostFit_s.root',
-'/shome/nmohr/VHbb/lhcp/PrePost/mBDT/BDT_Znn_LowPt_ZnunuLowPt_8TeV_PostFit_s.root',
-'/shome/nmohr/VHbb/lhcp/PrePost/mBDT/BDT_Znn_MedPt_ZnunuMedPt_8TeV_PostFit_s.root'
-]
-
-bdt_fix = [
-'/shome/nmohr/VHbb/lhcp/PrePost/BDT7TeV/BDT_Wln_ch1_Wenu2_PostFit_s.root',
-'/shome/nmohr/VHbb/lhcp/PrePost/BDT7TeV/BDT_Wln_ch1_Wenu_PostFit_s.root',
-'/shome/nmohr/VHbb/lhcp/PrePost/BDT7TeV/BDT_Wln_ch2_Wmunu2_PostFit_s.root',
-'/shome/nmohr/VHbb/lhcp/PrePost/BDT7TeV/BDT_Wln_ch2_Wmunu_PostFit_s.root',
-'/shome/nmohr/VHbb/lhcp/PrePost/BDT7TeV/BDT_Zll_card1_PostFit_s.root',
-'/shome/nmohr/VHbb/lhcp/PrePost/BDT7TeV/BDT_Zll_card2_PostFit_s.root',
-'/shome/nmohr/VHbb/lhcp/PrePost/BDT7TeV/BDT_Zll_card3_PostFit_s.root',
-'/shome/nmohr/VHbb/lhcp/PrePost/BDT7TeV/BDT_Zll_card4_PostFit_s.root',
-'/shome/nmohr/VHbb/lhcp/PrePost/BDT7TeV/BDT_Znn_ch1_PostFit_s.root',
-'/shome/nmohr/VHbb/lhcp/PrePost/BDT7TeV/BDT_Znn_ch2_PostFit_s.root' ]
-
-bdt_fileList2+=bdt_fix
-
-
+#bdt_fileList2+=bdt_fix
 
 if('mjj' in opts.type):
-        plot(fileList)
+    plot(fileList)
 else:
-        log_s_over_b(bdt_fileList2)
+    #log_s_over_b(bdt_fileList2)
+    log_s_over_b(bdt_fileList)
 
 sys.exit(0)    
 
