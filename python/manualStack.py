@@ -82,7 +82,9 @@ def get_th1(fName):
         ROOT.gDirectory.cd(folder.GetName())
         for key in ROOT.gDirectory.GetListOfKeys():
             infile.cd()
-            th1.append(key.ReadObj())
+            hist = key.ReadObj()
+            hist.SetDirectory(0)
+            th1.append(hist)
             #print "the class name is", key.GetClassName()
             #print 'the key is'
             #ROOT.gDirectory.GetListOfKeys().Print()
@@ -178,7 +180,7 @@ def log_s_over_b(fileList):
 def plot(fileList):
     signalRegion = True
     region = 'plot'
-    var = 'Hmass'
+    var = 'HCSVmass'
 
     stack = StackMaker(config,var,region,signalRegion)
 

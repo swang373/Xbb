@@ -188,6 +188,9 @@ fi
 if [ $task = "split" ]; then
     ./split_tree.py --samples $sample --config ${energy}config/${configList} --max-events $job_id
 fi
+if [ $task = "stack" ]; then
+    ./manualStack.py --config ${energy}config/${configList}
+fi
 
 if [ $task = "mva_opt" ]; then
     if [ $# -lt 5 ]
