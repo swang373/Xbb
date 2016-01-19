@@ -21,8 +21,10 @@ mode = 'BDT'
 xMin=-1
 xMax=1
 masses = ['125']
-Abins = ['HighPt','LowPt']
-channels= ['Zee','Zmm']
+#Abins = ['HighPt','LowPt']
+Abins = ['HighPt']
+#channels= ['Zee','Zmm']
+channels= ['Zmm']
 #------------------------------------------------------
 #---------- Mjj ---------------------------------------
 #mode = 'Mjj'
@@ -44,7 +46,8 @@ sys_BDT= eval(config.get('LimitGeneral','sys_BDT'))
 systematicsnaming = eval(config.get('LimitGeneral','systematicsnaming'))
 systs=[systematicsnaming[s] for s in sys_BDT]
 
-if eval(config.get('LimitGeneral','weightF_sys')): systs.append('UEPS')
+#What are those ?
+#if eval(config.get('LimitGeneral','weightF_sys')): systs.append('UEPS')
 
 def myText(txt="CMS Preliminary",ndcX=0,ndcY=0,size=0.8):
     ROOT.gPad.Update()
@@ -62,12 +65,16 @@ for mass in masses:
         for channel in channels:
 
             if mode == 'BDT':
-                input = TFile.Open(path+'/vhbb_TH_BDT_M'+mass+'_'+channel+Abin+'_8TeV.root','read')
+                #input = TFile.Open(path+'/vhbb_TH_BDT_M'+mass+'_'+channel+Abin+'_8TeV.root','read')
+                #input = TFile.Open()
+                input = TFile.Open(path+'vhbb_TH_BDT_highpt_Scan100_100.root','read')
             if mode == 'Mjj':
                 input = TFile.Open(path+'/vhbb_TH_Mjj_'+Abin+'_M'+mass+'_'+channel+'.root','read')
 
+            print 'The MCs are'
             for MC in MCs:
                 print MC
+                print 'The systs are'
                 for syst in systs:
                     print syst
                 #['CMS_res_j','CMS_scale_j','CMS_eff_b','CMS_fake_b_8TeV','UEPS']:
@@ -98,7 +105,8 @@ for mass in masses:
                     ROOT.gPad.SetTicks(1,1)
 
 
-                    input.cd(channel+Abin+'_8TeV')
+                    input.ls()
+                    input.cd("_BDT_highpt_preliminary_13TeV")
                     Ntotal=ROOT.gDirectory.Get(MC)
                     Utotal=ROOT.gDirectory.Get(MC+syst+'Up')
                     #Utotal=input.Get(MC+syst+MC+'_'+channel+'Up')
@@ -155,43 +163,32 @@ for mass in masses:
                     chiScoreD = Ntotal.Chi2Test( Dtotal , "WWCHI2/NDF")
 
 
-
                     ratioU.SetStats(0)
-                    ratioU.SetMinimum(0.01)
-                    ratioU.SetMaximum(2.49)
-                    ratioU.GetYaxis().SetNdivisions(505)
-                    #ratioU.GetYaxis().SetLabelSize(0.2)
-                    #ratioU.GetYaxis().SetTitleSize(0.2)
-                    #ratioU.GetYaxis().SetTitleOffset(0.2)
-                    #ratioU.GetXaxis().SetLabelColor(10)
-                    ratioU.SetLineColor(4)    
-                    ratioU.SetLineStyle(4)
-                    ratioU.SetLineWidth(2)
-                    ratioU.GetXaxis().SetTitle('BDT output')
-                    ratioU.GetYaxis().SetTitle('Ratio') 
-                    ratioU.Draw("hist")
-                    fitRatioU = ratioU.Fit("pol2","S")
-                    fitRatioU.Draw("SAME")
-                    ratioU.SetTitle("")
+                    ratioU.GetYaxis().SetRangeUser(0.5,1.5)
+                    ratioU.GetYaxis().SetNdivisions(502,0)
                     ratioD.SetStats(0)
                     ratioD.GetYaxis().SetRangeUser(0.5,1.5)
                     ratioD.GetYaxis().SetNdivisions(502,0)
-                    #ratioD.GetYaxis().SetLabelSize(0.2)
-                    #ratioD.GetYaxis().SetTitleSize(0.2)
-                    #ratioD.GetYaxis().SetTitleOffset(0.2)
-                    #ratioD.GetXaxis().SetLabelColor(10)
+                    ratioD.GetYaxis().SetLabelSize(0.05)
                     ratioD.SetLineColor(2)
                     ratioD.SetLineStyle(3)
-                    ratioD.SetLineWidth(2)  
-                    ratioD.Draw("hist same")
-                    fitRatioD = ratioD.Fit("pol2","S")
-                    fitRatioD.Draw("SAME")
-                    ratioD.SetTitle("")
-                    m_one_line = ROOT.TLine(xMin,1,xMax,1)
-                    m_one_line.SetLineStyle(7)
-                    m_one_line.SetLineColor(4)
-                    m_one_line.Draw("Same")
+                    ratioD.SetLineWidth(2)
+                    ratioU.SetLineColor(4)
+                    ratioU.SetLineStyle(4)
+                    ratioU.SetLineWidth(2)
 
+                    fitRatioU = ratioU.Fit("pol2","S")
+                    ratioU.GetFunction("pol2").SetLineColor(4)
+                    fitRatioD = ratioD.Fit("pol2","S")
+                    ratioU.Draw("APSAME")
+                    ratioD.GetXaxis().SetTitle('BDT Output')
+                    ratioD.GetYaxis().SetTitle('Ratio')
+                    ratioD.GetYaxis().SetTitleSize(0.1)
+                    ratioD.GetYaxis().SetTitleOffset(0.2)
+                    fitRatioU.Draw("SAME")
+                    fitRatioD.Draw("SAME")
+
+                    ratioD.Draw("SAME")
 
                     #name = outpath+Abin+'_M'+mass+'_'+channel+'_'+MC+syst+'.png'
                     #c.Print(name)

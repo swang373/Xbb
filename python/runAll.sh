@@ -140,6 +140,8 @@ fi
 configList=${input_configs// / -C ${energy}config\/}                     # replace the spaces with ' -C '
 echo "@LOG : The config list you are using is"
 echo ${configList}
+echo "task is"
+echo ${task}
 
 
 #------------------------------------
@@ -186,7 +188,9 @@ fi
 if [ $task = "stack" ]; then
     ./manualStack.py --config ${energy}config/${configList}
 fi
-
+if [ $task = "plot_sys" ]; then
+    ./plot_systematics.py --config ${energy}config/${configList}
+fi
 if [ $task = "mva_opt" ]; then
     if [ $# -lt 5 ]
   then
