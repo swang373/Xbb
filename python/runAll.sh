@@ -159,15 +159,12 @@ if [ $task = "prep" ]; then
 fi
 if [ $task = "trainReg" ]; then
     # ./trainRegression.py --config ${energy}config/${configList}
-    print ./trainRegression.py --config ${energy}config/${configList} --config ${energy}config/regression.ini
     ./trainRegression.py --config ${energy}config/${configList} --config ${energy}config/regression.ini
 fi
 if [ $task = "sys" ]; then
-    print ./write_regression_systematics.py --samples $sample --config ${energy}config/${configList}
     ./write_regression_systematics.py --samples $sample --config ${energy}config/${configList}
 fi
 if [ $task = "eval" ]; then
-    print ./evaluateMVA.py --discr $MVAList --samples $sample --config ${energy}config/${configList}
     ./evaluateMVA.py --discr $MVAList --samples $sample --config ${energy}config/${configList}
 fi
 if [ $task = "syseval" ]; then
@@ -175,14 +172,12 @@ if [ $task = "syseval" ]; then
     ./evaluateMVA.py --discr $MVAList --samples $sample --config ${energy}config/${configList}
 fi
 if [ $task = "train" ]; then
-    echo ./train.py --training $sample --config ${energy}config/${configList} --local True
     ./train.py --training $sample --config ${energy}config/${configList} --local True
 fi
 if [ $task = "plot" ]; then
     ./tree_stack.py --region $sample --config ${energy}config/${configList}
 fi
 if [ $task = "dc" ]; then
-    echo ./workspace_datacard.py --variable $sample --config ${energy}config/${configList}  --config ${energy}config/datacards.ini
     ./workspace_datacard.py --variable $sample --config ${energy}config/${configList}  --config ${energy}config/datacards.ini
 fi
 if [ $task = "split" ]; then
