@@ -45,6 +45,9 @@ MCs = [Dict[s] for s in setup]
 sys_BDT= eval(config.get('LimitGeneral','sys_BDT'))
 systematicsnaming = eval(config.get('LimitGeneral','systematicsnaming'))
 systs=[systematicsnaming[s] for s in sys_BDT]
+sys_weight = eval(config.get('LimitGeneral','weightF_sys'))
+
+for sw in  sys_weight: systs.append(systematicsnaming[sw])
 
 #What are those ?
 #if eval(config.get('LimitGeneral','weightF_sys')): systs.append('UEPS')
@@ -67,7 +70,7 @@ for mass in masses:
             if mode == 'BDT':
                 #input = TFile.Open(path+'/vhbb_TH_BDT_M'+mass+'_'+channel+Abin+'_8TeV.root','read')
                 #input = TFile.Open()
-                input = TFile.Open(path+'vhbb_TH_BDT_highpt_Scan100_100.root','read')
+                input = TFile.Open(path+'vhbb_TH_ZmmLowPt_13TeV.root','read')
             if mode == 'Mjj':
                 input = TFile.Open(path+'/vhbb_TH_Mjj_'+Abin+'_M'+mass+'_'+channel+'.root','read')
 
@@ -105,8 +108,10 @@ for mass in masses:
                     ROOT.gPad.SetTicks(1,1)
 
 
-                    input.ls()
-                    input.cd("_BDT_highpt_preliminary_13TeV")
+                    input.cd("Vpt1")
+                    print 'Ntotal is', MC
+                    print 'Utotal is', MC+syst+'Up'
+                    print 'Dtotal is', MC+syst+'Down'
                     Ntotal=ROOT.gDirectory.Get(MC)
                     Utotal=ROOT.gDirectory.Get(MC+syst+'Up')
                     #Utotal=input.Get(MC+syst+MC+'_'+channel+'Up')
