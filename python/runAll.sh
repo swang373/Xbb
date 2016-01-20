@@ -146,6 +146,11 @@ echo ${configList}
 #Run the scripts
 #------------------------------------
 
+echo "============================"
+echo "Will Lauch the script"
+echo "============================"
+echo "The command is"
+
 if [ $task = "prep" ]; then
     # ./prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList}
 #    print "./prepare_environment_with_config.py --samples" $sample "--config "${energy}"config/"${configList}" --config "${energy}"config/samples_nosplit.cfg #sometime"
@@ -167,18 +172,19 @@ if [ $task = "syseval" ]; then
     ./evaluateMVA.py --discr $MVAList --samples $sample --config ${energy}config/${configList}
 fi
 if [ $task = "train" ]; then
-    echo ./train.py --training $sample --config ${energy}config/${configList} --local True
     ./train.py --training $sample --config ${energy}config/${configList} --local True
 fi
 if [ $task = "plot" ]; then
     ./tree_stack.py --region $sample --config ${energy}config/${configList}
 fi
 if [ $task = "dc" ]; then
-    echo ./workspace_datacard.py --variable $sample --config ${energy}config/${configList}  --config ${energy}config/datacards.ini
     ./workspace_datacard.py --variable $sample --config ${energy}config/${configList}  --config ${energy}config/datacards.ini
 fi
 if [ $task = "split" ]; then
     ./split_tree.py --samples $sample --config ${energy}config/${configList} --max-events $job_id
+fi
+if [ $task = "stack" ]; then
+    ./manualStack.py --config ${energy}config/${configList}
 fi
 
 if [ $task = "mva_opt" ]; then

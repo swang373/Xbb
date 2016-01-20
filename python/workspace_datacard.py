@@ -209,11 +209,11 @@ print '================================\n'
 
 if 'HighPtLooseBTag' in ROOToutname:
     pt_region = 'HighPtLooseBTag'
-elif 'HighPt' in ROOToutname or 'highPt' in ROOToutname:
+elif 'HighPt' in ROOToutname or 'highPt' in ROOToutname or 'highpt' in ROOToutname:
     pt_region = 'HighPt'
 elif 'MedPt' in ROOToutname:
     pt_region = 'MedPt'
-elif 'LowPt' in ROOToutname or 'lowPt' in ROOToutname:
+elif 'LowPt' in ROOToutname or 'lowPt' in ROOToutname or 'lowpt' in ROOToutname:
     pt_region = 'LowPt'
 elif 'ATLAS' in ROOToutname:
     pt_region = 'HighPt'
