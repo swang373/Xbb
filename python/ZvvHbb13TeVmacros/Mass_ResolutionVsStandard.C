@@ -75,7 +75,7 @@ fit1->SetLineColor(Hmass->GetLineColor());
 fit2->SetLineColor(HmassReg->GetLineColor());
 fit3->SetLineColor(HFSRmassReg->GetLineColor());
 fit4->SetLineColor(HmassStdReg->GetLineColor());
-    
+
 Hmass->Fit(fit1);
 HmassReg->Fit(fit2);
 HFSRmassReg->Fit(fit3);
@@ -95,8 +95,8 @@ HmassReg->Fit(fit2,"","",fit2->GetParameter(1)-sigmam*fit2->GetParameter(2),fit2
 cout<<endl<< "Fitting HFSRmassReg"<<endl;
 HFSRmassReg->Fit(fit3,"","",fit3->GetParameter(1)-sigmam*fit3->GetParameter(2),fit3->GetParameter(1)+sigmap*fit3->GetParameter(2));
 cout<<endl<< "Fitting HmassStdReg"<<endl;
-HmassStdReg->Fit(fit4,"","",fit4->GetParameter(1)-sigmam*fit4->GetParameter(2),fit4->GetParameter(1)+sigmap*fit4->GetParameter(2));   
-   
+HmassStdReg->Fit(fit4,"","",fit4->GetParameter(1)-sigmam*fit4->GetParameter(2),fit4->GetParameter(1)+sigmap*fit4->GetParameter(2));
+
 c1->SaveAs("mass_resolution.png");
 c1->SaveAs("mass_resolution.C");
 }

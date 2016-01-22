@@ -41,11 +41,11 @@ def DivideTGraph(num,den):
     EXHs_new = [ EXHs_den[i] for i in range( Ns_den)]
     EYLs_new = [ Ys_new[i]*sqrt((EYLs_num[i]/(Ys_num[i]+1e-9))**2+(EYHs_den[i]/(Ys_den[i]+1e-9))**2) for i in range( Ns_den)]
     EYHs_new = [ Ys_new[i]*sqrt((EYHs_num[i]/(Ys_num[i]+1e-9))**2+(EYLs_den[i]/(Ys_den[i]+1e-9))**2) for i in range( Ns_den)]
-    
+
     print "DivideTGraph: len"
 
     n = len(Xs_new)
-    
+
     print "DivideTGraph: array"
 
     Xs_new = array.array('f',Xs_new)
@@ -56,10 +56,10 @@ def DivideTGraph(num,den):
     EYHs_new = array.array('f',EYHs_new)
 
     print "DivideTGraph: ratio"
-    
+
     ratio = ROOT.TGraphAsymmErrors(n, Xs_new, Ys_new, EXLs_new, EXHs_new, EYLs_new, EYHs_new)
     print "DivideTGraph: done"
-    
+
     return ratio
 
 
@@ -110,7 +110,7 @@ def doRatio(num, den, option=""):
         print ""
         for i in range(den.GetNbinsX()): print den.GetBinLowEdge(i),
         print ""
-        
+
         for i in range(den.GetNbinsX()):
             if num.GetBinContent(i)>den.GetBinContent(i):
                 print "WARNING!"
@@ -118,7 +118,7 @@ def doRatio(num, den, option=""):
                 num.SetBinContent(i,den.GetBinContent(i))
 #            num.SetBinContent(i,num.GetBinContent(i))
 #            den.SetBinContent(i,den.GetBinContent(i))
-        
+
         mratio.Divide(num,den,"cl=0.683 b(1,1) mode")
         print "End ratio"
         return mratio
@@ -139,23 +139,23 @@ def confidenceInterval(graph, function):
     parameters = [0]*4
     for i in range(4):
         parameters[i] = fit.GetParameter(i)
-    
+
     parametersUp = parameters[:]
     parametersDown = parameters[:]
 
     looseRange=10.
     tightRange=10.
-    
+
     print "Up/down fit"
 
     ## FixParameters
     for i in range(4):
         fit.ReleaseParameter(i)
-#        if i in [0]: #  x0 can go down 
+#        if i in [0]: #  x0 can go down
 #            pass
 #        elif i in [3]: # global efficiency can go up
 #            pass
-        if i in [0,2]: #  x0 can go down 
+        if i in [0,2]: #  x0 can go down
             pass
         else: # fix the other parameters
             fit.FixParameter( i, parameters[i] )
@@ -166,10 +166,10 @@ def confidenceInterval(graph, function):
         print "i=",i
         print fitResult.UpperError(i)
         print fitResult.LowerError(i)
-        
+
         parameters[i] = fit.GetParameter(i)
         nsigma = 2
-        if i in [0]: #  x0 can go down 
+        if i in [0]: #  x0 can go down
             parametersUp[i] = fit.GetParameter(i) + fitResult.LowerError(i)*nsigma
             parametersDown[i] = fit.GetParameter(i) + fitResult.UpperError(i)*nsigma
         elif i in [1]: # check-me!
@@ -184,7 +184,7 @@ def confidenceInterval(graph, function):
         else: # fix the other parameters
             parametersUp[i] = fit.GetParameter(i)
             parametersDown[i] = fit.GetParameter(i)
-        
+
         print "fit.GetParameter(1)*fit.GetParameter(2)"
         print fit.GetParameter(1)*fit.GetParameter(2)
         print "(fit.GetParameter(1)*fit.GetParameter(2))<0"
@@ -193,7 +193,7 @@ def confidenceInterval(graph, function):
         print fit.GetParameter(1)
         print "fit.GetParameter(2)"
         print fit.GetParameter(2)
-        
+
     if (fit.GetParameter(3)<0): ##if [3]<0, I have to exchange [0],[1] min/max
         for i in [0,1]:
             print "CHANGE"
@@ -235,7 +235,7 @@ def doPlots(ped,fileNum,fileDen):
     TurnOnData = function.Clone("TurnOnData")
 
     c1 = ROOT.TCanvas("c1","",1280,720)
-    
+
     TurnOnMC,TurnOnMCUp,TurnOnMCDown = confidenceInterval(turnOnMC,TurnOnMC)
 
     turnOnMC.SetMaximum(maxTurnOn)
@@ -265,7 +265,7 @@ def doPlots(ped,fileNum,fileDen):
     print "Ratio do"
     ratio = DivideTGraph(turnOnData,turnOnMC)
     print "Ratio done"
-    
+
     ratioFit=function.Clone("ratioFit")
     ratioFit.SetParameters(50,50,0,1)
 
@@ -305,7 +305,7 @@ def doPlots(ped,fileNum,fileDen):
     turnOnData.SetTitle("Trigger efficiency")
     turnOnData.GetXaxis().SetTitle("min(MET,MHT) [GeV]")
     turnOnData.GetYaxis().SetTitle("Efficiency")
-    
+
     turnOnData.Draw("AP")
     TurnOnData.Draw("same")
 
@@ -320,7 +320,7 @@ def doPlots(ped,fileNum,fileDen):
 
     c1.SaveAs("both_"+ped+".png")
     c1.SaveAs("both_"+ped+".root")
-    
+
     function.Delete()
     TurnOnMC.Delete()
     TurnOnMCDown.Delete()
@@ -338,7 +338,7 @@ def doPlots(ped,fileNum,fileDen):
 #    turnOnData.Fit(TurnOnData,"")
 #    for i in [1,2]:
 #        TurnOnData.FixParameter( i, TurnOnData.GetParameter(i) )
-#    
+#
 #    turnOnData.Fit(TurnOnData,"E")
 #    turnOnData.Draw("AP")
 
@@ -353,7 +353,7 @@ def doPlots(ped,fileNum,fileDen):
 #        else:
 #            TurnOnDataUp.SetParameter(i,TurnOnDataUp.GetParameter(i) - TurnOnDataUp.GetParError(i))
 #            TurnOnDataDown.SetParameter(i,TurnOnDataDown.GetParameter(i) + TurnOnDataDown.GetParError(i))
-#    
+#
 #    TurnOnData.Draw("same")
 #    TurnOnDataUp.Draw("same")
 #    TurnOnDataDown.Draw("same")
@@ -390,8 +390,8 @@ def doPlots(ped,fileNum,fileDen):
 #    print "TurnOnDataDown: ",TurnOnDataDown.GetExpFormula("P")
 #    print "TurnOnDataUp: ",TurnOnDataUp.GetExpFormula("P")
 #    print "function: ",function.GetExpFormula("P")
-#    
-#    
+#
+#
 #    function.Draw("same")
 #    TurnOnDataUp.Draw("same")
 #    TurnOnDataDown.Draw("l,same")
