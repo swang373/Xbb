@@ -4,6 +4,9 @@ ROOT.gROOT.SetBatch(True)
 from optparse import OptionParser
 from myutils import BetterConfigParser, copytree, ParseInfo
 
+print "Launch me with:"
+print "./print_cross_sections.py --config ZvvHbb13TeVconfig/paths.ini"
+
 argv = sys.argv
 
 #get files info from config
