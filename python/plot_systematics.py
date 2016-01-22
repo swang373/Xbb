@@ -22,7 +22,8 @@ xMin=-1
 xMax=1
 masses = ['125']
 #Abins = ['HighPt','LowPt']
-Abins = ['HighPt']
+#Abins = ['HighPt']
+Abins = ['LowPt']
 #channels= ['Zee','Zmm']
 channels= ['Zmm']
 #------------------------------------------------------
@@ -70,7 +71,9 @@ for mass in masses:
             if mode == 'BDT':
                 #input = TFile.Open(path+'/vhbb_TH_BDT_M'+mass+'_'+channel+Abin+'_8TeV.root','read')
                 #input = TFile.Open()
+
                 input = TFile.Open(path+'vhbb_TH_ZmmLowPt_13TeV.root','read')
+                #input = TFile.Open(path+'vhbb_TH_ZmmHighPt_13TeV.root','read')
             if mode == 'Mjj':
                 input = TFile.Open(path+'/vhbb_TH_Mjj_'+Abin+'_M'+mass+'_'+channel+'.root','read')
 
@@ -109,6 +112,7 @@ for mass in masses:
 
 
                     input.cd("Vpt1")
+                    #input.cd("Vpt2")
                     print 'Ntotal is', MC
                     print 'Utotal is', MC+syst+'Up'
                     print 'Dtotal is', MC+syst+'Down'
