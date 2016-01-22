@@ -588,7 +588,7 @@ if options.plotsf and options.dc:
             StackMaker.myText("%.2f #pm %.2f" %(latex[label][1],latex[label][2]),conversion_x(xmin)-0.02,conversion_y(latex[label][3]),0.5)
     if(drawSys) : g2.Draw("[] same")
     StackMaker.myText("CMS Preliminary",conversion_x(xmin)+0.1,0.95,0.6)
-    StackMaker.myText("#sqrt{s} =  8TeV, L = 19.0 fb^{-1}",conversion_x(xmin)+0.1,0.92,0.6)
+    StackMaker.myText("#sqrt{s} =  13TeV, L = 2.2 fb^{-1}",conversion_x(xmin)+0.1,0.92,0.6)
 
     ROOT.gPad.SetLeftMargin(0.2)
     ROOT.gPad.Update()
