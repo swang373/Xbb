@@ -10,12 +10,7 @@ warnings.filterwarnings( action='ignore', category=RuntimeWarning, message='crea
 ROOT.gROOT.SetBatch(True)
 from optparse import OptionParser
 from btag_reweight import *
-csvpath = "./"
-bweightcalc = BTagWeightCalculator(
-    csvpath + "/csv_rwt_fit_hf_2015_11_20.root",
-    csvpath + "/csv_rwt_fit_lf_2015_11_20.root"
-)
-bweightcalc.btag = "btagCSV"
+
 
 #usage: ./write_regression_systematic.py path
 
@@ -55,6 +50,14 @@ tmpDir = os.environ["TMPDIR"]
 print 'INput samples:\t%s'%pathIN
 print 'OUTput samples:\t%s'%pathOUT
 
+csv_rwt_hf=config.get('BTagHFweights','file')
+csv_rwt_lf=config.get('BTagLFweights','file')
+print "csv_rwt_hf",csv_rwt_hf,"csv_rwt_lf",csv_rwt_lf
+bweightcalc = BTagWeightCalculator(
+    csv_rwt_hf,
+    csv_rwt_lf
+)
+bweightcalc.btag = "btagCSV"
 
 #storagesamples = config.get('Directories','storagesamples')
 
