@@ -117,7 +117,7 @@ def Sort(lorentzvectorswithcsv,method=''):
     return (b1,b2,q1,q2)
 
 tree = ROOT.TChain("tree")
-tree.Add('/gpfs/ddn/srm/cms/store/user/arizzi/VHBBHeppyV13/JetHT/VHBB_HEPPY_V13_JetHT__Run2015C-PromptReco-v1/151002_100932/0000/tree_*.root')
+tree.Add('/gpfs/ddn/srm/cms/store/user/sdonato/VHBBHeppyA14/SingleElectron/VHBB_HEPPY_A14_SingleElectron__Run2015D-05Oct2015-v1/151125_165510/0000/tree_*.root')
 output = ROOT.TFile.Open('mytreeData.root','recreate')
 output.cd()
 nEntries = tree.GetEntries()
@@ -131,6 +131,8 @@ tree.SetBranchStatus('Jet_btagCSV',1)
 #tree.SetBranchStatus('Jet_mcPt',1)
 #tree.SetBranchStatus('Jet_mcFlavour',1)
 #tree.SetBranchStatus('Jet_mcMatchId',1)
+tree.SetBranchStatus('HLT_*Mu*',1)
+tree.SetBranchStatus('HLT_*Ele*',1)
 tree.SetBranchStatus('HLT_*VBF*',1)
 tree.SetBranchStatus('HLT_*Jet*',1)
 tree.SetBranchStatus('*json*',1)
@@ -171,7 +173,7 @@ for entry in range(0,nEntries):
         jet = ROOT.TLorentzVector()
         jet.SetPtEtaPhiM(tree.Jet_pt[i],tree.Jet_eta[i],tree.Jet_phi[i],tree.Jet_mass[i])
         jet.csv = tree.Jet_btagCSV[i]
-        if tree.Jet_pt[i]>30:
+        if tree.Jet_pt[i]>20:
             lorentzvectorswithcsv.append(jet)
 
     SortByCSV(lorentzvectorswithcsv)

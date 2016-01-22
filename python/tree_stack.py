@@ -75,6 +75,10 @@ if os.path.exists("../interface/DrawFunctions_C.so"):
     print 'ROOT.gROOT.LoadMacro("../interface/DrawFunctions_C.so")'
     ROOT.gROOT.LoadMacro("../interface/DrawFunctions_C.so")
 
+if os.path.exists("../interface/VHbbNameSpace_h.so"):
+    print 'ROOT.gROOT.LoadMacro("../interface/VHbbNameSpace_h.so")'
+    ROOT.gROOT.LoadMacro("../interface/VHbbNameSpace_h.so")
+
 #----------Histo from trees------------
 #Get the selections and the samples
 def doPlot():
