@@ -159,6 +159,9 @@ fi
 if [ $task = "sys" ]; then
     ./write_regression_systematics.py --samples $sample --config ${energy}config/${configList}
 fi
+if [ $task = "reg" ]; then
+    ./only_regression.py --samples $sample --config ${energy}config/${configList}
+fi
 if [ $task = "eval" ]; then
     ./evaluateMVA.py --discr $MVAList --samples $sample --config ${energy}config/${configList}
 fi
