@@ -1,10 +1,11 @@
 import os
+
 import ROOT
 import numpy as np
 
 class BTagWeightCalculator:
     """
-    Calculates the jet and event correction factor as a weight based on the b-tagger shape-dependent data/mc
+    Calculates the jet and event correction factor as a weight based on the b-tagger shape-dependent data/mc 
     corrections.
 
     Currently, the recipe is only described in https://twiki.cern.ch/twiki/bin/viewauth/CMS/TTbarHbbRun2ReferenceAnalysis#Applying_CSV_weights
@@ -24,13 +25,19 @@ class BTagWeightCalculator:
         self.pt_bins_hf = np.array([20, 30, 40, 60, 100])
         self.eta_bins_hf = np.array([0, 2.41])
 
-        #bin edges of the light-flavour histograms
+        #bin edges of the light-flavour histograms 
         self.pt_bins_lf = np.array([20, 30, 40, 60])
         self.eta_bins_lf = np.array([0, 0.8, 1.6, 2.41])
 
         #name of the default b-tagger
         self.btag = "pfCombinedInclusiveSecondaryVertexV2BJetTags"
         self.init(fn_hf, fn_lf)
+
+        self.systematics_for_b = ["JESUp", "JESDown", "LFUp", "LFDown",
+                                  "HFStats1Up", "HFStats1Down", "HFStats2Up", "HFStats2Down"]
+        self.systematics_for_c = ["cErr1Up", "cErr1Down", "cErr2Up", "cErr2Down"]
+        self.systematics_for_l = ["JESUp", "JESDown", "HFUp", "HFDown",
+                                  "LFStats1Up", "LFStats1Down", "LFStats2Up", "LFStats2Down"]
 
     def getBin(self, bvec, val):
         return int(bvec.searchsorted(val, side="right")) - 1
@@ -105,14 +112,13 @@ class BTagWeightCalculator:
              or a Heppy Jet
         kind: string specifying the name of the corrections. Usually "final".
         systematic: the correction systematic, e.g. "nominal", "JESUp", etc
-        returns: a float with the correction
-        """
+     """
         #if jet is a simple class with attributes
         if isinstance(getattr(jet, "pt"), float):
             pt   = getattr(jet, "pt")
             aeta = abs(getattr(jet, "eta"))
-            fl   = abs(getattr(jet, "mcFlavour"))
-            csv  = getattr(jet, self.btag)
+            fl   = abs(getattr(jet, "hadronFlavour"))
+            csv  = getattr(jet, "btag")
         #if jet is a heppy Jet object
         else:
             #print "could not get jet", e
@@ -120,23 +126,20 @@ class BTagWeightCalculator:
             aeta = abs(jet.eta())
             fl   = abs(jet.hadronFlavour())
             csv  = jet.btag(self.btag)
+        return self.calcJetWeightImpl(pt, aeta, fl, csv, kind, systematic)
+
+    def calcJetWeightImpl(self, pt, aeta, fl, csv, kind, systematic):
 
         is_b = (fl == 5)
         is_c = (fl == 4)
         is_l = not (is_b or is_c)
 
-        if is_b and not (systematic in ["JESUp", "JESDown", "LFUp", "LFDown",
-                                        "Stats1Up", "Stats1Down", "Stats2Up", "Stats2Down",
-                                        "nominal"]):
-            return 1.0
-        if is_c and not (systematic in ["cErr1Up", "cErr1Down", "cErr2Up", "cErr2Down",
-                                        "nominal"]):
-            return 1.0
-        if is_l and not (systematic in ["JESUp", "JESDown", "HFUp", "HFDown",
-                                        "Stats1Up", "Stats1Down", "Stats2Up", "Stats2Down",
-                                        "nominal"]):
-            return 1.0
+        if systematic != "nominal":
+            if (is_b and systematic not in self.systematics_for_b) or (is_c and systematic not in self.systematics_for_c) or (is_l and systematic not in self.systematics_for_l):
+                systematic = "nominal"
 
+        if "Stats" in systematic:
+            systematic = systematic[2:]
 
         if is_b or is_c:
             ptbin = self.getBin(self.pt_bins_hf, pt)
@@ -158,12 +161,16 @@ class BTagWeightCalculator:
             #print "no histogram", k
             return 1.0
 
+        if csv > 1:
+            csv = 1
+            
         csvbin = 1
         csvbin = h.FindBin(csv)
-
-        if csvbin <= 0 or csvbin > h.GetNbinsX():
-            #print "csv bin outside range", csv, csvbin
-            return 1.0
+        #This is to fix csv=-10 not being accounted for in CSV SF input hists
+        if csvbin <= 0:
+            csvbin = 1
+        if csvbin > h.GetNbinsX():
+            csvbin = h.GetNbinsX()
 
         w = h.GetBinContent(csvbin)
         return w
@@ -179,7 +186,7 @@ class BTagWeightCalculator:
 
         wtot = np.prod(weights)
         return wtot
-
+      
 
 ################################################################
 # A dummy class of a jet object
@@ -188,7 +195,7 @@ class Jet :
     def __init__(self, pt, eta, fl, csv, csvname) :
         self.pt = pt
         self.eta = eta
-        self.mcFlavour = fl
+        self.hadronFlavour = fl
         setattr(self, csvname, csv)
 
     #def hadronFlavour(self):
@@ -200,56 +207,53 @@ class Jet :
     #def eta(self):
     #    return self.eta
 
+
 ################################################################
-if __name__ == "__main__":
-    #Set up offline b-weight calculation
+#Set up offline b-weight calculation
 
-    #csvpath = os.environ['CMSSW_BASE']+"/src/VHbbAnalysis/Heppy/data/csv"
-    csvpath = "./"
-    bweightcalc = BTagWeightCalculator(
-        csvpath + "/csv_rwt_fit_hf_2015_11_20.root",
-        csvpath + "/csv_rwt_fit_lf_2015_11_20.root"
+#csvpath = os.environ['CMSSW_BASE']+"/src/VHbbAnalysis/Heppy/data/csv"
+csvpath = "./"
+bweightcalc = BTagWeightCalculator(
+    csvpath + "/csv_rwt_fit_hf_2015_12_14.root",
+    csvpath + "/csv_rwt_fit_lf_2015_12_14.root"
+)
+bweightcalc.btag = "btagCSV"
+
+
+# EXAMPLE (1): per-jet nominal weight
+jet = Jet(50., 1.2, 5, 0.89, bweightcalc.btag)
+
+jet_weight_nominal = bweightcalc.calcJetWeight(
+    jet, kind="final", systematic="nominal",
     )
-    bweightcalc.btag = "btagCSV"
+#print "Nominal jet weight: ", jet_weight_nominal
+
+# EXAMPLE (2): per-jet systematic up/down weight
+for syst in ["JES", "LF", "HF", "LFStats1", "LFStats2", "HFStats1", "HFStats2", "cErr1", "cErr2"]:
+    for sdir in ["Up", "Down"]:
+        jet_weight_shift = bweightcalc.calcJetWeight(
+            jet, kind="final", systematic=syst+sdir
+            )
+        print syst, sdir, ": ", jet_weight_shift
 
 
-    # EXAMPLE (1): per-jet nominal weight
-    jet = Jet(50., 1.2, 5, 0.89, bweightcalc.btag)
+# EXAMPLE (3): the nominal event weight 
+jet1 = Jet(50., -1.2, 5, 0.99, bweightcalc.btag)
+jet2 = Jet(30., 1.8, 4, 0.2, bweightcalc.btag)
+jet3 = Jet(100., 2.2, 0, 0.1, bweightcalc.btag)
+jet4 = Jet(20., 0.5,-5, 0.6, bweightcalc.btag)
+jets = [jet1,jet2,jet3,jet4]
 
-    jet_weight_nominal = bweightcalc.calcJetWeight(
-        jet, kind="final", systematic="nominal",
-        )
-    print "Nominal jet weight: ", jet_weight_nominal
-
-
-    # EXAMPLE (2): per-jet systematic up/down weight
-    for syst in ["JES", "LF", "HF", "Stats1", "Stats2", "cErr1", "cErr2"]:
-        for sdir in ["Up", "Down"]:
-            jet_weight_shift = bweightcalc.calcJetWeight(
-                jet, kind="final", systematic=syst+sdir
-                )
-            print syst, sdir, ": ", jet_weight_shift
+event_weight_nominal = bweightcalc.calcEventWeight(
+    jets, kind="final", systematic="nominal",
+    )
+print "Nominal event weight: ", event_weight_nominal
 
 
-    # EXAMPLE (3): the nominal event weight
-    jet1 = Jet(50., -1.2, 5, 0.99, bweightcalc.btag)
-    jet2 = Jet(30., 1.8, 4, 0.2, bweightcalc.btag)
-    jet3 = Jet(100., 2.2, 0, 0.1, bweightcalc.btag)
-    jet4 = Jet(20., 0.5,-5, 0.6, bweightcalc.btag)
-    jets = [jet1,jet2,jet3,jet4]
-
-    event_weight_nominal = bweightcalc.calcEventWeight(
-        jets, kind="final", systematic="nominal",
-        )
-    print "Nominal event weight: ", event_weight_nominal
-
-
-    # EXAMPLE (4): the systematic up/down event weight
-    for syst in ["JES", "LF", "HF", "Stats1", "Stats2", "cErr1", "cErr2"]:
-        for sdir in ["Up", "Down"]:
-            event_weight_shift = bweightcalc.calcEventWeight(
-                jets, kind="final", systematic=syst+sdir
-                )
-            print syst, sdir, ": ", event_weight_shift
-
-
+# EXAMPLE (4): the systematic up/down event weight 
+for syst in ["JES", "LF", "HF", "LFStats1", "LFStats2", "HFStats1", "HFStats2", "cErr1", "cErr2"]:
+    for sdir in ["Up", "Down"]:
+        event_weight_shift = bweightcalc.calcEventWeight(
+            jets, kind="final", systematic=syst+sdir
+            )
+        print syst, sdir, ": ", event_weight_shift
