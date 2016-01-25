@@ -10,7 +10,7 @@ warnings.filterwarnings( action='ignore', category=RuntimeWarning, message='crea
 ROOT.gROOT.SetBatch(True)
 from optparse import OptionParser
 from btag_reweight import *
-
+from time import gmtime, strftime
 
 #usage: ./write_regression_systematic.py path
 
@@ -537,7 +537,16 @@ for job in info:
     except:
         pass
 
+    print 'starting event loop, processing',str(nEntries),'events'
+    j_out=1;
+
     for entry in range(0,nEntries):
+            if ((entry%j_out)==0):
+                if ((entry/j_out)==9 and j_out < 1e4): j_out*=10;
+                print strftime("%Y-%m-%d %H:%M:%S", gmtime()),' - processing event',str(entry)+'/'+str(nEntries), '(cout every',j_out,'events)'
+                sys.stdout.flush()
+
+
             tree.GetEntry(entry)
             
             ### Fill new variable from configuration ###
@@ -756,7 +765,8 @@ for job in info:
                 HaddJetsdR08.dPhi = 0
                 HaddJetsdR08.dEta = 0                
                 
-                if hJet_regWeight[0] > 3. or hJet_regWeight[1] > 3. or hJet_regWeight[0] < 0.3 or hJet_regWeight[1] < 0.3:
+                debug_flag = False
+                if debug_flag and (hJet_regWeight[0] > 3. or hJet_regWeight[1] > 3. or hJet_regWeight[0] < 0.3 or hJet_regWeight[1] < 0.3):
                     print '### Debug event with ptReg/ptNoReg>0.3 or ptReg/ptNoReg<3 ###'
                     print 'Event %.0f' %(Event[0])
                     print 'MET %.2f' %(METet[0])
