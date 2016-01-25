@@ -10,12 +10,7 @@ warnings.filterwarnings( action='ignore', category=RuntimeWarning, message='crea
 ROOT.gROOT.SetBatch(True)
 from optparse import OptionParser
 from btag_reweight import *
-csvpath = "./"
-bweightcalc = BTagWeightCalculator(
-    csvpath + "/csv_rwt_fit_hf_2015_11_20.root",
-    csvpath + "/csv_rwt_fit_lf_2015_11_20.root"
-)
-bweightcalc.btag = "btagCSV"
+
 
 #usage: ./write_regression_systematic.py path
 
@@ -55,6 +50,14 @@ tmpDir = os.environ["TMPDIR"]
 print 'INput samples:\t%s'%pathIN
 print 'OUTput samples:\t%s'%pathOUT
 
+csv_rwt_hf=config.get('BTagHFweights','file')
+csv_rwt_lf=config.get('BTagLFweights','file')
+print "csv_rwt_hf",csv_rwt_hf,"csv_rwt_lf",csv_rwt_lf
+bweightcalc = BTagWeightCalculator(
+    csv_rwt_hf,
+    csv_rwt_lf
+)
+bweightcalc.btag = "btagCSV"
 
 #storagesamples = config.get('Directories','storagesamples')
 
@@ -358,7 +361,7 @@ for job in info:
     bTagWeightcErr1Down_new = array('f',[0])
     bTagWeightcErr2Up_new = array('f',[0])
     bTagWeightcErr2Down_new = array('f',[0])
-    
+
     bTagWeight_new[0] = 1
     bTagWeightJESUp_new[0] = 1
     bTagWeightJESDown_new[0] = 1
@@ -745,7 +748,7 @@ for job in info:
                 for i in range(tree.nJet):
 #                    if tree.Jet_mcFlavour[i]==0: print "tree.Jet_mcFlavour[i]=",tree.Jet_mcFlavour[i]
                     jetsForBtagWeight.append(Jet(tree.Jet_pt[i], tree.Jet_eta[i], tree.Jet_hadronFlavour[i], tree.Jet_btagCSV[i], bweightcalc.btag))
-                    
+
                 bTagWeight_new[0] = bweightcalc.calcEventWeight(
                     jetsForBtagWeight, kind="final", systematic="nominal",
                 )
@@ -769,7 +772,7 @@ for job in info:
                 bTagWeightcErr1Down_new[0] = weights["cErr1Down"]
                 bTagWeightcErr2Up_new[0] = weights["cErr2Up"]
                 bTagWeightcErr2Down_new[0] = weights["cErr2Down"]
-                
+
             
             
             if applyRegression:
