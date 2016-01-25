@@ -22,7 +22,7 @@ def trunc(f, n):
     '''Truncates/pads a float f to n decimal places without rounding'''
     slen = len('%.*f' % (n, f))
     return str(f)[:slen]
-
+        
 
 def removeDouble(seq):
 #    print "@removeDouble:",seq
@@ -35,7 +35,7 @@ def removeDouble(seq):
 
 def getInputSigma(options):
     opts = copy(options)
-
+    
     file = open(opts.dc, "r")
 #    os.chdir(os.path.dirname(opts.dc))
     opts.bin = True
@@ -61,19 +61,19 @@ def getInputSigma(options):
         # begin skip systematics
         skipme = False
         for xs in opts.excludeSyst:
-            if not re.search(xs, lsyst):
+            if not re.search(xs, lsyst): 
                 skipme = True
         if skipme: continue
         # end skip systematics
         counter = 0
         for p in DC.exp[b].keys(): # so that we get only self.DC.processes contributing to this bin
             if errline[b][p] == 0: continue
-            if p == 'QCDscale': continue
+            if p == 'QCD': continue
             if pdf == 'gmN':
                 exps[p][1].append(1/sqrt(pdfargs[0]+1));
             elif pdf == 'gmM':
                 exps[p][1].append(errline[b][p]);
-            elif type(errline[b][p]) == list:
+            elif type(errline[b][p]) == list: 
                 kmax = max(errline[b][p][0], errline[b][p][1], 1.0/errline[b][p][0], 1.0/errline[b][p][1]);
                 exps[p][1].append(kmax-1.);
             elif pdf == 'lnN':
@@ -89,7 +89,7 @@ def get_scale_factors(channel,labels,shift,v_b,input_sigma,nuisances):
     sf_e=[]
 #   correspondency_dictionary = {"TT":"TT","s_Top":"s_Top","Zj0b":"Z0b","Zj1b":"Z1b","Zj2b":"Z2b","Wj0b":"Wj0b","Wj1b":"Wj1b","Wj2b":"Wj2b","Zj1HF":"Z1b","Zj2HF":"Z2b","ZjLF":"Z0b"}
 #   correspondency_dictionary = {"TT":"TT","s_Top":"s_Top","Zj0b":"Zj0b","Zj1b":"Zj1b","Zj2b":"Zj2b","Wj0b":"Wj0b","Wj1b":"Wj1b","Wj2b":"Wj2b","Zj1HF":"Z1b","Zj2HF":"Z2b","ZjLF":"Z0b","s_Top":"s_Top"}
-    correspondency_dictionary = {"TT":"TT","s_Top":"s_Top","Zj0b":"Zj0b","Zj1b":"Zj1b","Zj2b":"Zj2b","Wj0b":"Wj0b","Wj1b":"Wj1b","Wj2b":"Wj2b","Zj1HF":"Z1b","Zj2HF":"Z2b","ZjLF":"Z0b","s_Top":"s_Top", "WJets_0b":"WJets_light","WJets_1b":"WJets_1b","WJets_2b":"WJets_2b","ZJets_0b":"ZJets_light","ZJets_1b":"ZJets_1b","ZJets_2b":"ZJets_2b","QCD":"QCD"}
+    correspondency_dictionary = {"TT":"TT","s_Top":"s_Top","Zj0b":"Zj0b","Zj1b":"Zj1b","Zj2b":"Zj2b","Wj0b":"Wj0b","Wj1b":"Wj1b","Wj2b":"Wj2b","Zj1HF":"Z1b","Zj2HF":"Z2b","ZjLF":"Z0b","s_Top":"s_Top", "WJets_0b":"WJets_light","WJets_1b":"WJets_1b","WJets_2b":"WJets_2b","ZJets_0b":"ZJets_light","ZJets_1b":"ZJets_1b","ZJets_2b":"ZJets_2b",}
 #    print input_sigma
 #    print input_sigma['TT'][1][0]
 #    initial_uncertainty=0.2 # initial uncertainty. @TO FIX: this can go in a config or as input arg
@@ -253,7 +253,7 @@ for i in range(fpf_s.getSize()):
         _nuis_b = fpf_b.at(j)
         _name   = _nuis_b.GetName();
         if name.find('SF') > 0 and ( _name.find('SF') > 0 or options.all ) :
-            #          print name + '  __CORR__  ' + _name
+            #          print name + '  __CORR__  ' + _name 
             #          print fit_b.correlation(name,_name)
 #            print _nuis_b.getError()
 #            print fit_b.correlation(name,_name)*_nuis_b.getError()
@@ -394,7 +394,7 @@ if options.plotsf and options.dc:
             n+=1
             #!! take the values
             #!! the usual order is: dX/sigma_in for background only - sigma_out/sigma_in for background only - dX/sigma_in for background+signal - sigma_out/sigma_in for background+signal - rho
-            v = table[name]
+            v = table[name] 
             #!! forget about the flag
             v = [ re.sub('!','',i) for i in v ]
             v = [ re.sub('\*','',i) for i in v ]
@@ -424,18 +424,18 @@ if options.plotsf and options.dc:
     #shift the elements in the array
 #    for i in range(0,len(y_position)): y_position[i]+=shift
 
-    print 'Y_POSITION'
+    print 'Y_POSITION' 
     print y_position
     # clean the labels
     nuisances = labels
     labels = [re.sub('CMS_vhbb_','',label) for label in labels ]
     try:
-
+        
         labels = [re.sub('_SF_Zvv_13TeV','',label) for label in labels ]
 #        labels = [re.sub('_Zll_SF_','',label) for label in labels ]
 #        labels = [re.sub('_Wln_SF_','',label) for label in labels ]
 #        labels = [re.sub('_Zee_SF_','',label) for label in labels ]
-#        labels = [re.sub('_Zmm_SF_','',label) for label in labels ]
+#        labels = [re.sub('_Zmm_SF_','',label) for label in labels ]                
 #        labels = [re.sub('_SF_Znunu','',label) for label in labels ]
 #        labels = [re.sub('lowPt_8TeV','',label) for label in labels ]
 #        labels = [re.sub('highPt_8TeV','',label) for label in labels ]
@@ -463,7 +463,7 @@ if options.plotsf and options.dc:
     print v_b
     print rho
 
-    label_dictionary = {"TT":"t#bar{t}","ZjHF":"Z+bX","ZjLF":"Z+udscg","Zj1HF":"Z+b","Zj2HF":"Z+b#bar{b}","Wj0b":"W+light","Wj1b":"W+b","Wj2b":"W+b#bar{b}","Zj0b":"Z+light","Zj1b":"Z+b","Zj2b":"Z+b#bar{b}","s_Top":"t", "WJets_0b":"WJets_0b","WJets_1b":"WJets_1b","WJets_2b":"WJets_2b","ZJets_0b":"ZJets_0b","ZJets_1b":"ZJets_1b","ZJets_2b":"ZJets_2b","QCD":"QCD"}
+    label_dictionary = {"TT":"t#bar{t}","ZjHF":"Z+bX","ZjLF":"Z+udscg","Zj1HF":"Z+b","Zj2HF":"Z+b#bar{b}","Wj0b":"W+light","Wj1b":"W+b","Wj2b":"W+b#bar{b}","Zj0b":"Z+light","Zj1b":"Z+b","Zj2b":"Z+b#bar{b}","s_Top":"t", "WJets_0b":"WJets_0b","WJets_1b":"WJets_1b","WJets_2b":"WJets_2b","ZJets_0b":"ZJets_0b","ZJets_1b":"ZJets_1b","ZJets_2b":"ZJets_2b"}
     c = ROOT.TCanvas("c","c",600,600)
 
     input_sigma = getInputSigma(options)
@@ -488,7 +488,7 @@ if options.plotsf and options.dc:
                 latex[labels[i]] = [labels[i],sf[i],sf_e[i],y_position[i]+0.35*shift]
                 print "%s %s pm %s" %(labels[i],sf[i],sf_e[i])
             j+=1
-
+            
     print graphs
     print "latex:",latex
 
@@ -498,14 +498,14 @@ if options.plotsf and options.dc:
     xmax = 1
     labels = removeDouble(labels)
     n= len(labels)
-    h2 = ROOT.TH2F("h2","",1,xmin,xmax,n,0,n*1.2) # x min - max values.
+    h2 = ROOT.TH2F("h2","",1,xmin,xmax,n,0,n*1.2) # x min - max values. 
     h2.GetXaxis().SetTitle("Scale factor")
-
+    
     print "label_dictionary:",label_dictionary
     for i in range(n):
         h2.GetYaxis().SetBinLabel(i+1,label_dictionary[labels[i]])
 
-
+    
     drawSys=False
     if(drawSys):
         #for the moment just random systematics
@@ -514,14 +514,14 @@ if options.plotsf and options.dc:
         g2 = ROOT.TGraphErrors(n,d,p,sys_e,zero)
         g2.SetFillColor(0)
         g2.SetLineWidth(3);
-
+    
     h2.Draw(); ROOT.gStyle.SetOptStat(0);
     h2.GetXaxis().SetTitleSize(0.04);
     h2.GetXaxis().SetLabelSize(0.04);
     h2.GetYaxis().SetLabelSize(0.06);
     #h2.SetFillStyle(4000)
     c.SetFillStyle(4000)
-
+    
     globalFitBand = ROOT.TBox(1.0, 0., 1.5, n);
     globalFitBand.SetFillStyle(3013);
     globalFitBand.SetFillColor(65);
