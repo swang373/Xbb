@@ -41,6 +41,8 @@ parser.add_option("-V", "--variable", dest="var", default="",
 
 (opts, args) = parser.parse_args(argv)
 
+print opts
+
 def readBestFit(theFile):
     file = ROOT.TFile(theFile)
     if file == None: raise RuntimeError, "Cannot open file %s" % theFile
@@ -122,7 +124,7 @@ def getBestFitShapes(procs,theShapes,shapeNui,theBestFit,DC,setup,opts,Dict):
 def drawFromDC():
     config = BetterConfigParser()
     config.read(opts.config)
-    print opts.config
+    print "opts.config:",opts.config
     dataname = ''
     if 'Zmm' in opts.bin: dataname = 'Zmm'
     elif 'Zee' in opts.bin: dataname = 'Zee'

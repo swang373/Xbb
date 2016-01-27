@@ -183,7 +183,8 @@ class ParseInfo:
         #else check the name
         else:
                 for sample in self._samplelist:
-                  for samplename in samplenames.split(','):
+                  if not isinstance(samplenames, (list, tuple)): samplenames = samplenames.split(',')
+                  for samplename in samplenames:
                         # print "get_samples sample is", sample ,'samplename',samplename
                         if sample.name == samplename:
                                 # print 'matched sample.name',sample.name

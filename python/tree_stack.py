@@ -112,6 +112,7 @@ def doPlot():
     datasamples = info.get_samples(data)
     print "datasamples is\n", datasamples
     print "Getting mc sample"
+    print mc
     mcsamples = info.get_samples(mc)
     print "mc sample is\n"
     for sample in mcsamples:

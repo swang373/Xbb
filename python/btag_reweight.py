@@ -208,8 +208,8 @@ class Jet :
     #    return self.eta
 
 
-################################################################
-#Set up offline b-weight calculation
+#################################################################
+##Set up offline b-weight calculation
 
 #csvpath = os.environ['CMSSW_BASE']+"/src/VHbbAnalysis/Heppy/data/csv"
 csvpath = "./"
@@ -217,7 +217,7 @@ bweightcalc = BTagWeightCalculator(
     csvpath + "/csv_rwt_fit_hf_2015_12_14.root",
     csvpath + "/csv_rwt_fit_lf_2015_12_14.root"
 )
-bweightcalc.btag = "btagCSV"
+bweightcalc.btag = "btag"
 
 
 # EXAMPLE (1): per-jet nominal weight

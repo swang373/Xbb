@@ -57,7 +57,7 @@ bweightcalc = BTagWeightCalculator(
     csv_rwt_hf,
     csv_rwt_lf
 )
-bweightcalc.btag = "btagCSV"
+bweightcalc.btag = "btag"
 
 #storagesamples = config.get('Directories','storagesamples')
 
@@ -353,10 +353,14 @@ for job in info:
     bTagWeightLFDown_new = array('f',[0])
     bTagWeightHFUp_new = array('f',[0])
     bTagWeightHFDown_new = array('f',[0])
-    bTagWeightStats1Up_new = array('f',[0])
-    bTagWeightStats1Down_new = array('f',[0])
-    bTagWeightStats2Up_new = array('f',[0])
-    bTagWeightStats2Down_new = array('f',[0])
+    bTagWeightLFStats1Up_new = array('f',[0])
+    bTagWeightLFStats1Down_new = array('f',[0])
+    bTagWeightLFStats2Up_new = array('f',[0])
+    bTagWeightLFStats2Down_new = array('f',[0])
+    bTagWeightHFStats1Up_new = array('f',[0])
+    bTagWeightHFStats1Down_new = array('f',[0])
+    bTagWeightHFStats2Up_new = array('f',[0])
+    bTagWeightHFStats2Down_new = array('f',[0])
     bTagWeightcErr1Up_new = array('f',[0])
     bTagWeightcErr1Down_new = array('f',[0])
     bTagWeightcErr2Up_new = array('f',[0])
@@ -369,10 +373,14 @@ for job in info:
     bTagWeightLFDown_new[0] = 1
     bTagWeightHFUp_new[0] = 1
     bTagWeightHFDown_new[0] = 1
-    bTagWeightStats1Up_new[0] = 1
-    bTagWeightStats1Down_new[0] = 1
-    bTagWeightStats2Up_new[0] = 1
-    bTagWeightStats2Down_new[0] = 1
+    bTagWeightLFStats1Up_new[0] = 1
+    bTagWeightLFStats1Down_new[0] = 1
+    bTagWeightLFStats2Up_new[0] = 1
+    bTagWeightLFStats2Down_new[0] = 1
+    bTagWeightHFStats1Up_new[0] = 1
+    bTagWeightHFStats1Down_new[0] = 1
+    bTagWeightHFStats2Up_new[0] = 1
+    bTagWeightHFStats2Down_new[0] = 1
     bTagWeightcErr1Up_new[0] = 1
     bTagWeightcErr1Down_new[0] = 1
     bTagWeightcErr2Up_new[0] = 1
@@ -385,10 +393,14 @@ for job in info:
     newtree.Branch('bTagWeightLFDown_new',bTagWeightLFDown_new,'bTagWeightLFDown_new/F')
     newtree.Branch('bTagWeightHFUp_new',bTagWeightHFUp_new,'bTagWeightHFUp_new/F')
     newtree.Branch('bTagWeightHFDown_new',bTagWeightHFDown_new,'bTagWeightHFDown_new/F')
-    newtree.Branch('bTagWeightStats1Up_new',bTagWeightStats1Up_new,'bTagWeightStats1Up_new/F')
-    newtree.Branch('bTagWeightStats1Down_new',bTagWeightStats1Down_new,'bTagWeightStats1Down_new/F')
-    newtree.Branch('bTagWeightStats2Up_new',bTagWeightStats2Up_new,'bTagWeightStats2Up_new/F')
-    newtree.Branch('bTagWeightStats2Down_new',bTagWeightStats2Down_new,'bTagWeightStats2Down_new/F')
+    newtree.Branch('bTagWeightLFStats1Up_new',bTagWeightLFStats1Up_new,'bTagWeightLFStats1Up_new/F')
+    newtree.Branch('bTagWeightLFStats1Down_new',bTagWeightLFStats1Down_new,'bTagWeightLFStats1Down_new/F')
+    newtree.Branch('bTagWeightLFStats2Up_new',bTagWeightLFStats2Up_new,'bTagWeightLFStats2Up_new/F')
+    newtree.Branch('bTagWeightLFStats2Down_new',bTagWeightLFStats2Down_new,'bTagWeightLFStats2Down_new/F')
+    newtree.Branch('bTagWeightHFStats1Up_new',bTagWeightHFStats1Up_new,'bTagWeightHFStats1Up_new/F')
+    newtree.Branch('bTagWeightHFStats1Down_new',bTagWeightHFStats1Down_new,'bTagWeightHFStats1Down_new/F')
+    newtree.Branch('bTagWeightHFStats2Up_new',bTagWeightHFStats2Up_new,'bTagWeightHFStats2Up_new/F')
+    newtree.Branch('bTagWeightHFStats2Down_new',bTagWeightHFStats2Down_new,'bTagWeightHFStats2Down_new/F')
     newtree.Branch('bTagWeightcErr1Up_new',bTagWeightcErr1Up_new,'bTagWeightcErr1Up_new/F')
     newtree.Branch('bTagWeightcErr1Down_new',bTagWeightcErr1Down_new,'bTagWeightcErr1Down_new/F')
     newtree.Branch('bTagWeightcErr2Up_new',bTagWeightcErr2Up_new,'bTagWeightcErr2Up_new/F')
@@ -586,13 +598,23 @@ for job in info:
     newVariableNames = []
     try:
         writeNewVariables = eval(config.get("Regression","writeNewVariables"))
+        
+        ## remove MC variables in data ##
+        if job.type == 'DATA':
+            for idx in dict(writeNewVariables):
+                formula = writeNewVariables[idx]
+                if 'gen' in formula or 'Gen' in formula or 'True' in formula or 'true' in formula or 'mc' in formula or 'Mc' in formula:
+                    print "Removing: ",idx," with ",formula
+                    del writeNewVariables[idx]
+
         newVariableNames = writeNewVariables.keys()
         newVariables = {}
         newVariableFormulas = {}
         for variableName in newVariableNames:
+            formula = writeNewVariables[variableName]
             newVariables[variableName] = array('f',[0])
             newtree.Branch(variableName,newVariables[variableName],variableName+'/F')
-            newVariableFormulas[variableName] =ROOT.TTreeFormula(variableName,writeNewVariables[variableName],tree)
+            newVariableFormulas[variableName] =ROOT.TTreeFormula(variableName,formula,tree)
             print "adding variable ",variableName,", using formula",writeNewVariables[variableName]," ."
     except:
         pass
@@ -753,7 +775,7 @@ for job in info:
                     jetsForBtagWeight, kind="final", systematic="nominal",
                 )
                 weights = {}
-                for syst in ["JES", "LF", "HF", "Stats1", "Stats2", "cErr1", "cErr2"]:
+                for syst in ["JES", "LF", "HF", "LFStats1", "LFStats2", "HFStats1", "HFStats2", "cErr1", "cErr2"]:
                     for sdir in ["Up", "Down"]:
                         weights[syst+sdir] = bweightcalc.calcEventWeight(
                             jetsForBtagWeight, kind="final", systematic=syst+sdir
@@ -764,10 +786,14 @@ for job in info:
                 bTagWeightLFDown_new[0] = weights["LFDown"]
                 bTagWeightHFUp_new[0] = weights["HFUp"]
                 bTagWeightHFDown_new[0] = weights["HFDown"]
-                bTagWeightStats1Up_new[0] = weights["Stats1Up"]
-                bTagWeightStats1Down_new[0] = weights["Stats1Down"]
-                bTagWeightStats2Up_new[0] = weights["Stats2Up"]
-                bTagWeightStats2Down_new[0] = weights["Stats2Down"]
+                bTagWeightLFStats1Up_new[0] = weights["LFStats1Up"]
+                bTagWeightLFStats1Down_new[0] = weights["LFStats1Down"]
+                bTagWeightLFStats2Up_new[0] = weights["LFStats2Up"]
+                bTagWeightLFStats2Down_new[0] = weights["LFStats2Down"]
+                bTagWeightHFStats1Up_new[0] = weights["HFStats1Up"]
+                bTagWeightHFStats1Down_new[0] = weights["HFStats1Down"]
+                bTagWeightHFStats2Up_new[0] = weights["HFStats2Up"]
+                bTagWeightHFStats2Down_new[0] = weights["HFStats2Down"]
                 bTagWeightcErr1Up_new[0] = weights["cErr1Up"]
                 bTagWeightcErr1Down_new[0] = weights["cErr1Down"]
                 bTagWeightcErr2Up_new[0] = weights["cErr2Up"]

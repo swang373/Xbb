@@ -7,3 +7,7 @@ bash runAll.sh All ZvvHbb13TeV plot >& log/logPlotAll &
 bash runAll.sh AllBDT ZvvHbb13TeV plot >& log/logPlotAllBDT &
 bash runAll.sh AllBDTLog ZvvHbb13TeV plot >& log/logPlotAllBDTLog &
 
+
+bash runAll.sh NoQCDTest1 ZvvHbb13TeV plot >& log/logPlotNoQCDTest1 &
+bash runAll.sh NoQCDTest2 ZvvHbb13TeV plot >& log/logPlotNoQCDTest2 &
+bash runAll.sh NoQCDTest3 ZvvHbb13TeV plot >& log/logPlotNoQCDTest3 &
