@@ -58,7 +58,7 @@ bweightcalc = BTagWeightCalculator(
     csv_rwt_hf,
     csv_rwt_lf
 )
-bweightcalc.btag = "btagCSV"
+bweightcalc.btag = "btag"
 
 #storagesamples = config.get('Directories','storagesamples')
 
@@ -67,6 +67,14 @@ namelist=opts.names.split(',')
 
 #load info
 info = ParseInfo(samplesinfo,pathIN)
+
+def isInside(map_,eta,phi):
+    bin_ = map_.FindBin(phi,eta)
+    bit = map_.GetBinContent(bin_)
+    if bit>0:
+        return True
+    else:
+        return False
 
 def deltaPhi(phi1, phi2): 
     result = phi1 - phi2
@@ -108,6 +116,13 @@ def corrCSV(btag,  csv, flav):
 def csvReshape(sh, pt, eta, csv, flav):
     return sh.reshape(float(eta), float(pt), float(csv), int(flav))
 
+
+
+filt = ROOT.TFile("plot.root")
+NewUnder    = filt.Get("NewUnder")
+NewOver     = filt.Get("NewOver")
+NewUnderQCD = filt.Get("NewUnderQCD")
+NewOverQCD  = filt.Get("NewOverQCD")
 
 for job in info:
     if not job.name in namelist: continue
@@ -339,10 +354,14 @@ for job in info:
     bTagWeightLFDown_new = array('f',[0])
     bTagWeightHFUp_new = array('f',[0])
     bTagWeightHFDown_new = array('f',[0])
-    bTagWeightStats1Up_new = array('f',[0])
-    bTagWeightStats1Down_new = array('f',[0])
-    bTagWeightStats2Up_new = array('f',[0])
-    bTagWeightStats2Down_new = array('f',[0])
+    bTagWeightLFStats1Up_new = array('f',[0])
+    bTagWeightLFStats1Down_new = array('f',[0])
+    bTagWeightLFStats2Up_new = array('f',[0])
+    bTagWeightLFStats2Down_new = array('f',[0])
+    bTagWeightHFStats1Up_new = array('f',[0])
+    bTagWeightHFStats1Down_new = array('f',[0])
+    bTagWeightHFStats2Up_new = array('f',[0])
+    bTagWeightHFStats2Down_new = array('f',[0])
     bTagWeightcErr1Up_new = array('f',[0])
     bTagWeightcErr1Down_new = array('f',[0])
     bTagWeightcErr2Up_new = array('f',[0])
@@ -368,10 +387,14 @@ for job in info:
     bTagWeightLFDown_new[0] = 1
     bTagWeightHFUp_new[0] = 1
     bTagWeightHFDown_new[0] = 1
-    bTagWeightStats1Up_new[0] = 1
-    bTagWeightStats1Down_new[0] = 1
-    bTagWeightStats2Up_new[0] = 1
-    bTagWeightStats2Down_new[0] = 1
+    bTagWeightLFStats1Up_new[0] = 1
+    bTagWeightLFStats1Down_new[0] = 1
+    bTagWeightLFStats2Up_new[0] = 1
+    bTagWeightLFStats2Down_new[0] = 1
+    bTagWeightHFStats1Up_new[0] = 1
+    bTagWeightHFStats1Down_new[0] = 1
+    bTagWeightHFStats2Up_new[0] = 1
+    bTagWeightHFStats2Down_new[0] = 1
     bTagWeightcErr1Up_new[0] = 1
     bTagWeightcErr1Down_new[0] = 1
     bTagWeightcErr2Up_new[0] = 1
@@ -395,10 +418,14 @@ for job in info:
     newtree.Branch('bTagWeightLFDown_new',bTagWeightLFDown_new,'bTagWeightLFDown_new/F')
     newtree.Branch('bTagWeightHFUp_new',bTagWeightHFUp_new,'bTagWeightHFUp_new/F')
     newtree.Branch('bTagWeightHFDown_new',bTagWeightHFDown_new,'bTagWeightHFDown_new/F')
-    newtree.Branch('bTagWeightStats1Up_new',bTagWeightStats1Up_new,'bTagWeightStats1Up_new/F')
-    newtree.Branch('bTagWeightStats1Down_new',bTagWeightStats1Down_new,'bTagWeightStats1Down_new/F')
-    newtree.Branch('bTagWeightStats2Up_new',bTagWeightStats2Up_new,'bTagWeightStats2Up_new/F')
-    newtree.Branch('bTagWeightStats2Down_new',bTagWeightStats2Down_new,'bTagWeightStats2Down_new/F')
+    newtree.Branch('bTagWeightLFStats1Up_new',bTagWeightLFStats1Up_new,'bTagWeightLFStats1Up_new/F')
+    newtree.Branch('bTagWeightLFStats1Down_new',bTagWeightLFStats1Down_new,'bTagWeightLFStats1Down_new/F')
+    newtree.Branch('bTagWeightLFStats2Up_new',bTagWeightLFStats2Up_new,'bTagWeightLFStats2Up_new/F')
+    newtree.Branch('bTagWeightLFStats2Down_new',bTagWeightLFStats2Down_new,'bTagWeightLFStats2Down_new/F')
+    newtree.Branch('bTagWeightHFStats1Up_new',bTagWeightHFStats1Up_new,'bTagWeightHFStats1Up_new/F')
+    newtree.Branch('bTagWeightHFStats1Down_new',bTagWeightHFStats1Down_new,'bTagWeightHFStats1Down_new/F')
+    newtree.Branch('bTagWeightHFStats2Up_new',bTagWeightHFStats2Up_new,'bTagWeightHFStats2Up_new/F')
+    newtree.Branch('bTagWeightHFStats2Down_new',bTagWeightHFStats2Down_new,'bTagWeightHFStats2Down_new/F')
     newtree.Branch('bTagWeightcErr1Up_new',bTagWeightcErr1Up_new,'bTagWeightcErr1Up_new/F')
     newtree.Branch('bTagWeightcErr1Down_new',bTagWeightcErr1Down_new,'bTagWeightcErr1Down_new/F')
     newtree.Branch('bTagWeightcErr2Up_new',bTagWeightcErr2Up_new,'bTagWeightcErr2Up_new/F')
@@ -473,6 +500,51 @@ for job in info:
         newtree.Branch('hJet_btagCSVFUp',hJet_btagCSVFUp,'hJet_btagCSVFUp[2]/F')
         newtree.Branch('hJet_btagCSVFDown',hJet_btagCSVFDown,'hJet_btagCSVFDown[2]/F')
         
+        #Jet in bad (eta,phi) [for fake-MET]
+        Jet_under = array('f',[0]*50)
+        newtree.Branch('Jet_under',Jet_under,'Jet_under[nJet]/F')
+        Jet_over = array('f',[0]*50)
+        newtree.Branch('Jet_over',Jet_over,'Jet_over[nJet]/F')
+        Jet_underMC = array('f',[0]*50)
+        newtree.Branch('Jet_underMC',Jet_underMC,'Jet_underMC[nJet]/F')
+        Jet_overMC = array('f',[0]*50)
+        newtree.Branch('Jet_overMC',Jet_overMC,'Jet_overMC[nJet]/F')
+        Jet_bad = array('f',[0]*50)
+        newtree.Branch('Jet_bad',Jet_bad,'Jet_bad[nJet]/F')
+
+        DiscardedJet_under = array('f',[0]*50)
+        newtree.Branch('DiscardedJet_under',DiscardedJet_under,'DiscardedJet_under[nDiscardedJet]/F')
+        DiscardedJet_over = array('f',[0]*50)
+        newtree.Branch('DiscardedJet_over',DiscardedJet_over,'DiscardedJet_over[nDiscardedJet]/F')
+        DiscardedJet_underMC = array('f',[0]*50)
+        newtree.Branch('DiscardedJet_underMC',DiscardedJet_underMC,'DiscardedJet_underMC[nDiscardedJet]/F')
+        DiscardedJet_overMC = array('f',[0]*50)
+        newtree.Branch('DiscardedJet_overMC',DiscardedJet_overMC,'DiscardedJet_overMC[nDiscardedJet]/F')
+        DiscardedJet_bad = array('f',[0]*50)
+        newtree.Branch('DiscardedJet_bad',DiscardedJet_bad,'DiscardedJet_bad[nDiscardedJet]/F')
+
+        aLeptons_under = array('f',[0]*50)
+        newtree.Branch('aLeptons_under',aLeptons_under,'aLeptons_under[naLeptons]/F')
+        aLeptons_over = array('f',[0]*50)
+        newtree.Branch('aLeptons_over',aLeptons_over,'aLeptons_over[naLeptons]/F')
+        aLeptons_underMC = array('f',[0]*50)
+        newtree.Branch('aLeptons_underMC',aLeptons_underMC,'aLeptons_underMC[naLeptons]/F')
+        aLeptons_overMC = array('f',[0]*50)
+        newtree.Branch('aLeptons_overMC',aLeptons_overMC,'aLeptons_overMC[naLeptons]/F')
+        aLeptons_bad = array('f',[0]*50)
+        newtree.Branch('aLeptons_bad',aLeptons_bad,'aLeptons_bad[naLeptons]/F')
+
+        vLeptons_under = array('f',[0]*50)
+        newtree.Branch('vLeptons_under',vLeptons_under,'vLeptons_under[nvLeptons]/F')
+        vLeptons_over = array('f',[0]*50)
+        newtree.Branch('vLeptons_over',vLeptons_over,'vLeptons_over[nvLeptons]/F')
+        vLeptons_underMC = array('f',[0]*50)
+        newtree.Branch('vLeptons_underMC',vLeptons_underMC,'vLeptons_underMC[nvLeptons]/F')
+        vLeptons_overMC = array('f',[0]*50)
+        newtree.Branch('vLeptons_overMC',vLeptons_overMC,'vLeptons_overMC[nvLeptons]/F')
+        vLeptons_bad = array('f',[0]*50)
+        newtree.Branch('vLeptons_bad',vLeptons_bad,'vLeptons_bad[nvLeptons]/F')
+
         #JER branches
         hJet_pt_JER_up = array('f',[0]*2)
         newtree.Branch('hJet_pt_JER_up',hJet_pt_JER_up,'hJet_pt_JER_up[2]/F')
@@ -562,13 +634,23 @@ for job in info:
     newVariableNames = []
     try:
         writeNewVariables = eval(config.get("Regression","writeNewVariables"))
+
+        ## remove MC variables in data ##
+        if job.type == 'DATA':
+            for idx in dict(writeNewVariables):
+                formula = writeNewVariables[idx]
+                if 'gen' in formula or 'Gen' in formula or 'True' in formula or 'true' in formula or 'mc' in formula or 'Mc' in formula:
+                    print "Removing: ",idx," with ",formula
+                    del writeNewVariables[idx]
+
         newVariableNames = writeNewVariables.keys()
         newVariables = {}
         newVariableFormulas = {}
         for variableName in newVariableNames:
+            formula = writeNewVariables[variableName]
             newVariables[variableName] = array('f',[0])
             newtree.Branch(variableName,newVariables[variableName],variableName+'/F')
-            newVariableFormulas[variableName] =ROOT.TTreeFormula(variableName,writeNewVariables[variableName],tree)
+            newVariableFormulas[variableName] =ROOT.TTreeFormula(variableName,formula,tree)
             print "adding variable ",variableName,", using formula",writeNewVariables[variableName]," ."
     except:
         pass
@@ -585,7 +667,6 @@ for job in info:
                 if ((entry/j_out)==9 and j_out < 1e4): j_out*=10;
                 print strftime("%Y-%m-%d %H:%M:%S", gmtime()),' - processing event',str(entry)+'/'+str(nEntries), '(cout every',j_out,'events)'
                 sys.stdout.flush()
-
 
             tree.GetEntry(entry)
             
@@ -706,6 +787,31 @@ for job in info:
             jetEt1 = hJ1.Et()
             hJet_mt0 = hJ0.Mt()
             hJet_mt1 = hJ1.Mt()
+            for i in range(tree.nJet):
+                Jet_under[i]    = isInside(NewUnder   ,tree.Jet_eta[i],tree.Jet_phi[i])
+                Jet_over[i]     = isInside(NewOver    ,tree.Jet_eta[i],tree.Jet_phi[i])
+                Jet_underMC[i]  = isInside(NewUnderQCD,tree.Jet_eta[i],tree.Jet_phi[i])
+                Jet_overMC[i]   = isInside(NewOverQCD ,tree.Jet_eta[i],tree.Jet_phi[i])
+                Jet_bad[i]      = Jet_under[i] or Jet_over[i] or Jet_underMC[i] or Jet_overMC[i]
+            for i in range(tree.nDiscardedJet):
+                DiscardedJet_under[i]    = isInside(NewUnder   ,tree.DiscardedJet_eta[i],tree.DiscardedJet_phi[i])
+                DiscardedJet_over[i]     = isInside(NewOver    ,tree.DiscardedJet_eta[i],tree.DiscardedJet_phi[i])
+                DiscardedJet_underMC[i]  = isInside(NewUnderQCD,tree.DiscardedJet_eta[i],tree.DiscardedJet_phi[i])
+                DiscardedJet_overMC[i]   = isInside(NewOverQCD ,tree.DiscardedJet_eta[i],tree.DiscardedJet_phi[i])
+                DiscardedJet_bad[i]      = DiscardedJet_under[i] or DiscardedJet_over[i] or DiscardedJet_underMC[i] or DiscardedJet_overMC[i]
+            for i in range(tree.naLeptons):
+                aLeptons_under[i]    = isInside(NewUnder   ,tree.aLeptons_eta[i],tree.aLeptons_phi[i])
+                aLeptons_over[i]     = isInside(NewOver    ,tree.aLeptons_eta[i],tree.aLeptons_phi[i])
+                aLeptons_underMC[i]  = isInside(NewUnderQCD,tree.aLeptons_eta[i],tree.aLeptons_phi[i])
+                aLeptons_overMC[i]   = isInside(NewOverQCD ,tree.aLeptons_eta[i],tree.aLeptons_phi[i])
+                aLeptons_bad[i]      = aLeptons_under[i] or aLeptons_over[i] or aLeptons_underMC[i] or aLeptons_overMC[i]
+            for i in range(tree.nvLeptons):
+                vLeptons_under[i]    = isInside(NewUnder   ,tree.vLeptons_eta[i],tree.vLeptons_phi[i])
+                vLeptons_over[i]     = isInside(NewOver    ,tree.vLeptons_eta[i],tree.vLeptons_phi[i])
+                vLeptons_underMC[i]  = isInside(NewUnderQCD,tree.vLeptons_eta[i],tree.vLeptons_phi[i])
+                vLeptons_overMC[i]   = isInside(NewOverQCD ,tree.vLeptons_eta[i],tree.vLeptons_phi[i])
+                vLeptons_bad[i]      = vLeptons_under[i] or vLeptons_over[i] or vLeptons_underMC[i] or vLeptons_overMC[i]
+
             if not job.type == 'DATA':
                 jetsForBtagWeight = []
                 for i in range(tree.nJet):
@@ -716,7 +822,7 @@ for job in info:
                     jetsForBtagWeight, kind="final", systematic="nominal",
                 )
                 weights = {}
-                for syst in ["JES", "LF", "HF", "Stats1", "Stats2", "cErr1", "cErr2"]:
+                for syst in ["JES", "LF", "HF", "LFStats1", "LFStats2", "HFStats1", "HFStats2", "cErr1", "cErr2"]:
                     for sdir in ["Up", "Down"]:
                         weights[syst+sdir] = bweightcalc.calcEventWeight(
                             jetsForBtagWeight, kind="final", systematic=syst+sdir
@@ -727,10 +833,14 @@ for job in info:
                 bTagWeightLFDown_new[0] = weights["LFDown"]
                 bTagWeightHFUp_new[0] = weights["HFUp"]
                 bTagWeightHFDown_new[0] = weights["HFDown"]
-                bTagWeightStats1Up_new[0] = weights["Stats1Up"]
-                bTagWeightStats1Down_new[0] = weights["Stats1Down"]
-                bTagWeightStats2Up_new[0] = weights["Stats2Up"]
-                bTagWeightStats2Down_new[0] = weights["Stats2Down"]
+                bTagWeightLFStats1Up_new[0] = weights["LFStats1Up"]
+                bTagWeightLFStats1Down_new[0] = weights["LFStats1Down"]
+                bTagWeightLFStats2Up_new[0] = weights["LFStats2Up"]
+                bTagWeightLFStats2Down_new[0] = weights["LFStats2Down"]
+                bTagWeightHFStats1Up_new[0] = weights["HFStats1Up"]
+                bTagWeightHFStats1Down_new[0] = weights["HFStats1Down"]
+                bTagWeightHFStats2Up_new[0] = weights["HFStats2Up"]
+                bTagWeightHFStats2Down_new[0] = weights["HFStats2Down"]
                 bTagWeightcErr1Up_new[0] = weights["cErr1Up"]
                 bTagWeightcErr1Down_new[0] = weights["cErr1Down"]
                 bTagWeightcErr2Up_new[0] = weights["cErr2Up"]
