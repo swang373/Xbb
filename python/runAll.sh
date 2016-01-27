@@ -146,39 +146,55 @@ echo ${configList}
 #Run the scripts
 #------------------------------------
 
+echo "============================"
+echo "Will Lauch the script"
+echo "============================"
+echo "The command is"
+
 if [ $task = "prep" ]; then
     # ./prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList}
 #    print "./prepare_environment_with_config.py --samples" $sample "--config "${energy}"config/"${configList}" --config "${energy}"config/samples_nosplit.cfg #sometime"
-    echo ./prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.ini #sometime I need this add: please check --config ${energy}
+    echo "./prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.ini" #sometime I need this add: please check --config ${energy}
     ./prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.ini #sometime I need this add: please check --config ${energy}config/samples_nosplit.cfg
 fi
 if [ $task = "trainReg" ]; then
     # ./trainRegression.py --config ${energy}config/${configList}
+    echo "./trainRegression.py --config ${energy}config/${configList} --config ${energy}config/regression.ini"
     ./trainRegression.py --config ${energy}config/${configList} --config ${energy}config/regression.ini
 fi
 if [ $task = "sys" ]; then
+    echo "./write_regression_systematics.py --samples $sample --config ${energy}config/${configList}"
     ./write_regression_systematics.py --samples $sample --config ${energy}config/${configList}
 fi
 if [ $task = "eval" ]; then
+    echo "./evaluateMVA.py --discr $MVAList --samples $sample --config ${energy}config/${configList}"
     ./evaluateMVA.py --discr $MVAList --samples $sample --config ${energy}config/${configList}
 fi
 if [ $task = "syseval" ]; then
+    echo "./write_regression_systematics.py --samples $sample --config ${energy}config/${configList}"
     ./write_regression_systematics.py --samples $sample --config ${energy}config/${configList}
+    echo "./evaluateMVA.py --discr $MVAList --samples $sample --config ${energy}config/${configList}"
     ./evaluateMVA.py --discr $MVAList --samples $sample --config ${energy}config/${configList}
 fi
 if [ $task = "train" ]; then
-    echo ./train.py --training $sample --config ${energy}config/${configList} --local True
+    echo "./train.py --training $sample --config ${energy}config/${configList} --local True"
     ./train.py --training $sample --config ${energy}config/${configList} --local True
 fi
 if [ $task = "plot" ]; then
+    echo "./tree_stack.py --region $sample --config ${energy}config/${configList}"
     ./tree_stack.py --region $sample --config ${energy}config/${configList}
 fi
 if [ $task = "dc" ]; then
-    echo ./workspace_datacard.py --variable $sample --config ${energy}config/${configList}  --config ${energy}config/datacards.ini
+    echo "./workspace_datacard.py --variable $sample --config ${energy}config/${configList}  --config ${energy}config/datacards.ini"
     ./workspace_datacard.py --variable $sample --config ${energy}config/${configList}  --config ${energy}config/datacards.ini
 fi
 if [ $task = "split" ]; then
+    echo "./split_tree.py --samples $sample --config ${energy}config/${configList} --max-events $job_id"
     ./split_tree.py --samples $sample --config ${energy}config/${configList} --max-events $job_id
+fi
+if [ $task = "stack" ]; then
+    echo "./manualStack.py --config ${energy}config/${configList}"
+    ./manualStack.py --config ${energy}config/${configList}
 fi
 
 if [ $task = "mva_opt" ]; then

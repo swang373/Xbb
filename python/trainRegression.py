@@ -16,9 +16,9 @@ if opts.config =="":
 
 #load config
 config = BetterConfigParser()
-print opts.config
+print "opts.config",opts.config
 config.read(opts.config)
-print config
+print "config",config
 
 print "Launching RegressionTrainer"
 RegTrainer = RegressionTrainer(config)
