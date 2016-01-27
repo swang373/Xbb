@@ -11,6 +11,7 @@ ROOT.gROOT.SetBatch(True)
 from optparse import OptionParser
 from btag_reweight import *
 from time import gmtime, strftime
+from muonSF import *
 
 #usage: ./write_regression_systematic.py path
 
@@ -347,6 +348,19 @@ for job in info:
     bTagWeightcErr2Up_new = array('f',[0])
     bTagWeightcErr2Down_new = array('f',[0])
 
+    #Add muon SF
+    muTriggSFWeight = array('f',[0])
+    muTriggSFWeightUp = array('f',[0])
+    muTriggSFWeightDown = array('f',[0])
+    muIDSFWeight = array('f',[0])
+    muIDSFWeightUp = array('f',[0])
+    muIDSFWeightDown = array('f',[0])
+    muIsoSFWeight = array('f',[0])
+    muIsoSFWeightUp = array('f',[0])
+    muIsoSFWeightDown = array('f',[0])
+
+
+
     bTagWeight_new[0] = 1
     bTagWeightJESUp_new[0] = 1
     bTagWeightJESDown_new[0] = 1
@@ -363,6 +377,17 @@ for job in info:
     bTagWeightcErr2Up_new[0] = 1
     bTagWeightcErr2Down_new[0] = 1
 
+    #Add muon SF
+    muTriggSFWeight[0] = 1
+    muTriggSFWeightUp[0] = 1
+    muTriggSFWeightDown[0] = 1
+    muIDSFWeight[0] = 1
+    muIDSFWeightUp[0] = 1
+    muIDSFWeightDown[0] = 1
+    muIsoSFWeight[0] = 1
+    muIsoSFWeightUp[0] = 1
+    muIsoSFWeightDown[0] = 1
+
     newtree.Branch('bTagWeight_new',bTagWeight_new,'bTagWeight_new/F')
     newtree.Branch('bTagWeightJESUp_new',bTagWeightJESUp_new,'bTagWeightJESUp_new/F')
     newtree.Branch('bTagWeightJESDown_new',bTagWeightJESDown_new,'bTagWeightJESDown_new/F')
@@ -378,6 +403,17 @@ for job in info:
     newtree.Branch('bTagWeightcErr1Down_new',bTagWeightcErr1Down_new,'bTagWeightcErr1Down_new/F')
     newtree.Branch('bTagWeightcErr2Up_new',bTagWeightcErr2Up_new,'bTagWeightcErr2Up_new/F')
     newtree.Branch('bTagWeightcErr2Down_new',bTagWeightcErr2Down_new,'bTagWeightcErr2Down_new/F')
+
+    #Add muon SF
+    newtree.Branch('muTriggSFWeight',muTriggSFWeight,'muTriggSFWeight/F')
+    newtree.Branch('muTriggSFWeightUp',muTriggSFWeightUp,'muTriggSFWeightUp/F')
+    newtree.Branch('muTriggSFWeightDown',muTriggSFWeightDown,'muTriggSFWeightDown/F')
+    newtree.Branch('muIDSFWeight',muIDSFWeight,'muIDSFWeight/F')
+    newtree.Branch('muIDSFWeightUp',muIDSFWeightUp,'muIDSFWeightUp/F')
+    newtree.Branch('muIDSFWeightDown',muIDSFWeightDown,'muIDSFWeightDown/F')
+    newtree.Branch('muIsoSFWeight',muIsoSFWeight,'muIsoSFWeight/F')
+    newtree.Branch('muIsoSFWeightUp',muIsoSFWeightUp,'muIsoSFWeightUp/F')
+    newtree.Branch('muIsoSFWeightDown',muIsoSFWeightDown,'muIsoSFWeightDown/F')
 
     #Angular Likelihood
     angleHB = array('f',[0])
@@ -540,6 +576,10 @@ for job in info:
     print 'starting event loop, processing',str(nEntries),'events'
     j_out=1;
 
+#########################
+#Start event loop
+#########################
+
     for entry in range(0,nEntries):
             if ((entry%j_out)==0):
                 if ((entry/j_out)==9 and j_out < 1e4): j_out*=10;
@@ -696,7 +736,37 @@ for job in info:
                 bTagWeightcErr2Up_new[0] = weights["cErr2Up"]
                 bTagWeightcErr2Down_new[0] = weights["cErr2Down"]
 
-            
+                ##########################
+                #Adding mu SFs
+                ##########################
+
+                jsons = {
+                    'json/SingleMuonTrigger_Z_RunCD_Reco74X_Dec1.json' : 'runD_IsoMu20_OR_IsoTkMu20_HLTv4p3_PtEtaBins',
+                    'json/MuonIso_Z_RunCD_Reco74X_Dec1.json' : 'NUM_LooseRelIso_DEN_LooseID_PAR_pt_spliteta_bin1',
+                    'json/MuonID_Z_RunCD_Reco74X_Dec1.json' : 'NUM_LooseID_DEN_genTracks_PAR_pt_spliteta_bin1'
+                    }
+
+                for j, name in jsons.iteritems():
+                    weight = []
+                    muonCorr = MuonSF(j, name)
+                    weight.append(muonCorr.get_2D( tree.vLeptons_pt[0], tree.vLeptons_eta[0]))
+                    weight.append(muonCorr.get_2D( tree.vLeptons_pt[1], tree.vLeptons_eta[1]))
+                    if j.find('Trigger') != -1:
+                        #Eff l1 x Eff l2
+                        muTriggSFWeight[0] = weight[0][0]*weight[1][0]
+                        muTriggSFWeightUp[0] = (weight[0][0]+weight[0][1])*(weight[1][0]+weight[1][1])
+                        muTriggSFWeightDown[0] = (weight[0][0]-weight[0][1])*(weight[1][0]-weight[1][1])
+                    elif j.find('MuonID') != -1:
+                        muIDSFWeight[0] = weight[0][0]*weight[1][0]
+                        muIDSFWeightUp[0] = (weight[0][0]+weight[0][1])*(weight[1][0]+weight[1][1])
+                        muIDSFWeightDown[0] = (weight[0][0]-weight[0][1])*(weight[1][0]-weight[1][1])
+                    elif j.find('MuonIso') != -1:
+                        muIsoSFWeight[0] = weight[0][0]*weight[1][0]
+                        muIsoSFWeightUp[0] = (weight[0][0]+weight[0][1])*(weight[1][0]+weight[1][1])
+                        muIsoSFWeightDown[0] = (weight[0][0]-weight[0][1])*(weight[1][0]-weight[1][1])
+                    else:
+                        sys.exit('@ERROR: SF list doesn\'t match json files. Abort')
+
             
             if applyRegression:
                 HNoReg.HiggsFlag = 1
