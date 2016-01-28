@@ -10,7 +10,7 @@ argv.remove( '-b-' )
 if len(argv) == 0: raise RuntimeError, "Usage: mlfitNormsToText.py [ -u ] mlfit.root";
 
 errors = False
-if len(argv) > 2 and argv[1] == "-u": 
+if len(argv) > 2 and argv[1] == "-u":
     errors = True
     argv[1] = argv[2];
 file = ROOT.TFile.Open(argv[1]);

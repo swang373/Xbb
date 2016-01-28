@@ -22,7 +22,7 @@ def fromDictToTH2(dict_,hist2D):
 
 
 def getSignificance(x,y,maxX,maxY,plot2D,clusterMap,rangeXbins,rangeYbins,vetoXbins,vetoYbins):
-    sum_  = 25 ## to avoid 1/0 
+    sum_  = 25 ## to avoid 1/0
     count = 0
     for i in range(x-rangeXbins,x+rangeXbins+1):
         i = i%maxX
@@ -143,7 +143,7 @@ for x in range(Nxaxis):
         if NewOver.GetBinContent(x,y)==1    : FiltOver.SetBinContent(x,y,0.)
         if NewUnderQCD.GetBinContent(x,y)==1: FiltUnderQCD.SetBinContent(x,y,0.)
         if NewOverQCD.GetBinContent(x,y)==1 : FiltOverQCD.SetBinContent(x,y,0.)
-        
+
 UnderQCD.Write()
 OverQCD.Write()
 Under.Write()

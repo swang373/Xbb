@@ -3,7 +3,7 @@ from array import array
 from math import *
 
 def getSignificance(x,y,maxX,band,plot2D,clusterMap,Xveto):
-    sum_  = 25 ## to avoid 1/0 
+    sum_  = 25 ## to avoid 1/0
     count = 0
     for i in range(maxX):
         for j in range(y-band,y+band+1):

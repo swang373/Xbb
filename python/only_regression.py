@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import sys
 import os,subprocess
-import ROOT 
+import ROOT
 import math
 import shutil
 from array import array
@@ -15,9 +15,9 @@ from optparse import OptionParser
 #os.mkdir(path+'/sys')
 argv = sys.argv
 parser = OptionParser()
-#parser.add_option("-P", "--path", dest="path", default="", 
+#parser.add_option("-P", "--path", dest="path", default="",
 #                      help="path to samples")
-parser.add_option("-S", "--samples", dest="names", default="", 
+parser.add_option("-S", "--samples", dest="names", default="",
                       help="samples you want to run on")
 parser.add_option("-C", "--config", dest="config", default=[], action="append",
                       help="configuration defining the plots to make")
@@ -57,7 +57,7 @@ namelist=opts.names.split(',')
 #load info
 info = ParseInfo(samplesinfo,pathIN)
 
-def deltaPhi(phi1, phi2): 
+def deltaPhi(phi1, phi2):
     result = phi1 - phi2
     while (result > math.pi): result -= 2*math.pi
     while (result <= -math.pi): result += 2*math.pi
@@ -131,26 +131,26 @@ for job in info:
             continue
         output.cd()
         obj.Write(key.GetName())
-        
+
     input.cd()
     tree = input.Get(job.tree)
     nEntries = tree.GetEntries()
-        
+
     H = ROOT.H()
     HNoReg = ROOT.H()
     HaddJetsdR08 = ROOT.H()
     HaddJetsdR08NoReg = ROOT.H()
-    
+
 #    tree.SetBranchStatus('H',0)
     output.cd()
     newtree = tree.CloneTree(0)
-        
+
     hJ0 = ROOT.TLorentzVector()
     hJ1 = ROOT.TLorentzVector()
     vect = ROOT.TLorentzVector()
     #hFJ0 = ROOT.TLorentzVector()
     #hFJ1 = ROOT.TLorentzVector()
-        
+
     writeNewVariables = eval(config.get("Regression","writeNewVariables"))
     regWeight = config.get("Regression","regWeight")
     regDict = eval(config.get("Regression","regDict"))
@@ -167,7 +167,7 @@ for job in info:
     newtree.Branch( 'HNoReg', HNoReg , 'HiggsFlag/I:mass/F:pt/F:eta/F:phi/F:dR/F:dPhi/F:dEta/F' )
     newtree.Branch( 'HaddJetsdR08', HaddJetsdR08 , 'HiggsFlag/I:mass/F:pt/F:eta/F:phi/F:dR/F:dPhi/F:dEta/F' )
     newtree.Branch( 'HaddJetsdR08NoReg', HaddJetsdR08NoReg , 'HiggsFlag/I:mass/F:pt/F:eta/F:phi/F:dR/F:dPhi/F:dEta/F' )
-    #FatHReg = array('f',[0]*2) 
+    #FatHReg = array('f',[0]*2)
     #newtree.Branch('FatHReg',FatHReg,'filteredmass:filteredpt/F')
     Event = array('f',[0])
     METet = array('f',[0])
@@ -247,14 +247,14 @@ for job in info:
             formula = formulaX.replace("[X]",brakets)
             formula = formula.replace("[0]","[%.0f]" %i)
             theForms['form_reg_%s_%.0f'%(key+syst,i)] = ROOT.TTreeFormula("form_reg_%s_%.0f"%(key+syst,i),'%s' %(formula),tree)
-        return 
+        return
 
-    addVarsToReader(readerJet0,regDict,regVars,theVars0,theForms,0,hJet_MET_dPhiArray,METet,rho,hJet_MtArray,hJet_etarray,hJet_rawPtArray)    
-    addVarsToReader(readerJet1,regDict,regVars,theVars1,theForms,1,hJet_MET_dPhiArray,METet,rho,hJet_MtArray,hJet_etarray,hJet_rawPtArray)    
+    addVarsToReader(readerJet0,regDict,regVars,theVars0,theForms,0,hJet_MET_dPhiArray,METet,rho,hJet_MtArray,hJet_etarray,hJet_rawPtArray)
+    addVarsToReader(readerJet1,regDict,regVars,theVars1,theForms,1,hJet_MET_dPhiArray,METet,rho,hJet_MtArray,hJet_etarray,hJet_rawPtArray)
 
     readerJet0.BookMVA( "jet0Regression", regWeight )
     readerJet1.BookMVA( "jet1Regression", regWeight )
-        
+
     #Add training Flag
     EventForTraining = array('i',[0])
     newtree.Branch('EventForTraining',EventForTraining,'EventForTraining/I')
@@ -287,7 +287,7 @@ for job in info:
     for entry in range(0,nEntries):
             tree.GetEntry(entry)
             if entry>10000: break
-            
+
             if tree.nJet<=tree.hJCidx[0] or tree.nJet<=tree.hJCidx[1]:
                 print('tree.nJet<=tree.hJCidx[0] or tree.nJet<=tree.hJCidx[1]',tree.nJet,tree.hJCidx[0],tree.hJCidx[1])
                 print('skip event')
@@ -306,7 +306,7 @@ for job in info:
                 print "tree.hJCidx[1]",tree.hJCidx[1]
                 if tree.hJCidx[1] >=tree.nJet : tree.hJCidx[1] =1
                 if tree.hJCidx[0] >=tree.nJet : tree.hJCidx[0] =0
-                
+
 
             hJet_pt[0] = hJet_pt0
             hJet_pt[1] = hJet_pt1
@@ -349,8 +349,8 @@ for job in info:
             jetEt1 = hJ1.Et()
             hJet_mt0 = hJ0.Mt()
             hJet_mt1 = hJ1.Mt()
-            
-            
+
+
             if applyRegression:
                 HNoReg.HiggsFlag = 1
                 HNoReg.mass = (hJ0+hJ1).M()
@@ -363,9 +363,9 @@ for job in info:
 
                 HNoRegwithFSR = ROOT.TLorentzVector()
                 HNoRegwithFSR.SetPtEtaPhiM(HNoReg.pt,HNoReg.eta,HNoReg.phi,HNoReg.mass)
-                
+
                 HNoRegwithFSR = addAdditionalJets(HNoRegwithFSR,tree)
-                
+
                 HaddJetsdR08NoReg.HiggsFlag = 1
                 HaddJetsdR08NoReg.mass = HNoRegwithFSR.M()
                 HaddJetsdR08NoReg.pt = HNoRegwithFSR.Pt()
@@ -373,8 +373,8 @@ for job in info:
                 HaddJetsdR08NoReg.phi = HNoRegwithFSR.Phi()
                 HaddJetsdR08NoReg.dR = 0
                 HaddJetsdR08NoReg.dPhi = 0
-                HaddJetsdR08NoReg.dEta = 0                
-                
+                HaddJetsdR08NoReg.dEta = 0
+
                 hJet_MtArray[0][0] = hJ0.Mt()
                 hJet_MtArray[1][0] = hJ1.Mt()
                 hJet_etarray[0][0] = hJ0.Et()
@@ -402,12 +402,12 @@ for job in info:
                 H.dR = hJ0.DeltaR(hJ1)
                 H.dPhi = hJ0.DeltaPhi(hJ1)
                 H.dEta = abs(hJ0.Eta()-hJ1.Eta())
-                
+
                 HwithFSR = ROOT.TLorentzVector()
                 HwithFSR.SetPtEtaPhiM(H.pt,H.eta,H.phi,H.mass)
-                
+
                 HwithFSR = addAdditionalJets(HwithFSR,tree)
-                
+
                 HaddJetsdR08.HiggsFlag = 1
                 HaddJetsdR08.mass = HwithFSR.M()
                 HaddJetsdR08.pt = HwithFSR.Pt()
@@ -415,8 +415,8 @@ for job in info:
                 HaddJetsdR08.phi = HwithFSR.Phi()
                 HaddJetsdR08.dR = 0
                 HaddJetsdR08.dPhi = 0
-                HaddJetsdR08.dEta = 0                
-                
+                HaddJetsdR08.dEta = 0
+
                 if False:#hJet_regWeight[0] > 3. or hJet_regWeight[1] > 3. or hJet_regWeight[0] < 0.3 or hJet_regWeight[1] < 0.3:
                     print '### Debug event with ptReg/ptNoReg>0.3 or ptReg/ptNoReg<3 ###'
                     print 'Event %.0f' %(Event[0])
@@ -441,13 +441,13 @@ for job in info:
                     print 'rMass0 %.2f' %(rMass0)
                     print 'rMass1 %.2f' %(rMass1)
                     print 'Mass %.2f' %(H.mass)
-                    
+
                     print 'hJet_pt0: ',hJet_pt0
                     print 'hJet_pt1: ',hJet_pt1
 
 ############################################
             newtree.Fill()
-                   
+
     print 'Exit loop'
     newtree.AutoSave()
     print 'Save'

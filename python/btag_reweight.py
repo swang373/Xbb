@@ -5,7 +5,7 @@ import numpy as np
 
 class BTagWeightCalculator:
     """
-    Calculates the jet and event correction factor as a weight based on the b-tagger shape-dependent data/mc 
+    Calculates the jet and event correction factor as a weight based on the b-tagger shape-dependent data/mc
     corrections.
 
     Currently, the recipe is only described in https://twiki.cern.ch/twiki/bin/viewauth/CMS/TTbarHbbRun2ReferenceAnalysis#Applying_CSV_weights
@@ -25,7 +25,7 @@ class BTagWeightCalculator:
         self.pt_bins_hf = np.array([20, 30, 40, 60, 100])
         self.eta_bins_hf = np.array([0, 2.41])
 
-        #bin edges of the light-flavour histograms 
+        #bin edges of the light-flavour histograms
         self.pt_bins_lf = np.array([20, 30, 40, 60])
         self.eta_bins_lf = np.array([0, 0.8, 1.6, 2.41])
 
@@ -163,7 +163,7 @@ class BTagWeightCalculator:
 
         if csv > 1:
             csv = 1
-            
+
         csvbin = 1
         csvbin = h.FindBin(csv)
         #This is to fix csv=-10 not being accounted for in CSV SF input hists
@@ -186,7 +186,7 @@ class BTagWeightCalculator:
 
         wtot = np.prod(weights)
         return wtot
-      
+
 
 ################################################################
 # A dummy class of a jet object
@@ -237,7 +237,7 @@ for syst in ["JES", "LF", "HF", "LFStats1", "LFStats2", "HFStats1", "HFStats2", 
         print syst, sdir, ": ", jet_weight_shift
 
 
-# EXAMPLE (3): the nominal event weight 
+# EXAMPLE (3): the nominal event weight
 jet1 = Jet(50., -1.2, 5, 0.99, bweightcalc.btag)
 jet2 = Jet(30., 1.8, 4, 0.2, bweightcalc.btag)
 jet3 = Jet(100., 2.2, 0, 0.1, bweightcalc.btag)
@@ -250,7 +250,7 @@ event_weight_nominal = bweightcalc.calcEventWeight(
 print "Nominal event weight: ", event_weight_nominal
 
 
-# EXAMPLE (4): the systematic up/down event weight 
+# EXAMPLE (4): the systematic up/down event weight
 for syst in ["JES", "LF", "HF", "LFStats1", "LFStats2", "HFStats1", "HFStats2", "cErr1", "cErr2"]:
     for sdir in ["Up", "Down"]:
         event_weight_shift = bweightcalc.calcEventWeight(

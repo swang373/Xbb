@@ -8,7 +8,7 @@ rangeY = 1.0
 def getSignificance(x,y,maxX,maxY,band,plot2D,clusterMap,Xveto):
     rangeXbins = int(rangeX/3.2/2*maxX)
     rangeYbins = int(rangeY/4.7/2*maxY)
-    sum_  = 25 ## to avoid 1/0 
+    sum_  = 25 ## to avoid 1/0
     count = 0
     for i in range(x-rangeXbins,x+rangeXbins+1):
         x = x%maxX
