@@ -914,7 +914,7 @@ for job in info:
                         # sys.exit('@ERROR: SF list doesn\'t match json files. Abort')
 # =======
                 # if tree.nvLeptons>=2:
-                if channel == "Znn":
+                if channel == "Zmm":
                     for j, name in jsons.iteritems():
                         weight = []
                         muonCorr = MuonSF(j, name)
