@@ -687,7 +687,7 @@ for job in info:
 #Start event loop
 #########################
 
-    for entry in range(0,1000):#nEntries):
+    for entry in range(0,nEntries):
             if ((entry%j_out)==0):
                 if ((entry/j_out)==9 and j_out < 1e4): j_out*=10;
                 print strftime("%Y-%m-%d %H:%M:%S", gmtime()),' - processing event',str(entry)+'/'+str(nEntries), '(cout every',j_out,'events)'
