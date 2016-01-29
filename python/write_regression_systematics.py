@@ -380,6 +380,8 @@ for job in info:
     vLeptons_SFerr_IsoTight = array('f',2*[0])
     vLeptons_SF_IsoLoose = array('f',2*[0])
     vLeptons_SFerr_IsoLoose = array('f',2*[0])
+    vLeptons_Eff_HLT = array('f',2*[0])
+    vLeptons_Efferr_HLT = array('f',2*[0])
 
 
 
@@ -425,6 +427,10 @@ for job in info:
     vLeptons_SF_IsoLoose[1] = 1
     vLeptons_SFerr_IsoLoose[0] = 1
     vLeptons_SFerr_IsoLoose[1] = 1
+    vLeptons_Eff_HLT[0]
+    vLeptons_Eff_HLT[1]
+    vLeptons_Efferr_HLT[0]
+    vLeptons_Efferr_HLT[1]
 
     newtree.Branch('bTagWeight_new',bTagWeight_new,'bTagWeight_new/F')
     newtree.Branch('bTagWeightJESUp_new',bTagWeightJESUp_new,'bTagWeightJESUp_new/F')
@@ -457,6 +463,8 @@ for job in info:
     newtree.Branch('vLeptons_SFerr_IsoTight',vLeptons_SFerr_IsoTight,'vLeptons_SFerr_IsoTight[2]/F')
     newtree.Branch('vLeptons_SF_IsoLoose',vLeptons_SF_IsoLoose,'vLeptons_SF_IsoLoose[2]/F')
     newtree.Branch('vLeptons_SFerr_IsoLoose',vLeptons_SFerr_IsoLoose,'vLeptons_SFerr_IsoLoose[2]/F')
+    newtree.Branch('vLeptons_Eff_HLT',vLeptons_Eff_HLT,'vLeptons_Eff_HLT[2]/F')
+    newtree.Branch('vLeptons_Efferr_HLT',vLeptons_Efferr_HLT,'vLeptons_Efferr_HLT[2]/F')
 
     #Angular Likelihood
     angleHB = array('f',[0])
@@ -679,7 +687,7 @@ for job in info:
 #Start event loop
 #########################
 
-    for entry in range(0,nEntries):
+    for entry in range(0,1000):#nEntries):
             if ((entry%j_out)==0):
                 if ((entry/j_out)==9 and j_out < 1e4): j_out*=10;
                 print strftime("%Y-%m-%d %H:%M:%S", gmtime()),' - processing event',str(entry)+'/'+str(nEntries), '(cout every',j_out,'events)'
@@ -872,7 +880,8 @@ for job in info:
                 jsons = {
                     'json/SingleMuonTrigger_Z_RunCD_Reco74X_Dec1.json' : 'runD_IsoMu20_OR_IsoTkMu20_HLTv4p3_PtEtaBins',
                     'json/MuonIso_Z_RunCD_Reco74X_Dec1.json' : 'NUM_LooseRelIso_DEN_LooseID_PAR_pt_spliteta_bin1',
-                    'json/MuonID_Z_RunCD_Reco74X_Dec1.json' : 'NUM_LooseID_DEN_genTracks_PAR_pt_spliteta_bin1'
+                    'json/MuonID_Z_RunCD_Reco74X_Dec1.json' : 'NUM_LooseID_DEN_genTracks_PAR_pt_spliteta_bin1',
+                    'json/SingleMuonTrigger_Z_RunCD_Reco74X_Dec1_MC.json' : 'runD_IsoMu20_OR_IsoTkMu20_HLTv4p3_PtEtaBins'
                     }
 
                 for j, name in jsons.iteritems():
@@ -886,6 +895,10 @@ for job in info:
                         vLeptons_SF_HLT[1] = weight[1][0]
                         vLeptons_SFerr_HLT[0] = weight[0][1]
                         vLeptons_SFerr_HLT[1] = weight[1][1]
+                        vLeptons_Eff_HLT[0] = weight[0][0]
+                        vLeptons_Eff_HLT[1] = weight[1][0]
+                        vLeptons_Efferr_HLT[0] = weight[0][1]
+                        vLeptons_Efferr_HLT[1] = weight[1][1]
                     elif j.find('MuonID') != -1:
                         vLeptons_SF_IdLoose[0] = weight[0][0]
                         vLeptons_SF_IdLoose[1] = weight[1][0]
