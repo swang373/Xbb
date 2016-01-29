@@ -370,15 +370,17 @@ for job in info:
     bTagWeightcErr2Down_new = array('f',[0])
 
     #Add muon SF
-    muTriggSFWeight = array('f',[0])
-    muTriggSFWeightUp = array('f',[0])
-    muTriggSFWeightDown = array('f',[0])
-    muIDSFWeight = array('f',[0])
-    muIDSFWeightUp = array('f',[0])
-    muIDSFWeightDown = array('f',[0])
-    muIsoSFWeight = array('f',[0])
-    muIsoSFWeightUp = array('f',[0])
-    muIsoSFWeightDown = array('f',[0])
+    vLeptons_SF_HLT = array('f',2*[0])
+    vLeptons_SFerr_HLT = array('f',2*[0])
+    vLeptons_SF_IdLoose = array('f',2*[0])
+    vLeptons_SFerr_IdLoose = array('f',2*[0])
+    vLeptons_SF_IdTight = array('f',2*[0])
+    vLeptons_SFerr_IdTight = array('f',2*[0])
+    vLeptons_SF_IsoTight = array('f',2*[0])
+    vLeptons_SFerr_IsoTight = array('f',2*[0])
+    vLeptons_SF_IsoLoose = array('f',2*[0])
+    vLeptons_SFerr_IsoLoose = array('f',2*[0])
+
 
 
 
@@ -403,15 +405,26 @@ for job in info:
     bTagWeightcErr2Down_new[0] = 1
 
     #Add muon SF
-    muTriggSFWeight[0] = 1
-    muTriggSFWeightUp[0] = 1
-    muTriggSFWeightDown[0] = 1
-    muIDSFWeight[0] = 1
-    muIDSFWeightUp[0] = 1
-    muIDSFWeightDown[0] = 1
-    muIsoSFWeight[0] = 1
-    muIsoSFWeightUp[0] = 1
-    muIsoSFWeightDown[0] = 1
+    vLeptons_SF_HLT[0] = 1
+    vLeptons_SF_HLT[1] = 1
+    vLeptons_SFerr_HLT[0] = 1
+    vLeptons_SFerr_HLT[1] = 1
+    vLeptons_SF_IdLoose[0] = 1
+    vLeptons_SF_IdLoose[1] = 1
+    vLeptons_SFerr_IdLoose[0] = 1
+    vLeptons_SFerr_IdLoose[1] = 1
+    vLeptons_SF_IdTight[0] = 1
+    vLeptons_SF_IdTight[1] = 1
+    vLeptons_SFerr_IdTight[0] = 1
+    vLeptons_SFerr_IdTight[1] = 1
+    vLeptons_SF_IsoTight[0] = 1
+    vLeptons_SF_IsoTight[1] = 1
+    vLeptons_SFerr_IsoTight[0] = 1
+    vLeptons_SFerr_IsoTight[1] = 1
+    vLeptons_SF_IsoLoose[0] = 1
+    vLeptons_SF_IsoLoose[1] = 1
+    vLeptons_SFerr_IsoLoose[0] = 1
+    vLeptons_SFerr_IsoLoose[1] = 1
 
     newtree.Branch('bTagWeight_new',bTagWeight_new,'bTagWeight_new/F')
     newtree.Branch('bTagWeightJESUp_new',bTagWeightJESUp_new,'bTagWeightJESUp_new/F')
@@ -434,15 +447,16 @@ for job in info:
     newtree.Branch('bTagWeightcErr2Down_new',bTagWeightcErr2Down_new,'bTagWeightcErr2Down_new/F')
 
     #Add muon SF
-    newtree.Branch('muTriggSFWeight',muTriggSFWeight,'muTriggSFWeight/F')
-    newtree.Branch('muTriggSFWeightUp',muTriggSFWeightUp,'muTriggSFWeightUp/F')
-    newtree.Branch('muTriggSFWeightDown',muTriggSFWeightDown,'muTriggSFWeightDown/F')
-    newtree.Branch('muIDSFWeight',muIDSFWeight,'muIDSFWeight/F')
-    newtree.Branch('muIDSFWeightUp',muIDSFWeightUp,'muIDSFWeightUp/F')
-    newtree.Branch('muIDSFWeightDown',muIDSFWeightDown,'muIDSFWeightDown/F')
-    newtree.Branch('muIsoSFWeight',muIsoSFWeight,'muIsoSFWeight/F')
-    newtree.Branch('muIsoSFWeightUp',muIsoSFWeightUp,'muIsoSFWeightUp/F')
-    newtree.Branch('muIsoSFWeightDown',muIsoSFWeightDown,'muIsoSFWeightDown/F')
+    newtree.Branch('vLeptons_SF_HLT',vLeptons_SF_HLT,'vLeptons_SF_HLT[2]/F')
+    newtree.Branch('vLeptons_SFerr_HLT',vLeptons_SFerr_HLT,'vLeptons_SFerr_HLT[2]/F')
+    newtree.Branch('vLeptons_SF_IdLoose',vLeptons_SF_IdLoose,'vLeptons_SF_IdLoose[2]/F')
+    newtree.Branch('vLeptons_SFerr_IdLoose',vLeptons_SFerr_IdLoose,'vLeptons_SFerr_IdLoose[2]/F')
+    newtree.Branch('vLeptons_SF_IdTight',vLeptons_SF_IdTight,'vLeptons_SF_IdTight[2]/F')
+    newtree.Branch('vLeptons_SFerr_IdTight',vLeptons_SFerr_IdTight,'vLeptons_SFerr_IdTight[2]/F')
+    newtree.Branch('vLeptons_SF_IsoTight',vLeptons_SF_IsoTight,'vLeptons_SF_IsoTight[2]/F')
+    newtree.Branch('vLeptons_SFerr_IsoTight',vLeptons_SFerr_IsoTight,'vLeptons_SFerr_IsoTight[2]/F')
+    newtree.Branch('vLeptons_SF_IsoLoose',vLeptons_SF_IsoLoose,'vLeptons_SF_IsoLoose[2]/F')
+    newtree.Branch('vLeptons_SFerr_IsoLoose',vLeptons_SFerr_IsoLoose,'vLeptons_SFerr_IsoLoose[2]/F')
 
     #Angular Likelihood
     angleHB = array('f',[0])
@@ -868,20 +882,22 @@ for job in info:
                     weight.append(muonCorr.get_2D( tree.vLeptons_pt[1], tree.vLeptons_eta[1]))
                     if j.find('Trigger') != -1:
                         #Eff l1 x Eff l2
-                        muTriggSFWeight[0] = weight[0][0]*weight[1][0]
-                        muTriggSFWeightUp[0] = (weight[0][0]+weight[0][1])*(weight[1][0]+weight[1][1])
-                        muTriggSFWeightDown[0] = (weight[0][0]-weight[0][1])*(weight[1][0]-weight[1][1])
+                        vLeptons_SF_HLT[0] = weight[0][0]
+                        vLeptons_SF_HLT[1] = weight[1][0]
+                        vLeptons_SFerr_HLT[0] = weight[0][1]
+                        vLeptons_SFerr_HLT[1] = weight[1][1]
                     elif j.find('MuonID') != -1:
-                        muIDSFWeight[0] = weight[0][0]*weight[1][0]
-                        muIDSFWeightUp[0] = (weight[0][0]+weight[0][1])*(weight[1][0]+weight[1][1])
-                        muIDSFWeightDown[0] = (weight[0][0]-weight[0][1])*(weight[1][0]-weight[1][1])
+                        vLeptons_SF_IdLoose[0] = weight[0][0]
+                        vLeptons_SF_IdLoose[1] = weight[1][0]
+                        vLeptons_SFerr_IdLoose[0] = weight[0][1]
+                        vLeptons_SFerr_IdLoose[1] = weight[1][1]
                     elif j.find('MuonIso') != -1:
-                        muIsoSFWeight[0] = weight[0][0]*weight[1][0]
-                        muIsoSFWeightUp[0] = (weight[0][0]+weight[0][1])*(weight[1][0]+weight[1][1])
-                        muIsoSFWeightDown[0] = (weight[0][0]-weight[0][1])*(weight[1][0]-weight[1][1])
+                        vLeptons_SF_IsoLoose[0] = weight[0][0]
+                        vLeptons_SF_IsoLoose[1] = weight[1][0]
+                        vLeptons_SFerr_IsoLoose[0] = weight[0][1]
+                        vLeptons_SFerr_IsoLoose[1] = weight[1][1]
                     else:
                         sys.exit('@ERROR: SF list doesn\'t match json files. Abort')
-
             
             if applyRegression:
                 HNoReg.HiggsFlag = 1
