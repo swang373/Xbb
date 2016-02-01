@@ -131,6 +131,7 @@ def drawFromDC():
     elif 'Wmunu' in opts.bin: dataname = 'Wmn'
     elif 'Wenu' in opts.bin: dataname = 'Wen'
     elif 'Znunu' in opts.bin: dataname = 'Znn'
+    elif 'Znn' in opts.bin: dataname = 'Znn'
     elif 'Wtn' in opts.bin: dataname = 'Wtn'
 
     print 'Variable printing'
@@ -180,7 +181,8 @@ def drawFromDC():
             setup.remove('WH')
         except:
             print '@INFO: Wb / Wligh / WH not present in the datacard'
-    if not dataname == 'Znn' and 'QCD' in setup:
+#    if not dataname == 'Znn' and 'QCD' in setup:
+    if True:
         setup.remove('QCD')
     Stack.setup = setup
 
@@ -314,6 +316,7 @@ def drawFromDC():
         absBestFit = sum([x for x in expNui[p][1]])
         theBestFit[p] = 1.+absBestFit
 
+    print "theShapes:",theShapes
     histos = []
     typs = []
 
@@ -455,12 +458,19 @@ def drawFromDC():
     if (data0.InheritsFrom("RooDataHist")):
         data0 = ROOT.RooAbsData.createHistogram(data0,'data_obs',ws_var,theBinning)
         data0.SetName('data_obs')
+        data0.SetTitle('data_obs')
+    data0.SetName('data_obs')
+    data0.SetTitle('data_obs')
     datas=[data0]
     datatyps = [None]
     datanames=[dataname]
 
+    print "data:",data0
+    print datas
+
 
     if blind and 'BDT' in var:
+        print "I'm blinding"
         for bin in range(10,datas[0].GetNbinsX()+1):
             datas[0].SetBinContent(bin,0)
 
@@ -487,6 +497,16 @@ def drawFromDC():
     print Stack.setup
     print histos
 
+    print datas
+    print datatyps
+    print datanames
+    print datas[0].GetXaxis().GetNbins()
+    print histos[0].GetXaxis().GetNbins()
+    print datas[0].GetXaxis().GetXmin()
+    print histos[0].GetXaxis().GetXmin()
+    print datas[0].GetXaxis().GetXmax()
+    print histos[0].GetXaxis().GetXmax()
+
     Stack.histos = histos
     Stack.typs = typs
     Stack.datas = datas
@@ -497,9 +517,6 @@ def drawFromDC():
     if dataname == 'Wtn':
         lumi = 18300.
     Stack.lumi = lumi
-    print "="*10
-    print ROOT.gROOT.cd("/scratch/sdonato/VHbbRun2/V14_forPreApproval/CMSSW_7_1_5/src/Xbb/Limit_expertAllnominal:.::")
-    print ROOT.gROOT.ls()
     print "Launching doPlot()"
     os.chdir(pwd)
     Stack.doPlot()
