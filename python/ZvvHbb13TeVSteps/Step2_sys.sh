@@ -48,6 +48,15 @@ bash runAll.sh  ZZpythia     ZvvHbb13TeV sys >& log/logSysZZpythia  &
 #bash runAll.sh  ZZTo2L2Q     ZvvHbb13TeV sys >& log/logSysZZTo2L2Q  &
 bash runAll.sh  ZZTo2Q2Nu     ZvvHbb13TeV sys >& log/logSysZZTo2Q2Nu  &
 
+bash runAll.sh  FakeQCDHT100     ZvvHbb13TeV sys >& log/logSysFakeQCDHT100  &
+bash runAll.sh  FakeQCDHT200     ZvvHbb13TeV sys >& log/logSysFakeQCDHT200  &
+bash runAll.sh  FakeQCDHT300     ZvvHbb13TeV sys >& log/logSysFakeQCDHT300  &
+bash runAll.sh  FakeQCDHT500     ZvvHbb13TeV sys >& log/logSysFakeQCDHT500  &
+bash runAll.sh  FakeQCDHT700     ZvvHbb13TeV sys >& log/logSysFakeQCDHT700  &
+bash runAll.sh  FakeQCDHT1000     ZvvHbb13TeV sys >& log/logSysFakeQCDHT1000  &
+bash runAll.sh  FakeQCDHT1500     ZvvHbb13TeV sys >& log/logSysFakeQCDHT1500  &
+bash runAll.sh  FakeQCDHT2000     ZvvHbb13TeV sys >& log/logSysFakeQCDHT2000  &
+
 bash runAll.sh  SingleElectron     ZvvHbb13TeV sys >& log/logSysSingleElectron  &
 bash runAll.sh  SingleMuon     ZvvHbb13TeV sys >& log/logSysSingleMuon  &
 bash runAll.sh  DoubleEG     ZvvHbb13TeV sys >& log/logSysDoubleEG  &
