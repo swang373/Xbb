@@ -210,8 +210,8 @@ class Jet :
 
 #################################################################
 ##Set up offline b-weight calculation
-
 if __name__ == "__main__":
+
     #csvpath = os.environ['CMSSW_BASE']+"/src/VHbbAnalysis/Heppy/data/csv"
     csvpath = "./"
     bweightcalc = BTagWeightCalculator(

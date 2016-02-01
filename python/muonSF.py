@@ -15,8 +15,11 @@ class MuonSF:
 
     def get_2D(self, pt, eta):
         eta = abs(eta)
-        if "abseta_pt_ratio" in self.res.keys():
-            for etaKey, values in sorted(self.res["abseta_pt_ratio"].iteritems()) :
+        header = ''
+        if "abseta_pt_ratio" in self.res.keys(): header = "abseta_pt_ratio"
+        elif "abseta_pt_MC" in self.res.keys(): header = "abseta_pt_MC"
+        if header != '':
+            for etaKey, values in sorted(self.res[header].iteritems()) :
                 etaL = float(((etaKey[8:]).rstrip(']').split(',')[0]))
                 etaH = float(((etaKey[8:]).rstrip(']').split(',')[1]))
                 if not (eta>etaL and eta<etaH):
@@ -38,13 +41,14 @@ class MuonSF:
 
 
 
-###################################################################################################
-## EXAMPLE
+##################################################################################################
+# EXAMPLE
 #
 #jsons = {
-#    'SingleMuonTrigger_Z_RunCD_Reco74X_Dec1.json' : 'runD_IsoMu20_OR_IsoTkMu20_HLTv4p3_PtEtaBins',
-#    'MuonIso_Z_RunCD_Reco74X_Dec1.json' : 'NUM_LooseRelIso_DEN_LooseID_PAR_pt_spliteta_bin1',
-#    'MuonID_Z_RunCD_Reco74X_Dec1.json' : 'NUM_LooseID_DEN_genTracks_PAR_pt_spliteta_bin1' ,
+#    'json/SingleMuonTrigger_Z_RunCD_Reco74X_Dec1.json' : 'runD_IsoMu20_OR_IsoTkMu20_HLTv4p3_PtEtaBins',
+#    'json/MuonIso_Z_RunCD_Reco74X_Dec1.json' : 'NUM_LooseRelIso_DEN_LooseID_PAR_pt_spliteta_bin1',
+#    'json/MuonID_Z_RunCD_Reco74X_Dec1.json' : 'NUM_LooseID_DEN_genTracks_PAR_pt_spliteta_bin1' ,
+#    'json/SingleMuonTrigger_Z_RunCD_Reco74X_Dec1_MC.json' : 'runD_IsoMu20_OR_IsoTkMu20_HLTv4p3_PtEtaBins'
 #    }
 #
 ## example

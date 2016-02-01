@@ -37,6 +37,8 @@ anaTag = config.get("Analysis","tag")
 TrainFlag = eval(config.get('Analysis','TrainFlag'))
 btagLibrary = config.get('BTagReshaping','library')
 samplesinfo=config.get('Directories','samplesinfo')
+channel=config.get('Configuration','channel')
+print 'channel is', channel
 
 VHbbNameSpace=config.get('VHbbNameSpace','library')
 ROOT.gSystem.Load(VHbbNameSpace)
@@ -117,12 +119,12 @@ def csvReshape(sh, pt, eta, csv, flav):
     return sh.reshape(float(eta), float(pt), float(csv), int(flav))
 
 
-
-filt = ROOT.TFile("plot.root")
-NewUnder    = filt.Get("NewUnder")
-NewOver     = filt.Get("NewOver")
-NewUnderQCD = filt.Get("NewUnderQCD")
-NewOverQCD  = filt.Get("NewOverQCD")
+if channel == "Znn":
+    filt = ROOT.TFile("plot.root")
+    NewUnder    = filt.Get("NewUnder")
+    NewOver     = filt.Get("NewOver")
+    NewUnderQCD = filt.Get("NewUnderQCD")
+    NewOverQCD  = filt.Get("NewOverQCD")
 
 for job in info:
     if not job.name in namelist: continue
@@ -368,15 +370,19 @@ for job in info:
     bTagWeightcErr2Down_new = array('f',[0])
 
     #Add muon SF
-    muTriggSFWeight = array('f',[0])
-    muTriggSFWeightUp = array('f',[0])
-    muTriggSFWeightDown = array('f',[0])
-    muIDSFWeight = array('f',[0])
-    muIDSFWeightUp = array('f',[0])
-    muIDSFWeightDown = array('f',[0])
-    muIsoSFWeight = array('f',[0])
-    muIsoSFWeightUp = array('f',[0])
-    muIsoSFWeightDown = array('f',[0])
+    vLeptons_SF_HLT = array('f',2*[0])
+    vLeptons_SFerr_HLT = array('f',2*[0])
+    vLeptons_SF_IdLoose = array('f',2*[0])
+    vLeptons_SFerr_IdLoose = array('f',2*[0])
+    vLeptons_SF_IdTight = array('f',2*[0])
+    vLeptons_SFerr_IdTight = array('f',2*[0])
+    vLeptons_SF_IsoTight = array('f',2*[0])
+    vLeptons_SFerr_IsoTight = array('f',2*[0])
+    vLeptons_SF_IsoLoose = array('f',2*[0])
+    vLeptons_SFerr_IsoLoose = array('f',2*[0])
+    vLeptons_Eff_HLT = array('f',2*[0])
+    vLeptons_Efferr_HLT = array('f',2*[0])
+
 
 
 
@@ -401,15 +407,30 @@ for job in info:
     bTagWeightcErr2Down_new[0] = 1
 
     #Add muon SF
-    muTriggSFWeight[0] = 1
-    muTriggSFWeightUp[0] = 1
-    muTriggSFWeightDown[0] = 1
-    muIDSFWeight[0] = 1
-    muIDSFWeightUp[0] = 1
-    muIDSFWeightDown[0] = 1
-    muIsoSFWeight[0] = 1
-    muIsoSFWeightUp[0] = 1
-    muIsoSFWeightDown[0] = 1
+    vLeptons_SF_HLT[0] = 1
+    vLeptons_SF_HLT[1] = 1
+    vLeptons_SFerr_HLT[0] = 1
+    vLeptons_SFerr_HLT[1] = 1
+    vLeptons_SF_IdLoose[0] = 1
+    vLeptons_SF_IdLoose[1] = 1
+    vLeptons_SFerr_IdLoose[0] = 1
+    vLeptons_SFerr_IdLoose[1] = 1
+    vLeptons_SF_IdTight[0] = 1
+    vLeptons_SF_IdTight[1] = 1
+    vLeptons_SFerr_IdTight[0] = 1
+    vLeptons_SFerr_IdTight[1] = 1
+    vLeptons_SF_IsoTight[0] = 1
+    vLeptons_SF_IsoTight[1] = 1
+    vLeptons_SFerr_IsoTight[0] = 1
+    vLeptons_SFerr_IsoTight[1] = 1
+    vLeptons_SF_IsoLoose[0] = 1
+    vLeptons_SF_IsoLoose[1] = 1
+    vLeptons_SFerr_IsoLoose[0] = 1
+    vLeptons_SFerr_IsoLoose[1] = 1
+    vLeptons_Eff_HLT[0]
+    vLeptons_Eff_HLT[1]
+    vLeptons_Efferr_HLT[0]
+    vLeptons_Efferr_HLT[1]
 
     newtree.Branch('bTagWeight_new',bTagWeight_new,'bTagWeight_new/F')
     newtree.Branch('bTagWeightJESUp_new',bTagWeightJESUp_new,'bTagWeightJESUp_new/F')
@@ -432,15 +453,18 @@ for job in info:
     newtree.Branch('bTagWeightcErr2Down_new',bTagWeightcErr2Down_new,'bTagWeightcErr2Down_new/F')
 
     #Add muon SF
-    newtree.Branch('muTriggSFWeight',muTriggSFWeight,'muTriggSFWeight/F')
-    newtree.Branch('muTriggSFWeightUp',muTriggSFWeightUp,'muTriggSFWeightUp/F')
-    newtree.Branch('muTriggSFWeightDown',muTriggSFWeightDown,'muTriggSFWeightDown/F')
-    newtree.Branch('muIDSFWeight',muIDSFWeight,'muIDSFWeight/F')
-    newtree.Branch('muIDSFWeightUp',muIDSFWeightUp,'muIDSFWeightUp/F')
-    newtree.Branch('muIDSFWeightDown',muIDSFWeightDown,'muIDSFWeightDown/F')
-    newtree.Branch('muIsoSFWeight',muIsoSFWeight,'muIsoSFWeight/F')
-    newtree.Branch('muIsoSFWeightUp',muIsoSFWeightUp,'muIsoSFWeightUp/F')
-    newtree.Branch('muIsoSFWeightDown',muIsoSFWeightDown,'muIsoSFWeightDown/F')
+    newtree.Branch('vLeptons_SF_HLT',vLeptons_SF_HLT,'vLeptons_SF_HLT[2]/F')
+    newtree.Branch('vLeptons_SFerr_HLT',vLeptons_SFerr_HLT,'vLeptons_SFerr_HLT[2]/F')
+    newtree.Branch('vLeptons_SF_IdLoose',vLeptons_SF_IdLoose,'vLeptons_SF_IdLoose[2]/F')
+    newtree.Branch('vLeptons_SFerr_IdLoose',vLeptons_SFerr_IdLoose,'vLeptons_SFerr_IdLoose[2]/F')
+    newtree.Branch('vLeptons_SF_IdTight',vLeptons_SF_IdTight,'vLeptons_SF_IdTight[2]/F')
+    newtree.Branch('vLeptons_SFerr_IdTight',vLeptons_SFerr_IdTight,'vLeptons_SFerr_IdTight[2]/F')
+    newtree.Branch('vLeptons_SF_IsoTight',vLeptons_SF_IsoTight,'vLeptons_SF_IsoTight[2]/F')
+    newtree.Branch('vLeptons_SFerr_IsoTight',vLeptons_SFerr_IsoTight,'vLeptons_SFerr_IsoTight[2]/F')
+    newtree.Branch('vLeptons_SF_IsoLoose',vLeptons_SF_IsoLoose,'vLeptons_SF_IsoLoose[2]/F')
+    newtree.Branch('vLeptons_SFerr_IsoLoose',vLeptons_SFerr_IsoLoose,'vLeptons_SFerr_IsoLoose[2]/F')
+    newtree.Branch('vLeptons_Eff_HLT',vLeptons_Eff_HLT,'vLeptons_Eff_HLT[2]/F')
+    newtree.Branch('vLeptons_Efferr_HLT',vLeptons_Efferr_HLT,'vLeptons_Efferr_HLT[2]/F')
 
     #Angular Likelihood
     angleHB = array('f',[0])
@@ -512,38 +536,39 @@ for job in info:
         Jet_bad = array('f',[0]*50)
         newtree.Branch('Jet_bad',Jet_bad,'Jet_bad[nJet]/F')
 
-        DiscardedJet_under = array('f',[0]*50)
-        newtree.Branch('DiscardedJet_under',DiscardedJet_under,'DiscardedJet_under[nDiscardedJet]/F')
-        DiscardedJet_over = array('f',[0]*50)
-        newtree.Branch('DiscardedJet_over',DiscardedJet_over,'DiscardedJet_over[nDiscardedJet]/F')
-        DiscardedJet_underMC = array('f',[0]*50)
-        newtree.Branch('DiscardedJet_underMC',DiscardedJet_underMC,'DiscardedJet_underMC[nDiscardedJet]/F')
-        DiscardedJet_overMC = array('f',[0]*50)
-        newtree.Branch('DiscardedJet_overMC',DiscardedJet_overMC,'DiscardedJet_overMC[nDiscardedJet]/F')
-        DiscardedJet_bad = array('f',[0]*50)
-        newtree.Branch('DiscardedJet_bad',DiscardedJet_bad,'DiscardedJet_bad[nDiscardedJet]/F')
+        if channel == "Znn":
+            DiscardedJet_under = array('f',[0]*50)
+            newtree.Branch('DiscardedJet_under',DiscardedJet_under,'DiscardedJet_under[nDiscardedJet]/F')
+            DiscardedJet_over = array('f',[0]*50)
+            newtree.Branch('DiscardedJet_over',DiscardedJet_over,'DiscardedJet_over[nDiscardedJet]/F')
+            DiscardedJet_underMC = array('f',[0]*50)
+            newtree.Branch('DiscardedJet_underMC',DiscardedJet_underMC,'DiscardedJet_underMC[nDiscardedJet]/F')
+            DiscardedJet_overMC = array('f',[0]*50)
+            newtree.Branch('DiscardedJet_overMC',DiscardedJet_overMC,'DiscardedJet_overMC[nDiscardedJet]/F')
+            DiscardedJet_bad = array('f',[0]*50)
+            newtree.Branch('DiscardedJet_bad',DiscardedJet_bad,'DiscardedJet_bad[nDiscardedJet]/F')
 
-        aLeptons_under = array('f',[0]*50)
-        newtree.Branch('aLeptons_under',aLeptons_under,'aLeptons_under[naLeptons]/F')
-        aLeptons_over = array('f',[0]*50)
-        newtree.Branch('aLeptons_over',aLeptons_over,'aLeptons_over[naLeptons]/F')
-        aLeptons_underMC = array('f',[0]*50)
-        newtree.Branch('aLeptons_underMC',aLeptons_underMC,'aLeptons_underMC[naLeptons]/F')
-        aLeptons_overMC = array('f',[0]*50)
-        newtree.Branch('aLeptons_overMC',aLeptons_overMC,'aLeptons_overMC[naLeptons]/F')
-        aLeptons_bad = array('f',[0]*50)
-        newtree.Branch('aLeptons_bad',aLeptons_bad,'aLeptons_bad[naLeptons]/F')
+            aLeptons_under = array('f',[0]*50)
+            newtree.Branch('aLeptons_under',aLeptons_under,'aLeptons_under[naLeptons]/F')
+            aLeptons_over = array('f',[0]*50)
+            newtree.Branch('aLeptons_over',aLeptons_over,'aLeptons_over[naLeptons]/F')
+            aLeptons_underMC = array('f',[0]*50)
+            newtree.Branch('aLeptons_underMC',aLeptons_underMC,'aLeptons_underMC[naLeptons]/F')
+            aLeptons_overMC = array('f',[0]*50)
+            newtree.Branch('aLeptons_overMC',aLeptons_overMC,'aLeptons_overMC[naLeptons]/F')
+            aLeptons_bad = array('f',[0]*50)
+            newtree.Branch('aLeptons_bad',aLeptons_bad,'aLeptons_bad[naLeptons]/F')
 
-        vLeptons_under = array('f',[0]*50)
-        newtree.Branch('vLeptons_under',vLeptons_under,'vLeptons_under[nvLeptons]/F')
-        vLeptons_over = array('f',[0]*50)
-        newtree.Branch('vLeptons_over',vLeptons_over,'vLeptons_over[nvLeptons]/F')
-        vLeptons_underMC = array('f',[0]*50)
-        newtree.Branch('vLeptons_underMC',vLeptons_underMC,'vLeptons_underMC[nvLeptons]/F')
-        vLeptons_overMC = array('f',[0]*50)
-        newtree.Branch('vLeptons_overMC',vLeptons_overMC,'vLeptons_overMC[nvLeptons]/F')
-        vLeptons_bad = array('f',[0]*50)
-        newtree.Branch('vLeptons_bad',vLeptons_bad,'vLeptons_bad[nvLeptons]/F')
+            vLeptons_under = array('f',[0]*50)
+            newtree.Branch('vLeptons_under',vLeptons_under,'vLeptons_under[nvLeptons]/F')
+            vLeptons_over = array('f',[0]*50)
+            newtree.Branch('vLeptons_over',vLeptons_over,'vLeptons_over[nvLeptons]/F')
+            vLeptons_underMC = array('f',[0]*50)
+            newtree.Branch('vLeptons_underMC',vLeptons_underMC,'vLeptons_underMC[nvLeptons]/F')
+            vLeptons_overMC = array('f',[0]*50)
+            newtree.Branch('vLeptons_overMC',vLeptons_overMC,'vLeptons_overMC[nvLeptons]/F')
+            vLeptons_bad = array('f',[0]*50)
+            newtree.Branch('vLeptons_bad',vLeptons_bad,'vLeptons_bad[nvLeptons]/F')
 
         #JER branches
         hJet_pt_JER_up = array('f',[0]*2)
@@ -787,30 +812,32 @@ for job in info:
             jetEt1 = hJ1.Et()
             hJet_mt0 = hJ0.Mt()
             hJet_mt1 = hJ1.Mt()
-            for i in range(tree.nJet):
-                Jet_under[i]    = isInside(NewUnder   ,tree.Jet_eta[i],tree.Jet_phi[i])
-                Jet_over[i]     = isInside(NewOver    ,tree.Jet_eta[i],tree.Jet_phi[i])
-                Jet_underMC[i]  = isInside(NewUnderQCD,tree.Jet_eta[i],tree.Jet_phi[i])
-                Jet_overMC[i]   = isInside(NewOverQCD ,tree.Jet_eta[i],tree.Jet_phi[i])
-                Jet_bad[i]      = Jet_under[i] or Jet_over[i] or Jet_underMC[i] or Jet_overMC[i]
-            for i in range(tree.nDiscardedJet):
-                DiscardedJet_under[i]    = isInside(NewUnder   ,tree.DiscardedJet_eta[i],tree.DiscardedJet_phi[i])
-                DiscardedJet_over[i]     = isInside(NewOver    ,tree.DiscardedJet_eta[i],tree.DiscardedJet_phi[i])
-                DiscardedJet_underMC[i]  = isInside(NewUnderQCD,tree.DiscardedJet_eta[i],tree.DiscardedJet_phi[i])
-                DiscardedJet_overMC[i]   = isInside(NewOverQCD ,tree.DiscardedJet_eta[i],tree.DiscardedJet_phi[i])
-                DiscardedJet_bad[i]      = DiscardedJet_under[i] or DiscardedJet_over[i] or DiscardedJet_underMC[i] or DiscardedJet_overMC[i]
-            for i in range(tree.naLeptons):
-                aLeptons_under[i]    = isInside(NewUnder   ,tree.aLeptons_eta[i],tree.aLeptons_phi[i])
-                aLeptons_over[i]     = isInside(NewOver    ,tree.aLeptons_eta[i],tree.aLeptons_phi[i])
-                aLeptons_underMC[i]  = isInside(NewUnderQCD,tree.aLeptons_eta[i],tree.aLeptons_phi[i])
-                aLeptons_overMC[i]   = isInside(NewOverQCD ,tree.aLeptons_eta[i],tree.aLeptons_phi[i])
-                aLeptons_bad[i]      = aLeptons_under[i] or aLeptons_over[i] or aLeptons_underMC[i] or aLeptons_overMC[i]
-            for i in range(tree.nvLeptons):
-                vLeptons_under[i]    = isInside(NewUnder   ,tree.vLeptons_eta[i],tree.vLeptons_phi[i])
-                vLeptons_over[i]     = isInside(NewOver    ,tree.vLeptons_eta[i],tree.vLeptons_phi[i])
-                vLeptons_underMC[i]  = isInside(NewUnderQCD,tree.vLeptons_eta[i],tree.vLeptons_phi[i])
-                vLeptons_overMC[i]   = isInside(NewOverQCD ,tree.vLeptons_eta[i],tree.vLeptons_phi[i])
-                vLeptons_bad[i]      = vLeptons_under[i] or vLeptons_over[i] or vLeptons_underMC[i] or vLeptons_overMC[i]
+
+            if channel == "Znn":
+                for i in range(tree.nJet):
+                    Jet_under[i]    = isInside(NewUnder   ,tree.Jet_eta[i],tree.Jet_phi[i])
+                    Jet_over[i]     = isInside(NewOver    ,tree.Jet_eta[i],tree.Jet_phi[i])
+                    Jet_underMC[i]  = isInside(NewUnderQCD,tree.Jet_eta[i],tree.Jet_phi[i])
+                    Jet_overMC[i]   = isInside(NewOverQCD ,tree.Jet_eta[i],tree.Jet_phi[i])
+                    Jet_bad[i]      = Jet_under[i] or Jet_over[i] or Jet_underMC[i] or Jet_overMC[i]
+                for i in range(tree.nDiscardedJet):
+                    DiscardedJet_under[i]    = isInside(NewUnder   ,tree.DiscardedJet_eta[i],tree.DiscardedJet_phi[i])
+                    DiscardedJet_over[i]     = isInside(NewOver    ,tree.DiscardedJet_eta[i],tree.DiscardedJet_phi[i])
+                    DiscardedJet_underMC[i]  = isInside(NewUnderQCD,tree.DiscardedJet_eta[i],tree.DiscardedJet_phi[i])
+                    DiscardedJet_overMC[i]   = isInside(NewOverQCD ,tree.DiscardedJet_eta[i],tree.DiscardedJet_phi[i])
+                    DiscardedJet_bad[i]      = DiscardedJet_under[i] or DiscardedJet_over[i] or DiscardedJet_underMC[i] or DiscardedJet_overMC[i]
+                for i in range(tree.naLeptons):
+                    aLeptons_under[i]    = isInside(NewUnder   ,tree.aLeptons_eta[i],tree.aLeptons_phi[i])
+                    aLeptons_over[i]     = isInside(NewOver    ,tree.aLeptons_eta[i],tree.aLeptons_phi[i])
+                    aLeptons_underMC[i]  = isInside(NewUnderQCD,tree.aLeptons_eta[i],tree.aLeptons_phi[i])
+                    aLeptons_overMC[i]   = isInside(NewOverQCD ,tree.aLeptons_eta[i],tree.aLeptons_phi[i])
+                    aLeptons_bad[i]      = aLeptons_under[i] or aLeptons_over[i] or aLeptons_underMC[i] or aLeptons_overMC[i]
+                for i in range(tree.nvLeptons):
+                    vLeptons_under[i]    = isInside(NewUnder   ,tree.vLeptons_eta[i],tree.vLeptons_phi[i])
+                    vLeptons_over[i]     = isInside(NewOver    ,tree.vLeptons_eta[i],tree.vLeptons_phi[i])
+                    vLeptons_underMC[i]  = isInside(NewUnderQCD,tree.vLeptons_eta[i],tree.vLeptons_phi[i])
+                    vLeptons_overMC[i]   = isInside(NewOverQCD ,tree.vLeptons_eta[i],tree.vLeptons_phi[i])
+                    vLeptons_bad[i]      = vLeptons_under[i] or vLeptons_over[i] or vLeptons_underMC[i] or vLeptons_overMC[i]
 
             if not job.type == 'DATA':
                 jetsForBtagWeight = []
@@ -853,10 +880,41 @@ for job in info:
                 jsons = {
                     'json/SingleMuonTrigger_Z_RunCD_Reco74X_Dec1.json' : 'runD_IsoMu20_OR_IsoTkMu20_HLTv4p3_PtEtaBins',
                     'json/MuonIso_Z_RunCD_Reco74X_Dec1.json' : 'NUM_LooseRelIso_DEN_LooseID_PAR_pt_spliteta_bin1',
-                    'json/MuonID_Z_RunCD_Reco74X_Dec1.json' : 'NUM_LooseID_DEN_genTracks_PAR_pt_spliteta_bin1'
+                    'json/MuonID_Z_RunCD_Reco74X_Dec1.json' : 'NUM_LooseID_DEN_genTracks_PAR_pt_spliteta_bin1',
+                    'json/SingleMuonTrigger_Z_RunCD_Reco74X_Dec1_MC.json' : 'runD_IsoMu20_OR_IsoTkMu20_HLTv4p3_PtEtaBins'
                     }
 
-                if tree.nvLeptons>=2:
+# <<<<<<< HEAD
+                # for j, name in jsons.iteritems():
+                    # weight = []
+                    # muonCorr = MuonSF(j, name)
+                    # weight.append(muonCorr.get_2D( tree.vLeptons_pt[0], tree.vLeptons_eta[0]))
+                    # weight.append(muonCorr.get_2D( tree.vLeptons_pt[1], tree.vLeptons_eta[1]))
+                    # if j.find('Trigger') != -1:
+                        # # Eff l1 x Eff l2
+                        # vLeptons_SF_HLT[0] = weight[0][0]
+                        # vLeptons_SF_HLT[1] = weight[1][0]
+                        # vLeptons_SFerr_HLT[0] = weight[0][1]
+                        # vLeptons_SFerr_HLT[1] = weight[1][1]
+                        # vLeptons_Eff_HLT[0] = weight[0][0]
+                        # vLeptons_Eff_HLT[1] = weight[1][0]
+                        # vLeptons_Efferr_HLT[0] = weight[0][1]
+                        # vLeptons_Efferr_HLT[1] = weight[1][1]
+                    # elif j.find('MuonID') != -1:
+                        # vLeptons_SF_IdLoose[0] = weight[0][0]
+                        # vLeptons_SF_IdLoose[1] = weight[1][0]
+                        # vLeptons_SFerr_IdLoose[0] = weight[0][1]
+                        # vLeptons_SFerr_IdLoose[1] = weight[1][1]
+                    # elif j.find('MuonIso') != -1:
+                        # vLeptons_SF_IsoLoose[0] = weight[0][0]
+                        # vLeptons_SF_IsoLoose[1] = weight[1][0]
+                        # vLeptons_SFerr_IsoLoose[0] = weight[0][1]
+                        # vLeptons_SFerr_IsoLoose[1] = weight[1][1]
+                    # else:
+                        # sys.exit('@ERROR: SF list doesn\'t match json files. Abort')
+# =======
+                # if tree.nvLeptons>=2:
+                if channel == "Zmm":
                     for j, name in jsons.iteritems():
                         weight = []
                         muonCorr = MuonSF(j, name)
@@ -878,6 +936,7 @@ for job in info:
                         else:
                             sys.exit('@ERROR: SF list doesn\'t match json files. Abort')
 
+# >>>>>>> e8badf057a5a9cf558eaa07dccf98d759b1e78ca
             
             if applyRegression:
                 HNoReg.HiggsFlag = 1
