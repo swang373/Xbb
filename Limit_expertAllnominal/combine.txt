@@ -1,3 +1,0 @@
-combine -M ProfileLikelihood --signif vhbb_DC_TH_BDT_M125_ZvvHbbHighPt_myDatacard_13TeV.txt
-combine -M Asymptotic vhbb_DC_TH_BDT_M125_ZvvHbbHighPt_myDatacard_13TeV.txt
-combineCards.py datacard1.txt datacard2.txt > datacard_combined.txt

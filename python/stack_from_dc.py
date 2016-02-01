@@ -106,7 +106,7 @@ def getBestFitShapes(procs,theShapes,shapeNui,theBestFit,DC,setup,opts,Dict):
     histos = []
     typs = []
     sigCount = 0
-    signalList = ['ZH','WH']
+    signalList = ['ZH','WH','ggZH']
     #signalList = ['VVb']
     for s in setup:
         if s in signalList:
@@ -140,9 +140,9 @@ def drawFromDC():
         if dataname == 'Zmm' or dataname == 'Zee': var = 'BDT_Zll' 
         elif dataname == 'Wmn' or dataname == 'Wen': var = 'BDT_Wln' 
         elif dataname == 'Znn': 
-            if 'HighPt' in opts.bin: var = 'BDT_ZnnHighPt' 
-            if 'LowPt' in opts.bin: var = 'BDT_ZnnLowPt' 
-            if 'LowCSV' in opts.bin: var = 'BDT_ZnnLowCSV' 
+            if 'HighPt' in opts.bin: var = 'ZnnHighPt_13TeV'
+            if 'LowPt' in opts.bin: var = 'ZnnLowPt_13TeV'
+            if 'LowCSV' in opts.bin: var = 'ZnnLowCSV_13TeV'
         if dataname == '' or var == 'BDT': raise RuntimeError, "Did not recognise mode or var from %s" % opts.bin
     else:
         var = opts.var
@@ -187,6 +187,10 @@ def drawFromDC():
     Dict = eval(config.get('LimitGeneral','Dict'))
     lumi = eval(config.get('Plot_general','lumi'))
     
+    DictAnti = {}
+    for i in Dict:
+        DictAnti[Dict[i]]=i
+
     options = copy(opts)
     options.dataname = "data_obs"
     options.mass = 0
@@ -208,6 +212,8 @@ def drawFromDC():
     theBinning = ROOT.RooFit.Binning(Stack.nBins,Stack.xMin,Stack.xMax)
 
     file = open(opts.dc, "r")
+    import os
+    pwd = os.getcwd()
     os.chdir(os.path.dirname(opts.dc))
     DC = parseCard(file, options)
     if not DC.hasShapes: DC.hasShapes = True
@@ -317,7 +323,7 @@ def drawFromDC():
     shapesDown = [[] for _ in range(0,len(setup2))]
     
     sigCount = 0
-    signalList = ['ZH','WH']
+    signalList = ['ZH','WH','ggZH']
     #signalList = ['VVb']
     for p in procs:
         b = opts.bin
@@ -368,6 +374,34 @@ def drawFromDC():
     if not preFit:
         histos, Overlay, typs = getBestFitShapes(procs,theShapes,shapeNui,theBestFit,DC,setup,opts,Dict)
     
+    ##Set name using only proc "shapeBkg_ZH_ZnnHighPt_13TeV" -> "ZH"
+    for histo in histos:
+        found = False
+        for p in procs:
+            name = "shapeBkg_"+p+"_ZnnHighPt_13TeV"
+            if p in signalList: name.replace("shapeBkg_","shapeSig_")
+            if histo.GetName()==name:
+                histo.SetName(p)
+                found=True
+                break
+
+    print procs
+    print Dict
+    print DictAnti
+    print "="*30
+    print "Histo names:"
+    for histo in histos:
+        print histo.GetName()
+    print
+    print "procs names:"
+    for proc in procs:
+        print proc
+
+    print "Debug1 - ",procs
+    print "Debug1 - ",histos, Overlay, typs
+    print "Debug1 - ",theNormUncert, theBestFit
+    print "Debug1 - ",histos[0].GetName()
+
     counter = 0
     errUp=[]
     total=[]
@@ -431,7 +465,13 @@ def drawFromDC():
             datas[0].SetBinContent(bin,0)
 
     histos.append(copy(Overlay))
-    if 'ZH' in signalList and 'WH' in signalList:
+    if 'ZH' in signalList and 'WH' in signalList and 'ggZH' in signalList:
+        typs.append('VH')
+        if 'ZH' in Stack.setup: Stack.setup.remove('ZH')
+        if 'WH' in Stack.setup: Stack.setup.remove('WH')
+        if 'ggZH' in Stack.setup: Stack.setup.remove('ggZH')
+        Stack.setup.insert(0,'VH')
+    elif 'ZH' in signalList and 'WH' in signalList:
         typs.append('VH')
         if 'ZH' in Stack.setup: Stack.setup.remove('ZH')
         if 'WH' in Stack.setup: Stack.setup.remove('WH')
@@ -440,9 +480,12 @@ def drawFromDC():
         typs.append('ZH')
     elif 'WH' in signalList:
         typs.append('WH')
+    elif 'ggZH' in signalList:
+        typs.append('ggZH')
     elif 'VVb' in signalList:
         typs.append('VVb')
     print Stack.setup
+    print histos
 
     Stack.histos = histos
     Stack.typs = typs
@@ -454,6 +497,11 @@ def drawFromDC():
     if dataname == 'Wtn': 
         lumi = 18300.
     Stack.lumi = lumi
+    print "="*10
+    print ROOT.gROOT.cd("/scratch/sdonato/VHbbRun2/V14_forPreApproval/CMSSW_7_1_5/src/Xbb/Limit_expertAllnominal:.::")
+    print ROOT.gROOT.ls()
+    print "Launching doPlot()"
+    os.chdir(pwd)
     Stack.doPlot()
 
     print 'i am done!\n'
