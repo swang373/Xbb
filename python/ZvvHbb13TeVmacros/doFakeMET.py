@@ -227,6 +227,12 @@ def doFile(fileName="tree_100_QCDHT700.root",outName="newTree.root",function=Non
     FakeMET_count.SetBinContent(0,0)
     #file_.Close()
 
+    Vtype = array('i',[0])
+    tree.SetBranchAddress("Vtype",Vtype)
+
+    HLT_BIT_HLT_PFMET90_PFMHT90_IDLoose_v = array('i',[0])
+    tree.SetBranchAddress("HLT_BIT_HLT_PFMET90_PFMHT90_IDLoose_v",HLT_BIT_HLT_PFMET90_PFMHT90_IDLoose_v)
+
     met_pt = array('f',[0])
     tree.SetBranchAddress("met_pt",met_pt)
 
@@ -276,6 +282,8 @@ def doFile(fileName="tree_100_QCDHT700.root",outName="newTree.root",function=Non
         (met_pt[0],met_phi[0])  = correctMet(old_tree.met_pt,old_tree.met_phi,old_tree.Jet_pt[idx],old_tree.Jet_phi[idx],newPt_)
         (mhtJet30[0],mhtPhiJet30[0]) = correctMet(old_tree.mhtJet30,old_tree.mhtPhiJet30,old_tree.Jet_pt[idx],old_tree.Jet_phi[idx],newPt_30)
         old_tree.Jet_pt[idx]    = newPt_15
+        Vtype                   = 4
+        HLT_BIT_HLT_PFMET90_PFMHT90_IDLoose_v = 1
         tree.Fill()
 
     FakeMET_count.SetBinContent(1,CountWeighted.GetBinContent(1))
