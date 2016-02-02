@@ -807,6 +807,13 @@ for DCtype in ['WS','TH']:
             else:
                 f.write('\t-')
         f.write('\n')
+    # write rateParams systematics (free parameters)
+    rateParams=eval(config.get('Datacard','rateParams_%s_%s'%(str(anType), pt_region)))
+    for rateParam in rateParams:
+        dictProcs=eval(config.get('Datacard',rateParam))
+        for proc in dictProcs.keys():
+            f.write(rateParam+'\trateParam\t'+Datacardbin+'\t'+proc+'\t'+str(dictProcs[proc])+'\n')
+
     f.close()
     useSpacesInDC(fileName)
 
