@@ -42,6 +42,9 @@ anaTag = config.get("Analysis","tag")
 Wdir=config.get('Directories','Wdir')
 samplesinfo=config.get('Directories','samplesinfo')
 
+#read shape systematics
+systematics=config.get('systematics','systematics')
+
 #systematics
 INpath = config.get('Directories','MVAin')
 OUTpath = config.get('Directories','MVAout')
@@ -126,8 +129,9 @@ for job in samples:
             mvaVals.append(array('f',[0]))
             newtree.Branch(MVAinfos[i].MVAname,mvaVals[i],'nominal/F') 
         else:
-            mvaVals.append(array('f',[0]*11))
-            newtree.Branch(theMVAs[i].MVAname,mvaVals[i],'nominal:JER_up:JER_down:JES_up:JES_down:beff_up:beff_down:bmis_up:bmis_down:beff1_up:beff1_down/F')
+            mvaVals.append(array('f',[0]*len(systematics.split())))
+            newtree.Branch(theMVAs[i].MVAname,mvaVals[i],':'.join(systematics.split())+'/F')
+            #newtree.Branch(theMVAs[i].MVAname,mvaVals[i],'nominal:JER_up:JER_down:JES_up:JES_down:beff_up:beff_down:bmis_up:bmis_down:beff1_up:beff1_down/F')
         MVA_formulas_Nominal = []
         print('\n--> ' + job.name +':')
     #Fill event by event:
