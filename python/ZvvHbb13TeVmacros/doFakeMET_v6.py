@@ -7,7 +7,7 @@ precut  = 90
 cut     = 130
 gROOT.SetBatch()
 
-range_ = 500
+range_ = 1000
 
 newHCSV = TLorentzVector()
 j1 = TLorentzVector()
@@ -101,56 +101,6 @@ def redoJetArray(old_tree,idx,nJet,nhJCidx,naJCidx):
     old_tree.Jet_chMult[i]        = tmpJet_chMult
     old_tree.Jet_mult[i]          = tmpJet_mult
 
-    while (i>0 and i<nJet[0] and old_tree.Jet_pt[i-1]<tmpJet_pt):
-        old_tree.Jet_id[i]       = old_tree.Jet_id[i-1]
-        old_tree.Jet_puId[i]     = old_tree.Jet_puId[i-1]
-        old_tree.Jet_pt[i]            = old_tree.Jet_pt[i-1]
-        old_tree.Jet_rawPt[i]         = old_tree.Jet_rawPt[i-1]
-        old_tree.Jet_eta[i]           = old_tree.Jet_eta[i-1]
-        old_tree.Jet_phi[i]           = old_tree.Jet_phi[i-1]
-        old_tree.Jet_btagCSV[i]       = old_tree.Jet_btagCSV[i-1]
-        old_tree.Jet_mass[i]          = old_tree.Jet_mass[i-1]
-        old_tree.Jet_leadTrackPt[i]   = old_tree.Jet_leadTrackPt[i-1]
-        old_tree.Jet_leptonPtRel[i]   = old_tree.Jet_leptonPtRel[i-1]
-        old_tree.Jet_leptonPt[i]      = old_tree.Jet_leptonPt[i-1]
-        old_tree.Jet_leptonDeltaR[i]  = old_tree.Jet_leptonDeltaR[i-1]
-        old_tree.Jet_vtxPt[i]         = old_tree.Jet_vtxPt[i-1]
-        old_tree.Jet_vtxMass[i]       = old_tree.Jet_vtxMass[i-1]
-        old_tree.Jet_vtx3DVal[i]      = old_tree.Jet_vtx3DVal[i-1]
-        old_tree.Jet_vtxNtracks[i]    = old_tree.Jet_vtxNtracks[i-1]
-        old_tree.Jet_vtx3DSig[i]      = old_tree.Jet_vtx3DSig[i-1]
-        old_tree.Jet_chEmEF[i]        = old_tree.Jet_chEmEF[i-1]
-        old_tree.Jet_neEmEF[i]        = old_tree.Jet_neEmEF[i-1]
-        old_tree.Jet_chHEF[i]         = old_tree.Jet_chHEF[i-1]
-        old_tree.Jet_neHEF[i]         = old_tree.Jet_neHEF[i-1]
-        old_tree.Jet_chMult[i]        = old_tree.Jet_chMult[i-1]
-        old_tree.Jet_mult[i]          = old_tree.Jet_mult[i-1]
-        i -= 1
-
-    old_tree.Jet_pt[i]            = tmpJet_pt
-    old_tree.Jet_rawPt[i]         = tmpJet_rawPt
-    old_tree.Jet_eta[i]           = tmpJet_eta
-    old_tree.Jet_phi[i]           = tmpJet_phi
-    old_tree.Jet_btagCSV[i]       = tmpJet_btagCSV
-    old_tree.Jet_id[i]            = tmpJet_id
-    old_tree.Jet_puId[i]          = tmpJet_puId
-    old_tree.Jet_mass[i]          = tmpJet_mass
-    old_tree.Jet_leadTrackPt[i]   = tmpJet_leadTrackPt
-    old_tree.Jet_leptonPtRel[i]   = tmpJet_leptonPtRel
-    old_tree.Jet_leptonPt[i]      = tmpJet_leptonPt
-    old_tree.Jet_leptonDeltaR[i]  = tmpJet_leptonDeltaR
-    old_tree.Jet_vtxPt[i]         = tmpJet_vtxPt
-    old_tree.Jet_vtxMass[i]       = tmpJet_vtxMass
-    old_tree.Jet_vtx3DVal[i]      = tmpJet_vtx3DVal
-    old_tree.Jet_vtxNtracks[i]    = tmpJet_vtxNtracks
-    old_tree.Jet_vtx3DSig[i]      = tmpJet_vtx3DSig
-    old_tree.Jet_chEmEF[i]        = tmpJet_chEmEF
-    old_tree.Jet_neEmEF[i]        = tmpJet_neEmEF
-    old_tree.Jet_chHEF[i]         = tmpJet_chHEF
-    old_tree.Jet_neHEF[i]         = tmpJet_neHEF
-    old_tree.Jet_chMult[i]        = tmpJet_chMult
-    old_tree.Jet_mult[i]          = tmpJet_mult
-
     if nJet[0]>0 and old_tree.Jet_pt[nJet[0]-1]<15: nJet[0]=nJet[0]-1
 
     CSVs=[]
@@ -165,7 +115,6 @@ def redoJetArray(old_tree,idx,nJet,nhJCidx,naJCidx):
     hJCidx =0
     aJCidx =0
     count=0
-    warning =False
     for CSV,i in CSVs:
 #        print count,i
         if (count<2):
@@ -174,19 +123,17 @@ def redoJetArray(old_tree,idx,nJet,nhJCidx,naJCidx):
                 hJCidx+=1
             else:
                 print "Warning hJCidx:",hJCidx,old_tree.nhJCidx,count
-                warning=True
         else:
             if aJCidx<old_tree.naJCidx:
                 old_tree.aJCidx[aJCidx] = i
                 aJCidx+=1
             else:
                 print "Warning aJCidx:",aJCidx,old_tree.naJCidx,count
-                warning=True
         count+=1
 
     nhJCidx[0] = hJCidx
     naJCidx[0] = aJCidx
-    return warning
+
 
 def redohJCidx(old_tree):
     maxCSVidx = -1
@@ -304,15 +251,14 @@ def smartFit(histo,default,formula="gaus(0)+gaus(3)+gaus(6)+gaus(9)"):
 #    histo.Fit(function,"","",min_,max_)
 #    return function
 
-def getJetIdx(nJets,nGenJets,Jet_pt,Jet_mcIdx,GenJet_wNuPt,GenJet_wNuEta):
+def getJetIdx(nJets,nGenJets,Jet_pt,Jet_mcIdx,GenJet_wNuPt):
     idx=int(-1)
     diff=-1
     ndiff=0
     for i in range(nJets):
 #        if Jet_mcIdx[i]<0 or Jet_mcIdx[i]>=nGenJets: continue
 #        if Jet_mcIdx[i]>=nGenJets or Jet_mcIdx[i]<0 : continue
-        if Jet_mcIdx[i]>=nGenJets or Jet_mcIdx[i]<0: continue
-#        if abs(GenJet_wNuEta[Jet_mcIdx[i]])>2.6 : continue
+        if Jet_mcIdx[i]>=nGenJets or Jet_mcIdx[i]<0 or abs(tree.GenJet_wNuEta[Jet_mcIdx[i]])>2.6 : continue
         ndiff=abs(GenJet_wNuPt[Jet_mcIdx[i]]-Jet_pt[i])
         if ndiff>diff:
             idx=i
@@ -320,9 +266,7 @@ def getJetIdx(nJets,nGenJets,Jet_pt,Jet_mcIdx,GenJet_wNuPt,GenJet_wNuEta):
     return int(idx)
 
 def newPt(GenJet_wNuPt,Jet_pt,Jet_phi,met_pt,met_phi,function,cut):
-#    sign = 1
-#    if Jet_pt-GenJet_wNuPt<0:
-#        sign = -1
+    sign = (Jet_pt-GenJet_wNuPt)/abs(Jet_pt-GenJet_wNuPt)
     Jet_ptNew = Jet_pt
     met_ptx = met_pt * cos(met_phi)
     met_pty = met_pt * sin(met_phi)
@@ -333,18 +277,17 @@ def newPt(GenJet_wNuPt,Jet_pt,Jet_phi,met_pt,met_phi,function,cut):
     i=0
     newMet_pt_squared = met_pt**2
     count=1
-    rdm_min = 0
-    rdm_max = 0
+    Jet_ptNew_min = Jet_ptNew
+    Jet_ptNew_max = Jet_ptNew
     while(newMet_pt_squared < cut**2 and count<1E5):
         count+=1
         rdm = function.GetRandom()
 #        while rdm*sign<0:
 #            rdm = function.GetRandom()
-        if rdm<rdm_max and rdm>rdm_min: continue
-#        Jet_ptNew = GenJet_wNuPt * exp(rdm)
         Jet_ptNew = GenJet_wNuPt + rdm
-        rdm_min = min(rdm_min,rdm)
-        rdm_max = max(rdm_max,rdm)
+        if Jet_ptNew<Jet_ptNew_max and Jet_ptNew>Jet_ptNew_min: continue
+        Jet_ptNew_min = min(Jet_ptNew_min,Jet_ptNew)
+        Jet_ptNew_max = max(Jet_ptNew_max,Jet_ptNew)
         met_ptx = metNoJet_ptx - Jet_ptNew * cos(Jet_phi)
         met_pty = metNoJet_pty - Jet_ptNew * sin(Jet_phi)
         newMet_pt_squared = met_ptx**2+met_pty**2
@@ -379,32 +322,27 @@ def doFile(fileName="tree_100_QCDHT700.root",outName="newTree.root",function=Non
 
     if function is None:
         c1              = TCanvas()
-        chainN          = fileName
+#        chainN          = fileName
         chainN          = fileName.split("/tree_")[0]+"/tree_*.root"
-        chainN          = chainN.replace(".root/tree_*.root",".root")
         chain           = TChain("tree")
         chain.Add(chainN)
-#        nEntries = chain.GetEntries()
-#        histo = TH1F("histo","histo",2000,-1000,+1000)
-#        for entry in range(0,nEntries):
-#            #print entry
-##            if entry>1E5: break
-#            chain.GetEntry(entry)
-#            if chain.met_pt<precut: continue
-#            idx = getJetIdx(chain.nJet,chain.nGenJet,chain.Jet_pt,chain.Jet_mcIdx,chain.GenJet_wNuPt)
-#            if idx<0:
-#                print "X"
-#                continue
-#            if chain.Jet_mcIdx[idx]<0: continue
-#            histo.Fill((chain.Jet_pt[idx]-chain.GenJet_wNuPt[chain.Jet_mcIdx[idx]]))
-#        histo.Draw()
+        nEntries = chain.GetEntries()
+        histo = TH1F("histo","histo",2000,-1000,+1000)
+        for entry in range(0,nEntries):
+            #print entry
+#            if entry>1E5: break
+            chain.GetEntry(entry)
+            if chain.met_pt<precut: continue
+            idx = getJetIdx(chain.nJet,chain.nGenJet,chain.Jet_pt,chain.Jet_mcIdx,chain.GenJet_wNuPt)
+            if idx<0:
+                print "X"
+                continue
+            if chain.Jet_mcIdx[idx]<0: continue
+            histo.Fill((chain.Jet_pt[idx]-chain.GenJet_wNuPt[chain.Jet_mcIdx[idx]]))
+        histo.Draw()
         print "Fitting function in: ",chainN
-#        chain.Draw(" (Jet_pt-GenJet_wNuPt[Jet_mcIdx])  >> histo(1000,%d,%d)"%(-range_,range_),"Jet_mcIdx>=0 && MaxIf$((abs(Jet_pt-GenJet_wNuPt[Jet_mcIdx])),Jet_mcIdx>=0)==abs(Jet_pt-GenJet_wNuPt[Jet_mcIdx]) && (met_pt > %d) "%precut,"NORM")
-#        chain.Draw(" log(Jet_pt/GenJet_wNuPt[Jet_mcIdx])  >> histo(1000,%d,%d)"%(-range_,range_),"abs(Jet_eta)<2.6 && GenJet_wNuPt[Jet_mcIdx]>20 && Jet_id>=3 && Jet_puId==1 && (met_pt > %d) && Jet_mcIdx>=0 && abs(Jet_eta)<2.6 && Jet_pt>20 && Jet_id>=3 && Jet_puId==1 && abs(Jet_eta[1])<2.6 && Jet_id[1]>=3 && Jet_puId[1]==1 && Jet_id[hJCidx[0]]>=3 && Jet_puId[hJCidx[0]]==1 && Jet_id[hJCidx[1]]>=3  && Jet_puId[hJCidx[1]]==1 && (MaxIf$((abs(Jet_pt-GenJet_wNuPt[Jet_mcIdx])),Jet_mcIdx>=0)==abs(Jet_pt-GenJet_wNuPt[Jet_mcIdx]))"%cut,"NORM")
-        chain.Draw(" (Jet_pt-GenJet_wNuPt[Jet_mcIdx])  >> histo(1000,%d,%d)"%(-range_,range_),"(met_pt > %d) && (mhtJet30 > %d) && abs(Jet_eta)<2.6 && Jet_id>=3 && Jet_puId==1 && Jet_mcIdx>=0 && abs(Jet_eta[1])<2.6 && Jet_id[1]>=3 && Jet_puId[1]==1 && abs(Jet_eta[0])<2.6 && Jet_id[0]>=3 && Jet_puId[0]==1 && Jet_id[hJCidx[0]]>=3 && Jet_puId[hJCidx[0]]==1 && Jet_id[hJCidx[1]]>=3  && Jet_puId[hJCidx[1]]==1 && (MaxIf$((abs(Jet_pt-GenJet_wNuPt[Jet_mcIdx])),Jet_mcIdx>=0)==abs(Jet_pt-GenJet_wNuPt[Jet_mcIdx]))"%(cut,cut),"NORM")
-#        chain.Draw(" (Jet_pt-GenJet_wNuPt[Jet_mcIdx])  >> histo(1000,%d,%d)"%(-range_,range_),"(met_pt > %d) Jet_mcIdx>=0 && MaxIf$((abs(Jet_pt-GenJet_wNuPt[Jet_mcIdx])),Jet_mcIdx>=0)==abs(Jet_pt-GenJet_wNuPt[Jet_mcIdx]) &&  && (HCSV_pt>50 && Jet_btagCSV[hJCidx[1]]>0.4 && HCSV_mass<500 && HCSV_mass>0 && abs(TVector2::Phi_mpi_pi(HCSV_phi-met_phi))>0.7 && abs(Jet_eta)<2.6 && Jet_pt>20 && Jet_id>=3 && Jet_puId==1 && abs(Jet_eta[1])<2.6 && Jet_id[1]>=3 && Jet_puId[1]==1 && Jet_id[hJCidx[0]]>=3 && Jet_puId[hJCidx[0]]==1 && Jet_id[hJCidx[1]]>=3  && Jet_puId[hJCidx[1]]==1)"%precut,"NORM")
-
-        histo = gDirectory.Get("histo")
+#        chain.Draw(" log(Jet_pt/GenJet_wNuPt[Jet_mcIdx])  >> histo(1000,-3,3)","Jet_mcIdx==0 && GenJet_wNuPt[Jet_mcIdx]>0 && abs(GenJet_wNuEta[Jet_mcIdx])<2.6 && met_pt>%d"%precut,"NORM")
+#        histo = gDirectory.Get("histo")
 
 #        default=(0.015,0.027,0.094,0.0060,-0.050,0.15,0.00015,-0.13,0.44)
 #        function = smartFit(histo,default,"gaus(0)+gaus(3)+gaus(6)")
@@ -502,35 +440,21 @@ def doFile(fileName="tree_100_QCDHT700.root",outName="newTree.root",function=Non
     FakeMET_jetPt = array('f',[0])
     tree.Branch('FakeMET_jetPt',FakeMET_jetPt,'FakeMET_jetPt/F')
 
-    FakeMET_jetPtNew = array('f',[0])
-    tree.Branch('FakeMET_jetPtNew',FakeMET_jetPtNew,'FakeMET_jetPtNew/F')
-
     FakeMET_jetIdx = array('i',[0])
     tree.Branch('FakeMET_jetIdx',FakeMET_jetIdx,'FakeMET_jetIdx/I')
 
-    FakeMET_attempts = array('i',[0])
-    tree.Branch('FakeMET_attempts',FakeMET_attempts,'FakeMET_attempts/I')
-
-    FakeMET_warning = array('i',[0])
-    tree.Branch('FakeMET_warning',FakeMET_warning,'FakeMET_warning/I')
-
     nEntries = old_tree.GetEntries()
 
-    formCut = TTreeFormula("formCut","(met_pt > %d) && (mhtJet30 > %d) && abs(Jet_eta[1])<2.6 && Jet_id[1]>=3 && Jet_puId[1]==1 && abs(Jet_eta[0])<2.6 && Jet_id[0]>=3 && Jet_puId[0]==1 && Jet_id[hJCidx[0]]>=3 && Jet_puId[hJCidx[0]]==1 && Jet_id[hJCidx[1]]>=3  && Jet_puId[hJCidx[1]]==1"%(precut,precut),old_tree)
     for entry in range(0,nEntries):
         old_tree.GetEntry(entry)
 #        print old_tree.nJet
 #        print nJet[0]
 #        print nJet
 #        print
-        formCut.GetNdata()
-        bit = formCut.EvalInstance()
-
-        if not bit: continue
-        if type(old_tree)!=TTree: continue
+        if not old_tree.met_pt>precut: continue
     #    if entry>1000: break
+    #    idx                     = getJetIdx(old_tree.nJet,old_tree.nGenJet,old_tree.Jet_pt,old_tree.Jet_mcIdx,old_tree.GenJet_wNuPt)
         idx = 0
-        idx                     = getJetIdx(old_tree.nJet,old_tree.nGenJet,old_tree.Jet_pt,old_tree.Jet_mcIdx,old_tree.GenJet_wNuPt,old_tree.GenJet_wNuEta)
         if idx>=old_tree.nJet or idx<0 or old_tree.Jet_mcIdx[idx]<0 or old_tree.Jet_mcIdx[idx]>=old_tree.nGenJet:
             print
             print idx
@@ -540,10 +464,6 @@ def doFile(fileName="tree_100_QCDHT700.root",outName="newTree.root",function=Non
         FakeMET_metPhi[0]       = old_tree.met_phi
         FakeMET_jetPt[0]        = old_tree.Jet_pt[idx]
         FakeMET_jetIdx[0]       = idx
-
-        (met_pt[0],met_phi[0])          = (old_tree.met_pt,old_tree.met_phi)
-        htJet30[0]                      = old_tree.htJet30
-        (mhtJet30[0],mhtPhiJet30[0])    = (old_tree.mhtJet30,old_tree.mhtPhiJet30)
 
         nJet[0]    = old_tree.nJet
         nhJCidx[0] = old_tree.nhJCidx
@@ -559,23 +479,14 @@ def doFile(fileName="tree_100_QCDHT700.root",outName="newTree.root",function=Non
 #            print old_tree.Jet_pt[i], old_tree.Jet_eta[i], old_tree.Jet_btagCSV[i]
 
         newPt_,count            = newPt(old_tree.GenJet_wNuPt[old_tree.Jet_mcIdx[idx]],old_tree.Jet_pt[idx],old_tree.Jet_phi[idx],old_tree.met_pt,old_tree.met_phi,function,cut)
-        FakeMET_jetPtNew[0]     = newPt_
-        FakeMET_attempts[0]     = count
         newPt_15                = newPt_
         newPt_30                = newPt_
-        if newPt_15<15: newPt_15=0.
-        if newPt_30<30: newPt_30=0.
+        if newPt_15<15: newPt_15=0
+        if newPt_30<30: newPt_30=0
         (met_pt[0],met_phi[0])  = correctMet(old_tree.met_pt,old_tree.met_phi,old_tree.Jet_pt[idx],old_tree.Jet_phi[idx],newPt_)
         if old_tree.Jet_pt[idx]>30 and old_tree.Jet_puId[idx]==1 and abs(old_tree.Jet_eta[idx])<2.4:
             htJet30[0]  = old_tree.htJet30 - old_tree.Jet_pt[idx] + newPt_30
             (mhtJet30[0],mhtPhiJet30[0]) = correctMet(old_tree.mhtJet30,old_tree.mhtPhiJet30,old_tree.Jet_pt[idx],old_tree.Jet_phi[idx],newPt_30)
-        elif newPt_30>30 and old_tree.Jet_puId[idx]==1 and abs(old_tree.Jet_eta[idx])<2.4:
-            ## if the pt was <30 and now is >30
-            htJet30[0]  = old_tree.htJet30 + newPt_30
-            (mhtJet30[0],mhtPhiJet30[0]) = correctMet(old_tree.mhtJet30,old_tree.mhtPhiJet30,0,old_tree.Jet_phi[idx],newPt_30)
-
-        if old_tree.Jet_pt[idx]!=FakeMET_jetPt[0]:
-            print "Achtung!", old_tree.Jet_pt[idx],FakeMET_jetPt[0]
 
         old_tree.Jet_pt[idx]    = newPt_15
         Vtype[0]                   = 4
@@ -584,8 +495,7 @@ def doFile(fileName="tree_100_QCDHT700.root",outName="newTree.root",function=Non
         redoHCSV_ = True
         if idx in old_tree.hJCidx: redoHCSV_ = True
 
-        warning = redoJetArray(old_tree,idx,nJet,nhJCidx,naJCidx)
-        FakeMET_warning[0]     = warning
+        redoJetArray(old_tree,idx,nJet,nhJCidx,naJCidx)
 
 #        if newPt_15==0:
 #            print "X"*1000
@@ -599,7 +509,7 @@ def doFile(fileName="tree_100_QCDHT700.root",outName="newTree.root",function=Non
 #                print old_tree.Jet_pt[i], old_tree.Jet_eta[i], old_tree.Jet_btagCSV[i]
 
         ## if the leading jet was in hJCidx and now pt<15 -> recalculate hJCidx
-#        if idx in old_tree.hJCidx and newPt_15==0: redohJCidx(old_tree)
+        if idx in old_tree.hJCidx and newPt_15==0: redohJCidx(old_tree)
 
         if redoHCSV_:    redoHCSV(old_tree,HCSV_pt,HCSV_eta,HCSV_phi,HCSV_mass)
 
@@ -626,7 +536,6 @@ if __name__ == "__main__":
     f       = TFile("newTree_fit.root")
     function = f.Get("c1").GetPrimitive("histo")
 #    function = copy.copy(function)
-#    fileName="/scratch/sdonato/VHbbRun2/V14_forPreApproval/CMSSW_7_1_5/src/Xbb/env/ZvvHighPt_V15_QCD_HT300to500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root"
     fileName="/gpfs/ddn/srm/cms/store/user/arizzi/VHBBHeppyV14//QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/VHBB_HEPPY_V14_QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8__RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/151024_181957/0000/tree_1.root"
 #    fileName="/scratch/sdonato/VHbbRun2/V14_forPreApproval/CMSSW_7_1_5/src/Xbb/env/ZvvHighPt_V15_QCD_HT300to500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root"
 #    fileName="/scratch/sdonato/VHbbRun2/V14_forPreApproval/CMSSW_7_1_5/src/Xbb/env/ZvvHighPt_V15_QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root"

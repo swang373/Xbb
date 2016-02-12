@@ -1,5 +1,6 @@
 import sys
 from doFakeMET import *
+#from doFakeMETStupid import *
 
 try:
   fileNames = sys.argv[1]
