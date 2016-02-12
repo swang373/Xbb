@@ -224,7 +224,8 @@ def doPlots(ped,fileNum,fileDen):
 
 #    DataMC = doRatio(turnOnData,turnOnMC)
 
-    function = ROOT.TF1("turnonPt","1-(0.5-0.5*erf( (x-[0])/[1]))*([3])-[2] ",functionMin,functionMax)
+    #function = ROOT.TF1("turnonPt","1-(0.5-0.5*erf( (x-[0])/[1]))*([3])-[2] ",functionMin,functionMax)
+    function = ROOT.TF1("turnonPt","1-(0.5-0.5*TMath::Erf( (x-[0])/[1]))*([3])-[2] ",functionMin,functionMax)
     function.SetParameters(105,45,0.01,1)
     function.SetParLimits(0,0,200)
     function.SetParLimits(1,0,100)
@@ -462,14 +463,19 @@ ROOT.gStyle.SetOptFit(0)
 
 ###############################
 
-fileNum = "/scratch/sdonato/VHbbRun2/V14_forPreApproval/triggerMET/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnEleNum_minMETMHT_125.root"
-fileDen = "/scratch/sdonato/VHbbRun2/V14_forPreApproval/triggerMET/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnEleDen_minMETMHT_125.root"
-ped="ele_std"
-doPlots(ped,fileNum,fileDen)
+#fileNum = "/scratch/sdonato/VHbbRun2/V14_forPreApproval/triggerMET/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnEleNum_minMETMHT_125.root"
+#fileDen = "/scratch/sdonato/VHbbRun2/V14_forPreApproval/triggerMET/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnEleDen_minMETMHT_125.root"
+#ped="ele_std"
+#doPlots(ped,fileNum,fileDen)
 
-fileNum = "/scratch/sdonato/VHbbRun2/V14_forPreApproval/triggerMET/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnMuNum_minMETMHT_125.root"
-fileDen = "/scratch/sdonato/VHbbRun2/V14_forPreApproval/triggerMET/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnMuDen_minMETMHT_125.root"
-ped="mu_std"
+#fileNum = "/scratch/sdonato/VHbbRun2/V14_forPreApproval/triggerMET/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnMuNum_minMETMHT_125.root"
+#fileDen = "/scratch/sdonato/VHbbRun2/V14_forPreApproval/triggerMET/CMSSW_7_4_7_patch1/src/Xbb/Stacks_expertAllnominal_v0.0.0/root/TurnOnMuDen_minMETMHT_125.root"
+#ped="mu_std"
+#doPlots(ped,fileNum,fileDen)
+
+fileNum = "../../../Stacks_expertAllnominal_v0.0.0/root/TurnOnMuNum_minMETMHT_125.root"
+fileDen = "../../../Stacks_expertAllnominal_v0.0.0/root/TurnOnMuDen_minMETMHT_125.root"
+ped="mu_TT"
 doPlots(ped,fileNum,fileDen)
 
 
