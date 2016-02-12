@@ -15,6 +15,17 @@ maxRatio    = 1.2
 functionMin = 80
 functionMax = 500
 
+title = "aaa"
+
+def getTitle(fileName):
+    file_ = ROOT.TFile.Open(fileName)
+    file_.cd()
+    name = file_.GetListOfKeys().First().GetName()
+    canvas =  file_.Get(name)
+    pad =  canvas.GetPrimitive("unten")
+    title =  pad.GetPrimitive("Ratio").GetXaxis().GetTitle()
+    return title
+    
 def DivideTGraph(num,den):
     Ns_den   = den.GetN()
     Xs_den   = den.GetX()
@@ -36,11 +47,14 @@ def DivideTGraph(num,den):
     print "Xs_den",Xs_den
     Xs_new   = [ Xs_den[i] for i in range( Ns_den)]
     print "Xs_new",Xs_new
-    Ys_new   = [ Ys_num[i]/Ys_den[i] for i in range( Ns_den)]
+    Ys_new   = [ Ys_num[i]/(Ys_den[i]+1E-7) for i in range( Ns_den)]
     EXLs_new = [ EXLs_den[i] for i in range( Ns_den)]
     EXHs_new = [ EXHs_den[i] for i in range( Ns_den)]
-    EYLs_new = [ Ys_new[i]*sqrt((EYLs_num[i]/(Ys_num[i]+1e-9))**2+(EYHs_den[i]/(Ys_den[i]+1e-9))**2) for i in range( Ns_den)]
-    EYHs_new = [ Ys_new[i]*sqrt((EYHs_num[i]/(Ys_num[i]+1e-9))**2+(EYLs_den[i]/(Ys_den[i]+1e-9))**2) for i in range( Ns_den)]
+    [ EYLs_num[i] for i in range( Ns_den)]
+    [ ((EYLs_num[i]/(Ys_num[i]+1E-7))**2) for i in range( Ns_den)]
+    [ Ys_new[i]*sqrt((EYLs_num[i]/(Ys_num[i]+1E-7))**2) for i in range( Ns_den)]
+    EYLs_new = [ Ys_new[i]*sqrt((EYLs_num[i]/(Ys_num[i]+1E-7))**2+(EYHs_den[i]/(Ys_den[i]+1E-7))**2) for i in range( Ns_den)]
+    EYHs_new = [ Ys_new[i]*sqrt((EYHs_num[i]/(Ys_num[i]+1E-7))**2+(EYLs_den[i]/(Ys_den[i]+1E-7))**2) for i in range( Ns_den)]
 
     print "DivideTGraph: len"
 
@@ -76,8 +90,8 @@ def getMCAndData(fileName):
     data =  data_tmp.Clone("data")
     MC.SetTitle("MC")
     data.SetTitle("data")
-    MC.GetXaxis().SetTitle("min(MET,MHT) [GeV]")
-    data.GetXaxis().SetTitle("min(MET,MHT) [GeV]")
+    MC.GetXaxis().SetTitle(title)
+    data.GetXaxis().SetTitle(title)
     MC.SetMarkerStyle(20)
     data.SetMarkerStyle(20)
     MC.SetMarkerColor(ROOT.kBlack)
@@ -100,7 +114,7 @@ def doRatio(num, den, option=""):
         mratio.SetMarkerColor(ROOT.kBlack)
         mratio.SetLineColor(ROOT.kBlack)
         mratio.SetName("ratio")
-        mratio.GetXaxis().SetTitle("off(MET,MHT)")
+        mratio.GetXaxis().SetTitle(title)
 #        mratio = histo.Clone(triggerName+"_eff")
 #        mratio.Divide(histo,inclusive,1.,1.,"B")
 #        mratio.Divide(histo,inclusive,1.,1.,"cl=0.683 b(1,1) mode")
@@ -112,6 +126,8 @@ def doRatio(num, den, option=""):
         print ""
 
         for i in range(den.GetNbinsX()):
+            if den.GetBinContent(i)<=0:
+                den.SetBinContent(i,1.E-7)
             if num.GetBinContent(i)>den.GetBinContent(i):
                 print "WARNING!"
                 print num.GetBinContent(i),den.GetBinContent(i)
@@ -120,7 +136,7 @@ def doRatio(num, den, option=""):
 #            den.SetBinContent(i,den.GetBinContent(i))
 
         mratio.Divide(num,den,"cl=0.683 b(1,1) mode")
-        print "End ratio"
+        print "End ratio. bins:",mratio.GetN()," num:",num.GetNbinsX()," den:",den.GetNbinsX()
         return mratio
 
 def confidenceInterval(graph, function):
@@ -241,6 +257,8 @@ def doPlots(ped,fileNum,fileDen):
 
     turnOnMC.SetMaximum(maxTurnOn)
     turnOnMC.SetMinimum(minTurnOn)
+    turnOnMC.GetXaxis().SetTitle(title)
+    turnOnMC.GetYaxis().SetTitle("Efficiency")
 
     turnOnMC.Draw("AP")
     TurnOnMC.Draw("same")
@@ -254,6 +272,8 @@ def doPlots(ped,fileNum,fileDen):
 
     turnOnData.SetMaximum(maxTurnOn)
     turnOnData.SetMinimum(minTurnOn)
+    turnOnData.GetXaxis().SetTitle(title)
+    turnOnData.GetYaxis().SetTitle("Efficiency")
 
     turnOnData.Draw("AP")
     TurnOnData.Draw("same")
@@ -276,7 +296,7 @@ def doPlots(ped,fileNum,fileDen):
     ratio.SetMinimum(minRatio)
 
     ratio.SetTitle("Data/MC efficiency ratio")
-    ratio.GetXaxis().SetTitle("min(MET,MHT) [GeV]")
+    ratio.GetXaxis().SetTitle(title)
     ratio.GetYaxis().SetTitle("ratio")
     ratio.Draw("AP")
     ratioFit.Draw("same")
@@ -304,7 +324,7 @@ def doPlots(ped,fileNum,fileDen):
     TurnOnData.SetLineColor(colorData)
 
     turnOnData.SetTitle("Trigger efficiency")
-    turnOnData.GetXaxis().SetTitle("min(MET,MHT) [GeV]")
+    turnOnData.GetXaxis().SetTitle(title)
     turnOnData.GetYaxis().SetTitle("Efficiency")
 
     turnOnData.Draw("AP")
@@ -473,11 +493,24 @@ ROOT.gStyle.SetOptFit(0)
 #ped="mu_std"
 #doPlots(ped,fileNum,fileDen)
 
-fileNum = "../../../Stacks_expertAllnominal_v0.0.0/root/TurnOnMuNum_minMETMHT_125.root"
-fileDen = "../../../Stacks_expertAllnominal_v0.0.0/root/TurnOnMuDen_minMETMHT_125.root"
-ped="mu_TT"
+#fileNum = "../../../Stacks_expertAllnominal_v0.0.0/root/TurnOnMuNum_minMETMHT_125.root"
+#fileDen = "../../../Stacks_expertAllnominal_v0.0.0/root/TurnOnMuDen_minMETMHT_125.root"
+#ped="mu_TT"
+#doPlots(ped,fileNum,fileDen)
+
+fileNum = "../../../Stacks_expertAllnominal_v0.0.0/root/TurnOnCSVTTMuNum_TurnOnCSV_125.root"
+fileDen = "../../../Stacks_expertAllnominal_v0.0.0/root/TurnOnCSVTTMuDen_TurnOnCSV_125.root"
+ped="mu_TT_CSV"
+title = getTitle(fileNum)
 doPlots(ped,fileNum,fileDen)
 
+
+fileNum = "../../../Stacks_expertAllnominal_v0.0.0/root/TurnOnCSVTTMuNum_TurnOnLogCSV_125.root"
+fileDen = "../../../Stacks_expertAllnominal_v0.0.0/root/TurnOnCSVTTMuDen_TurnOnLogCSV_125.root"
+ped="mu_TT_LogCSV"
+title = getTitle(fileNum)
+
+doPlots(ped,fileNum,fileDen)
 
 
 
