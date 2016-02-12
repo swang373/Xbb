@@ -3,7 +3,7 @@ from array import *
 from math import *
 
 gROOT.SetBatch()
-
+preselection = "AntiSoftLetponDecay && (!Jet_over[0] && !Jet_overMC[0] && Sum$((Jet_under||Jet_underMC) * (Jet_pt>25) * (abs(TVector2::Phi_mpi_pi ( Jet_phi-met_phi ))<0.785))==0)"
 
 def fixCountFile(fileName="tree_100_QCDHT700.root",outName="newTree.root"):
 
@@ -27,11 +27,18 @@ def fixCountFile(fileName="tree_100_QCDHT700.root",outName="newTree.root"):
     CountNegWeight  = old_CountNegWeight.Clone("CountNegWeight")
     FakeMET_count   = old_FakeMET_count.Clone("FakeMET_count")
 
+    newcount        = old_Count.GetBinContent(1)
     count           = old_FakeMET_count.GetBinContent(1)
-    events          = 1.*old_tree.Draw("","")
-    eventsOriginal  = 1.*old_tree.Draw("","FakeMET_met==met_pt")
-    if eventsOriginal==0: eventsOriginal=events
-    newcount        = count*events/eventsOriginal
+    events          = 1.*old_tree.Draw("",preselection)
+    eventsOriginal  = 1.*old_tree.Draw("","(FakeMET_met==met_pt)&&"+preselection)
+    if eventsOriginal!=0:
+        oldcount        = newcount
+        newcount        = count*events/eventsOriginal
+        print "eventsTrue:",eventsOriginal
+        print "eventsFake(including true):",events
+        print "count original:",count
+        print "count fake (old):",oldcount
+        print "count fake (new):",newcount
 
 
     Count.SetBinContent(1,newcount)
@@ -50,18 +57,18 @@ def fixCountFile(fileName="tree_100_QCDHT700.root",outName="newTree.root"):
 
 if __name__ == "__main__":
 
-    dirIn       = "/scratch/sdonato/VHbbRun2/V14_forPreApproval/CMSSW_7_1_5/src/Xbb/env/syst/MVAout_v0.0.0/"
-    dirOut       = "/scratch/sdonato/VHbbRun2/V14_forPreApproval/CMSSW_7_1_5/src/Xbb/env/syst/MVAout_v0.0.0/"
+    dirIn       = "/scratch/sdonato/VHbbRun2/V14_forPreApproval/CMSSW_7_1_5/src/Xbb/env/syst/"
+    dirOut       = "/scratch/sdonato/VHbbRun2/V14_forPreApproval/CMSSW_7_1_5/src/Xbb/env/syst/"
 
     files = [
-#        'ZvvHighPt_V15_FakeQCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root',
-#        'ZvvHighPt_V15_FakeQCD_HT100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root',
-#        'ZvvHighPt_V15_FakeQCD_HT1500to2000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root',
-#        'ZvvHighPt_V15_FakeQCD_HT2000toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root',
+        'ZvvHighPt_V15_FakeQCD_HT100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root',
         'ZvvHighPt_V15_FakeQCD_HT200to300_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root',
         'ZvvHighPt_V15_FakeQCD_HT300to500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root',
         'ZvvHighPt_V15_FakeQCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root',
         'ZvvHighPt_V15_FakeQCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root',
+        'ZvvHighPt_V15_FakeQCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root',
+       'ZvvHighPt_V15_FakeQCD_HT1500to2000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root',
+        'ZvvHighPt_V15_FakeQCD_HT2000toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root',
     ]
 
     import os
