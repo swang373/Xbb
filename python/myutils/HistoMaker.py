@@ -7,6 +7,7 @@ from BetterConfigParser import BetterConfigParser
 from TreeCache import TreeCache
 from math import sqrt
 from copy import copy
+import time
 
 class HistoMaker:
     def __init__(self, samples, path, config, optionsList,GroupDict=None):
@@ -42,6 +43,7 @@ class HistoMaker:
         print "========================\n"
 
     def get_histos_from_tree(self,job,cutOverWrite=None,quick=True):
+        start_time = time.time()
         print "get_histos_from_tree START for ",job.name
         '''Function that produce the trees from a HistoMaker'''
          
@@ -205,7 +207,7 @@ class HistoMaker:
         del CuttedTree
         print "Finished to extract the histos from trees (get_histos_from_tree)"
         print "================================================================\n"
-        print "get_histos_from_tree DONE for ",job.name
+        print "get_histos_from_tree DONE for ",job.name," in ", str(time.time() - start_time)," s."
         return hTreeList
        
     @property

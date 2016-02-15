@@ -2,6 +2,7 @@ from __future__ import print_function
 import os,sys,subprocess,hashlib
 import ROOT
 from samplesclass import Sample
+import time
 
 class TreeCache:
     def __init__(self, cutList, sampleList, path, config):
@@ -52,6 +53,7 @@ class TreeCache:
 
     def _trim_tree(self, sample, forceReDo = False):
 
+        start_time = time.time()
         print("Caching the sample")
         print("==================\n")
 
@@ -164,6 +166,7 @@ class TreeCache:
 #            print("@ERROR: Zombie file")
         del output
         print ("debug4")
+        print ("I've done " + theName + " in " + str(time.time() - start_time) + " s.")
         return (theName,theHash)
 
 

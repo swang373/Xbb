@@ -50,6 +50,15 @@ bash runAll.sh  ZZpythia     ZvvHbb13TeV eval >& log/logEvalZZpythia  &
 #bash runAll.sh  ZZTo2L2Q     ZvvHbb13TeV eval >& log/logEvalZZTo2L2Q  &
 bash runAll.sh  ZZTo2Q2Nu     ZvvHbb13TeV eval >& log/logEvalZZTo2Q2Nu  &
 
+bash runAll.sh  FakeQCDHT100     ZvvHbb13TeV eval >& log/logEvalFakeQCDHT100  &
+bash runAll.sh  FakeQCDHT200     ZvvHbb13TeV eval >& log/logEvalFakeQCDHT200  &
+bash runAll.sh  FakeQCDHT300     ZvvHbb13TeV eval >& log/logEvalFakeQCDHT300  &
+bash runAll.sh  FakeQCDHT500     ZvvHbb13TeV eval >& log/logEvalFakeQCDHT500  &
+bash runAll.sh  FakeQCDHT700     ZvvHbb13TeV eval >& log/logEvalFakeQCDHT700  &
+bash runAll.sh  FakeQCDHT1000     ZvvHbb13TeV eval >& log/logEvalFakeQCDHT1000  &
+bash runAll.sh  FakeQCDHT1500     ZvvHbb13TeV eval >& log/logEvalFakeQCDHT1500  &
+bash runAll.sh  FakeQCDHT2000     ZvvHbb13TeV eval >& log/logEvalFakeQCDHT2000  &
+
 bash runAll.sh  SingleElectron     ZvvHbb13TeV eval >& log/logEvalSingleElectron  &
 bash runAll.sh  SingleMuon     ZvvHbb13TeV eval >& log/logEvalSingleMuon  &
 bash runAll.sh  DoubleEG     ZvvHbb13TeV eval >& log/logEvalDoubleEG  &
