@@ -1,3 +1,4 @@
+#include <algorithm>
 void MET_onQCD(){
 gROOT->SetBatch();
 gStyle->SetPadGridX(1);
@@ -6,8 +7,11 @@ gStyle->SetOptStat(0);
 gStyle->SetLineWidth(2);
 gROOT->ForceStyle();
 
+
 TChain* tree = new TChain("tree");
-tree->Add("/gpfs/ddn/srm/cms/store/user/arizzi/VHBBHeppyV14/QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/VHBB_HEPPY_V14_QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8__RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/151025_083726/0000/tree_1.root");
+//tree->Add("../MCAndDataLinks/QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/VHBB_HEPPY_V20_QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-Py8__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160210_093408/0000/tree_34.root");
+tree->Add("../MCAndDataLinks/QCD_HT200to300_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/VHBB_HEPPY_V20_QCD_HT200to300_TuneCUETP8M1_13TeV-madgraphMLM-Py8__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_170630/0000/tree_137.root");
+//tree->Add("/gpfs/ddn/srm/cms/store/user/arizzi/VHBBHeppyV14/QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/VHBB_HEPPY_V14_QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8__RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/151025_083726/0000/tree_1.root");
 //TFile *_file0 = TFile::Open("../../env/ZvvHighPt_V12_QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root");
 //tree = (TTree*) _file0->Get("tree");
 
@@ -36,7 +40,7 @@ metPuppiDistr->SetLineColor(kRed);
 mhtDistr->SetLineColor(kBlue);
 metType1p2Distr->SetLineColor(kGreen);
 
-maxim = max(max(metDistr->GetMaximum(),mhtDistr->GetMaximum()),max(metPuppiDistr->GetMaximum(),metType1p2Distr->GetMaximum()));
+float maxim = max(max(metDistr->GetMaximum(),mhtDistr->GetMaximum()),max(metPuppiDistr->GetMaximum(),metType1p2Distr->GetMaximum()));
 
 metDistr->SetMaximum(maxim*1.1);
 metDistr->SetTitle("MET/MHT distribution in QCDHT500To700");

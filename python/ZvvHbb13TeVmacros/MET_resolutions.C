@@ -1,3 +1,4 @@
+#include <algorithm>
 void MET_resolutions(){
 gROOT->SetBatch();
 gStyle->SetPadGridX(1);
@@ -8,7 +9,7 @@ gStyle->SetLineWidth(2);
 gROOT->ForceStyle();
 
 TChain* tree = new TChain("tree");
-tree->Add("/gpfs/ddn/srm/cms/store/user/arizzi/VHBBHeppyV14/ZH_HToBB_ZToNuNu_M125_13TeV_amcatnloFXFX_madspin_pythia8/VHBB_HEPPY_V14_ZH_HToBB_ZToNuNu_M125_13TeV_amcatnloFXFX_madspin_pythia8__RunIISpring15MiniAODv2-74X_mcRun2_asymptotic_v2-v1/151024_161706/0000/tree_*.root");
+tree->Add("../MCAndDataLinks/ZH_HToBB_ZToNuNu_M125_13TeV_amcatnloFXFX_madspin_pythia8/VHBB_HEPPY_V20_ZH_HToBB_ZToNuNu_M125_13TeV_amcatnloFXFX_madspin_Py8__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_172306/0000/tree_*.root");
 //TFile *_file0 = TFile::Open("../../env/ZvvHighPt_V12_QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root");
 //tree = (TTree*) _file0->Get("tree");
 
@@ -39,26 +40,19 @@ metPuppiRes->SetLineColor(kRed);
 mhtRes->SetLineColor(kBlue);
 metType1p2Res->SetLineColor(kGreen);
 
-maxim = max(max(metRes->GetMaximum(),mhtRes->GetMaximum()),max(metPuppiRes->GetMaximum(),metType1p2Res->GetMaximum()));
+float maxim = max(max(metRes->GetMaximum(),mhtRes->GetMaximum()),max(metPuppiRes->GetMaximum(),metType1p2Res->GetMaximum()));
 
 metRes->SetMaximum(maxim*1.1);
 metRes->SetTitle("(MET-genMET)/MET for events with genMET > 150 GeV");
 metRes->GetXaxis()->SetTitle("(MET-genMET)/MET [GeV]");
 metRes->GetYaxis()->SetTitle("Events");
 
-
-metRes->Draw("");
-metPuppiRes->Draw("same");
-mhtRes->Draw("same");
-metType1p2Res->Draw("same");
-
-TLegend* leg = new TLegend(0.1,0.7,0.38,0.9);
+TLegend* leg = new TLegend(0.1,0.7,0.25,0.9);
 //leg->SetHeader("The Legend Title");
 leg->AddEntry(metRes,"MET","l");
 leg->AddEntry(metType1p2Res,"MET type 1.2","l");
 leg->AddEntry(metPuppiRes,"MET PUPPI","l");
 leg->AddEntry(mhtRes,"MHT (jet30)","l");
-leg->Draw();
 
 TF1* gaus1 = new TF1("gaus1","gaus");
 TF1* gaus2 = new TF1("gaus2","gaus");
@@ -91,6 +85,12 @@ cout<<endl<< "Fitting mhtRes"<<endl;
 mhtRes->Fit(gaus3,"","",sigmam*gaus3->GetParameter(1)-gaus3->GetParameter(2),gaus3->GetParameter(1)+sigmap*gaus3->GetParameter(2));
 cout<<endl<< "Fitting metType1p2Res"<<endl;
 metType1p2Res->Fit(gaus4,"","",sigmam*gaus4->GetParameter(1)-gaus4->GetParameter(2),gaus4->GetParameter(1)+sigmap*gaus4->GetParameter(2));   
+
+metRes->Draw("");
+metPuppiRes->Draw("same");
+mhtRes->Draw("same");
+metType1p2Res->Draw("same");
+leg->Draw();
 
 c1->SaveAs("met_resolutions.png");
 c1->SaveAs("met_resolutions.C");

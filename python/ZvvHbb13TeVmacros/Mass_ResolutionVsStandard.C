@@ -1,3 +1,4 @@
+#include <algorithm>
 void Mass_ResolutionVsStandard(){
 gROOT->SetBatch();
 gStyle->SetPadGridX(1);
@@ -8,7 +9,7 @@ gROOT->ForceStyle();
 
 TChain* tree = new TChain("tree");
 //tree->Add("/scratch/sdonato/VHbbRun2/V14_forPreApproval/CMSSW_7_4_7_patch1/src/Xbb/env/syst/ZvvHighPt_V15_ZH_HToBB_ZToNuNu_M125_13TeV_amcatnloFXFX_madspin_pythia8.root");
-tree->Add("/scratch/sdonato/VHbbRun2/V14_forPreApproval/CMSSW_7_4_7_patch1/src/Xbb/env/syst/ZvvHighPt_V15_ZH_HToBB_ZToNuNu_M125_13TeV_amcatnloFXFX_madspin_pythia8.root");
+tree->Add("../../env/syst/ZvvHighPt_V20_ZH_HToBB_ZToNuNu_M125_13TeV_amcatnloFXFX_madspin_pythia8.root");
 
 TCanvas* c1 = new TCanvas("c1","c1",1280,768);
 
@@ -44,10 +45,6 @@ Hmass->GetXaxis()->SetTitle("m(bb) [GeV]");
 Hmass->GetYaxis()->SetTitle("Events");
 
 
-Hmass->Draw("");
-HmassReg->Draw("same");
-//HFSRmassReg->Draw("same");
-HmassStdReg->Draw("same");
 
 TLegend* leg = new TLegend(0.1,0.7,0.35,0.9);
 //leg->SetHeader("The Legend Title");
@@ -55,7 +52,7 @@ leg->AddEntry(Hmass,"baseline","l");
 leg->AddEntry(HmassReg,"regressed","l");
 leg->AddEntry(HmassStdReg,"std. regression","l");
 //leg->AddEntry(HFSRmassReg,"withFSR+regr.","l");
-leg->Draw();
+
 
 //TF1* gaus2 = new TF1("gaus2","gaus");
 //TF1* gaus1 = new TF1("gaus1","gaus");
@@ -97,6 +94,12 @@ HmassReg->Fit(fit2,"","",fit2->GetParameter(1)-sigmam*fit2->GetParameter(2),fit2
 //HFSRmassReg->Fit(fit3,"","",fit3->GetParameter(1)-sigmam*fit3->GetParameter(2),fit3->GetParameter(1)+sigmap*fit3->GetParameter(2));
 cout<<endl<< "Fitting HmassStdReg"<<endl;
 HmassStdReg->Fit(fit4,"","",fit4->GetParameter(1)-sigmam*fit4->GetParameter(2),fit4->GetParameter(1)+sigmap*fit4->GetParameter(2));
+
+Hmass->Draw("");
+HmassReg->Draw("same");
+//HFSRmassReg->Draw("same");
+HmassStdReg->Draw("same");
+leg->Draw("same");
 
 c1->SaveAs("mass_resolution.png");
 c1->SaveAs("mass_resolution.C");
