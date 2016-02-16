@@ -18,3 +18,6 @@ bash runAll.sh TurnOnQCDTTEleNum ZvvHbb13TeV plot > & log/logPlotTurnOnQCDTTEleN
 bash runAll.sh TurnOnQCDTTMuDen ZvvHbb13TeV plot > & log/logPlotTurnOnQCDTTMuDen &
 bash runAll.sh TurnOnQCDTTMuNum ZvvHbb13TeV plot > & log/logPlotTurnOnQCDTTMuNum &
 
+bash runAll.sh TurnOnCSVTTMuDen ZvvHbb13TeV plot > & log/logPlotTurnOnCSVTTMuDen &
+bash runAll.sh TurnOnCSVTTMuNum ZvvHbb13TeV plot > & log/logPlotTurnOnCSVTTMuNum &
+
