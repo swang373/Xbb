@@ -56,7 +56,7 @@ def getClusters(plot2D,clusterMap,Nxaxis,Nyaxis,rangeXbins,rangeYbins,vetoXbins,
 #                    plot2D.SetBinContent(x,y,0)
                     clusterMap[(x,y)]=1
                     print x,y,sig,sum_,value,count,sum_/count
-                elif sig > significanceBorder and (clusterMap[((x+1)%Nxaxis,y)]==1 or clusterMap[((x-1)%Nxaxis,y)]==1 or clusterMap[(x,(y+1)%Nyaxis)]==1 or clusterMap[(x,(y-1)%Nxaxis)]==1):
+                elif sig > significanceBorder and (clusterMap[((x+1)%Nxaxis,y)]==1 or clusterMap[((x-1)%Nxaxis,y)]==1 or clusterMap[(x,y+1)]==1 or clusterMap[(x,y-1)]==1):
                     touch = True
 #                    plot2D.SetBinContent(x,y,0)
                     clusterMap[(x,y)]=1.

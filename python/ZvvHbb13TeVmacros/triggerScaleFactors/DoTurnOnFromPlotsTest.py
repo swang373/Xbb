@@ -498,9 +498,6 @@ ROOT.gStyle.SetOptFit(0)
 #ped="mu_TT"
 #doPlots(ped,fileNum,fileDen)
 
-minRatio    = 0.5
-maxRatio    = 1.5
-
 fileNum = "../../../Stacks_expertAllnominal_v0.0.0/root/TurnOnCSVTTMuNum_TurnOnCSV_125.root"
 fileDen = "../../../Stacks_expertAllnominal_v0.0.0/root/TurnOnCSVTTMuDen_TurnOnCSV_125.root"
 ped="mu_TT_CSV"
