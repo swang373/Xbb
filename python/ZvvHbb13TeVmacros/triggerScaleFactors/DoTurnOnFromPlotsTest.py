@@ -74,10 +74,11 @@ def getMCAndData(fileName):
     data_tmp =  pad.GetPrimitive("noData")
     MC =  MC_tmp.Clone("MC")
     data =  data_tmp.Clone("data")
+    title = MC.GetXaxis().GetTitle()
     MC.SetTitle("MC")
     data.SetTitle("data")
-    MC.GetXaxis().SetTitle("min(MET,MHT) [GeV]")
-    data.GetXaxis().SetTitle("min(MET,MHT) [GeV]")
+    MC.GetXaxis().SetTitle(title)
+    data.GetXaxis().SetTitle(title)
     MC.SetMarkerStyle(20)
     data.SetMarkerStyle(20)
     MC.SetMarkerColor(ROOT.kBlack)
@@ -96,11 +97,12 @@ def doRatio(num, den, option=""):
 #    else:
 #        mratio.Divide(num,den)
 #    return mratio
+	title = num.GetXaxis().GetTitle()
         mratio = ROOT.TGraphAsymmErrors()
         mratio.SetMarkerColor(ROOT.kBlack)
         mratio.SetLineColor(ROOT.kBlack)
         mratio.SetName("ratio")
-        mratio.GetXaxis().SetTitle("off(MET,MHT)")
+        mratio.GetXaxis().SetTitle(title)
 #        mratio = histo.Clone(triggerName+"_eff")
 #        mratio.Divide(histo,inclusive,1.,1.,"B")
 #        mratio.Divide(histo,inclusive,1.,1.,"cl=0.683 b(1,1) mode")
@@ -219,6 +221,8 @@ def doPlots(ped,fileNum,fileDen):
     MC_num, data_num = getMCAndData(fileNum)
     MC_den, data_den = getMCAndData(fileDen)
 
+    title = MC_num.GetXaxis().GetTitle()
+
     turnOnMC = doRatio(MC_num,MC_den,"b")
     turnOnData = doRatio(data_num,data_den,"b")
 
@@ -275,7 +279,7 @@ def doPlots(ped,fileNum,fileDen):
     ratio.SetMinimum(minRatio)
 
     ratio.SetTitle("Data/MC efficiency ratio")
-    ratio.GetXaxis().SetTitle("min(MET,MHT) [GeV]")
+    ratio.GetXaxis().SetTitle(title)
     ratio.GetYaxis().SetTitle("ratio")
     ratio.Draw("AP")
     ratioFit.Draw("same")
@@ -303,7 +307,7 @@ def doPlots(ped,fileNum,fileDen):
     TurnOnData.SetLineColor(colorData)
 
     turnOnData.SetTitle("Trigger efficiency")
-    turnOnData.GetXaxis().SetTitle("min(MET,MHT) [GeV]")
+    turnOnData.GetXaxis().SetTitle(title)
     turnOnData.GetYaxis().SetTitle("Efficiency")
 
     turnOnData.Draw("AP")
