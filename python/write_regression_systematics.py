@@ -889,12 +889,14 @@ for job in info:
                     muonCorr = MuonSF(j, name)
                     weight.append(muonCorr.get_2D( tree.vLeptons_pt[0], tree.vLeptons_eta[0]))
                     weight.append(muonCorr.get_2D( tree.vLeptons_pt[1], tree.vLeptons_eta[1]))
-                    if j.find('Trigger') != -1:
+                    if j.find('Trigger') != -1 and not j.find('_MC') != -1:
                        # Eff l1 x Eff l2
                         vLeptons_SF_HLT[0] = weight[0][0]
                         vLeptons_SF_HLT[1] = weight[1][0]
                         vLeptons_SFerr_HLT[0] = weight[0][1]
                         vLeptons_SFerr_HLT[1] = weight[1][1]
+                    elif j.find('Trigger') != -1 and j.find('_MC') != -1:
+                       # Eff l1 x Eff l2
                         vLeptons_Eff_HLT[0] = weight[0][0]
                         vLeptons_Eff_HLT[1] = weight[1][0]
                         vLeptons_Efferr_HLT[0] = weight[0][1]
