@@ -110,7 +110,6 @@ class HistoMaker:
             if job.type != 'DATA':
               #print "the jobs is not data"
               if CuttedTree and CuttedTree.GetEntries():
-                print 'hello'
                 if 'BDT' in treeVar or 'bdt' in treeVar: 
                     drawoption = '(%s)*(%s & %s)'%(weightF,treeCut,BDT_add_cut)
                     # drawoption = 'sign(genWeight)*(%s)*(%s & %s)'%(weightF,treeCut,BDT_add_cut)
@@ -118,6 +117,7 @@ class HistoMaker:
                 else: 
                     drawoption = '(%s)*(%s)'%(weightF,treeCut)
                 #print ('Draw: %s>>%s' %(treeVar,name), drawoption, "goff,e")
+                print 'drawoption is', drawoption
                 nevents = CuttedTree.Draw('%s>>%s' %(treeVar,name), drawoption, "goff,e")
                 #print 'nevents:',hTree.GetEntries(),' hTree.name() 2 =',hTree.GetName()
                 full=True
