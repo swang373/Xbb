@@ -88,7 +88,7 @@ def doPlot():
 
     vars = (config.get(section, 'vars')).split(',')#get the variables to be ploted in each region 
     print "The variables are", vars, "\n"
-    data = config.get(section,'Datas')# read the data corresponding to each CR (section)
+    data = eval(config.get(section,'Datas'))# read the data corresponding to each CR (section)
     mc = eval(config.get('Plot_general','samples'))# read the list of mc samples
     total_lumi = eval(config.get('Plot_general','lumi'))
     print 'total lumi is', total_lumi
@@ -157,7 +157,6 @@ def doPlot():
     else:
         print "Will run over datasamples to sum up the lumi"
         for job in datasamples:
-            print "hello"
             print "Datasample is", job
             lumi+=float(job.lumi)
             lumicounter+=1.
