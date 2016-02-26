@@ -3,7 +3,7 @@ from array import *
 from math import *
 
 gROOT.SetBatch()
-preselection = "AntiSoftLetponDecay && (!Jet_over[0] && !Jet_overMC[0] && Sum$((Jet_under||Jet_underMC) * (Jet_pt>25) * (abs(TVector2::Phi_mpi_pi ( Jet_phi-met_phi ))<0.785))==0)"
+preselection = "(!Jet_over[0] && !Jet_overMC[0] && Sum$((Jet_under||Jet_underMC) * (Jet_pt>25) * (abs(TVector2::Phi_mpi_pi ( Jet_phi-met_phi ))<0.785))==0) && (Sum$(abs(TVector2::Phi_mpi_pi ( aLeptons_phi-met_phi ))<0.5 && (aLeptons_pt>5) )==0)"
 
 def fixCountFile(fileName="tree_100_QCDHT700.root",outName="newTree.root"):
 
@@ -30,7 +30,19 @@ def fixCountFile(fileName="tree_100_QCDHT700.root",outName="newTree.root"):
     newcount        = old_Count.GetBinContent(1)
     count           = old_FakeMET_count.GetBinContent(1)
     events          = 1.*old_tree.Draw("",preselection)
-    eventsOriginal  = 1.*old_tree.Draw("","(FakeMET_met==met_pt)&&"+preselection)
+    eventsOriginal  = 1.*old_tree.Draw("","(FakeMET_attempts==1)&&HLT_BIT_HLT_PFMET90_PFMHT90_IDLoose_old&&"+preselection)
+    if eventsOriginal==0:
+        print "*"*10
+        print "no events pass antiQCD cuts. I will use the backup solution"
+        print "*"*10
+        events          = 1.*old_tree.Draw("","")
+        eventsOriginal  = 1.*old_tree.Draw("","(FakeMET_attempts==1)&&HLT_BIT_HLT_PFMET90_PFMHT90_IDLoose_old")
+    if eventsOriginal==0:
+        print "*"*10
+        print "no events pass antiQCD cuts. I will use the backup solution2"
+        print "*"*10
+        events          = 1.*old_tree.Draw("","")
+        eventsOriginal  = 1.*old_tree.Draw("","(FakeMET_attempts==1)")
     if eventsOriginal!=0:
         oldcount        = newcount
         newcount        = count*events/eventsOriginal

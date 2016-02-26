@@ -3,7 +3,7 @@ from array import *
 from math import *
 import copy
 
-precut  = 50
+precut  = 90
 cut     = 130
 gROOT.SetBatch()
 
@@ -168,19 +168,20 @@ def redoJetArray(old_tree,idx,nJet,nhJCidx,naJCidx):
     warning =False
     for CSV,i in CSVs:
 #        print count,i
-        if hJCidx<old_tree.nhJCidx and hJCidx<2 and old_tree.Jet_pt[i]>20 and old_tree.Jet_puId[i]==1:
-            old_tree.hJCidx[hJCidx] = i
-            hJCidx+=1
-        elif aJCidx<old_tree.naJCidx:
-            old_tree.aJCidx[aJCidx] = i
-            aJCidx+=1
-        elif aJCidx>=8: #ignore warning if aJCidx>=8 (because in the ntuples naJCidx is forced to be <=8)
-            pass
+        if (count<2):
+            if hJCidx<old_tree.nhJCidx:
+                old_tree.hJCidx[hJCidx] = i
+                hJCidx+=1
+            else:
+                print "Warning hJCidx:",hJCidx,old_tree.nhJCidx,count
+                warning=True
         else:
-            print "Warning hJCidx:",hJCidx,old_tree.nhJCidx,count
-            print "Warning aJCidx:",aJCidx,old_tree.naJCidx,count
-            print "Warning evt:",old_tree.evt
-            warning=True
+            if aJCidx<old_tree.naJCidx:
+                old_tree.aJCidx[aJCidx] = i
+                aJCidx+=1
+            else:
+                print "Warning aJCidx:",aJCidx,old_tree.naJCidx,count
+                warning=True
         count+=1
 
     nhJCidx[0] = hJCidx
@@ -334,8 +335,7 @@ def newPt(GenJet_wNuPt,Jet_pt,Jet_phi,met_pt,met_phi,function,cut):
     count=1
     rdm_min = 0
     rdm_max = 0
-    ### FIXME ####
-    while(newMet_pt_squared < cut**2 and count<2):
+    while(newMet_pt_squared < cut**2 and count<1E5):
         count+=1
         rdm = function.GetRandom()
 #        while rdm*sign<0:
@@ -505,9 +505,6 @@ def doFile(fileName="tree_100_QCDHT700.root",outName="newTree.root",function=Non
     FakeMET_jetPtNew = array('f',[0])
     tree.Branch('FakeMET_jetPtNew',FakeMET_jetPtNew,'FakeMET_jetPtNew/F')
 
-    HLT_BIT_HLT_PFMET90_PFMHT90_IDLoose_old = array('f',[0])
-    tree.Branch("HLT_BIT_HLT_PFMET90_PFMHT90_IDLoose_old",HLT_BIT_HLT_PFMET90_PFMHT90_IDLoose_old,'HLT_BIT_HLT_PFMET90_PFMHT90_IDLoose_old/F')
-
     FakeMET_jetIdx = array('i',[0])
     tree.Branch('FakeMET_jetIdx',FakeMET_jetIdx,'FakeMET_jetIdx/I')
 
@@ -569,10 +566,10 @@ def doFile(fileName="tree_100_QCDHT700.root",outName="newTree.root",function=Non
         if newPt_15<15: newPt_15=0.
         if newPt_30<30: newPt_30=0.
         (met_pt[0],met_phi[0])  = correctMet(old_tree.met_pt,old_tree.met_phi,old_tree.Jet_pt[idx],old_tree.Jet_phi[idx],newPt_)
-        if old_tree.Jet_pt[idx]>30 and abs(old_tree.Jet_eta[idx])<2.4:
+        if old_tree.Jet_pt[idx]>30 and old_tree.Jet_puId[idx]==1 and abs(old_tree.Jet_eta[idx])<2.4:
             htJet30[0]  = old_tree.htJet30 - old_tree.Jet_pt[idx] + newPt_30
             (mhtJet30[0],mhtPhiJet30[0]) = correctMet(old_tree.mhtJet30,old_tree.mhtPhiJet30,old_tree.Jet_pt[idx],old_tree.Jet_phi[idx],newPt_30)
-        elif newPt_30>30 and abs(old_tree.Jet_eta[idx])<2.4:
+        elif newPt_30>30 and old_tree.Jet_puId[idx]==1 and abs(old_tree.Jet_eta[idx])<2.4:
             ## if the pt was <30 and now is >30
             htJet30[0]  = old_tree.htJet30 + newPt_30
             (mhtJet30[0],mhtPhiJet30[0]) = correctMet(old_tree.mhtJet30,old_tree.mhtPhiJet30,0,old_tree.Jet_phi[idx],newPt_30)
@@ -582,7 +579,6 @@ def doFile(fileName="tree_100_QCDHT700.root",outName="newTree.root",function=Non
 
         old_tree.Jet_pt[idx]    = newPt_15
         Vtype[0]                   = 4
-        HLT_BIT_HLT_PFMET90_PFMHT90_IDLoose_old[0] = old_tree.HLT_BIT_HLT_PFMET90_PFMHT90_IDLoose_v
         HLT_BIT_HLT_PFMET90_PFMHT90_IDLoose_v[0] = 1
 
         redoHCSV_ = True
