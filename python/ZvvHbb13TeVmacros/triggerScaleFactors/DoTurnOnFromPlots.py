@@ -25,7 +25,7 @@ def getTitle(fileName):
     pad =  canvas.GetPrimitive("unten")
     title =  pad.GetPrimitive("Ratio").GetXaxis().GetTitle()
     return title
-    
+
 def DivideTGraph(num,den):
     Ns_den   = den.GetN()
     Xs_den   = den.GetX()

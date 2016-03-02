@@ -21,7 +21,7 @@
    c1->SetFrameBorderMode(0);
    c1->SetFrameFillStyle(0);
    c1->SetFrameBorderMode(0);
-   
+
    TGraphAsymmErrors *grae = new TGraphAsymmErrors(37);
    grae->SetName("ratio");
    grae->SetTitle("Trigger efficiency");
@@ -109,7 +109,7 @@
    grae->SetPointError(35,5,5,0.3181538,0);
    grae->SetPoint(36,495,1);
    grae->SetPointError(36,5,5,0.119839,0);
-   
+
    TH1F *Graph_Graph_ratio24 = new TH1F("Graph_Graph_ratio24","Trigger efficiency",100,49,541);
    Graph_Graph_ratio24->SetMinimum(0);
    Graph_Graph_ratio24->SetMaximum(1);
@@ -137,9 +137,9 @@
    Graph_Graph_ratio24->GetZaxis()->SetTitleSize(0.06);
    Graph_Graph_ratio24->GetZaxis()->SetTitleFont(42);
    grae->SetHistogram(Graph_Graph_ratio24);
-   
+
    grae->Draw("ap");
-   
+
    TF1 *fit = new TF1("fit","1-(0.5-0.5*erf((x-[0])/[1]))*([3])-[2]",80,500);
    fit->SetFillColor(19);
    fit->SetFillStyle(0);
@@ -173,7 +173,7 @@
    fit->SetParError(3,0);
    fit->SetParLimits(3,1,1);
    fit->Draw("same");
-   
+
    grae = new TGraphAsymmErrors(40);
    grae->SetName("ratio");
    grae->SetTitle("");
@@ -266,7 +266,7 @@
    grae->SetPointError(38,5,5,0.4036975,0);
    grae->SetPoint(39,495,1);
    grae->SetPointError(39,5,5,0.05169252,0);
-   
+
    TH1F *Graph_Graph_ratio15 = new TH1F("Graph_Graph_ratio15","",100,49,541);
    Graph_Graph_ratio15->SetMinimum(0);
    Graph_Graph_ratio15->SetMaximum(1);
@@ -292,9 +292,9 @@
    Graph_Graph_ratio15->GetZaxis()->SetTitleSize(0.06);
    Graph_Graph_ratio15->GetZaxis()->SetTitleFont(42);
    grae->SetHistogram(Graph_Graph_ratio15);
-   
+
    grae->Draw("p");
-   
+
    TF1 *fit = new TF1("fit","1-(0.5-0.5*erf((x-[0])/[1]))*([3])-[2]",80,500);
    fit->SetFillColor(19);
    fit->SetFillStyle(0);
@@ -328,7 +328,7 @@
    fit->SetParError(3,0);
    fit->SetParLimits(3,1,1);
    fit->Draw("same");
-   
+
    TLegend *leg = new TLegend(0.7,0.15,0.95,0.3,NULL,"brNDC");
    leg->SetTextFont(62);
    leg->SetLineColor(1);

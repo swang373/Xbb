@@ -42,7 +42,7 @@ class TreeCopier(object):
         )
 
         self.logger = logging.getLogger('TreeCopier')
-       
+
         source = os.path.join(prep_in, sample)
         file_paths = self._check_files(prep_out, source)
 
@@ -84,7 +84,7 @@ class TreeCopier(object):
             return file_paths
         else:
             raise IOError('Unable to locate any .root files.')
-        
+
     def _copy_files(self, file_paths, copy_dir, cut):
         """
         Copy files in parallel and return a list of successfully copied files.
@@ -137,7 +137,7 @@ class TreeCopier(object):
 
         # Consume tasks from the queue until the sentinel value is received.
         for file_path, copy_path in iter(task_queue.get, None):
-        
+
             with open_root(file_path, 'r') as infile, open_root(copy_path, 'w'):
                 # Copy any objects present besides the tree.
                 for key in infile.GetListOfKeys():
@@ -169,7 +169,7 @@ class TreeCopier(object):
         self.logger.debug('Merging the files to "%s"', merge_path)
 
         # Set the first positional argument, isLocal, to false to prevent the
-        # files to merge from being copied to a temporary directory, as they 
+        # files to merge from being copied to a temporary directory, as they
         # are already available locally. PyROOT doesn't support keyword args.
         merge_file = ROOT.TFileMerger(ROOT.kFALSE)
         merge_file.OutputFile(merge_path, 'RECREATE')
