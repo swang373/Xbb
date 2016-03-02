@@ -91,23 +91,26 @@ fi
 #-------------------------------------------------
 #Set the environment for the batch job execution
 #-------------------------------------------------
-cd $CMSSW_BASE/src/
-if [[ $whereToLaunch == "pisa" ]]; then
-  source /afs/pi.infn.it/grid_exp_sw/cms/scripts/setcms.sh
-else
-  source /swshare/psit3/etc/profile.d/cms_ui_env.sh
-  export LD_PRELOAD="libglobus_gssapi_gsi_gcc64pthr.so.0":${LD_PRELOAD}
-  export LD_LIBRARY_PATH=/swshare/glite/globus/lib/:/swshare/glite/d-cache/dcap/lib64/:$LD_LIBRARY_PATH
-export LD_PRELOAD="libglobus_gssapi_gsi_gcc64pthr.so.0:${LD_PRELOAD}"
+
+if [[ $whereToLaunch != "lxplus" ]]; then
+  cd $CMSSW_BASE/src/
+  if [[ $whereToLaunch == "pisa" ]]; then
+    source /afs/pi.infn.it/grid_exp_sw/cms/scripts/setcms.sh
+  else
+    source /swshare/psit3/etc/profile.d/cms_ui_env.sh
+    export LD_PRELOAD="libglobus_gssapi_gsi_gcc64pthr.so.0":${LD_PRELOAD}
+    export LD_LIBRARY_PATH=/swshare/glite/globus/lib/:/swshare/glite/d-cache/dcap/lib64/:$LD_LIBRARY_PATH
+  export LD_PRELOAD="libglobus_gssapi_gsi_gcc64pthr.so.0:${LD_PRELOAD}"
+  fi
+
+  export SCRAM_ARCH="slc5_amd64_gcc462"
+  source $VO_CMS_SW_DIR/cmsset_default.sh
+  eval `scramv1 runtime -sh`
+  export TMPDIR=$CMSSW_BASE/src/tmp
+  if ! [ -e $TMPDIR ]; then mkdir $TMPDIR; fi
+
+  cd -   #back to the working dir
 fi
-
-export SCRAM_ARCH="slc5_amd64_gcc462"
-source $VO_CMS_SW_DIR/cmsset_default.sh
-eval `scramv1 runtime -sh`
-export TMPDIR=$CMSSW_BASE/src/tmp
-if ! [ -e $TMPDIR ]; then mkdir $TMPDIR; fi
-
-cd -   #back to the working dir
 
 MVAList=`python << EOF 
 import os
