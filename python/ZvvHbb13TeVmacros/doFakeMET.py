@@ -463,8 +463,8 @@ def doFile(fileName="tree_100_QCDHT700.root",outName="newTree.root",function=Non
     naJCidx = array('I',[0])
     tree.SetBranchAddress("naJCidx",naJCidx)
 
-    HLT_BIT_HLT_PFMET90_PFMHT90_IDLoose_v = array('f',[0])
-    tree.SetBranchAddress("HLT_BIT_HLT_PFMET90_PFMHT90_IDLoose_v",HLT_BIT_HLT_PFMET90_PFMHT90_IDLoose_v)
+    HLT_BIT_HLT_PFMET90_PFMHT90_IDTight_v = array('f',[0])
+    tree.SetBranchAddress("HLT_BIT_HLT_PFMET90_PFMHT90_IDTight_v",HLT_BIT_HLT_PFMET90_PFMHT90_IDTight_v)
 
     HCSV_mass = array('f',[0])
     tree.SetBranchAddress("HCSV_mass",HCSV_mass)
@@ -519,7 +519,8 @@ def doFile(fileName="tree_100_QCDHT700.root",outName="newTree.root",function=Non
 
     nEntries = old_tree.GetEntries()
 
-    formCut = TTreeFormula("formCut","(met_pt > %d) && (mhtJet30 > %d) && abs(Jet_eta[1])<2.6 && Jet_id[1]>=3 && Jet_puId[1]==1 && abs(Jet_eta[0])<2.6 && Jet_id[0]>=3 && Jet_puId[0]==1 && Jet_id[hJCidx[0]]>=3 && Jet_puId[hJCidx[0]]==1 && Jet_id[hJCidx[1]]>=3  && Jet_puId[hJCidx[1]]==1"%(precut,precut),old_tree)
+#    formCut = TTreeFormula("formCut","(met_pt > %d) && (mhtJet30 > %d) && abs(Jet_eta[1])<2.6 && Jet_id[1]>=3 && Jet_puId[1]==1 && abs(Jet_eta[0])<2.6 && Jet_id[0]>=3 && Jet_puId[0]==1 && Jet_id[hJCidx[0]]>=3 && Jet_puId[hJCidx[0]]==1 && Jet_id[hJCidx[1]]>=3  && Jet_puId[hJCidx[1]]==1"%(precut,precut),old_tree)
+    formCut = TTreeFormula("formCut","(met_pt > %d) && (mhtJet30 > %d) && nhJCidx>=2"%(precut,precut),old_tree)
     for entry in range(0,nEntries):
         old_tree.GetEntry(entry)
 #        print old_tree.nJet
@@ -582,8 +583,8 @@ def doFile(fileName="tree_100_QCDHT700.root",outName="newTree.root",function=Non
 
         old_tree.Jet_pt[idx]    = newPt_15
         Vtype[0]                   = 4
-        HLT_BIT_HLT_PFMET90_PFMHT90_IDLoose_old[0] = old_tree.HLT_BIT_HLT_PFMET90_PFMHT90_IDLoose_v
-        HLT_BIT_HLT_PFMET90_PFMHT90_IDLoose_v[0] = 1
+        HLT_BIT_HLT_PFMET90_PFMHT90_IDLoose_old[0] = old_tree.HLT_BIT_HLT_PFMET90_PFMHT90_IDTight_v
+        HLT_BIT_HLT_PFMET90_PFMHT90_IDTight_v[0] = 1
 
         redoHCSV_ = True
         if idx in old_tree.hJCidx: redoHCSV_ = True

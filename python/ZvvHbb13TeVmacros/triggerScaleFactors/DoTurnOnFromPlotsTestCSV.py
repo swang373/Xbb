@@ -76,6 +76,26 @@ def DivideTGraph(num,den):
 
     return ratio
 
+def makeHistos(var="MaxIf$(Jet_btagCSV,Jet_pt>30)",trigger="ntrgObjects_hltCSV0p72L3>0",preselection="HLT_BIT_HLT_PFMET90_PFMHT90_IDTight_v",binning=(100,0,1),fileName=""):
+    tree = ROOT.TChain("tree")
+    tree.Add(fileName)
+    print "fileName=",fileName
+    print "var=",var
+    print "trigger=",trigger
+    print "preselection=",preselection
+    print "binning=",str(binning)
+    tree.Draw(var+">>num"+str(binning),str(preselection+"&&"+trigger))
+    print "Draw:\t",var+">>num"+str(binning),str(preselection+"&&"+trigger)
+    num = ROOT.gDirectory.Get("num")
+    num = copy.copy(num)
+    tree.Draw(var+">>den"+str(binning),str(preselection))
+    print "Draw:\t",var+">>den"+str(binning),str(preselection)
+    den = ROOT.gDirectory.Get("den")
+    den = copy.copy(den)
+    print "num,den = ",num.Integral(),den.Integral()
+    return num,den
+
+
 
 def getMCAndData(fileName):
     file_ = ROOT.TFile.Open(fileName)
@@ -88,7 +108,6 @@ def getMCAndData(fileName):
     data_tmp =  pad.GetPrimitive("noData")
     MC =  MC_tmp.Clone("MC")
     data =  data_tmp.Clone("data")
-    title = MC.GetXaxis().GetTitle()
     MC.SetTitle("MC")
     data.SetTitle("data")
     MC.GetXaxis().SetTitle(title)
@@ -111,7 +130,6 @@ def doRatio(num, den, option=""):
 #    else:
 #        mratio.Divide(num,den)
 #    return mratio
-	title = num.GetXaxis().GetTitle()
         mratio = ROOT.TGraphAsymmErrors()
         mratio.SetMarkerColor(ROOT.kBlack)
         mratio.SetLineColor(ROOT.kBlack)
@@ -130,6 +148,8 @@ def doRatio(num, den, option=""):
         for i in range(den.GetNbinsX()):
             if den.GetBinContent(i)<=0:
                 den.SetBinContent(i,1.E-7)
+            if num.GetBinContent(i)<=0:
+                num.SetBinContent(i,1.E-7)
             if num.GetBinContent(i)>den.GetBinContent(i):
                 print "WARNING!"
                 print num.GetBinContent(i),den.GetBinContent(i)
@@ -232,16 +252,23 @@ def confidenceInterval(graph, function):
 
 
 
-def doPlots(ped,fileNum,fileDen):
+def doPlots(ped,fileNum,fileDen,drawOption=""):
 
-    MC_num, data_num = getMCAndData(fileNum)
-    MC_den, data_den = getMCAndData(fileDen)
+    if drawOption=="":
+        MC_num, data_num = getMCAndData(fileNum)
+        MC_den, data_den = getMCAndData(fileDen)
 
-    title = MC_num.GetXaxis().GetTitle()
+        turnOnMC = doRatio(MC_num,MC_den,"b")
+        turnOnData = doRatio(data_num,data_den,"b")
+    else:
+        drawOption["fileName"]=fileDen
+        data_num,data_den =  makeHistos(**drawOption)
+        drawOption["fileName"]=fileNum
+        MC_num,MC_den =  makeHistos(**drawOption)
 
-    turnOnMC = doRatio(MC_num,MC_den,"b")
-    turnOnData = doRatio(data_num,data_den,"b")
-
+        turnOnMC = doRatio(MC_num,MC_den,"b")
+        turnOnData = doRatio(data_num,data_den,"b")
+        #do plot!
 #    DataMC = doRatio(turnOnData,turnOnMC)
 
     #function = ROOT.TF1("turnonPt","1-(0.5-0.5*erf( (x-[0])/[1]))*([3])-[2] ",functionMin,functionMax)
@@ -502,20 +529,32 @@ ROOT.gStyle.SetOptFit(0)
 #ped="mu_TT"
 #doPlots(ped,fileNum,fileDen)
 
-fileNum = "../../../Stacks_expertAllnominal_v0.0.0/root/TurnOnCSVTTMuNum_TurnOnCSV_125.root"
-fileDen = "../../../Stacks_expertAllnominal_v0.0.0/root/TurnOnCSVTTMuDen_TurnOnCSV_125.root"
-ped="mu_TT_CSV"
-title = getTitle(fileNum)
-doPlots(ped,fileNum,fileDen)
+drawOption={
+    "var"           :"MaxIf$(Jet_btagCSV,Jet_pt>30 )",
+    "trigger"       :"ntrgObjects_hltCSV0p72L3>0",
+    "preselection"  :"HLT_BIT_HLT_PFMET90_PFMHT90_IDTight_v && (Vtype==2||Vtype==3||Vtype==4) && trgObjects_caloMht_pt>90 && nselLeptons>=1 && Sum$(Jet_pt>40 && abs(Jet_eta)<5.2)>=4 && Alt$(selLeptons_pt[0],0)>20 && met_pt>90 && MaxIf$(Jet_btagCSV,Jet_pt>30)>0.4",
+    "binning"       :(50,0,1)
+}
 
+minRatio    = 0.5
+maxRatio    = 1.5
 
-fileNum = "../../../Stacks_expertAllnominal_v0.0.0/root/TurnOnCSVTTMuNum_TurnOnLogCSV_125.root"
-fileDen = "../../../Stacks_expertAllnominal_v0.0.0/root/TurnOnCSVTTMuDen_TurnOnLogCSV_125.root"
-ped="mu_TT_LogCSV"
-title = getTitle(fileNum)
+fileMC     = "../../../env/ZvvHighPt_V20_TT_TuneCUETP8M1_13TeV-amcatnlo-pythia8.root"
+fileData   = "../../../env/ZvvHighPt_V20_MET.root"
+#fileMC      = "../../MCAndDataLinks/TT_TuneCUETP8M1_13TeV-amcatnlo-pythia8/VHBB_HEPPY_V20_TT_TuneCUETP8M1_13TeV-amcatnlo-Py8__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171214/0000/tree_*0.root"
+#fileData    = "../../MCAndDataLinks/MET/VHBB_HEPPY_V20_MET__Run2015D-16Dec2015-v1/160210_081237/0000/tree_*.root"
+ped         = "MET_CSV"
+title       = "CSV"
+doPlots(ped,fileMC,fileData,drawOption)
 
-doPlots(ped,fileNum,fileDen)
+drawOption={
+    "var"           :"MaxIf$(-log(1-Jet_btagCSV),Jet_pt>30 )",
+    "trigger"       :"ntrgObjects_hltCSV0p72L3>0",
+    "preselection"  :"HLT_BIT_HLT_PFMET90_PFMHT90_IDTight_v && (Vtype==2||Vtype==3||Vtype==4) && trgObjects_caloMht_pt>90 && nselLeptons>=1 && Sum$(Jet_pt>40 && abs(Jet_eta)<5.2)>=4 && Alt$(selLeptons_pt[0],0)>20 && met_pt>90 && MaxIf$(Jet_btagCSV,Jet_pt>30)>0.4",
+    "binning"       :(40,0,8)
+}
 
-
-
+ped="MET_LogCSV"
+title = "-log(1-CSV)"
+doPlots(ped,fileMC,fileData,drawOption)
 
