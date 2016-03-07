@@ -112,7 +112,8 @@ class HistoMaker:
               if CuttedTree and CuttedTree.GetEntries():
                 print 'hello'
                 if 'BDT' in treeVar or 'bdt' in treeVar: 
-                    drawoption = '(%s)*(%s & %s)'%(weightF,treeCut,BDT_add_cut)
+                    drawoption = '(%s)*(%s & %s)'%(weightF,BDT_add_cut,treeCut)
+                    print "I'm appling: ",BDT_add_cut
                     # drawoption = 'sign(genWeight)*(%s)*(%s & %s)'%(weightF,treeCut,BDT_add_cut)
                     #print drawoption
                 else: 
@@ -136,18 +137,26 @@ class HistoMaker:
                     # full=False
             elif job.type == 'DATA':
                 if options['blind']:
-                    lowLimitBlindingMass = 90
-                    highLimitBlindingMass = 140
-                    lowLimitBlindingBDT = 0
+                    lowLimitBlindingMass    = 90
+                    highLimitBlindingMass   = 140
+                    lowLimitBlindingBDT     = 0
+                    lowLimitBlindingDR      = 0.8
+                    highLimitBlindingDR     = 1.6
                     if 'H' in treeVar and 'mass' in treeVar:
                         lowLimitBlindingMass =hTree.GetBinLowEdge(hTree.FindBin(lowLimitBlindingMass))
                         highLimitBlindingMass =hTree.GetBinLowEdge(hTree.FindBin(highLimitBlindingMass))+ hTree.GetBinWidth(hTree.GetBin(highLimitBlindingMass))
                         veto = ("(%s <%s || %s > %s)" %(treeVar,lowLimitBlindingMass,treeVar,highLimitBlindingMass))
                         print "Using veto:",veto
                         CuttedTree.Draw('%s>>%s' %(treeVar,name),veto +'&'+' %(cut)s' %options, "goff,e")
-                    elif 'BDT' in treeVar or 'bdt' in treeVar or 'nominal' in treeVar:
+                    elif 'BDT' in treeVar or 'bdt' in treeVar or 'nominal' in treeVar in treeVar:
                         lowLimitBlindingBDT = hTree.GetBinLowEdge(hTree.FindBin(lowLimitBlindingBDT))
                         veto = "(%s <%s)" %(treeVar,lowLimitBlindingBDT)
+                        print "Using veto:",veto
+                        CuttedTree.Draw('%s>>%s' %(treeVar,name),veto +'&'+' %(cut)s'%options, "goff,e")
+                    elif 'dR' in treeVar and 'H' in treeVar:
+                        lowLimit   = hTree.GetBinLowEdge(hTree.FindBin(lowLimitBlindingDR))
+                        highLimit  = hTree.GetBinLowEdge(hTree.FindBin(highLimitBlindingDR))
+                        veto = ("(%s <%s || %s > %s)" %(treeVar,lowLimitBlindingMass,treeVar,highLimitBlindingMass))
                         print "Using veto:",veto
                         CuttedTree.Draw('%s>>%s' %(treeVar,name),veto +'&'+' %(cut)s'%options, "goff,e")
                     else:
