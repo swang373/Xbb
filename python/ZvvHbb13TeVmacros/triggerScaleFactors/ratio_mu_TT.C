@@ -21,7 +21,7 @@
    c1->SetFrameBorderMode(0);
    c1->SetFrameFillStyle(0);
    c1->SetFrameBorderMode(0);
-   
+
    TGraphAsymmErrors *grae = new TGraphAsymmErrors(40);
    grae->SetName("Graph0");
    grae->SetTitle("Data/MC efficiency ratio");
@@ -107,7 +107,7 @@
    grae->SetPointError(38,5,5,0,0);
    grae->SetPoint(39,495,0);
    grae->SetPointError(39,5,5,0,0);
-   
+
    TH1F *Graph_Graph3 = new TH1F("Graph_Graph3","Data/MC efficiency ratio",100,49,541);
    Graph_Graph3->SetMinimum(0.8);
    Graph_Graph3->SetMaximum(1.2);
@@ -135,9 +135,9 @@
    Graph_Graph3->GetZaxis()->SetTitleSize(0.06);
    Graph_Graph3->GetZaxis()->SetTitleFont(42);
    grae->SetHistogram(Graph_Graph3);
-   
+
    grae->Draw("ap");
-   
+
    TF1 *fit = new TF1("fit","1-(0.5-0.5*erf((x-[0])/[1]))*([3])-[2]",80,500);
    fit->SetFillColor(19);
    fit->SetFillStyle(0);
@@ -169,7 +169,7 @@
    fit->SetParError(3,0);
    fit->SetParLimits(3,1,1);
    fit->Draw("same");
-   
+
    TF1 *fitUp = new TF1("fitUp","1-(0.5-0.5*erf((x-[0])/[1]))*([3])-[2]",80,500);
    fitUp->SetFillColor(19);
    fitUp->SetFillStyle(0);
@@ -205,7 +205,7 @@
    fitUp->SetParError(3,0);
    fitUp->SetParLimits(3,0,0);
    fitUp->Draw("same");
-   
+
    TF1 *fitDown = new TF1("fitDown","1-(0.5-0.5*erf((x-[0])/[1]))*([3])-[2]",80,500);
    fitDown->SetFillColor(19);
    fitDown->SetFillStyle(0);

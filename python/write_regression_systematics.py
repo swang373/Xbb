@@ -89,7 +89,8 @@ def addAdditionalJets(H, tree):
         idx = tree.hjidxaddJetsdR08[i]
         if (idx == tree.hJCidx[0]) or (idx == tree.hJCidx[1]): continue
         addjet = ROOT.TLorentzVector()
-        addjet.SetPtEtaPhiM(tree.Jet_pt[idx],tree.Jet_eta[idx],tree.Jet_phi[idx],tree.Jet_mass[idx])
+        if idx<tree.nJet:
+		addjet.SetPtEtaPhiM(tree.Jet_pt[idx],tree.Jet_eta[idx],tree.Jet_phi[idx],tree.Jet_mass[idx])
         H = H + addjet
     return H
 
@@ -688,6 +689,7 @@ for job in info:
 #########################
 
     for entry in range(0,nEntries):
+#            if entry>1000: break
             if ((entry%j_out)==0):
                 if ((entry/j_out)==9 and j_out < 1e4): j_out*=10;
                 print strftime("%Y-%m-%d %H:%M:%S", gmtime()),' - processing event',str(entry)+'/'+str(nEntries), '(cout every',j_out,'events)'
@@ -700,6 +702,7 @@ for job in info:
                 newVariableFormulas[variableName].GetNdata()
                 newVariables[variableName][0] = newVariableFormulas[variableName].EvalInstance()
 
+            if tree.nhJCidx<2: continue
             if tree.nJet<=tree.hJCidx[0] or tree.nJet<=tree.hJCidx[1]:
                 print('tree.nJet<=tree.hJCidx[0] or tree.nJet<=tree.hJCidx[1]',tree.nJet,tree.hJCidx[0],tree.hJCidx[1])
                 print('skip event')
@@ -884,59 +887,35 @@ for job in info:
                     'json/SingleMuonTrigger_Z_RunCD_Reco74X_Dec1_MC.json' : 'runD_IsoMu20_OR_IsoTkMu20_HLTv4p3_PtEtaBins'
                     }
 
-# <<<<<<< HEAD
-                # for j, name in jsons.iteritems():
-                    # weight = []
-                    # muonCorr = MuonSF(j, name)
-                    # weight.append(muonCorr.get_2D( tree.vLeptons_pt[0], tree.vLeptons_eta[0]))
-                    # weight.append(muonCorr.get_2D( tree.vLeptons_pt[1], tree.vLeptons_eta[1]))
-                    # if j.find('Trigger') != -1:
-                        # # Eff l1 x Eff l2
-                        # vLeptons_SF_HLT[0] = weight[0][0]
-                        # vLeptons_SF_HLT[1] = weight[1][0]
-                        # vLeptons_SFerr_HLT[0] = weight[0][1]
-                        # vLeptons_SFerr_HLT[1] = weight[1][1]
-                        # vLeptons_Eff_HLT[0] = weight[0][0]
-                        # vLeptons_Eff_HLT[1] = weight[1][0]
-                        # vLeptons_Efferr_HLT[0] = weight[0][1]
-                        # vLeptons_Efferr_HLT[1] = weight[1][1]
-                    # elif j.find('MuonID') != -1:
-                        # vLeptons_SF_IdLoose[0] = weight[0][0]
-                        # vLeptons_SF_IdLoose[1] = weight[1][0]
-                        # vLeptons_SFerr_IdLoose[0] = weight[0][1]
-                        # vLeptons_SFerr_IdLoose[1] = weight[1][1]
-                    # elif j.find('MuonIso') != -1:
-                        # vLeptons_SF_IsoLoose[0] = weight[0][0]
-                        # vLeptons_SF_IsoLoose[1] = weight[1][0]
-                        # vLeptons_SFerr_IsoLoose[0] = weight[0][1]
-                        # vLeptons_SFerr_IsoLoose[1] = weight[1][1]
-                    # else:
-                        # sys.exit('@ERROR: SF list doesn\'t match json files. Abort')
-# =======
-                # if tree.nvLeptons>=2:
-                if channel == "Zmm":
-                    for j, name in jsons.iteritems():
-                        weight = []
-                        muonCorr = MuonSF(j, name)
-                        weight.append(muonCorr.get_2D( tree.vLeptons_pt[0], tree.vLeptons_eta[0]))
-                        weight.append(muonCorr.get_2D( tree.vLeptons_pt[1], tree.vLeptons_eta[1]))
-                        if j.find('Trigger') != -1:
-                            #Eff l1 x Eff l2
-                            muTriggSFWeight[0] = weight[0][0]*weight[1][0]
-                            muTriggSFWeightUp[0] = (weight[0][0]+weight[0][1])*(weight[1][0]+weight[1][1])
-                            muTriggSFWeightDown[0] = (weight[0][0]-weight[0][1])*(weight[1][0]-weight[1][1])
-                        elif j.find('MuonID') != -1:
-                            muIDSFWeight[0] = weight[0][0]*weight[1][0]
-                            muIDSFWeightUp[0] = (weight[0][0]+weight[0][1])*(weight[1][0]+weight[1][1])
-                            muIDSFWeightDown[0] = (weight[0][0]-weight[0][1])*(weight[1][0]-weight[1][1])
-                        elif j.find('MuonIso') != -1:
-                            muIsoSFWeight[0] = weight[0][0]*weight[1][0]
-                            muIsoSFWeightUp[0] = (weight[0][0]+weight[0][1])*(weight[1][0]+weight[1][1])
-                            muIsoSFWeightDown[0] = (weight[0][0]-weight[0][1])*(weight[1][0]-weight[1][1])
-                        else:
-                            sys.exit('@ERROR: SF list doesn\'t match json files. Abort')
-
-# >>>>>>> e8badf057a5a9cf558eaa07dccf98d759b1e78ca
+                for j, name in jsons.iteritems():
+                    weight = []
+                    muonCorr = MuonSF(j, name)
+                    weight.append(muonCorr.get_2D( tree.vLeptons_pt[0], tree.vLeptons_eta[0]))
+                    weight.append(muonCorr.get_2D( tree.vLeptons_pt[1], tree.vLeptons_eta[1]))
+                    if j.find('Trigger') != -1 and not j.find('_MC') != -1:
+                       # Eff l1 x Eff l2
+                        vLeptons_SF_HLT[0] = weight[0][0]
+                        vLeptons_SF_HLT[1] = weight[1][0]
+                        vLeptons_SFerr_HLT[0] = weight[0][1]
+                        vLeptons_SFerr_HLT[1] = weight[1][1]
+                    elif j.find('Trigger') != -1 and j.find('_MC') != -1:
+                       # Eff l1 x Eff l2
+                        vLeptons_Eff_HLT[0] = weight[0][0]
+                        vLeptons_Eff_HLT[1] = weight[1][0]
+                        vLeptons_Efferr_HLT[0] = weight[0][1]
+                        vLeptons_Efferr_HLT[1] = weight[1][1]
+                    elif j.find('MuonID') != -1:
+                        vLeptons_SF_IdLoose[0] = weight[0][0]
+                        vLeptons_SF_IdLoose[1] = weight[1][0]
+                        vLeptons_SFerr_IdLoose[0] = weight[0][1]
+                        vLeptons_SFerr_IdLoose[1] = weight[1][1]
+                    elif j.find('MuonIso') != -1:
+                        vLeptons_SF_IsoLoose[0] = weight[0][0]
+                        vLeptons_SF_IsoLoose[1] = weight[1][0]
+                        vLeptons_SFerr_IsoLoose[0] = weight[0][1]
+                        vLeptons_SFerr_IsoLoose[1] = weight[1][1]
+                    else:
+                        sys.exit('@ERROR: SF list doesn\'t match json files. Abort')
             
             if applyRegression:
                 HNoReg.HiggsFlag = 1
@@ -1111,12 +1090,12 @@ for job in info:
                 eta = float(tree.Jet_eta[tree.hJCidx[i]])
                 csv = float(tree.Jet_btagCSV[tree.hJCidx[i]])
                 ##FIXME## we have to add the CSV reshaping
-                hJet_btagCSVOld[i] = tree.Jet_btagCSV[tree.hJCidx[i]]*tree.Jet_bTagWeight[tree.hJCidx[i]]
-                hJet_btagCSV[i] = tree.Jet_btagCSV[tree.hJCidx[i]]*tree.Jet_bTagWeight[tree.hJCidx[i]]
-                hJet_btagCSVDown[i] = tree.Jet_btagCSV[tree.hJCidx[i]]*tree.Jet_bTagWeightLFDown[tree.hJCidx[i]]
-                hJet_btagCSVUp[i] = tree.Jet_btagCSV[tree.hJCidx[i]]*tree.Jet_bTagWeightHFUp[tree.hJCidx[i]]
-                hJet_btagCSVFDown[i] = tree.Jet_btagCSV[tree.hJCidx[i]]*tree.Jet_bTagWeightLFDown[tree.hJCidx[i]]
-                hJet_btagCSVFUp[i] = tree.Jet_btagCSV[tree.hJCidx[i]]*tree.Jet_bTagWeightLFUp[tree.hJCidx[i]]
+                hJet_btagCSVOld[i] = tree.Jet_btagCSV[tree.hJCidx[i]]
+                hJet_btagCSV[i] = tree.Jet_btagCSV[tree.hJCidx[i]]
+                hJet_btagCSVDown[i] = tree.Jet_btagCSV[tree.hJCidx[i]]
+                hJet_btagCSVUp[i] = tree.Jet_btagCSV[tree.hJCidx[i]]
+                hJet_btagCSVFDown[i] = tree.Jet_btagCSV[tree.hJCidx[i]]
+                hJet_btagCSVFUp[i] = tree.Jet_btagCSV[tree.hJCidx[i]]
 
 
 ############################################

@@ -25,7 +25,7 @@ def getTitle(fileName):
     pad =  canvas.GetPrimitive("unten")
     title =  pad.GetPrimitive("Ratio").GetXaxis().GetTitle()
     return title
-    
+
 def DivideTGraph(num,den):
     Ns_den   = den.GetN()
     Xs_den   = den.GetX()
@@ -88,6 +88,7 @@ def getMCAndData(fileName):
     data_tmp =  pad.GetPrimitive("noData")
     MC =  MC_tmp.Clone("MC")
     data =  data_tmp.Clone("data")
+    title = MC.GetXaxis().GetTitle()
     MC.SetTitle("MC")
     data.SetTitle("data")
     MC.GetXaxis().SetTitle(title)
@@ -110,6 +111,7 @@ def doRatio(num, den, option=""):
 #    else:
 #        mratio.Divide(num,den)
 #    return mratio
+	title = num.GetXaxis().GetTitle()
         mratio = ROOT.TGraphAsymmErrors()
         mratio.SetMarkerColor(ROOT.kBlack)
         mratio.SetLineColor(ROOT.kBlack)
@@ -234,6 +236,8 @@ def doPlots(ped,fileNum,fileDen):
 
     MC_num, data_num = getMCAndData(fileNum)
     MC_den, data_den = getMCAndData(fileDen)
+
+    title = MC_num.GetXaxis().GetTitle()
 
     turnOnMC = doRatio(MC_num,MC_den,"b")
     turnOnData = doRatio(data_num,data_den,"b")

@@ -25,7 +25,7 @@ def getTitle(fileName):
     pad =  canvas.GetPrimitive("unten")
     title =  pad.GetPrimitive("Ratio").GetXaxis().GetTitle()
     return title
-    
+
 def DivideTGraph(num,den):
     Ns_den   = den.GetN()
     Xs_den   = den.GetX()
@@ -94,8 +94,8 @@ def makeHistos(var="MaxIf$(Jet_btagCSV,Jet_pt>30)",trigger="ntrgObjects_hltCSV0p
     den = copy.copy(den)
     print "num,den = ",num.Integral(),den.Integral()
     return num,den
-    
-    
+
+
 
 def getMCAndData(fileName):
     file_ = ROOT.TFile.Open(fileName)

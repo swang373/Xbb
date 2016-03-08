@@ -21,7 +21,7 @@
    c1->SetFrameBorderMode(0);
    c1->SetFrameFillStyle(0);
    c1->SetFrameBorderMode(0);
-   
+
    TGraphAsymmErrors *grae = new TGraphAsymmErrors(37);
    grae->SetName("ratio");
    grae->SetTitle("");
@@ -101,7 +101,7 @@
    grae->SetPointError(35,5,5,0.3181538,0);
    grae->SetPoint(36,495,1);
    grae->SetPointError(36,5,5,0.119839,0);
-   
+
    TH1F *Graph_ratio2 = new TH1F("Graph_ratio2","",100,49,541);
    Graph_ratio2->SetMinimum(0);
    Graph_ratio2->SetMaximum(1);
@@ -127,9 +127,9 @@
    Graph_ratio2->GetZaxis()->SetTitleSize(0.06);
    Graph_ratio2->GetZaxis()->SetTitleFont(42);
    grae->SetHistogram(Graph_ratio2);
-   
+
    grae->Draw("ap");
-   
+
    TF1 *fit = new TF1("fit","1-(0.5-0.5*erf((x-[0])/[1]))*([3])-[2]",80,500);
    fit->SetFillColor(19);
    fit->SetFillStyle(0);

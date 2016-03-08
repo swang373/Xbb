@@ -275,6 +275,7 @@ _name = title
 _weight = weightF
 appendList()
 
+print "Using weightF:",weightF
 print 'Assign the systematics'
 print '======================\n'
 
@@ -639,10 +640,10 @@ if not ignore_stats:
                     if Q == 'Up':
                         final_histos['%s_bin%s_%s'%(systematicsnaming['stats'],bin,Q)][job].SetBinContent(bin,max(0,hist.GetBinContent(bin)+hist.GetBinError(bin)))
                     if Q == 'Down':
-                        final_histos['%s_bin%s_%s'%(systematicsnaming['stats'],bin,Q)][job].SetBinContent(bin,max(0,hist.GetBinContent(bin)-hist.GetBinError(bin)))
+                        final_histos['%s_bin%s_%s'%(systematicsnaming['stats'],bin,Q)][job].SetBinContent(bin,max(1.E-6,hist.GetBinContent(bin)-hist.GetBinError(bin)))
 
 
-print "binsBelowThreshold:",binsBelowThreshold
+#print "binsBelowThreshold:",binsBelowThreshold
 print 'Start writing shapes in WS'
 print '==========================\n'
 #write shapes in WS:
@@ -808,6 +809,7 @@ for DCtype in ['WS','TH']:
                 f.write('\t-')
         f.write('\n')
     # write rateParams systematics (free parameters)
+
     rateParams=eval(config.get('Datacard','rateParams_%s_%s'%(str(anType), pt_region)))
     for rateParam in rateParams:
         dictProcs=eval(config.get('Datacard',rateParam))
