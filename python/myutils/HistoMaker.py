@@ -79,7 +79,7 @@ class HistoMaker:
             else:
                 group=self.GroupDict[job.name]
             treeVar=options['var']
-#            print("START %s"%treeVar)
+            print("START %s"%treeVar)
             name=options['name']
             # print 'options[\'name\']',options['name']
             if self._rebin or self.calc_rebin_flag:
@@ -108,16 +108,13 @@ class HistoMaker:
             drawoption = ''
 #            print("START DRAWING")
             if job.type != 'DATA':
-              #print "the jobs is not data"
               if CuttedTree and CuttedTree.GetEntries():
                 if 'BDT' in treeVar or 'bdt' in treeVar: 
                     drawoption = '(%s)*(%s & %s)'%(weightF,treeCut,BDT_add_cut)
-                    # drawoption = 'sign(genWeight)*(%s)*(%s & %s)'%(weightF,treeCut,BDT_add_cut)
-                    #print drawoption
                 else: 
                     drawoption = '(%s)*(%s)'%(weightF,treeCut)
                 #print ('Draw: %s>>%s' %(treeVar,name), drawoption, "goff,e")
-                print 'drawoption is', drawoption
+                print 'drawoptions are', drawoption
                 nevents = CuttedTree.Draw('%s>>%s' %(treeVar,name), drawoption, "goff,e")
                 #print 'nevents:',hTree.GetEntries(),' hTree.name() 2 =',hTree.GetName()
                 full=True
@@ -153,6 +150,7 @@ class HistoMaker:
                     else:
                         CuttedTree.Draw('%s>>%s' %(treeVar,name),'%s' %treeCut, "goff,e")
                 else:
+                    print 'DATA drawoptions', '%s>>%s' %(treeVar,name),'%s' %treeCut
                     CuttedTree.Draw('%s>>%s' %(treeVar,name),'%s' %treeCut, "goff,e")
                 full = True
             # if full:
@@ -178,10 +176,10 @@ class HistoMaker:
                     ScaleFactor = self.tc.get_scale(job,self.config,self.lumi)
                 if ScaleFactor != 0:
                     hTree.Scale(ScaleFactor)
-            #print '\t-->import %s\t Integral: %s'%(job.name,hTree.Integral())
-#            print("job:",job.name," ScaleFactor=",ScaleFactor)
-#            print("END RESCALE")
-#            print("START addOverFlow")
+                print '\t-->import %s\t Integral: %s'%(job.name,hTree.Integral())
+                print("job:",job.name," ScaleFactor=",ScaleFactor)
+                print("END RESCALE")
+                print("START addOverFlow")
             if addOverFlow:
                 uFlow = hTree.GetBinContent(0)+hTree.GetBinContent(1)
                 oFlow = hTree.GetBinContent(hTree.GetNbinsX()+1)+hTree.GetBinContent(hTree.GetNbinsX())
