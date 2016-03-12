@@ -2,13 +2,15 @@ from ROOT import *
 from array import array
 from math import *
 
-rangeX = 1.0
-rangeY = 0.25
-vetoX = 0.05
-vetoY = 0.05
+rangeX = 0.2
+rangeY = 0.2
+vetoX = 0.1
+vetoY = 0.1
 
 significance = 5
 significanceBorder = 2
+ratio = 2
+ratioBorder = 1.2
 
 def fromTH2ToDict(hist2D,dict_):
     for x in range(hist2D.GetXaxis().GetNbins()):
@@ -37,7 +39,8 @@ def getSignificance(x,y,maxX,maxY,plot2D,clusterMap,rangeXbins,rangeYbins,vetoXb
     if count > 0:
         mean = sum_/count
         sig = (value-mean)/(sqrt(mean))
-    return sig,value,sum_,count
+    ratio = value/mean
+    return ratio,sig,value,sum_,count
 
 def getClusters(plot2D,clusterMap,Nxaxis,Nyaxis,rangeXbins,rangeYbins,vetoXbins,vetoYbins):
     touch = True
@@ -50,13 +53,13 @@ def getClusters(plot2D,clusterMap,Nxaxis,Nyaxis,rangeXbins,rangeYbins,vetoXbins,
         for y in range(Nyaxis):
             for x in range(Nxaxis):
                 if clusterMap[(x,y)]==0:
-                    sig,value,sum_,count = getSignificance(x,y,Nxaxis,Nyaxis,plot2D,clusterMap,rangeXbins,rangeYbins,vetoXbins,vetoYbins)
-                if sig > significance:
+                    rat,sig,value,sum_,count = getSignificance(x,y,Nxaxis,Nyaxis,plot2D,clusterMap,rangeXbins,rangeYbins,vetoXbins,vetoYbins)
+                if sig > significance and ratio>rat:
                     touch = True
 #                    plot2D.SetBinContent(x,y,0)
                     clusterMap[(x,y)]=1
                     print x,y,sig,sum_,value,count,sum_/count
-                elif sig > significanceBorder and (clusterMap[((x+1)%Nxaxis,y)]==1 or clusterMap[((x-1)%Nxaxis,y)]==1 or clusterMap[(x,y+1)]==1 or clusterMap[(x,y-1)]==1):
+                elif sig > significanceBorder  and ratioBorder>rat and (clusterMap[((x+1)%Nxaxis,y)]==1 or clusterMap[((x-1)%Nxaxis,y)]==1 or clusterMap[(x,(y+1)%Nyaxis)]==1 or clusterMap[(x,(y-1)%Nyaxis)]==1):
                     touch = True
 #                    plot2D.SetBinContent(x,y,0)
                     clusterMap[(x,y)]=1.
