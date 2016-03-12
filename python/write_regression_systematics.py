@@ -703,6 +703,7 @@ for job in info:
                 newVariables[variableName][0] = newVariableFormulas[variableName].EvalInstance()
 
             if tree.nhJCidx<2: continue
+            # if len(tree.hJCidx) == 0: continue
             if tree.nJet<=tree.hJCidx[0] or tree.nJet<=tree.hJCidx[1]:
                 print('tree.nJet<=tree.hJCidx[0] or tree.nJet<=tree.hJCidx[1]',tree.nJet,tree.hJCidx[0],tree.hJCidx[1])
                 print('skip event')
