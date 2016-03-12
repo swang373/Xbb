@@ -3,7 +3,6 @@ import os, pickle, sys, ROOT
 ROOT.gROOT.SetBatch(True)
 from optparse import OptionParser
 from myutils import BetterConfigParser, copytree, ParseInfo
-import utils
 
 print 'start prepare_environment_with_config.py'
 
@@ -43,8 +42,5 @@ for job in info:
         continue
     if job.subsample:
         continue
-    # copytree function
-    #copytree(pathIN,pathOUT,prefix,job.prefix,job.identifier,'',job.addtreecut, config)
-    # TreeCopier class
-    utils.TreeCopier(pathIN, pathOUT, job.identifier, job.prefix, job.addtreecut)
+    copytree(pathIN,pathOUT,prefix,job.prefix,job.identifier,'',job.addtreecut, config)
 print 'end prepare_environment_with_config.py'
