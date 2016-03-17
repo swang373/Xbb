@@ -1,736 +1,0 @@
-/bin/bash: module: line 1: syntax error: unexpected end of file
-/bin/bash: error importing function definition for `BASH_FUNC_module'
-
-Reading ./GaelZllHbb13TeVconfig
-taskprep
-
-whereToLaunch= PSI
-Debug is  True
-
-Checking the number of input arguments
-
-/shome/nchernya/Hbb/Xbb/Xbb/python
-@LOG : The config list you are using is
-paths.ini -C GaelZllHbb13TeVconfig/general.ini -C GaelZllHbb13TeVconfig/cuts.ini -C GaelZllHbb13TeVconfig/training.ini -C GaelZllHbb13TeVconfig/datacards.ini -C GaelZllHbb13TeVconfig/plots.ini -C GaelZllHbb13TeVconfig/lhe_weights.ini -C GaelZllHbb13TeVconfig/samples_nosplit.ini
-task is
-prep
-============================
-Will Lauch the script
-============================
-The command is
-./prepare_environment_with_config.py --samples ST_tW_antitop --config GaelZllHbb13TeVconfig/paths.ini -C GaelZllHbb13TeVconfig/general.ini -C GaelZllHbb13TeVconfig/cuts.ini -C GaelZllHbb13TeVconfig/training.ini -C GaelZllHbb13TeVconfig/datacards.ini -C GaelZllHbb13TeVconfig/plots.ini -C GaelZllHbb13TeVconfig/lhe_weights.ini -C GaelZllHbb13TeVconfig/samples_nosplit.ini --config GaelZllHbb13TeVconfig/samples_nosplit.ini
-Return code: SRM_DUPLICATION_ERROR
-Explanation: File exists
-
-start prepare_environment_with_config.py
-namelist: ['ST_tW_antitop']
-Start getting infos on all the samples (ParseInfo)
-==================================================
-
-samples_config is /shome/nchernya/Hbb/Xbb/Xbb/python/GaelZllHbb13TeVconfig/samples_nosplit.ini
-@DEBUG: []
-infile VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1
-infile VHBB_HEPPY_V20a_BTagCSV__Run2015D-16Dec2015-v1
-infile VBFHToBB_M-125_13TeV_powheg_pythia8_weightfix
-infile DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
-infile DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8
-infile TT_TuneCUETP8M1_13TeV-amcatnlo-pythia8
-infile TT_TuneCUETP8M1_13TeV-powheg-pythia8
-infile ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1
-infile ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1
-infile WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
-infile QCD_HT100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
-infile QCD_HT200to300_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
-infile QCD_HT300to500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
-infile QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
-infile QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
-infile QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
-infile QCD_HT1500to2000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
-infile QCD_HT2000toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
-Finished getting infos on all the samples (ParseInfo)
-=====================================================
-
-samplesinfo: /shome/nchernya/Hbb/Xbb/Xbb/python/GaelZllHbb13TeVconfig/samples_nosplit.ini
-info: <myutils.sample_parser.ParseInfo instance at 0x50c3c20>
-job.name: BTag_Run2015C_25ns_16Dec2015
-job.name: BTag_Run2015D_16Dec2015
-job.name: VBFHToBB_M-125_13TeV_powheg
-job.name: DYJetsToLL_M-50_TuneCUETP8M1
-job.name: DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX
-job.name: TT_mad
-job.name: TT_pow
-job.name: ST_tW_antitop
-start copytree.py
-('dcap://t3se01.psi.ch:22125/pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20/', 'root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep', '', 'ZmmH.BestCSV.heppy.', 'ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1', '', '((HLT_BIT_HLT_QuadPFJet_SingleBTagCSV_VBF_Mqq460_v) || (HLT_BIT_HLT_QuadPFJet_DoubleBTagCSV_VBF_Mqq200_v == 1)) & (Jet_pt[0] > 82. & Jet_pt[1] > 66. & Jet_pt[2] > 54. & Jet_pt[3] > 20. ) & (nJet > 3)')
-##### COPY TREE - BEGIN ######
-Create the ouput folder if not existing
-mkdir_protocol /pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/
-checking and/or creating folder 
-exists
-Folder / sucessfully created
-checking and/or creating folder /
-exists
-Folder //pnfs sucessfully created
-checking and/or creating folder //pnfs
-exists
-Folder //pnfs/psi.ch sucessfully created
-checking and/or creating folder //pnfs/psi.ch
-exists
-Folder //pnfs/psi.ch/cms sucessfully created
-checking and/or creating folder //pnfs/psi.ch/cms
-exists
-Folder //pnfs/psi.ch/cms/trivcat sucessfully created
-checking and/or creating folder //pnfs/psi.ch/cms/trivcat
-exists
-Folder //pnfs/psi.ch/cms/trivcat/store sucessfully created
-checking and/or creating folder //pnfs/psi.ch/cms/trivcat/store
-exists
-Folder //pnfs/psi.ch/cms/trivcat/store/user sucessfully created
-checking and/or creating folder //pnfs/psi.ch/cms/trivcat/store/user
-exists
-Folder //pnfs/psi.ch/cms/trivcat/store/user/nchernya sucessfully created
-checking and/or creating folder //pnfs/psi.ch/cms/trivcat/store/user/nchernya
-exists
-Folder //pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb sucessfully created
-checking and/or creating folder //pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb
-exists
-Folder //pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20 sucessfully created
-checking and/or creating folder //pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20
-exists
-Folder //pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep sucessfully created
-checking and/or creating folder //pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep
-does not exist
-checking and/or creating folder //pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1
-does not exist
-cutting  /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20//ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_12.root  --->  root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_12_VOBJ8D.root
-FALSE
-cutting  /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20//ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_1.root  --->  root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_1_06H6KN.root
-FALSE
-cutting  /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20//ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_14.root  --->  root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_14_0IS3JI.root
-FALSE
-cutting  /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20//ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_6.root  --->  root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_6_XZ4TAH.root
-FALSE
-cutting  /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20//ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_2.root  --->  root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_2_XBCJDK.root
-FALSE
-cutting  /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20//ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_9.root  --->  root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_9_RO8LXD.root
-FALSE
-cutting  /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20//ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_7.root  --->  root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_7_J5C1PN.root
-FALSE
-cutting  /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20//ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_3.root  --->  root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_3_2XGJF8.root
-FALSE
-cutting  /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20//ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_10.root  --->  root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_10_DV819Q.root
-FALSE
-cutting  /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20//ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_4.root  --->  root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_4_MTM0MZ.root
-FALSE
-cutting  /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20//ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_13.root  --->  root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_13_SRD1LB.root
-FALSE
-cutting  /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20//ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_5.root  --->  root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_5_7JQO5H.root
-FALSE
-cutting  /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20//ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_8.root  --->  root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_8_3WGS0N.root
-FALSE
-inputFile /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20//ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_12.root
-Writing file: root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_12_VOBJ8D.root
-TNetXNGFile**		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat//store/t3groups/ethz-higgs/run2/VHBBHeppyV20/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_12.root	
- TNetXNGFile*		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat//store/t3groups/ethz-higgs/run2/VHBBHeppyV20/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_12.root	
-  KEY: TTree	tree;6	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
-  KEY: TTree	tree;5	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
-  KEY: TH1F	Count;1	Count
-  KEY: TH1F	CountWeighted;1	Count with gen weight and pu weight
-  KEY: TH1F	CountPosWeight;1	Count genWeight>0
-  KEY: TH1F	CountNegWeight;1	Count genWeight<0
-  KEY: TH1F	CountWeightedLHEWeightScale_0;1	Count with gen weight x LHE_weights_scale[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_1;1	Count with gen weight x LHE_weights_scale[1] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_2;1	Count with gen weight x LHE_weights_scale[2] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_3;1	Count with gen weight x LHE_weights_scale[3] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_4;1	Count with gen weight x LHE_weights_scale[4] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_5;1	Count with gen weight x LHE_weights_scale[5] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_0;1	Count with gen weight x LHE_weights_pdf[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_1;1	Count with gen weight x LHE_weights_pdf[1] and pu weight
-
-	 copy file: /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20//ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_12.root with cut: ((HLT_BIT_HLT_QuadPFJet_SingleBTagCSV_VBF_Mqq460_v) || (HLT_BIT_HLT_QuadPFJet_DoubleBTagCSV_VBF_Mqq200_v == 1)) & (Jet_pt[0] > 82. & Jet_pt[1] > 66. & Jet_pt[2] > 54. & Jet_pt[3] > 20. ) & (nJet > 3)
-[1;34m	 before cuts	 47189[1;m
-[1;32m	 survived	 1218[1;m
-TNetXNGFile**		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_12_VOBJ8D.root	
- TNetXNGFile*		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_12_VOBJ8D.root	
-  OBJ: TTree	tree	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1 : 0 at: 0x597cf50
-  KEY: TH1F	Count;1	Count
-  KEY: TH1F	CountWeighted;1	Count with gen weight and pu weight
-  KEY: TH1F	CountPosWeight;1	Count genWeight>0
-  KEY: TH1F	CountNegWeight;1	Count genWeight<0
-  KEY: TH1F	CountWeightedLHEWeightScale_0;1	Count with gen weight x LHE_weights_scale[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_1;1	Count with gen weight x LHE_weights_scale[1] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_2;1	Count with gen weight x LHE_weights_scale[2] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_3;1	Count with gen weight x LHE_weights_scale[3] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_4;1	Count with gen weight x LHE_weights_scale[4] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_5;1	Count with gen weight x LHE_weights_scale[5] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_0;1	Count with gen weight x LHE_weights_pdf[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_1;1	Count with gen weight x LHE_weights_pdf[1] and pu weight
-  KEY: TTree	tree;1	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
-Writing output file
-Closing output file
-Closing input file
-inputFile /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20//ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_1.root
-Writing file: root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_1_06H6KN.root
-TNetXNGFile**		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat//store/t3groups/ethz-higgs/run2/VHBBHeppyV20/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_1.root	
- TNetXNGFile*		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat//store/t3groups/ethz-higgs/run2/VHBBHeppyV20/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_1.root	
-  KEY: TTree	tree;8	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
-  KEY: TTree	tree;7	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
-  KEY: TH1F	Count;1	Count
-  KEY: TH1F	CountWeighted;1	Count with gen weight and pu weight
-  KEY: TH1F	CountPosWeight;1	Count genWeight>0
-  KEY: TH1F	CountNegWeight;1	Count genWeight<0
-  KEY: TH1F	CountWeightedLHEWeightScale_0;1	Count with gen weight x LHE_weights_scale[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_1;1	Count with gen weight x LHE_weights_scale[1] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_2;1	Count with gen weight x LHE_weights_scale[2] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_3;1	Count with gen weight x LHE_weights_scale[3] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_4;1	Count with gen weight x LHE_weights_scale[4] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_5;1	Count with gen weight x LHE_weights_scale[5] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_0;1	Count with gen weight x LHE_weights_pdf[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_1;1	Count with gen weight x LHE_weights_pdf[1] and pu weight
-
-	 copy file: /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20//ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_1.root with cut: ((HLT_BIT_HLT_QuadPFJet_SingleBTagCSV_VBF_Mqq460_v) || (HLT_BIT_HLT_QuadPFJet_DoubleBTagCSV_VBF_Mqq200_v == 1)) & (Jet_pt[0] > 82. & Jet_pt[1] > 66. & Jet_pt[2] > 54. & Jet_pt[3] > 20. ) & (nJet > 3)
-[1;34m	 before cuts	 62946[1;m
-[1;32m	 survived	 1612[1;m
-TNetXNGFile**		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_1_06H6KN.root	
- TNetXNGFile*		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_1_06H6KN.root	
-  OBJ: TTree	tree	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1 : 0 at: 0x936dd10
-  KEY: TH1F	Count;1	Count
-  KEY: TH1F	CountWeighted;1	Count with gen weight and pu weight
-  KEY: TH1F	CountPosWeight;1	Count genWeight>0
-  KEY: TH1F	CountNegWeight;1	Count genWeight<0
-  KEY: TH1F	CountWeightedLHEWeightScale_0;1	Count with gen weight x LHE_weights_scale[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_1;1	Count with gen weight x LHE_weights_scale[1] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_2;1	Count with gen weight x LHE_weights_scale[2] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_3;1	Count with gen weight x LHE_weights_scale[3] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_4;1	Count with gen weight x LHE_weights_scale[4] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_5;1	Count with gen weight x LHE_weights_scale[5] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_0;1	Count with gen weight x LHE_weights_pdf[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_1;1	Count with gen weight x LHE_weights_pdf[1] and pu weight
-  KEY: TTree	tree;1	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
-Writing output file
-Closing output file
-Closing input file
-inputFile /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20//ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_14.root
-Writing file: root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_14_0IS3JI.root
-TNetXNGFile**		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat//store/t3groups/ethz-higgs/run2/VHBBHeppyV20/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_14.root	
- TNetXNGFile*		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat//store/t3groups/ethz-higgs/run2/VHBBHeppyV20/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_14.root	
-  KEY: TTree	tree;3	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
-  KEY: TTree	tree;2	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
-  KEY: TH1F	Count;1	Count
-  KEY: TH1F	CountWeighted;1	Count with gen weight and pu weight
-  KEY: TH1F	CountPosWeight;1	Count genWeight>0
-  KEY: TH1F	CountNegWeight;1	Count genWeight<0
-  KEY: TH1F	CountWeightedLHEWeightScale_0;1	Count with gen weight x LHE_weights_scale[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_1;1	Count with gen weight x LHE_weights_scale[1] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_2;1	Count with gen weight x LHE_weights_scale[2] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_3;1	Count with gen weight x LHE_weights_scale[3] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_4;1	Count with gen weight x LHE_weights_scale[4] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_5;1	Count with gen weight x LHE_weights_scale[5] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_0;1	Count with gen weight x LHE_weights_pdf[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_1;1	Count with gen weight x LHE_weights_pdf[1] and pu weight
-
-	 copy file: /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20//ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_14.root with cut: ((HLT_BIT_HLT_QuadPFJet_SingleBTagCSV_VBF_Mqq460_v) || (HLT_BIT_HLT_QuadPFJet_DoubleBTagCSV_VBF_Mqq200_v == 1)) & (Jet_pt[0] > 82. & Jet_pt[1] > 66. & Jet_pt[2] > 54. & Jet_pt[3] > 20. ) & (nJet > 3)
-[1;34m	 before cuts	 18722[1;m
-[1;32m	 survived	 507[1;m
-TNetXNGFile**		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_14_0IS3JI.root	
- TNetXNGFile*		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_14_0IS3JI.root	
-  OBJ: TTree	tree	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1 : 0 at: 0x93c6ee0
-  KEY: TH1F	Count;1	Count
-  KEY: TH1F	CountWeighted;1	Count with gen weight and pu weight
-  KEY: TH1F	CountPosWeight;1	Count genWeight>0
-  KEY: TH1F	CountNegWeight;1	Count genWeight<0
-  KEY: TH1F	CountWeightedLHEWeightScale_0;1	Count with gen weight x LHE_weights_scale[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_1;1	Count with gen weight x LHE_weights_scale[1] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_2;1	Count with gen weight x LHE_weights_scale[2] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_3;1	Count with gen weight x LHE_weights_scale[3] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_4;1	Count with gen weight x LHE_weights_scale[4] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_5;1	Count with gen weight x LHE_weights_scale[5] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_0;1	Count with gen weight x LHE_weights_pdf[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_1;1	Count with gen weight x LHE_weights_pdf[1] and pu weight
-  KEY: TTree	tree;1	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
-Writing output file
-Closing output file
-Closing input file
-inputFile /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20//ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_6.root
-Writing file: root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_6_XZ4TAH.root
-TNetXNGFile**		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat//store/t3groups/ethz-higgs/run2/VHBBHeppyV20/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_6.root	
- TNetXNGFile*		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat//store/t3groups/ethz-higgs/run2/VHBBHeppyV20/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_6.root	
-  KEY: TTree	tree;5	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
-  KEY: TTree	tree;4	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
-  KEY: TH1F	Count;1	Count
-  KEY: TH1F	CountWeighted;1	Count with gen weight and pu weight
-  KEY: TH1F	CountPosWeight;1	Count genWeight>0
-  KEY: TH1F	CountNegWeight;1	Count genWeight<0
-  KEY: TH1F	CountWeightedLHEWeightScale_0;1	Count with gen weight x LHE_weights_scale[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_1;1	Count with gen weight x LHE_weights_scale[1] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_2;1	Count with gen weight x LHE_weights_scale[2] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_3;1	Count with gen weight x LHE_weights_scale[3] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_4;1	Count with gen weight x LHE_weights_scale[4] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_5;1	Count with gen weight x LHE_weights_scale[5] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_0;1	Count with gen weight x LHE_weights_pdf[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_1;1	Count with gen weight x LHE_weights_pdf[1] and pu weight
-
-	 copy file: /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20//ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_6.root with cut: ((HLT_BIT_HLT_QuadPFJet_SingleBTagCSV_VBF_Mqq460_v) || (HLT_BIT_HLT_QuadPFJet_DoubleBTagCSV_VBF_Mqq200_v == 1)) & (Jet_pt[0] > 82. & Jet_pt[1] > 66. & Jet_pt[2] > 54. & Jet_pt[3] > 20. ) & (nJet > 3)
-[1;34m	 before cuts	 34857[1;m
-[1;32m	 survived	 917[1;m
-TNetXNGFile**		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_6_XZ4TAH.root	
- TNetXNGFile*		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_6_XZ4TAH.root	
-  OBJ: TTree	tree	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1 : 0 at: 0x93a95b0
-  KEY: TH1F	Count;1	Count
-  KEY: TH1F	CountWeighted;1	Count with gen weight and pu weight
-  KEY: TH1F	CountPosWeight;1	Count genWeight>0
-  KEY: TH1F	CountNegWeight;1	Count genWeight<0
-  KEY: TH1F	CountWeightedLHEWeightScale_0;1	Count with gen weight x LHE_weights_scale[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_1;1	Count with gen weight x LHE_weights_scale[1] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_2;1	Count with gen weight x LHE_weights_scale[2] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_3;1	Count with gen weight x LHE_weights_scale[3] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_4;1	Count with gen weight x LHE_weights_scale[4] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_5;1	Count with gen weight x LHE_weights_scale[5] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_0;1	Count with gen weight x LHE_weights_pdf[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_1;1	Count with gen weight x LHE_weights_pdf[1] and pu weight
-  KEY: TTree	tree;1	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
-Writing output file
-Closing output file
-Closing input file
-inputFile /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20//ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_2.root
-Writing file: root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_2_XBCJDK.root
-TNetXNGFile**		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat//store/t3groups/ethz-higgs/run2/VHBBHeppyV20/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_2.root	
- TNetXNGFile*		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat//store/t3groups/ethz-higgs/run2/VHBBHeppyV20/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_2.root	
-  KEY: TTree	tree;8	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
-  KEY: TTree	tree;7	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
-  KEY: TH1F	Count;1	Count
-  KEY: TH1F	CountWeighted;1	Count with gen weight and pu weight
-  KEY: TH1F	CountPosWeight;1	Count genWeight>0
-  KEY: TH1F	CountNegWeight;1	Count genWeight<0
-  KEY: TH1F	CountWeightedLHEWeightScale_0;1	Count with gen weight x LHE_weights_scale[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_1;1	Count with gen weight x LHE_weights_scale[1] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_2;1	Count with gen weight x LHE_weights_scale[2] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_3;1	Count with gen weight x LHE_weights_scale[3] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_4;1	Count with gen weight x LHE_weights_scale[4] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_5;1	Count with gen weight x LHE_weights_scale[5] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_0;1	Count with gen weight x LHE_weights_pdf[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_1;1	Count with gen weight x LHE_weights_pdf[1] and pu weight
-
-	 copy file: /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20//ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_2.root with cut: ((HLT_BIT_HLT_QuadPFJet_SingleBTagCSV_VBF_Mqq460_v) || (HLT_BIT_HLT_QuadPFJet_DoubleBTagCSV_VBF_Mqq200_v == 1)) & (Jet_pt[0] > 82. & Jet_pt[1] > 66. & Jet_pt[2] > 54. & Jet_pt[3] > 20. ) & (nJet > 3)
-[1;34m	 before cuts	 63736[1;m
-[1;32m	 survived	 1683[1;m
-TNetXNGFile**		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_2_XBCJDK.root	
- TNetXNGFile*		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_2_XBCJDK.root	
-  OBJ: TTree	tree	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1 : 0 at: 0x93e8610
-  KEY: TH1F	Count;1	Count
-  KEY: TH1F	CountWeighted;1	Count with gen weight and pu weight
-  KEY: TH1F	CountPosWeight;1	Count genWeight>0
-  KEY: TH1F	CountNegWeight;1	Count genWeight<0
-  KEY: TH1F	CountWeightedLHEWeightScale_0;1	Count with gen weight x LHE_weights_scale[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_1;1	Count with gen weight x LHE_weights_scale[1] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_2;1	Count with gen weight x LHE_weights_scale[2] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_3;1	Count with gen weight x LHE_weights_scale[3] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_4;1	Count with gen weight x LHE_weights_scale[4] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_5;1	Count with gen weight x LHE_weights_scale[5] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_0;1	Count with gen weight x LHE_weights_pdf[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_1;1	Count with gen weight x LHE_weights_pdf[1] and pu weight
-  KEY: TTree	tree;1	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
-Writing output file
-Closing output file
-Closing input file
-inputFile /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20//ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_9.root
-Writing file: root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_9_RO8LXD.root
-TNetXNGFile**		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat//store/t3groups/ethz-higgs/run2/VHBBHeppyV20/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_9.root	
- TNetXNGFile*		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat//store/t3groups/ethz-higgs/run2/VHBBHeppyV20/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_9.root	
-  KEY: TTree	tree;9	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
-  KEY: TTree	tree;8	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
-  KEY: TH1F	Count;1	Count
-  KEY: TH1F	CountWeighted;1	Count with gen weight and pu weight
-  KEY: TH1F	CountPosWeight;1	Count genWeight>0
-  KEY: TH1F	CountNegWeight;1	Count genWeight<0
-  KEY: TH1F	CountWeightedLHEWeightScale_0;1	Count with gen weight x LHE_weights_scale[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_1;1	Count with gen weight x LHE_weights_scale[1] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_2;1	Count with gen weight x LHE_weights_scale[2] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_3;1	Count with gen weight x LHE_weights_scale[3] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_4;1	Count with gen weight x LHE_weights_scale[4] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_5;1	Count with gen weight x LHE_weights_scale[5] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_0;1	Count with gen weight x LHE_weights_pdf[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_1;1	Count with gen weight x LHE_weights_pdf[1] and pu weight
-
-	 copy file: /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20//ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_9.root with cut: ((HLT_BIT_HLT_QuadPFJet_SingleBTagCSV_VBF_Mqq460_v) || (HLT_BIT_HLT_QuadPFJet_DoubleBTagCSV_VBF_Mqq200_v == 1)) & (Jet_pt[0] > 82. & Jet_pt[1] > 66. & Jet_pt[2] > 54. & Jet_pt[3] > 20. ) & (nJet > 3)
-[1;34m	 before cuts	 70000[1;m
-[1;32m	 survived	 1855[1;m
-TNetXNGFile**		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_9_RO8LXD.root	
- TNetXNGFile*		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_9_RO8LXD.root	
-  OBJ: TTree	tree	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1 : 0 at: 0x919f690
-  KEY: TH1F	Count;1	Count
-  KEY: TH1F	CountWeighted;1	Count with gen weight and pu weight
-  KEY: TH1F	CountPosWeight;1	Count genWeight>0
-  KEY: TH1F	CountNegWeight;1	Count genWeight<0
-  KEY: TH1F	CountWeightedLHEWeightScale_0;1	Count with gen weight x LHE_weights_scale[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_1;1	Count with gen weight x LHE_weights_scale[1] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_2;1	Count with gen weight x LHE_weights_scale[2] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_3;1	Count with gen weight x LHE_weights_scale[3] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_4;1	Count with gen weight x LHE_weights_scale[4] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_5;1	Count with gen weight x LHE_weights_scale[5] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_0;1	Count with gen weight x LHE_weights_pdf[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_1;1	Count with gen weight x LHE_weights_pdf[1] and pu weight
-  KEY: TTree	tree;1	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
-Writing output file
-Closing output file
-Closing input file
-inputFile /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20//ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_7.root
-Writing file: root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_7_J5C1PN.root
-TNetXNGFile**		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat//store/t3groups/ethz-higgs/run2/VHBBHeppyV20/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_7.root	
- TNetXNGFile*		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat//store/t3groups/ethz-higgs/run2/VHBBHeppyV20/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_7.root	
-  KEY: TTree	tree;9	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
-  KEY: TTree	tree;8	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
-  KEY: TH1F	Count;1	Count
-  KEY: TH1F	CountWeighted;1	Count with gen weight and pu weight
-  KEY: TH1F	CountPosWeight;1	Count genWeight>0
-  KEY: TH1F	CountNegWeight;1	Count genWeight<0
-  KEY: TH1F	CountWeightedLHEWeightScale_0;1	Count with gen weight x LHE_weights_scale[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_1;1	Count with gen weight x LHE_weights_scale[1] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_2;1	Count with gen weight x LHE_weights_scale[2] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_3;1	Count with gen weight x LHE_weights_scale[3] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_4;1	Count with gen weight x LHE_weights_scale[4] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_5;1	Count with gen weight x LHE_weights_scale[5] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_0;1	Count with gen weight x LHE_weights_pdf[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_1;1	Count with gen weight x LHE_weights_pdf[1] and pu weight
-
-	 copy file: /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20//ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_7.root with cut: ((HLT_BIT_HLT_QuadPFJet_SingleBTagCSV_VBF_Mqq460_v) || (HLT_BIT_HLT_QuadPFJet_DoubleBTagCSV_VBF_Mqq200_v == 1)) & (Jet_pt[0] > 82. & Jet_pt[1] > 66. & Jet_pt[2] > 54. & Jet_pt[3] > 20. ) & (nJet > 3)
-[1;34m	 before cuts	 72621[1;m
-[1;32m	 survived	 1837[1;m
-TNetXNGFile**		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_7_J5C1PN.root	
- TNetXNGFile*		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_7_J5C1PN.root	
-  OBJ: TTree	tree	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1 : 0 at: 0x93519c0
-  KEY: TH1F	Count;1	Count
-  KEY: TH1F	CountWeighted;1	Count with gen weight and pu weight
-  KEY: TH1F	CountPosWeight;1	Count genWeight>0
-  KEY: TH1F	CountNegWeight;1	Count genWeight<0
-  KEY: TH1F	CountWeightedLHEWeightScale_0;1	Count with gen weight x LHE_weights_scale[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_1;1	Count with gen weight x LHE_weights_scale[1] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_2;1	Count with gen weight x LHE_weights_scale[2] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_3;1	Count with gen weight x LHE_weights_scale[3] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_4;1	Count with gen weight x LHE_weights_scale[4] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_5;1	Count with gen weight x LHE_weights_scale[5] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_0;1	Count with gen weight x LHE_weights_pdf[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_1;1	Count with gen weight x LHE_weights_pdf[1] and pu weight
-  KEY: TTree	tree;1	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
-Writing output file
-Closing output file
-Closing input file
-inputFile /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20//ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_3.root
-Writing file: root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_3_2XGJF8.root
-TNetXNGFile**		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat//store/t3groups/ethz-higgs/run2/VHBBHeppyV20/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_3.root	
- TNetXNGFile*		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat//store/t3groups/ethz-higgs/run2/VHBBHeppyV20/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_3.root	
-  KEY: TTree	tree;8	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
-  KEY: TTree	tree;7	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
-  KEY: TH1F	Count;1	Count
-  KEY: TH1F	CountWeighted;1	Count with gen weight and pu weight
-  KEY: TH1F	CountPosWeight;1	Count genWeight>0
-  KEY: TH1F	CountNegWeight;1	Count genWeight<0
-  KEY: TH1F	CountWeightedLHEWeightScale_0;1	Count with gen weight x LHE_weights_scale[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_1;1	Count with gen weight x LHE_weights_scale[1] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_2;1	Count with gen weight x LHE_weights_scale[2] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_3;1	Count with gen weight x LHE_weights_scale[3] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_4;1	Count with gen weight x LHE_weights_scale[4] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_5;1	Count with gen weight x LHE_weights_scale[5] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_0;1	Count with gen weight x LHE_weights_pdf[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_1;1	Count with gen weight x LHE_weights_pdf[1] and pu weight
-
-	 copy file: /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20//ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_3.root with cut: ((HLT_BIT_HLT_QuadPFJet_SingleBTagCSV_VBF_Mqq460_v) || (HLT_BIT_HLT_QuadPFJet_DoubleBTagCSV_VBF_Mqq200_v == 1)) & (Jet_pt[0] > 82. & Jet_pt[1] > 66. & Jet_pt[2] > 54. & Jet_pt[3] > 20. ) & (nJet > 3)
-[1;34m	 before cuts	 63745[1;m
-[1;32m	 survived	 1607[1;m
-TNetXNGFile**		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_3_2XGJF8.root	
- TNetXNGFile*		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_3_2XGJF8.root	
-  OBJ: TTree	tree	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1 : 0 at: 0x9523980
-  KEY: TH1F	Count;1	Count
-  KEY: TH1F	CountWeighted;1	Count with gen weight and pu weight
-  KEY: TH1F	CountPosWeight;1	Count genWeight>0
-  KEY: TH1F	CountNegWeight;1	Count genWeight<0
-  KEY: TH1F	CountWeightedLHEWeightScale_0;1	Count with gen weight x LHE_weights_scale[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_1;1	Count with gen weight x LHE_weights_scale[1] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_2;1	Count with gen weight x LHE_weights_scale[2] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_3;1	Count with gen weight x LHE_weights_scale[3] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_4;1	Count with gen weight x LHE_weights_scale[4] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_5;1	Count with gen weight x LHE_weights_scale[5] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_0;1	Count with gen weight x LHE_weights_pdf[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_1;1	Count with gen weight x LHE_weights_pdf[1] and pu weight
-  KEY: TTree	tree;1	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
-Writing output file
-Closing output file
-Closing input file
-inputFile /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20//ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_10.root
-Writing file: root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_10_DV819Q.root
-TNetXNGFile**		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat//store/t3groups/ethz-higgs/run2/VHBBHeppyV20/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_10.root	
- TNetXNGFile*		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat//store/t3groups/ethz-higgs/run2/VHBBHeppyV20/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_10.root	
-  KEY: TTree	tree;8	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
-  KEY: TTree	tree;7	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
-  KEY: TH1F	Count;1	Count
-  KEY: TH1F	CountWeighted;1	Count with gen weight and pu weight
-  KEY: TH1F	CountPosWeight;1	Count genWeight>0
-  KEY: TH1F	CountNegWeight;1	Count genWeight<0
-  KEY: TH1F	CountWeightedLHEWeightScale_0;1	Count with gen weight x LHE_weights_scale[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_1;1	Count with gen weight x LHE_weights_scale[1] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_2;1	Count with gen weight x LHE_weights_scale[2] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_3;1	Count with gen weight x LHE_weights_scale[3] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_4;1	Count with gen weight x LHE_weights_scale[4] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_5;1	Count with gen weight x LHE_weights_scale[5] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_0;1	Count with gen weight x LHE_weights_pdf[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_1;1	Count with gen weight x LHE_weights_pdf[1] and pu weight
-
-	 copy file: /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20//ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_10.root with cut: ((HLT_BIT_HLT_QuadPFJet_SingleBTagCSV_VBF_Mqq460_v) || (HLT_BIT_HLT_QuadPFJet_DoubleBTagCSV_VBF_Mqq200_v == 1)) & (Jet_pt[0] > 82. & Jet_pt[1] > 66. & Jet_pt[2] > 54. & Jet_pt[3] > 20. ) & (nJet > 3)
-[1;34m	 before cuts	 63652[1;m
-[1;32m	 survived	 1655[1;m
-TNetXNGFile**		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_10_DV819Q.root	
- TNetXNGFile*		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_10_DV819Q.root	
-  OBJ: TTree	tree	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1 : 0 at: 0x9470a40
-  KEY: TH1F	Count;1	Count
-  KEY: TH1F	CountWeighted;1	Count with gen weight and pu weight
-  KEY: TH1F	CountPosWeight;1	Count genWeight>0
-  KEY: TH1F	CountNegWeight;1	Count genWeight<0
-  KEY: TH1F	CountWeightedLHEWeightScale_0;1	Count with gen weight x LHE_weights_scale[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_1;1	Count with gen weight x LHE_weights_scale[1] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_2;1	Count with gen weight x LHE_weights_scale[2] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_3;1	Count with gen weight x LHE_weights_scale[3] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_4;1	Count with gen weight x LHE_weights_scale[4] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_5;1	Count with gen weight x LHE_weights_scale[5] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_0;1	Count with gen weight x LHE_weights_pdf[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_1;1	Count with gen weight x LHE_weights_pdf[1] and pu weight
-  KEY: TTree	tree;1	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
-Writing output file
-Closing output file
-Closing input file
-inputFile /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20//ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_4.root
-Writing file: root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_4_MTM0MZ.root
-TNetXNGFile**		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat//store/t3groups/ethz-higgs/run2/VHBBHeppyV20/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_4.root	
- TNetXNGFile*		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat//store/t3groups/ethz-higgs/run2/VHBBHeppyV20/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_4.root	
-  KEY: TTree	tree;8	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
-  KEY: TTree	tree;7	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
-  KEY: TH1F	Count;1	Count
-  KEY: TH1F	CountWeighted;1	Count with gen weight and pu weight
-  KEY: TH1F	CountPosWeight;1	Count genWeight>0
-  KEY: TH1F	CountNegWeight;1	Count genWeight<0
-  KEY: TH1F	CountWeightedLHEWeightScale_0;1	Count with gen weight x LHE_weights_scale[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_1;1	Count with gen weight x LHE_weights_scale[1] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_2;1	Count with gen weight x LHE_weights_scale[2] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_3;1	Count with gen weight x LHE_weights_scale[3] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_4;1	Count with gen weight x LHE_weights_scale[4] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_5;1	Count with gen weight x LHE_weights_scale[5] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_0;1	Count with gen weight x LHE_weights_pdf[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_1;1	Count with gen weight x LHE_weights_pdf[1] and pu weight
-
-	 copy file: /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20//ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_4.root with cut: ((HLT_BIT_HLT_QuadPFJet_SingleBTagCSV_VBF_Mqq460_v) || (HLT_BIT_HLT_QuadPFJet_DoubleBTagCSV_VBF_Mqq200_v == 1)) & (Jet_pt[0] > 82. & Jet_pt[1] > 66. & Jet_pt[2] > 54. & Jet_pt[3] > 20. ) & (nJet > 3)
-[1;34m	 before cuts	 63757[1;m
-[1;32m	 survived	 1605[1;m
-TNetXNGFile**		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_4_MTM0MZ.root	
- TNetXNGFile*		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_4_MTM0MZ.root	
-  OBJ: TTree	tree	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1 : 0 at: 0x919b330
-  KEY: TH1F	Count;1	Count
-  KEY: TH1F	CountWeighted;1	Count with gen weight and pu weight
-  KEY: TH1F	CountPosWeight;1	Count genWeight>0
-  KEY: TH1F	CountNegWeight;1	Count genWeight<0
-  KEY: TH1F	CountWeightedLHEWeightScale_0;1	Count with gen weight x LHE_weights_scale[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_1;1	Count with gen weight x LHE_weights_scale[1] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_2;1	Count with gen weight x LHE_weights_scale[2] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_3;1	Count with gen weight x LHE_weights_scale[3] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_4;1	Count with gen weight x LHE_weights_scale[4] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_5;1	Count with gen weight x LHE_weights_scale[5] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_0;1	Count with gen weight x LHE_weights_pdf[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_1;1	Count with gen weight x LHE_weights_pdf[1] and pu weight
-  KEY: TTree	tree;1	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
-Writing output file
-Closing output file
-Closing input file
-inputFile /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20//ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_13.root
-Writing file: root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_13_SRD1LB.root
-TNetXNGFile**		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat//store/t3groups/ethz-higgs/run2/VHBBHeppyV20/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_13.root	
- TNetXNGFile*		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat//store/t3groups/ethz-higgs/run2/VHBBHeppyV20/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_13.root	
-  KEY: TTree	tree;9	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
-  KEY: TTree	tree;8	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
-  KEY: TH1F	Count;1	Count
-  KEY: TH1F	CountWeighted;1	Count with gen weight and pu weight
-  KEY: TH1F	CountPosWeight;1	Count genWeight>0
-  KEY: TH1F	CountNegWeight;1	Count genWeight<0
-  KEY: TH1F	CountWeightedLHEWeightScale_0;1	Count with gen weight x LHE_weights_scale[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_1;1	Count with gen weight x LHE_weights_scale[1] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_2;1	Count with gen weight x LHE_weights_scale[2] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_3;1	Count with gen weight x LHE_weights_scale[3] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_4;1	Count with gen weight x LHE_weights_scale[4] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_5;1	Count with gen weight x LHE_weights_scale[5] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_0;1	Count with gen weight x LHE_weights_pdf[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_1;1	Count with gen weight x LHE_weights_pdf[1] and pu weight
-
-	 copy file: /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20//ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_13.root with cut: ((HLT_BIT_HLT_QuadPFJet_SingleBTagCSV_VBF_Mqq460_v) || (HLT_BIT_HLT_QuadPFJet_DoubleBTagCSV_VBF_Mqq200_v == 1)) & (Jet_pt[0] > 82. & Jet_pt[1] > 66. & Jet_pt[2] > 54. & Jet_pt[3] > 20. ) & (nJet > 3)
-[1;34m	 before cuts	 71662[1;m
-[1;32m	 survived	 1914[1;m
-TNetXNGFile**		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_13_SRD1LB.root	
- TNetXNGFile*		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_13_SRD1LB.root	
-  OBJ: TTree	tree	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1 : 0 at: 0x91c3730
-  KEY: TH1F	Count;1	Count
-  KEY: TH1F	CountWeighted;1	Count with gen weight and pu weight
-  KEY: TH1F	CountPosWeight;1	Count genWeight>0
-  KEY: TH1F	CountNegWeight;1	Count genWeight<0
-  KEY: TH1F	CountWeightedLHEWeightScale_0;1	Count with gen weight x LHE_weights_scale[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_1;1	Count with gen weight x LHE_weights_scale[1] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_2;1	Count with gen weight x LHE_weights_scale[2] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_3;1	Count with gen weight x LHE_weights_scale[3] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_4;1	Count with gen weight x LHE_weights_scale[4] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_5;1	Count with gen weight x LHE_weights_scale[5] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_0;1	Count with gen weight x LHE_weights_pdf[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_1;1	Count with gen weight x LHE_weights_pdf[1] and pu weight
-  KEY: TTree	tree;1	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
-Writing output file
-Closing output file
-Closing input file
-inputFile /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20//ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_5.root
-Writing file: root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_5_7JQO5H.root
-TNetXNGFile**		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat//store/t3groups/ethz-higgs/run2/VHBBHeppyV20/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_5.root	
- TNetXNGFile*		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat//store/t3groups/ethz-higgs/run2/VHBBHeppyV20/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_5.root	
-  KEY: TTree	tree;8	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
-  KEY: TTree	tree;7	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
-  KEY: TH1F	Count;1	Count
-  KEY: TH1F	CountWeighted;1	Count with gen weight and pu weight
-  KEY: TH1F	CountPosWeight;1	Count genWeight>0
-  KEY: TH1F	CountNegWeight;1	Count genWeight<0
-  KEY: TH1F	CountWeightedLHEWeightScale_0;1	Count with gen weight x LHE_weights_scale[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_1;1	Count with gen weight x LHE_weights_scale[1] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_2;1	Count with gen weight x LHE_weights_scale[2] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_3;1	Count with gen weight x LHE_weights_scale[3] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_4;1	Count with gen weight x LHE_weights_scale[4] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_5;1	Count with gen weight x LHE_weights_scale[5] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_0;1	Count with gen weight x LHE_weights_pdf[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_1;1	Count with gen weight x LHE_weights_pdf[1] and pu weight
-
-	 copy file: /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20//ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_5.root with cut: ((HLT_BIT_HLT_QuadPFJet_SingleBTagCSV_VBF_Mqq460_v) || (HLT_BIT_HLT_QuadPFJet_DoubleBTagCSV_VBF_Mqq200_v == 1)) & (Jet_pt[0] > 82. & Jet_pt[1] > 66. & Jet_pt[2] > 54. & Jet_pt[3] > 20. ) & (nJet > 3)
-[1;34m	 before cuts	 62959[1;m
-[1;32m	 survived	 1612[1;m
-TNetXNGFile**		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_5_7JQO5H.root	
- TNetXNGFile*		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_5_7JQO5H.root	
-  OBJ: TTree	tree	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1 : 0 at: 0x95502a0
-  KEY: TH1F	Count;1	Count
-  KEY: TH1F	CountWeighted;1	Count with gen weight and pu weight
-  KEY: TH1F	CountPosWeight;1	Count genWeight>0
-  KEY: TH1F	CountNegWeight;1	Count genWeight<0
-  KEY: TH1F	CountWeightedLHEWeightScale_0;1	Count with gen weight x LHE_weights_scale[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_1;1	Count with gen weight x LHE_weights_scale[1] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_2;1	Count with gen weight x LHE_weights_scale[2] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_3;1	Count with gen weight x LHE_weights_scale[3] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_4;1	Count with gen weight x LHE_weights_scale[4] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_5;1	Count with gen weight x LHE_weights_scale[5] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_0;1	Count with gen weight x LHE_weights_pdf[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_1;1	Count with gen weight x LHE_weights_pdf[1] and pu weight
-  KEY: TTree	tree;1	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
-Writing output file
-Closing output file
-Closing input file
-inputFile /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20//ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_8.root
-Writing file: root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_8_3WGS0N.root
-TNetXNGFile**		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat//store/t3groups/ethz-higgs/run2/VHBBHeppyV20/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_8.root	
- TNetXNGFile*		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat//store/t3groups/ethz-higgs/run2/VHBBHeppyV20/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_8.root	
-  KEY: TTree	tree;9	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
-  KEY: TTree	tree;8	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
-  KEY: TH1F	Count;1	Count
-  KEY: TH1F	CountWeighted;1	Count with gen weight and pu weight
-  KEY: TH1F	CountPosWeight;1	Count genWeight>0
-  KEY: TH1F	CountNegWeight;1	Count genWeight<0
-  KEY: TH1F	CountWeightedLHEWeightScale_0;1	Count with gen weight x LHE_weights_scale[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_1;1	Count with gen weight x LHE_weights_scale[1] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_2;1	Count with gen weight x LHE_weights_scale[2] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_3;1	Count with gen weight x LHE_weights_scale[3] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_4;1	Count with gen weight x LHE_weights_scale[4] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_5;1	Count with gen weight x LHE_weights_scale[5] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_0;1	Count with gen weight x LHE_weights_pdf[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_1;1	Count with gen weight x LHE_weights_pdf[1] and pu weight
-
-	 copy file: /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20//ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1/160209_171104/0000/tree_8.root with cut: ((HLT_BIT_HLT_QuadPFJet_SingleBTagCSV_VBF_Mqq460_v) || (HLT_BIT_HLT_QuadPFJet_DoubleBTagCSV_VBF_Mqq200_v == 1)) & (Jet_pt[0] > 82. & Jet_pt[1] > 66. & Jet_pt[2] > 54. & Jet_pt[3] > 20. ) & (nJet > 3)
-[1;34m	 before cuts	 69248[1;m
-[1;32m	 survived	 1797[1;m
-TNetXNGFile**		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_8_3WGS0N.root	
- TNetXNGFile*		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_8_3WGS0N.root	
-  OBJ: TTree	tree	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1 : 0 at: 0x91e6140
-  KEY: TH1F	Count;1	Count
-  KEY: TH1F	CountWeighted;1	Count with gen weight and pu weight
-  KEY: TH1F	CountPosWeight;1	Count genWeight>0
-  KEY: TH1F	CountNegWeight;1	Count genWeight<0
-  KEY: TH1F	CountWeightedLHEWeightScale_0;1	Count with gen weight x LHE_weights_scale[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_1;1	Count with gen weight x LHE_weights_scale[1] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_2;1	Count with gen weight x LHE_weights_scale[2] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_3;1	Count with gen weight x LHE_weights_scale[3] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_4;1	Count with gen weight x LHE_weights_scale[4] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightScale_5;1	Count with gen weight x LHE_weights_scale[5] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_0;1	Count with gen weight x LHE_weights_pdf[0] and pu weight
-  KEY: TH1F	CountWeightedLHEWeightPdf_1;1	Count with gen weight x LHE_weights_pdf[1] and pu weight
-  KEY: TTree	tree;1	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
-Return code: SRM_FAILURE
-Explanation: The operation failed for all SURLs
-file#0 : srm://t3se01.psi.ch:8443/srm/managerv2?SFN=/pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ZmmH.BestCSV.heppy.ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1.root, SRM_INVALID_PATH, "No such file"
-
-[TFile::Cp] Total 5.19 MB	|>...................| 0.00 % [0.0 MB/s][TFile::Cp] Total 5.19 MB	|===>................| 18.39 % [91.2 MB/s][TFile::Cp] Total 5.19 MB	|=======>............| 36.77 % [94.4 MB/s][TFile::Cp] Total 5.19 MB	|===========>........| 55.16 % [94.9 MB/s][TFile::Cp] Total 5.19 MB	|==============>.....| 73.54 % [95.6 MB/s][TFile::Cp] Total 5.19 MB	|==================>.| 91.93 % [96.1 MB/s][TFile::Cp] Total 5.19 MB	|====================| 100.00 % [95.7 MB/s]
-[TFile::Cp] Total 17.99 MB	|>...................| 0.00 % [0.0 MB/s][TFile::Cp] Total 17.99 MB	|=>..................| 5.30 % [86.3 MB/s][TFile::Cp] Total 17.99 MB	|==>.................| 10.60 % [87.6 MB/s][TFile::Cp] Total 17.99 MB	|===>................| 15.90 % [87.9 MB/s][TFile::Cp] Total 17.99 MB	|====>...............| 21.20 % [87.9 MB/s][TFile::Cp] Total 17.99 MB	|=====>..............| 26.50 % [88.0 MB/s][TFile::Cp] Total 17.99 MB	|======>.............| 31.80 % [89.0 MB/s][TFile::Cp] Total 17.99 MB	|=======>............| 37.10 % [89.8 MB/s][TFile::Cp] Total 17.99 MB	|========>...........| 42.40 % [90.4 MB/s][TFile::Cp] Total 17.99 MB	|=========>..........| 47.70 % [90.9 MB/s][TFile::Cp] Total 17.99 MB	|==========>.........| 53.00 % [91.3 MB/s][TFile::Cp] Total 17.99 MB	|===========>........| 58.30 % [91.6 MB/s][TFile::Cp] Total 17.99 MB	|============>.......| 63.60 % [91.9 MB/s][TFile::Cp] Total 17.99 MB	|=============>......| 68.90 % [92.1 MB/s][TFile::Cp] Total 17.99 MB	|==============>.....| 74.20 % [92.3 MB/s][TFile::Cp] Total 17.99 MB	|===============>....| 79.50 % [92.5 MB/s][TFile::Cp] Total 17.99 MB	|================>...| 84.80 % [92.7 MB/s][TFile::Cp] Total 17.99 MB	|==================>.| 90.10 % [92.8 MB/s][TFile::Cp] Total 17.99 MB	|===================>| 95.40 % [93.0 MB/s][TFile::Cp] Total 17.99 MB	|====================| 100.00 % [93.0 MB/s]
-[TFile::Cp] Total 15.78 MB	|>...................| 0.00 % [0.0 MB/s][TFile::Cp] Total 15.78 MB	|=>..................| 6.04 % [87.8 MB/s][TFile::Cp] Total 15.78 MB	|==>.................| 12.08 % [89.2 MB/s][TFile::Cp] Total 15.78 MB	|===>................| 18.13 % [89.7 MB/s][TFile::Cp] Total 15.78 MB	|====>...............| 24.17 % [90.0 MB/s][TFile::Cp] Total 15.78 MB	|======>.............| 30.21 % [90.4 MB/s][TFile::Cp] Total 15.78 MB	|=======>............| 36.25 % [90.3 MB/s][TFile::Cp] Total 15.78 MB	|========>...........| 42.29 % [90.4 MB/s][TFile::Cp] Total 15.78 MB	|=========>..........| 48.34 % [90.5 MB/s][TFile::Cp] Total 15.78 MB	|==========>.........| 54.38 % [90.4 MB/s][TFile::Cp] Total 15.78 MB	|============>.......| 60.42 % [90.5 MB/s][TFile::Cp] Total 15.78 MB	|=============>......| 66.46 % [90.4 MB/s][TFile::Cp] Total 15.78 MB	|==============>.....| 72.51 % [90.4 MB/s][TFile::Cp] Total 15.78 MB	|===============>....| 78.55 % [90.4 MB/s][TFile::Cp] Total 15.78 MB	|================>...| 84.59 % [90.4 MB/s][TFile::Cp] Total 15.78 MB	|==================>.| 90.63 % [90.5 MB/s][TFile::Cp] Total 15.78 MB	|===================>| 96.67 % [90.5 MB/s][TFile::Cp] Total 15.78 MB	|====================| 100.00 % [90.4 MB/s]
-[TFile::Cp] Total 9.22 MB	|>...................| 0.00 % [0.0 MB/s][TFile::Cp] Total 9.22 MB	|==>.................| 10.34 % [90.9 MB/s][TFile::Cp] Total 9.22 MB	|====>...............| 20.68 % [55.4 MB/s][TFile::Cp] Total 9.22 MB	|======>.............| 31.02 % [57.7 MB/s][TFile::Cp] Total 9.22 MB	|========>...........| 41.36 % [63.8 MB/s][TFile::Cp] Total 9.22 MB	|==========>.........| 51.70 % [58.5 MB/s][TFile::Cp] Total 9.22 MB	|============>.......| 62.04 % [58.5 MB/s][TFile::Cp] Total 9.22 MB	|==============>.....| 72.38 % [61.8 MB/s][TFile::Cp] Total 9.22 MB	|================>...| 82.72 % [64.5 MB/s][TFile::Cp] Total 9.22 MB	|==================>.| 93.06 % [66.9 MB/s][TFile::Cp] Total 9.22 MB	|====================| 100.00 % [67.6 MB/s]
-[TFile::Cp] Total 12.14 MB	|>...................| 0.00 % [0.0 MB/s][TFile::Cp] Total 12.14 MB	|=>..................| 7.86 % [68.9 MB/s][TFile::Cp] Total 12.14 MB	|===>................| 15.71 % [80.4 MB/s][TFile::Cp] Total 12.14 MB	|====>...............| 23.57 % [82.0 MB/s][TFile::Cp] Total 12.14 MB	|======>.............| 31.43 % [85.1 MB/s][TFile::Cp] Total 12.14 MB	|=======>............| 39.29 % [86.9 MB/s][TFile::Cp] Total 12.14 MB	|=========>..........| 47.14 % [87.2 MB/s][TFile::Cp] Total 12.14 MB	|===========>........| 55.00 % [88.4 MB/s][TFile::Cp] Total 12.14 MB	|============>.......| 62.86 % [89.4 MB/s][TFile::Cp] Total 12.14 MB	|==============>.....| 70.71 % [89.5 MB/s][TFile::Cp] Total 12.14 MB	|===============>....| 78.57 % [90.2 MB/s][TFile::Cp] Total 12.14 MB	|=================>..| 86.43 % [90.6 MB/s][TFile::Cp] Total 12.14 MB	|==================>.| 94.29 % [90.4 MB/s][TFile::Cp] Total 12.14 MB	|====================| 100.00 % [90.6 MB/s]
-[TFile::Cp] Total 16.64 MB	|>...................| 0.00 % [0.0 MB/s][TFile::Cp] Total 16.64 MB	|=>..................| 5.73 % [65.0 MB/s][TFile::Cp] Total 16.64 MB	|==>.................| 11.46 % [75.6 MB/s][TFile::Cp] Total 16.64 MB	|===>................| 17.19 % [80.3 MB/s][TFile::Cp] Total 16.64 MB	|====>...............| 22.92 % [83.1 MB/s][TFile::Cp] Total 16.64 MB	|=====>..............| 28.65 % [84.9 MB/s][TFile::Cp] Total 16.64 MB	|======>.............| 34.38 % [86.0 MB/s][TFile::Cp] Total 16.64 MB	|========>...........| 40.11 % [86.7 MB/s][TFile::Cp] Total 16.64 MB	|=========>..........| 45.84 % [86.6 MB/s][TFile::Cp] Total 16.64 MB	|==========>.........| 51.57 % [87.3 MB/s][TFile::Cp] Total 16.64 MB	|===========>........| 57.30 % [87.6 MB/s][TFile::Cp] Total 16.64 MB	|============>.......| 63.03 % [87.9 MB/s][TFile::Cp] Total 16.64 MB	|=============>......| 68.76 % [88.0 MB/s][TFile::Cp] Total 16.64 MB	|==============>.....| 74.49 % [87.9 MB/s][TFile::Cp] Total 16.64 MB	|================>...| 80.21 % [88.1 MB/s][TFile::Cp] Total 16.64 MB	|=================>..| 85.94 % [88.3 MB/s][TFile::Cp] Total 16.64 MB	|==================>.| 91.67 % [88.3 MB/s][TFile::Cp] Total 16.64 MB	|===================>| 97.40 % [88.6 MB/s][TFile::Cp] Total 16.64 MB	|====================| 100.00 % [88.4 MB/s]
-[TFile::Cp] Total 18.06 MB	|>...................| 0.00 % [0.0 MB/s][TFile::Cp] Total 18.06 MB	|=>..................| 5.28 % [84.3 MB/s][TFile::Cp] Total 18.06 MB	|==>.................| 10.56 % [84.2 MB/s][TFile::Cp] Total 18.06 MB	|===>................| 15.84 % [86.1 MB/s][TFile::Cp] Total 18.06 MB	|====>...............| 21.12 % [87.4 MB/s][TFile::Cp] Total 18.06 MB	|=====>..............| 26.40 % [88.2 MB/s][TFile::Cp] Total 18.06 MB	|======>.............| 31.68 % [88.7 MB/s][TFile::Cp] Total 18.06 MB	|=======>............| 36.96 % [89.1 MB/s][TFile::Cp] Total 18.06 MB	|========>...........| 42.24 % [89.5 MB/s][TFile::Cp] Total 18.06 MB	|=========>..........| 47.52 % [89.7 MB/s][TFile::Cp] Total 18.06 MB	|==========>.........| 52.80 % [89.9 MB/s][TFile::Cp] Total 18.06 MB	|===========>........| 58.08 % [90.0 MB/s][TFile::Cp] Total 18.06 MB	|============>.......| 63.36 % [90.0 MB/s][TFile::Cp] Total 18.06 MB	|=============>......| 68.64 % [90.2 MB/s][TFile::Cp] Total 18.06 MB	|==============>.....| 73.92 % [90.4 MB/s][TFile::Cp] Total 18.06 MB	|===============>....| 79.20 % [90.6 MB/s][TFile::Cp] Total 18.06 MB	|================>...| 84.48 % [90.7 MB/s][TFile::Cp] Total 18.06 MB	|=================>..| 89.76 % [90.9 MB/s][TFile::Cp] Total 18.06 MB	|===================>| 95.04 % [91.0 MB/s][TFile::Cp] Total 18.06 MB	|====================| 100.00 % [91.1 MB/s]
-[TFile::Cp] Total 15.75 MB	|>...................| 0.00 % [0.0 MB/s][TFile::Cp] Total 15.75 MB	|=>..................| 6.05 % [89.1 MB/s][TFile::Cp] Total 15.75 MB	|==>.................| 12.11 % [91.5 MB/s][TFile::Cp] Total 15.75 MB	|===>................| 18.16 % [91.9 MB/s][TFile::Cp] Total 15.75 MB	|====>...............| 24.21 % [92.1 MB/s][TFile::Cp] Total 15.75 MB	|======>.............| 30.27 % [92.2 MB/s][TFile::Cp] Total 15.75 MB	|=======>............| 36.32 % [92.3 MB/s][TFile::Cp] Total 15.75 MB	|========>...........| 42.37 % [92.4 MB/s][TFile::Cp] Total 15.75 MB	|=========>..........| 48.43 % [92.5 MB/s][TFile::Cp] Total 15.75 MB	|==========>.........| 54.48 % [92.6 MB/s][TFile::Cp] Total 15.75 MB	|============>.......| 60.54 % [92.6 MB/s][TFile::Cp] Total 15.75 MB	|=============>......| 66.59 % [92.6 MB/s][TFile::Cp] Total 15.75 MB	|==============>.....| 72.64 % [92.7 MB/s][TFile::Cp] Total 15.75 MB	|===============>....| 78.70 % [92.0 MB/s][TFile::Cp] Total 15.75 MB	|================>...| 84.75 % [91.6 MB/s][TFile::Cp] Total 15.75 MB	|==================>.| 90.80 % [91.3 MB/s][TFile::Cp] Total 15.75 MB	|===================>| 96.86 % [90.9 MB/s][TFile::Cp] Total 15.75 MB	|====================| 100.00 % [90.6 MB/s]
-[TFile::Cp] Total 16.24 MB	|>...................| 0.00 % [0.0 MB/s][TFile::Cp] Total 16.24 MB	|=>..................| 5.87 % [78.1 MB/s][TFile::Cp] Total 16.24 MB	|==>.................| 11.75 % [80.4 MB/s][TFile::Cp] Total 16.24 MB	|===>................| 17.62 % [81.0 MB/s][TFile::Cp] Total 16.24 MB	|====>...............| 23.50 % [80.5 MB/s][TFile::Cp] Total 16.24 MB	|=====>..............| 29.37 % [77.6 MB/s][TFile::Cp] Total 16.24 MB	|=======>............| 35.24 % [77.1 MB/s][TFile::Cp] Total 16.24 MB	|========>...........| 41.12 % [77.8 MB/s][TFile::Cp] Total 16.24 MB	|=========>..........| 46.99 % [78.4 MB/s][TFile::Cp] Total 16.24 MB	|==========>.........| 52.87 % [77.0 MB/s][TFile::Cp] Total 16.24 MB	|===========>........| 58.74 % [77.4 MB/s][TFile::Cp] Total 16.24 MB	|============>.......| 64.61 % [77.9 MB/s][TFile::Cp] Total 16.24 MB	|==============>.....| 70.49 % [78.2 MB/s][TFile::Cp] Total 16.24 MB	|===============>....| 76.36 % [78.5 MB/s][TFile::Cp] Total 16.24 MB	|================>...| 82.24 % [78.9 MB/s][TFile::Cp] Total 16.24 MB	|=================>..| 88.11 % [79.1 MB/s][TFile::Cp] Total 16.24 MB	|==================>.| 93.98 % [79.3 MB/s][TFile::Cp] Total 16.24 MB	|===================>| 99.86 % [79.5 MB/s][TFile::Cp] Total 16.24 MB	|====================| 100.00 % [79.3 MB/s]
-[TFile::Cp] Total 18.58 MB	|>...................| 0.00 % [0.0 MB/s][TFile::Cp] Total 18.58 MB	|=>..................| 5.13 % [80.3 MB/s][TFile::Cp] Total 18.58 MB	|==>.................| 10.27 % [81.8 MB/s][TFile::Cp] Total 18.58 MB	|===>................| 15.40 % [83.1 MB/s][TFile::Cp] Total 18.58 MB	|====>...............| 20.53 % [85.2 MB/s][TFile::Cp] Total 18.58 MB	|=====>..............| 25.67 % [84.8 MB/s][TFile::Cp] Total 18.58 MB	|======>.............| 30.80 % [85.1 MB/s][TFile::Cp] Total 18.58 MB	|=======>............| 35.93 % [85.0 MB/s][TFile::Cp] Total 18.58 MB	|========>...........| 41.07 % [84.7 MB/s][TFile::Cp] Total 18.58 MB	|=========>..........| 46.20 % [84.4 MB/s][TFile::Cp] Total 18.58 MB	|==========>.........| 51.34 % [85.2 MB/s][TFile::Cp] Total 18.58 MB	|===========>........| 56.47 % [85.6 MB/s][TFile::Cp] Total 18.58 MB	|============>.......| 61.60 % [86.2 MB/s][TFile::Cp] Total 18.58 MB	|=============>......| 66.74 % [86.8 MB/s][TFile::Cp] Total 18.58 MB	|==============>.....| 71.87 % [87.2 MB/s][TFile::Cp] Total 18.58 MB	|===============>....| 77.00 % [87.4 MB/s][TFile::Cp] Total 18.58 MB	|================>...| 82.14 % [87.8 MB/s][TFile::Cp] Total 18.58 MB	|=================>..| 87.27 % [88.2 MB/s][TFile::Cp] Total 18.58 MB	|==================>.| 92.40 % [88.3 MB/s][TFile::Cp] Total 18.58 MB	|===================>| 97.54 % [88.6 MB/s][TFile::Cp] Total 18.58 MB	|====================| 100.00 % [88.6 MB/s]
-[TFile::Cp] Total 15.61 MB	|>...................| 0.00 % [0.0 MB/s][TFile::Cp] Total 15.61 MB	|=>..................| 6.11 % [78.4 MB/s][TFile::Cp] Total 15.61 MB	|==>.................| 12.22 % [81.4 MB/s][TFile::Cp] Total 15.61 MB	|===>................| 18.33 % [82.6 MB/s][TFile::Cp] Total 15.61 MB	|====>...............| 24.44 % [83.5 MB/s][TFile::Cp] Total 15.61 MB	|======>.............| 30.55 % [83.6 MB/s][TFile::Cp] Total 15.61 MB	|=======>............| 36.66 % [84.8 MB/s][TFile::Cp] Total 15.61 MB	|========>...........| 42.77 % [85.0 MB/s][TFile::Cp] Total 15.61 MB	|=========>..........| 48.88 % [85.2 MB/s][TFile::Cp] Total 15.61 MB	|==========>.........| 54.99 % [85.4 MB/s][TFile::Cp] Total 15.61 MB	|============>.......| 61.10 % [85.6 MB/s][TFile::Cp] Total 15.61 MB	|=============>......| 67.21 % [85.7 MB/s][TFile::Cp] Total 15.61 MB	|==============>.....| 73.32 % [85.7 MB/s][TFile::Cp] Total 15.61 MB	|===============>....| 79.43 % [85.6 MB/s][TFile::Cp] Total 15.61 MB	|=================>..| 85.54 % [85.7 MB/s][TFile::Cp] Total 15.61 MB	|==================>.| 91.65 % [85.6 MB/s][TFile::Cp] Total 15.61 MB	|===================>| 97.76 % [85.6 MB/s][TFile::Cp] Total 15.61 MB	|====================| 100.00 % [85.4 MB/s]
-[TFile::Cp] Total 15.97 MB	|>...................| 0.00 % [0.0 MB/s][TFile::Cp] Total 15.97 MB	|=>..................| 5.97 % [14.2 MB/s][TFile::Cp] Total 15.97 MB	|==>.................| 11.95 % [24.1 MB/s][TFile::Cp] Total 15.97 MB	|===>................| 17.92 % [31.3 MB/s][TFile::Cp] Total 15.97 MB	|====>...............| 23.89 % [36.9 MB/s][TFile::Cp] Total 15.97 MB	|=====>..............| 29.87 % [36.6 MB/s][TFile::Cp] Total 15.97 MB	|=======>............| 35.84 % [39.5 MB/s][TFile::Cp] Total 15.97 MB	|========>...........| 41.81 % [42.5 MB/s][TFile::Cp] Total 15.97 MB	|=========>..........| 47.79 % [44.9 MB/s][TFile::Cp] Total 15.97 MB	|==========>.........| 53.76 % [47.2 MB/s][TFile::Cp] Total 15.97 MB	|===========>........| 59.73 % [45.1 MB/s][TFile::Cp] Total 15.97 MB	|=============>......| 65.71 % [46.9 MB/s][TFile::Cp] Total 15.97 MB	|==============>.....| 71.68 % [48.5 MB/s][TFile::Cp] Total 15.97 MB	|===============>....| 77.66 % [49.9 MB/s][TFile::Cp] Total 15.97 MB	|================>...| 83.63 % [51.2 MB/s][TFile::Cp] Total 15.97 MB	|=================>..| 89.60 % [52.2 MB/s][TFile::Cp] Total 15.97 MB	|===================>| 95.58 % [50.9 MB/s][TFile::Cp] Total 15.97 MB	|====================| 100.00 % [51.8 MB/s]
-[TFile::Cp] Total 17.66 MB	|>...................| 0.00 % [0.0 MB/s][TFile::Cp] Total 17.66 MB	|=>..................| 5.40 % [83.9 MB/s][TFile::Cp] Total 17.66 MB	|==>.................| 10.80 % [85.2 MB/s][TFile::Cp] Total 17.66 MB	|===>................| 16.20 % [87.2 MB/s][TFile::Cp] Total 17.66 MB	|====>...............| 21.60 % [87.6 MB/s][TFile::Cp] Total 17.66 MB	|=====>..............| 26.99 % [87.4 MB/s][TFile::Cp] Total 17.66 MB	|======>.............| 32.39 % [87.4 MB/s][TFile::Cp] Total 17.66 MB	|=======>............| 37.79 % [87.2 MB/s][TFile::Cp] Total 17.66 MB	|========>...........| 43.19 % [87.0 MB/s][TFile::Cp] Total 17.66 MB	|=========>..........| 48.59 % [87.6 MB/s][TFile::Cp] Total 17.66 MB	|==========>.........| 53.99 % [88.1 MB/s][TFile::Cp] Total 17.66 MB	|===========>........| 59.39 % [88.6 MB/s][TFile::Cp] Total 17.66 MB	|============>.......| 64.79 % [88.9 MB/s][TFile::Cp] Total 17.66 MB	|==============>.....| 70.19 % [89.2 MB/s][TFile::Cp] Total 17.66 MB	|===============>....| 75.59 % [89.5 MB/s][TFile::Cp] Total 17.66 MB	|================>...| 80.98 % [89.7 MB/s][TFile::Cp] Total 17.66 MB	|=================>..| 86.38 % [89.9 MB/s][TFile::Cp] Total 17.66 MB	|==================>.| 91.78 % [90.0 MB/s][TFile::Cp] Total 17.66 MB	|===================>| 97.18 % [90.2 MB/s][TFile::Cp] Total 17.66 MB	|====================| 100.00 % [90.1 MB/s]
-Writing output file
-Closing output file
-Closing input file
-srmrm srm://t3se01.psi.ch:8443/srm/managerv2?SFN=/pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ZmmH.BestCSV.heppy.ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1.root 
-outputFolder is root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/
-file is root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_14_0IS3JI.root
-file is root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_7_J5C1PN.root
-file is root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_1_06H6KN.root
-file is root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_6_XZ4TAH.root
-file is root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_12_VOBJ8D.root
-file is root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_2_XBCJDK.root
-file is root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_9_RO8LXD.root
-file is root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_3_2XGJF8.root
-file is root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_10_DV819Q.root
-file is root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_13_SRD1LB.root
-file is root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_4_MTM0MZ.root
-file is root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_5_7JQO5H.root
-file is root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_8_3WGS0N.root
-checking output file root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ZmmH.BestCSV.heppy.ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1.root
-srmrm srm://t3se01.psi.ch:8443/srm/managerv2?SFN=//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_14_0IS3JI.root
-srmrm srm://t3se01.psi.ch:8443/srm/managerv2?SFN=//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_7_J5C1PN.root
-srmrm srm://t3se01.psi.ch:8443/srm/managerv2?SFN=//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_1_06H6KN.root
-srmrm srm://t3se01.psi.ch:8443/srm/managerv2?SFN=//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_6_XZ4TAH.root
-srmrm srm://t3se01.psi.ch:8443/srm/managerv2?SFN=//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_12_VOBJ8D.root
-srmrm srm://t3se01.psi.ch:8443/srm/managerv2?SFN=//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_2_XBCJDK.root
-srmrm srm://t3se01.psi.ch:8443/srm/managerv2?SFN=//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_9_RO8LXD.root
-srmrm srm://t3se01.psi.ch:8443/srm/managerv2?SFN=//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_3_2XGJF8.root
-srmrm srm://t3se01.psi.ch:8443/srm/managerv2?SFN=//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_10_DV819Q.root
-srmrm srm://t3se01.psi.ch:8443/srm/managerv2?SFN=//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_13_SRD1LB.root
-srmrm srm://t3se01.psi.ch:8443/srm/managerv2?SFN=//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_4_MTM0MZ.root
-srmrm srm://t3se01.psi.ch:8443/srm/managerv2?SFN=//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_5_7JQO5H.root
-srmrm srm://t3se01.psi.ch:8443/srm/managerv2?SFN=//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1/tree_VHBB_HEPPY_V20_ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-Py8_TuneCUETP8M1__fall15MAv2-pu25ns15v1_76r2as_v12-v1_8_3WGS0N.root
-##### COPY TREE - END ######
-job.name: ST_tW_top
-job.name: WJetsToLNu_TuneCUETP8M1
-job.name: QCD_HT100to200_TuneCUETP8M1
-job.name: QCD_HT200to300_TuneCUETP8M1
-job.name: QCD_HT300to500_TuneCUETP8M1
-job.name: QCD_HT500to700_TuneCUETP8M1
-job.name: QCD_HT700to1000_TuneCUETP8M1
-job.name: QCD_HT1000to1500_TuneCUETP8M1
-job.name: QCD_HT1500to2000_TuneCUETP8M1
-job.name: QCD_HT2000toInf_TuneCUETP8M1
-end prepare_environment_with_config.py
-end runAll.sh
-/bin/sh: module: line 1: syntax error: unexpected end of file
-/bin/sh: error importing function definition for `BASH_FUNC_module'
-# ================================================================
-# JOB Live Resources USAGE for job 9367273: ( don't consider mem values, they are wrong )
-# usage    1:                 cpu=00:04:15, mem=1504.50000 GBs, io=3.82493, vmem=5.900G, maxvmem=5.900G
-# 
-# JOB Historical Resources USAGE for job 9367273: you have to manually run
-# qacct -j 9367273 2&> /dev/null || qacct -f /gridware/sge/default/common/accounting.complete -j 9367273
-# 
-# JOB ran over queue@host = all.q@t3wn11.psi.ch
-# 
-# JOBs executed on t3wn[30-40] should run ~1.13 faster than t3wn[10-29]
-#
-# removing TMPDIR: /scratch/tmpdir-9367273.1.all.q
