@@ -1,0 +1,89 @@
+/bin/bash: module: line 1: syntax error: unexpected end of file
+/bin/bash: error importing function definition for `BASH_FUNC_module'
+
+Reading ./GaelZllHbb13TeVconfig
+taskprep
+
+whereToLaunch= PSI
+Debug is  True
+
+Checking the number of input arguments
+
+/shome/nchernya/Hbb/Xbb/Xbb/python
+@LOG : The config list you are using is
+paths.ini -C GaelZllHbb13TeVconfig/general.ini -C GaelZllHbb13TeVconfig/cuts.ini -C GaelZllHbb13TeVconfig/training.ini -C GaelZllHbb13TeVconfig/datacards.ini -C GaelZllHbb13TeVconfig/plots.ini -C GaelZllHbb13TeVconfig/lhe_weights.ini -C GaelZllHbb13TeVconfig/samples_nosplit.ini
+task is
+prep
+============================
+Will Lauch the script
+============================
+The command is
+./prepare_environment_with_config.py --samples BTag_Run2015D_16Dec2015 --config GaelZllHbb13TeVconfig/paths.ini -C GaelZllHbb13TeVconfig/general.ini -C GaelZllHbb13TeVconfig/cuts.ini -C GaelZllHbb13TeVconfig/training.ini -C GaelZllHbb13TeVconfig/datacards.ini -C GaelZllHbb13TeVconfig/plots.ini -C GaelZllHbb13TeVconfig/lhe_weights.ini -C GaelZllHbb13TeVconfig/samples_nosplit.ini --config GaelZllHbb13TeVconfig/samples_nosplit.ini
+start prepare_environment_with_config.py
+namelist: ['BTag_Run2015D_16Dec2015']
+Start getting infos on all the samples (ParseInfo)
+==================================================
+
+samples_config is /shome/nchernya/Hbb/Xbb/Xbb/python/GaelZllHbb13TeVconfig/samples_nosplit.ini
+@DEBUG: []
+infile VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1
+infile VHBB_HEPPY_V20a_BTagCSV__Run2015D-16Dec2015-v1
+infile VBFHToBB_M-125_13TeV_powheg_pythia8_weightfix
+infile DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
+infile DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8
+infile TT_TuneCUETP8M1_13TeV-amcatnlo-pythia8
+infile TT_TuneCUETP8M1_13TeV-powheg-pythia8
+infile ST_tW_antitop_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1
+infile ST_tW_top_5f_inclusiveDecays_13TeV-powheg-pythia8_TuneCUETP8M1
+infile WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
+infile QCD_HT100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
+infile QCD_HT200to300_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
+infile QCD_HT300to500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
+infile QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
+infile QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
+infile QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
+infile QCD_HT1500to2000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
+infile QCD_HT2000toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
+Finished getting infos on all the samples (ParseInfo)
+=====================================================
+
+samplesinfo: /shome/nchernya/Hbb/Xbb/Xbb/python/GaelZllHbb13TeVconfig/samples_nosplit.ini
+info: <myutils.sample_parser.ParseInfo instance at 0x42555a8>
+job.name: BTag_Run2015C_25ns_16Dec2015
+job.name: BTag_Run2015D_16Dec2015
+start copytree.py
+('dcap://t3se01.psi.ch:22125/pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20/', 'root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep', '', 'ZmmH.BestCSV.heppy.', 'VHBB_HEPPY_V20a_BTagCSV__Run2015D-16Dec2015-v1', '', '(json == 1) & ((HLT_BIT_HLT_QuadPFJet_SingleBTagCSV_VBF_Mqq460_v) || (HLT_BIT_HLT_QuadPFJet_DoubleBTagCSV_VBF_Mqq200_v == 1)) & (Jet_pt[0] > 82. & Jet_pt[1] > 66. & Jet_pt[2] > 54. & Jet_pt[3] > 20. ) & (nJet > 3)')
+##### COPY TREE - BEGIN ######
+No .root files found in  dcap://t3se01.psi.ch:22125/pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20//VHBB_HEPPY_V20a_BTagCSV__Run2015D-16Dec2015-v1
+job.name: VBFHToBB_M-125_13TeV_powheg
+job.name: DYJetsToLL_M-50_TuneCUETP8M1
+job.name: DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX
+job.name: TT_mad
+job.name: TT_pow
+job.name: ST_tW_antitop
+job.name: ST_tW_top
+job.name: WJetsToLNu_TuneCUETP8M1
+job.name: QCD_HT100to200_TuneCUETP8M1
+job.name: QCD_HT200to300_TuneCUETP8M1
+job.name: QCD_HT300to500_TuneCUETP8M1
+job.name: QCD_HT500to700_TuneCUETP8M1
+job.name: QCD_HT700to1000_TuneCUETP8M1
+job.name: QCD_HT1000to1500_TuneCUETP8M1
+job.name: QCD_HT1500to2000_TuneCUETP8M1
+job.name: QCD_HT2000toInf_TuneCUETP8M1
+end prepare_environment_with_config.py
+end runAll.sh
+/bin/sh: module: line 1: syntax error: unexpected end of file
+/bin/sh: error importing function definition for `BASH_FUNC_module'
+# ================================================================
+# JOB Live Resources USAGE for job 9367267: ( don't consider mem values, they are wrong )
+# usage    1:                 cpu=00:00:00, mem=0.00000 GBs, io=0.00000, vmem=N/A, maxvmem=N/A
+# 
+# JOB Historical Resources USAGE for job 9367267: you have to manually run
+# qacct -j 9367267 2&> /dev/null || qacct -f /gridware/sge/default/common/accounting.complete -j 9367267
+# 
+# JOB ran over queue@host = all.q@t3wn24.psi.ch
+# 
+# JOBs executed on t3wn[30-40] should run ~1.13 faster than t3wn[10-29]
+#
+# removing TMPDIR: /scratch/tmpdir-9367267.1.all.q

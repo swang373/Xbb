@@ -1,0 +1,243 @@
+/bin/bash: module: line 1: syntax error: unexpected end of file
+/bin/bash: error importing function definition for `BASH_FUNC_module'
+
+Reading ./GaelZllHbb13TeVconfig
+taskprep
+
+whereToLaunch= PSI
+Debug is  True
+
+Checking the number of input arguments
+
+/shome/nchernya/Hbb/Xbb/Xbb/python
+@LOG : The config list you are using is
+paths.ini -C GaelZllHbb13TeVconfig/general.ini -C GaelZllHbb13TeVconfig/cuts.ini -C GaelZllHbb13TeVconfig/training.ini -C GaelZllHbb13TeVconfig/datacards.ini -C GaelZllHbb13TeVconfig/plots.ini -C GaelZllHbb13TeVconfig/lhe_weights.ini -C GaelZllHbb13TeVconfig/samples_nosplit.ini
+task is
+prep
+============================
+Will Lauch the script
+============================
+The command is
+./prepare_environment_with_config.py --samples BTag_Run2015C_25ns_16Dec2015 --config GaelZllHbb13TeVconfig/paths.ini -C GaelZllHbb13TeVconfig/general.ini -C GaelZllHbb13TeVconfig/cuts.ini -C GaelZllHbb13TeVconfig/training.ini -C GaelZllHbb13TeVconfig/datacards.ini -C GaelZllHbb13TeVconfig/plots.ini -C GaelZllHbb13TeVconfig/lhe_weights.ini -C GaelZllHbb13TeVconfig/samples_nosplit.ini --config GaelZllHbb13TeVconfig/samples_nosplit.ini
+Return code: SRM_DUPLICATION_ERROR
+Explanation: File exists
+
+start prepare_environment_with_config.py
+namelist: ['BTag_Run2015C_25ns_16Dec2015']
+Start getting infos on all the samples (ParseInfo)
+==================================================
+
+samples_config is /shome/nchernya/Hbb/Xbb/Xbb/python/GaelZllHbb13TeVconfig/samples_nosplit.ini
+@DEBUG: []
+infile VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1
+infile VHBB_HEPPY_V20a_BTagCSV__Run2015D-16Dec2015-v1
+Finished getting infos on all the samples (ParseInfo)
+=====================================================
+
+samplesinfo: /shome/nchernya/Hbb/Xbb/Xbb/python/GaelZllHbb13TeVconfig/samples_nosplit.ini
+info: <myutils.sample_parser.ParseInfo instance at 0x4a49f80>
+job.name: BTag_Run2015C_25ns_16Dec2015
+start copytree.py
+('dcap://t3se01.psi.ch:22125/pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20/BTagCSV/', 'root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep', '', 'ZmmH.BestCSV.heppy.', 'VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1', '', '(json == 1) & ((HLT_BIT_HLT_QuadPFJet_SingleBTagCSV_VBF_Mqq460_v) || (HLT_BIT_HLT_QuadPFJet_DoubleBTagCSV_VBF_Mqq200_v == 1)) & (Jet_pt[0] > 82. & Jet_pt[1] > 66. & Jet_pt[2] > 54. & Jet_pt[3] > 20. ) & (nJet > 3)')
+##### COPY TREE - BEGIN ######
+Create the ouput folder if not existing
+mkdir_protocol /pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1/
+checking and/or creating folder 
+exists
+Folder / sucessfully created
+checking and/or creating folder /
+exists
+Folder //pnfs sucessfully created
+checking and/or creating folder //pnfs
+exists
+Folder //pnfs/psi.ch sucessfully created
+checking and/or creating folder //pnfs/psi.ch
+exists
+Folder //pnfs/psi.ch/cms sucessfully created
+checking and/or creating folder //pnfs/psi.ch/cms
+exists
+Folder //pnfs/psi.ch/cms/trivcat sucessfully created
+checking and/or creating folder //pnfs/psi.ch/cms/trivcat
+exists
+Folder //pnfs/psi.ch/cms/trivcat/store sucessfully created
+checking and/or creating folder //pnfs/psi.ch/cms/trivcat/store
+exists
+Folder //pnfs/psi.ch/cms/trivcat/store/user sucessfully created
+checking and/or creating folder //pnfs/psi.ch/cms/trivcat/store/user
+exists
+Folder //pnfs/psi.ch/cms/trivcat/store/user/nchernya sucessfully created
+checking and/or creating folder //pnfs/psi.ch/cms/trivcat/store/user/nchernya
+exists
+Folder //pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb sucessfully created
+checking and/or creating folder //pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb
+exists
+Folder //pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20 sucessfully created
+checking and/or creating folder //pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20
+exists
+Folder //pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep sucessfully created
+checking and/or creating folder //pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep
+does not exist
+checking and/or creating folder //pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1
+does not exist
+cutting  /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20/BTagCSV//VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1/160210_081048/0000/tree_3.root  --->  root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1/tree_VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1_3_EX4WR7.root
+FALSE
+cutting  /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20/BTagCSV//VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1/160210_081048/0000/tree_1.root  --->  root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1/tree_VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1_1_JOV5WH.root
+FALSE
+cutting  /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20/BTagCSV//VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1/160210_081048/0000/tree_2.root  --->  root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1/tree_VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1_2_K9VBDF.root
+FALSE
+inputFile /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20/BTagCSV//VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1/160210_081048/0000/tree_3.root
+Writing file: root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1/tree_VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1_3_EX4WR7.root
+TNetXNGFile**		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat//store/t3groups/ethz-higgs/run2/VHBBHeppyV20/BTagCSV/VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1/160210_081048/0000/tree_3.root	
+ TNetXNGFile*		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat//store/t3groups/ethz-higgs/run2/VHBBHeppyV20/BTagCSV/VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1/160210_081048/0000/tree_3.root	
+  KEY: TH1F	Count;1	Count
+  KEY: TH1F	CountWeighted;1	Count with gen weight and pu weight
+  KEY: TH1F	CountPosWeight;1	Count genWeight>0
+  KEY: TH1F	CountNegWeight;1	Count genWeight<0
+  KEY: TH1F	CountWeightedLHEWeightScale_0;1	Count with gen weight x LHE_weights_scale[0] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightScale_1;1	Count with gen weight x LHE_weights_scale[1] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightScale_2;1	Count with gen weight x LHE_weights_scale[2] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightScale_3;1	Count with gen weight x LHE_weights_scale[3] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightScale_4;1	Count with gen weight x LHE_weights_scale[4] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightScale_5;1	Count with gen weight x LHE_weights_scale[5] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightPdf_0;1	Count with gen weight x LHE_weights_pdf[0] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightPdf_1;1	Count with gen weight x LHE_weights_pdf[1] and pu weight
+  KEY: TTree	tree;1	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
+
+	 copy file: /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20/BTagCSV//VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1/160210_081048/0000/tree_3.root with cut: (json == 1) & ((HLT_BIT_HLT_QuadPFJet_SingleBTagCSV_VBF_Mqq460_v) || (HLT_BIT_HLT_QuadPFJet_DoubleBTagCSV_VBF_Mqq200_v == 1)) & (Jet_pt[0] > 82. & Jet_pt[1] > 66. & Jet_pt[2] > 54. & Jet_pt[3] > 20. ) & (nJet > 3)
+[1;34m	 before cuts	 4873[1;m
+[1;32m	 survived	 1958[1;m
+TNetXNGFile**		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1/tree_VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1_3_EX4WR7.root	
+ TNetXNGFile*		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1/tree_VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1_3_EX4WR7.root	
+  OBJ: TTree	tree	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1 : 0 at: 0x5398f30
+  KEY: TH1F	Count;1	Count
+  KEY: TH1F	CountWeighted;1	Count with gen weight and pu weight
+  KEY: TH1F	CountPosWeight;1	Count genWeight>0
+  KEY: TH1F	CountNegWeight;1	Count genWeight<0
+  KEY: TH1F	CountWeightedLHEWeightScale_0;1	Count with gen weight x LHE_weights_scale[0] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightScale_1;1	Count with gen weight x LHE_weights_scale[1] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightScale_2;1	Count with gen weight x LHE_weights_scale[2] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightScale_3;1	Count with gen weight x LHE_weights_scale[3] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightScale_4;1	Count with gen weight x LHE_weights_scale[4] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightScale_5;1	Count with gen weight x LHE_weights_scale[5] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightPdf_0;1	Count with gen weight x LHE_weights_pdf[0] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightPdf_1;1	Count with gen weight x LHE_weights_pdf[1] and pu weight
+  KEY: TTree	tree;1	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
+Writing output file
+Closing output file
+Closing input file
+inputFile /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20/BTagCSV//VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1/160210_081048/0000/tree_1.root
+Writing file: root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1/tree_VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1_1_JOV5WH.root
+TNetXNGFile**		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat//store/t3groups/ethz-higgs/run2/VHBBHeppyV20/BTagCSV/VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1/160210_081048/0000/tree_1.root	
+ TNetXNGFile*		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat//store/t3groups/ethz-higgs/run2/VHBBHeppyV20/BTagCSV/VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1/160210_081048/0000/tree_1.root	
+  KEY: TTree	tree;9	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
+  KEY: TTree	tree;8	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
+  KEY: TH1F	Count;1	Count
+  KEY: TH1F	CountWeighted;1	Count with gen weight and pu weight
+  KEY: TH1F	CountPosWeight;1	Count genWeight>0
+  KEY: TH1F	CountNegWeight;1	Count genWeight<0
+  KEY: TH1F	CountWeightedLHEWeightScale_0;1	Count with gen weight x LHE_weights_scale[0] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightScale_1;1	Count with gen weight x LHE_weights_scale[1] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightScale_2;1	Count with gen weight x LHE_weights_scale[2] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightScale_3;1	Count with gen weight x LHE_weights_scale[3] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightScale_4;1	Count with gen weight x LHE_weights_scale[4] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightScale_5;1	Count with gen weight x LHE_weights_scale[5] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightPdf_0;1	Count with gen weight x LHE_weights_pdf[0] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightPdf_1;1	Count with gen weight x LHE_weights_pdf[1] and pu weight
+
+	 copy file: /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20/BTagCSV//VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1/160210_081048/0000/tree_1.root with cut: (json == 1) & ((HLT_BIT_HLT_QuadPFJet_SingleBTagCSV_VBF_Mqq460_v) || (HLT_BIT_HLT_QuadPFJet_DoubleBTagCSV_VBF_Mqq200_v == 1)) & (Jet_pt[0] > 82. & Jet_pt[1] > 66. & Jet_pt[2] > 54. & Jet_pt[3] > 20. ) & (nJet > 3)
+[1;34m	 before cuts	 95333[1;m
+[1;32m	 survived	 34259[1;m
+TNetXNGFile**		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1/tree_VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1_1_JOV5WH.root	
+ TNetXNGFile*		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1/tree_VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1_1_JOV5WH.root	
+  OBJ: TTree	tree	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1 : 0 at: 0x7417500
+  KEY: TH1F	Count;1	Count
+  KEY: TH1F	CountWeighted;1	Count with gen weight and pu weight
+  KEY: TH1F	CountPosWeight;1	Count genWeight>0
+  KEY: TH1F	CountNegWeight;1	Count genWeight<0
+  KEY: TH1F	CountWeightedLHEWeightScale_0;1	Count with gen weight x LHE_weights_scale[0] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightScale_1;1	Count with gen weight x LHE_weights_scale[1] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightScale_2;1	Count with gen weight x LHE_weights_scale[2] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightScale_3;1	Count with gen weight x LHE_weights_scale[3] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightScale_4;1	Count with gen weight x LHE_weights_scale[4] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightScale_5;1	Count with gen weight x LHE_weights_scale[5] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightPdf_0;1	Count with gen weight x LHE_weights_pdf[0] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightPdf_1;1	Count with gen weight x LHE_weights_pdf[1] and pu weight
+  KEY: TTree	tree;3	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
+Writing output file
+Closing output file
+Closing input file
+inputFile /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20/BTagCSV//VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1/160210_081048/0000/tree_2.root
+Writing file: root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1/tree_VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1_2_K9VBDF.root
+TNetXNGFile**		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat//store/t3groups/ethz-higgs/run2/VHBBHeppyV20/BTagCSV/VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1/160210_081048/0000/tree_2.root	
+ TNetXNGFile*		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat//store/t3groups/ethz-higgs/run2/VHBBHeppyV20/BTagCSV/VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1/160210_081048/0000/tree_2.root	
+  KEY: TTree	tree;2	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
+  KEY: TTree	tree;1	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
+  KEY: TH1F	Count;1	Count
+  KEY: TH1F	CountWeighted;1	Count with gen weight and pu weight
+  KEY: TH1F	CountPosWeight;1	Count genWeight>0
+  KEY: TH1F	CountNegWeight;1	Count genWeight<0
+  KEY: TH1F	CountWeightedLHEWeightScale_0;1	Count with gen weight x LHE_weights_scale[0] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightScale_1;1	Count with gen weight x LHE_weights_scale[1] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightScale_2;1	Count with gen weight x LHE_weights_scale[2] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightScale_3;1	Count with gen weight x LHE_weights_scale[3] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightScale_4;1	Count with gen weight x LHE_weights_scale[4] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightScale_5;1	Count with gen weight x LHE_weights_scale[5] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightPdf_0;1	Count with gen weight x LHE_weights_pdf[0] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightPdf_1;1	Count with gen weight x LHE_weights_pdf[1] and pu weight
+
+	 copy file: /pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20/BTagCSV//VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1/160210_081048/0000/tree_2.root with cut: (json == 1) & ((HLT_BIT_HLT_QuadPFJet_SingleBTagCSV_VBF_Mqq460_v) || (HLT_BIT_HLT_QuadPFJet_DoubleBTagCSV_VBF_Mqq200_v == 1)) & (Jet_pt[0] > 82. & Jet_pt[1] > 66. & Jet_pt[2] > 54. & Jet_pt[3] > 20. ) & (nJet > 3)
+[1;34m	 before cuts	 17353[1;m
+[1;32m	 survived	 3159[1;m
+TNetXNGFile**		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1/tree_VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1_2_K9VBDF.root	
+ TNetXNGFile*		root://t3dcachedb03.psi.ch//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1/tree_VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1_2_K9VBDF.root	
+  OBJ: TTree	tree	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1 : 0 at: 0x73d19b0
+  KEY: TH1F	Count;1	Count
+  KEY: TH1F	CountWeighted;1	Count with gen weight and pu weight
+  KEY: TH1F	CountPosWeight;1	Count genWeight>0
+  KEY: TH1F	CountNegWeight;1	Count genWeight<0
+  KEY: TH1F	CountWeightedLHEWeightScale_0;1	Count with gen weight x LHE_weights_scale[0] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightScale_1;1	Count with gen weight x LHE_weights_scale[1] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightScale_2;1	Count with gen weight x LHE_weights_scale[2] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightScale_3;1	Count with gen weight x LHE_weights_scale[3] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightScale_4;1	Count with gen weight x LHE_weights_scale[4] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightScale_5;1	Count with gen weight x LHE_weights_scale[5] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightPdf_0;1	Count with gen weight x LHE_weights_pdf[0] and pu weight
+  KEY: TH1F	CountWeightedLHEWeightPdf_1;1	Count with gen weight x LHE_weights_pdf[1] and pu weight
+  KEY: TTree	tree;1	PhysicsTools.Heppy.analyzers.core.AutoFillTreeProducer.AutoFillTreeProducer_1
+Return code: SRM_FAILURE
+Explanation: The operation failed for all SURLs
+file#0 : srm://t3se01.psi.ch:8443/srm/managerv2?SFN=/pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ZmmH.BestCSV.heppy.VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1.root, SRM_INVALID_PATH, "No such file"
+
+[TFile::Cp] Total 8.41 MB	|>...................| 0.00 % [0.0 MB/s][TFile::Cp] Total 8.41 MB	|==>.................| 11.34 % [91.5 MB/s][TFile::Cp] Total 8.41 MB	|====>...............| 22.68 % [95.1 MB/s][TFile::Cp] Total 8.41 MB	|======>.............| 34.01 % [96.2 MB/s][TFile::Cp] Total 8.41 MB	|=========>..........| 45.35 % [96.5 MB/s][TFile::Cp] Total 8.41 MB	|===========>........| 56.69 % [97.0 MB/s][TFile::Cp] Total 8.41 MB	|=============>......| 68.03 % [97.1 MB/s][TFile::Cp] Total 8.41 MB	|===============>....| 79.36 % [97.4 MB/s][TFile::Cp] Total 8.41 MB	|==================>.| 90.70 % [97.6 MB/s][TFile::Cp] Total 8.41 MB	|====================| 100.00 % [97.2 MB/s]
+[TFile::Cp] Total 105.81 MB	|>...................| 0.00 % [0.0 MB/s][TFile::Cp] Total 105.81 MB	|>...................| 0.90 % [80.7 MB/s][TFile::Cp] Total 105.81 MB	|>...................| 1.80 % [81.9 MB/s][TFile::Cp] Total 105.81 MB	|>...................| 2.70 % [83.2 MB/s][TFile::Cp] Total 105.81 MB	|>...................| 3.61 % [84.1 MB/s][TFile::Cp] Total 105.81 MB	|>...................| 4.51 % [84.1 MB/s][TFile::Cp] Total 105.81 MB	|=>..................| 5.41 % [84.6 MB/s][TFile::Cp] Total 105.81 MB	|=>..................| 6.31 % [84.9 MB/s][TFile::Cp] Total 105.81 MB	|=>..................| 7.21 % [85.0 MB/s][TFile::Cp] Total 105.81 MB	|=>..................| 8.11 % [85.1 MB/s][TFile::Cp] Total 105.81 MB	|=>..................| 9.01 % [85.2 MB/s][TFile::Cp] Total 105.81 MB	|=>..................| 9.91 % [85.3 MB/s][TFile::Cp] Total 105.81 MB	|==>.................| 10.82 % [85.4 MB/s][TFile::Cp] Total 105.81 MB	|==>.................| 11.72 % [85.4 MB/s][TFile::Cp] Total 105.81 MB	|==>.................| 12.62 % [85.4 MB/s][TFile::Cp] Total 105.81 MB	|==>.................| 13.52 % [85.3 MB/s][TFile::Cp] Total 105.81 MB	|==>.................| 14.42 % [85.3 MB/s][TFile::Cp] Total 105.81 MB	|===>................| 15.32 % [85.3 MB/s][TFile::Cp] Total 105.81 MB	|===>................| 16.22 % [85.4 MB/s][TFile::Cp] Total 105.81 MB	|===>................| 17.12 % [85.4 MB/s][TFile::Cp] Total 105.81 MB	|===>................| 18.03 % [85.4 MB/s][TFile::Cp] Total 105.81 MB	|===>................| 18.93 % [85.5 MB/s][TFile::Cp] Total 105.81 MB	|===>................| 19.83 % [85.5 MB/s][TFile::Cp] Total 105.81 MB	|====>...............| 20.73 % [85.5 MB/s][TFile::Cp] Total 105.81 MB	|====>...............| 21.63 % [85.5 MB/s][TFile::Cp] Total 105.81 MB	|====>...............| 22.53 % [85.5 MB/s][TFile::Cp] Total 105.81 MB	|====>...............| 23.43 % [85.6 MB/s][TFile::Cp] Total 105.81 MB	|====>...............| 24.33 % [85.6 MB/s][TFile::Cp] Total 105.81 MB	|=====>..............| 25.24 % [85.6 MB/s][TFile::Cp] Total 105.81 MB	|=====>..............| 26.14 % [85.7 MB/s][TFile::Cp] Total 105.81 MB	|=====>..............| 27.04 % [85.6 MB/s][TFile::Cp] Total 105.81 MB	|=====>..............| 27.94 % [85.6 MB/s][TFile::Cp] Total 105.81 MB	|=====>..............| 28.84 % [85.6 MB/s][TFile::Cp] Total 105.81 MB	|=====>..............| 29.74 % [85.6 MB/s][TFile::Cp] Total 105.81 MB	|======>.............| 30.64 % [85.7 MB/s][TFile::Cp] Total 105.81 MB	|======>.............| 31.54 % [85.7 MB/s][TFile::Cp] Total 105.81 MB	|======>.............| 32.45 % [85.7 MB/s][TFile::Cp] Total 105.81 MB	|======>.............| 33.35 % [85.7 MB/s][TFile::Cp] Total 105.81 MB	|======>.............| 34.25 % [85.7 MB/s][TFile::Cp] Total 105.81 MB	|=======>............| 35.15 % [85.7 MB/s][TFile::Cp] Total 105.81 MB	|=======>............| 36.05 % [85.7 MB/s][TFile::Cp] Total 105.81 MB	|=======>............| 36.95 % [85.7 MB/s][TFile::Cp] Total 105.81 MB	|=======>............| 37.85 % [85.7 MB/s][TFile::Cp] Total 105.81 MB	|=======>............| 38.75 % [85.7 MB/s][TFile::Cp] Total 105.81 MB	|=======>............| 39.66 % [85.7 MB/s][TFile::Cp] Total 105.81 MB	|========>...........| 40.56 % [85.8 MB/s][TFile::Cp] Total 105.81 MB	|========>...........| 41.46 % [85.7 MB/s][TFile::Cp] Total 105.81 MB	|========>...........| 42.36 % [85.7 MB/s][TFile::Cp] Total 105.81 MB	|========>...........| 43.26 % [85.7 MB/s][TFile::Cp] Total 105.81 MB	|========>...........| 44.16 % [85.7 MB/s][TFile::Cp] Total 105.81 MB	|=========>..........| 45.06 % [85.7 MB/s][TFile::Cp] Total 105.81 MB	|=========>..........| 45.96 % [85.7 MB/s][TFile::Cp] Total 105.81 MB	|=========>..........| 46.87 % [85.8 MB/s][TFile::Cp] Total 105.81 MB	|=========>..........| 47.77 % [85.8 MB/s][TFile::Cp] Total 105.81 MB	|=========>..........| 48.67 % [85.8 MB/s][TFile::Cp] Total 105.81 MB	|=========>..........| 49.57 % [85.8 MB/s][TFile::Cp] Total 105.81 MB	|==========>.........| 50.47 % [85.8 MB/s][TFile::Cp] Total 105.81 MB	|==========>.........| 51.37 % [85.8 MB/s][TFile::Cp] Total 105.81 MB	|==========>.........| 52.27 % [85.8 MB/s][TFile::Cp] Total 105.81 MB	|==========>.........| 53.17 % [85.8 MB/s][TFile::Cp] Total 105.81 MB	|==========>.........| 54.08 % [85.8 MB/s][TFile::Cp] Total 105.81 MB	|==========>.........| 54.98 % [85.8 MB/s][TFile::Cp] Total 105.81 MB	|===========>........| 55.88 % [85.8 MB/s][TFile::Cp] Total 105.81 MB	|===========>........| 56.78 % [85.8 MB/s][TFile::Cp] Total 105.81 MB	|===========>........| 57.68 % [85.8 MB/s][TFile::Cp] Total 105.81 MB	|===========>........| 58.58 % [85.8 MB/s][TFile::Cp] Total 105.81 MB	|===========>........| 59.48 % [85.8 MB/s][TFile::Cp] Total 105.81 MB	|============>.......| 60.38 % [85.8 MB/s][TFile::Cp] Total 105.81 MB	|============>.......| 61.29 % [85.8 MB/s][TFile::Cp] Total 105.81 MB	|============>.......| 62.19 % [85.8 MB/s][TFile::Cp] Total 105.81 MB	|============>.......| 63.09 % [85.8 MB/s][TFile::Cp] Total 105.81 MB	|============>.......| 63.99 % [85.8 MB/s][TFile::Cp] Total 105.81 MB	|============>.......| 64.89 % [85.8 MB/s][TFile::Cp] Total 105.81 MB	|=============>......| 65.79 % [85.8 MB/s][TFile::Cp] Total 105.81 MB	|=============>......| 66.69 % [85.8 MB/s][TFile::Cp] Total 105.81 MB	|=============>......| 67.59 % [85.8 MB/s][TFile::Cp] Total 105.81 MB	|=============>......| 68.50 % [85.8 MB/s][TFile::Cp] Total 105.81 MB	|=============>......| 69.40 % [85.8 MB/s][TFile::Cp] Total 105.81 MB	|==============>.....| 70.30 % [85.8 MB/s][TFile::Cp] Total 105.81 MB	|==============>.....| 71.20 % [85.8 MB/s][TFile::Cp] Total 105.81 MB	|==============>.....| 72.10 % [85.8 MB/s][TFile::Cp] Total 105.81 MB	|==============>.....| 73.00 % [85.8 MB/s][TFile::Cp] Total 105.81 MB	|==============>.....| 73.90 % [85.8 MB/s][TFile::Cp] Total 105.81 MB	|==============>.....| 74.81 % [85.8 MB/s][TFile::Cp] Total 105.81 MB	|===============>....| 75.71 % [84.5 MB/s][TFile::Cp] Total 105.81 MB	|===============>....| 76.61 % [84.5 MB/s][TFile::Cp] Total 105.81 MB	|===============>....| 77.51 % [84.5 MB/s][TFile::Cp] Total 105.81 MB	|===============>....| 78.41 % [84.5 MB/s][TFile::Cp] Total 105.81 MB	|===============>....| 79.31 % [84.6 MB/s][TFile::Cp] Total 105.81 MB	|================>...| 80.21 % [84.6 MB/s][TFile::Cp] Total 105.81 MB	|================>...| 81.11 % [84.6 MB/s][TFile::Cp] Total 105.81 MB	|================>...| 82.02 % [84.6 MB/s][TFile::Cp] Total 105.81 MB	|================>...| 82.92 % [84.6 MB/s][TFile::Cp] Total 105.81 MB	|================>...| 83.82 % [84.6 MB/s][TFile::Cp] Total 105.81 MB	|================>...| 84.72 % [84.6 MB/s][TFile::Cp] Total 105.81 MB	|=================>..| 85.62 % [84.7 MB/s][TFile::Cp] Total 105.81 MB	|=================>..| 86.52 % [84.7 MB/s][TFile::Cp] Total 105.81 MB	|=================>..| 87.42 % [84.7 MB/s][TFile::Cp] Total 105.81 MB	|=================>..| 88.32 % [84.7 MB/s][TFile::Cp] Total 105.81 MB	|=================>..| 89.23 % [84.7 MB/s][TFile::Cp] Total 105.81 MB	|==================>.| 90.13 % [84.7 MB/s][TFile::Cp] Total 105.81 MB	|==================>.| 91.03 % [84.7 MB/s][TFile::Cp] Total 105.81 MB	|==================>.| 91.93 % [84.7 MB/s][TFile::Cp] Total 105.81 MB	|==================>.| 92.83 % [84.7 MB/s][TFile::Cp] Total 105.81 MB	|==================>.| 93.73 % [84.2 MB/s][TFile::Cp] Total 105.81 MB	|==================>.| 94.63 % [84.2 MB/s][TFile::Cp] Total 105.81 MB	|===================>| 95.53 % [84.2 MB/s][TFile::Cp] Total 105.81 MB	|===================>| 96.44 % [84.2 MB/s][TFile::Cp] Total 105.81 MB	|===================>| 97.34 % [84.2 MB/s][TFile::Cp] Total 105.81 MB	|===================>| 98.24 % [84.2 MB/s][TFile::Cp] Total 105.81 MB	|===================>| 99.14 % [84.3 MB/s][TFile::Cp] Total 105.81 MB	|====================| 100.00 % [84.3 MB/s]
+[TFile::Cp] Total 17.41 MB	|>...................| 0.00 % [0.0 MB/s][TFile::Cp] Total 17.41 MB	|=>..................| 5.48 % [92.3 MB/s][TFile::Cp] Total 17.41 MB	|==>.................| 10.96 % [95.5 MB/s][TFile::Cp] Total 17.41 MB	|===>................| 16.43 % [96.3 MB/s][TFile::Cp] Total 17.41 MB	|====>...............| 21.91 % [97.1 MB/s][TFile::Cp] Total 17.41 MB	|=====>..............| 27.39 % [97.5 MB/s][TFile::Cp] Total 17.41 MB	|======>.............| 32.87 % [97.7 MB/s][TFile::Cp] Total 17.41 MB	|=======>............| 38.34 % [97.9 MB/s][TFile::Cp] Total 17.41 MB	|========>...........| 43.82 % [98.1 MB/s][TFile::Cp] Total 17.41 MB	|=========>..........| 49.30 % [98.2 MB/s][TFile::Cp] Total 17.41 MB	|==========>.........| 54.78 % [98.3 MB/s][TFile::Cp] Total 17.41 MB	|============>.......| 60.26 % [98.4 MB/s][TFile::Cp] Total 17.41 MB	|=============>......| 65.73 % [98.4 MB/s][TFile::Cp] Total 17.41 MB	|==============>.....| 71.21 % [98.6 MB/s][TFile::Cp] Total 17.41 MB	|===============>....| 76.69 % [98.6 MB/s][TFile::Cp] Total 17.41 MB	|================>...| 82.17 % [98.6 MB/s][TFile::Cp] Total 17.41 MB	|=================>..| 87.64 % [98.7 MB/s][TFile::Cp] Total 17.41 MB	|==================>.| 93.12 % [98.7 MB/s][TFile::Cp] Total 17.41 MB	|===================>| 98.60 % [98.7 MB/s][TFile::Cp] Total 17.41 MB	|====================| 100.00 % [98.6 MB/s]
+Writing output file
+Closing output file
+Closing input file
+srmrm srm://t3se01.psi.ch:8443/srm/managerv2?SFN=/pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ZmmH.BestCSV.heppy.VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1.root 
+outputFolder is root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1/
+file is root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1/tree_VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1_3_EX4WR7.root
+file is root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1/tree_VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1_1_JOV5WH.root
+file is root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1/tree_VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1_2_K9VBDF.root
+checking output file root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/ZmmH.BestCSV.heppy.VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1.root
+srmrm srm://t3se01.psi.ch:8443/srm/managerv2?SFN=//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1/tree_VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1_3_EX4WR7.root
+srmrm srm://t3se01.psi.ch:8443/srm/managerv2?SFN=//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1/tree_VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1_1_JOV5WH.root
+srmrm srm://t3se01.psi.ch:8443/srm/managerv2?SFN=//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep/VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1/tree_VHBB_HEPPY_V20_BTagCSV__Run2015C_25ns-16Dec2015-v1_2_K9VBDF.root
+##### COPY TREE - END ######
+job.name: BTag_Run2015D_16Dec2015
+end prepare_environment_with_config.py
+end runAll.sh
+/bin/sh: module: line 1: syntax error: unexpected end of file
+/bin/sh: error importing function definition for `BASH_FUNC_module'
+# ================================================================
+# JOB Live Resources USAGE for job 9369153: ( don't consider mem values, they are wrong )
+# usage    1:                 cpu=00:01:15, mem=442.50000 GBs, io=0.92270, vmem=5.900G, maxvmem=5.900G
+# 
+# JOB Historical Resources USAGE for job 9369153: you have to manually run
+# qacct -j 9369153 2&> /dev/null || qacct -f /gridware/sge/default/common/accounting.complete -j 9369153
+# 
+# JOB ran over queue@host = all.q@t3wn26.psi.ch
+# 
+# JOBs executed on t3wn[30-40] should run ~1.13 faster than t3wn[10-29]
+#
+# removing TMPDIR: /scratch/tmpdir-9369153.1.all.q
