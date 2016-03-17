@@ -350,6 +350,8 @@ for job in info:
 
     TFlag=ROOT.TTreeFormula("EventForTraining","evt%2",tree)
 
+    #Add bTag weights
+
     bTagWeight_new = array('f',[0])
     bTagWeightJESUp_new = array('f',[0])
     bTagWeightJESDown_new = array('f',[0])
@@ -383,9 +385,6 @@ for job in info:
     vLeptons_SFerr_IsoLoose = array('f',2*[0])
     vLeptons_Eff_HLT = array('f',2*[0])
     vLeptons_Efferr_HLT = array('f',2*[0])
-
-
-
 
     bTagWeight_new[0] = 1
     bTagWeightJESUp_new[0] = 1
@@ -843,10 +842,13 @@ for job in info:
                     vLeptons_overMC[i]   = isInside(NewOverQCD ,tree.vLeptons_eta[i],tree.vLeptons_phi[i])
                     vLeptons_bad[i]      = vLeptons_under[i] or vLeptons_over[i] or vLeptons_underMC[i] or vLeptons_overMC[i]
 
+            ##########################
+            #Loop to fill bTag weights variables
+            ##########################
+
             if not job.type == 'DATA':
                 jetsForBtagWeight = []
                 for i in range(tree.nJet):
-#                    if tree.Jet_mcFlavour[i]==0: print "tree.Jet_mcFlavour[i]=",tree.Jet_mcFlavour[i]
                     jetsForBtagWeight.append(Jet(tree.Jet_pt[i], tree.Jet_eta[i], tree.Jet_hadronFlavour[i], tree.Jet_btagCSV[i], bweightcalc.btag))
 
                 bTagWeight_new[0] = bweightcalc.calcEventWeight(
