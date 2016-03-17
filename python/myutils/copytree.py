@@ -4,7 +4,7 @@ from printcolor import printc
 def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
-def copySingleFile(whereToLaunch,inputFile,outputFile,Acut):
+def copySingleFile(remove_branches,whereToLaunch,inputFile,outputFile,Acut):
         print 'inputFile',inputFile
         if ('pisa' in whereToLaunch):
           input = ROOT.TFile.Open(inputFile,'read')
@@ -29,6 +29,10 @@ def copySingleFile(whereToLaunch,inputFile,outputFile,Acut):
 
         inputTree = input.Get("tree")
         nEntries = inputTree.GetEntries()
+        for branch in remove_branches:
+          # print 'DROPPING BRANCHES LIKE',str(branch)
+          inputTree.SetBranchStatus(str(branch), ROOT.kFALSE);
+
         output.cd()
         print '\n\t copy file: %s with cut: %s' %(inputFile,Acut)
         outputTree = inputTree.CopyTree(Acut)
@@ -44,8 +48,8 @@ def copySingleFile(whereToLaunch,inputFile,outputFile,Acut):
         print "Closing input file"
         input.Close()
 
-def copySingleFileOneInput(inputs):
-    return copySingleFile(*inputs)
+def copySingleFileOneInput(remove_branches,inputs):
+    return copySingleFile(remove_branches,*inputs)
 
 def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config):
     ''' 
@@ -70,7 +74,8 @@ def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config):
     folder_prefix = ''
     print "##### COPY TREE - BEGIN ######"
     whereToLaunch = config.get('Configuration','whereToLaunch')
-
+    remove_branches = config.get('General','remove_branches').replace("[","").replace("]","").replace("'","").split(',')
+    print 'remove_branches:',remove_branches,'len(remove_branches):',len(remove_branches)
 
     if('pisa' in whereToLaunch):
       for (dirpath_, dirnames, filenames_) in walk(pathIN+'/'+folderName):
@@ -157,7 +162,7 @@ def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config):
         outputs = p.map(copySingleFileOneInput, inputs)
     else:
         for input_ in inputs:
-                output = copySingleFileOneInput(input_)
+                output = copySingleFileOneInput(remove_branches,input_)
                 outputs.append(output)
 
     ## finally do the hadd of the copied trees
