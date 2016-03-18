@@ -22,4 +22,4 @@ for BDT_point in BDT_list:
         running_trainings = int(subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).stdout.read())
         print 'running_trainings',running_trainings,'waiting',time,'seconds before to retry'
         os.system('sleep '+str(waiting_time_before_retry))
-  
+
