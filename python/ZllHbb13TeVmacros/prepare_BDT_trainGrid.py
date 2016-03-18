@@ -22,13 +22,24 @@ class GridMaker:
             else: _dic = _dic + key + ' = ' + value + '\n'
         print _dic
 
+    def WriteHeaders(self):
+
+        #for dc in self.dcList:
+        #    for key, value in dc.iteritems():
+        #        if not 'header' in key: continue
+        #        else: print value + '\n'
+
+        for mva in self.mvaList:
+            for key, value in mva.iteritems():
+                if not 'header' in key: continue
+                else: print '\'' + value + '\','
+
     def WriteList(self):
 
-        for dc in self.dcList:
-            self.WriteDic(dc)
-        #for mva in self.mvaList:
-        #    self.WriteDic(mva)
-
+        #for dc in self.dcList:
+        #    self.WriteDic(dc)
+        for mva in self.mvaList:
+            self.WriteDic(mva)
 
 from copy import copy, deepcopy
 
@@ -66,7 +77,7 @@ if __name__ == "__main__":
 
 
     #Grid
-    Gr_range = range(11, 26)
+    Gr_range = range(20, 22)
     Gr_MVAsettings = {'NTrees':[200, 300], 'nEventsMin':[200, 300]}
 
     for r in Gr_range:
@@ -93,6 +104,7 @@ if __name__ == "__main__":
 
     g = GridMaker( dcList, mvaList, '')
     g.WriteList()
+    #g.WriteHeaders()
 
 
 
