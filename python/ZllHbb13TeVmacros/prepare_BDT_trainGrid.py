@@ -34,6 +34,19 @@ class GridMaker:
                 if not 'header' in key: continue
                 else: print '\'' + value + '\','
 
+    def WriteEvalList(self):
+        _out = 'List_for_submitscript: '
+        first = True
+        for mva in self.mvaList:
+            for key, value in mva.iteritems():
+                if not 'header' in key: continue
+
+                if first == True:
+                    _out = _out + value[1:-1]
+                    first = False
+                else: _out = _out + ',' + value[1:-1]
+        print _out
+
     def WriteList(self):
 
         #for dc in self.dcList:
@@ -103,8 +116,9 @@ if __name__ == "__main__":
                 appendList()
 
     g = GridMaker( dcList, mvaList, '')
-    g.WriteList()
+    #g.WriteList()
     #g.WriteHeaders()
+    g.WriteEvalList()
 
 
 
