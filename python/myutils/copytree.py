@@ -4,7 +4,7 @@ from printcolor import printc
 def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
-def copySingleFile(remove_branches,whereToLaunch,inputFile,outputFile,Acut):
+def copySingleFile(whereToLaunch,inputFile,outputFile,Acut,remove_branches):
         print 'inputFile',inputFile
         if ('pisa' in whereToLaunch):
           input = ROOT.TFile.Open(inputFile,'read')
@@ -30,8 +30,9 @@ def copySingleFile(remove_branches,whereToLaunch,inputFile,outputFile,Acut):
         inputTree = input.Get("tree")
         nEntries = inputTree.GetEntries()
         for branch in remove_branches:
-          # print 'DROPPING BRANCHES LIKE',str(branch)
-          inputTree.SetBranchStatus(str(branch), ROOT.kFALSE);
+          if branch and not branch.isspace():
+            # print 'DROPPING BRANCHES LIKE',str(branch)
+            inputTree.SetBranchStatus(str(branch), ROOT.kFALSE);
 
         output.cd()
         print '\n\t copy file: %s with cut: %s' %(inputFile,Acut)
@@ -48,8 +49,8 @@ def copySingleFile(remove_branches,whereToLaunch,inputFile,outputFile,Acut):
         print "Closing input file"
         input.Close()
 
-def copySingleFileOneInput(remove_branches,inputs):
-    return copySingleFile(remove_branches,*inputs)
+def copySingleFileOneInput(inputs):
+    return copySingleFile(*inputs)
 
 def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config):
     ''' 
@@ -151,7 +152,7 @@ def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config):
             print(command)
             subprocess.call([command], shell=True)
           else: print 'FALSE'
-        inputs.append((whereToLaunch,inputFile,outputFile,Acut))
+        inputs.append((whereToLaunch,inputFile,outputFile,Acut,remove_branches))
 
     ## process the input list (using multiprocess)
     multiprocess=int(config.get('Configuration','nprocesses'))
@@ -159,10 +160,10 @@ def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config):
     if multiprocess>1:
         from multiprocessing import Pool
         p = Pool(multiprocess)
-        outputs = p.map(copySingleFileOneInput, inputs)
+        outputs = p.map(copySingleFileOneInput,inputs)
     else:
         for input_ in inputs:
-                output = copySingleFileOneInput(remove_branches,input_)
+                output = copySingleFileOneInput(input_)
                 outputs.append(output)
 
     ## finally do the hadd of the copied trees
