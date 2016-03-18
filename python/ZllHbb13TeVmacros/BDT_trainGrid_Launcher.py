@@ -14,10 +14,10 @@ if 'perrozzi' in user:
 
 for BDT_point in BDT_list:
     command = 'ps aux | grep '+user.strip("\n")+' | grep train | grep runAll.sh | wc -l'
-    print 'checking running trainings with the string',command
+    print 'before running',BDT_point,'checking running trainings with the string',command
     running_trainings = int(subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).stdout.read())
     print 'running_trainings are',running_trainings
-    subprocess.Popen('sh runAll.sh '+BDT_point+' '+input_folder+' train 2>&1 > /dev/null &', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    subprocess.Popen('cd ..; sh runAll.sh '+BDT_point+' '+input_folder+' train 2>&1 > /dev/null; cd - &', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     while running_trainings > max_running_processes:
         running_trainings = int(subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).stdout.read())
         print 'running_trainings',running_trainings,'waiting',time,'seconds before to retry'
