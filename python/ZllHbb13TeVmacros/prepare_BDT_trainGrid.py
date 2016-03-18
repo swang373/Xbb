@@ -40,7 +40,6 @@ class GridMaker:
         for mva in self.mvaList:
             for key, value in mva.iteritems():
                 if not 'header' in key: continue
-
                 if first == True:
                     _out = _out + value[1:-1]
                     first = False
@@ -63,8 +62,9 @@ if __name__ == "__main__":
     mvaList = []
 
 
-    def appendList():
+    def dc_appendList():
         dcList.append({'header_dc':copy(_header_dc),'var':copy(_var),'wsVarName':copy(_wsVarName),'range':copy(_range), 'dcName':copy(_dcName), 'cut':_cut, 'signal':copy(_signal), 'dcBin':copy(_dcBin), 'data':copy(_data), 'type':copy(_type)})
+    def mva_appendList():
         mvaList.append({'header_mva':copy(_header_mva), 'MVAtype':copy(_MVAtype), 'MVAsettings':copy(_MVAsettings), 'signals':copy(_signals), 'backgrounds':copy(_backgrounds), 'treeVarSet':_treeVarSet, 'treeCut':_treeCut})
 
     #Default CR
@@ -93,32 +93,32 @@ if __name__ == "__main__":
     Gr_range = range(20, 22)
     Gr_MVAsettings = {'NTrees':[200, 300], 'nEventsMin':[200, 300]}
 
-    for r in Gr_range:
-        for n1 in Gr_MVAsettings['NTrees']:
-            for n2 in Gr_MVAsettings['nEventsMin']:
+    for n1 in Gr_MVAsettings['NTrees']:
+        for n2 in Gr_MVAsettings['nEventsMin']:
 
+            _ntrees = _MVAsettings[_MVAsettings.find('NTrees=')+7:_MVAsettings.find(':nEventsMin=')]
+            _MVAsettings = _MVAsettings.replace(':NTrees='+_ntrees+':', ':NTrees=%d:' %n1)
+            _nevntmin = _MVAsettings[_MVAsettings.find('nEventsMin=')+11:_MVAsettings.find(':MaxDepth')]
+            _MVAsettings = _MVAsettings.replace(':nEventsMin='+_nevntmin+':', ':nEventsMin=%d:' %n2)
+
+            #Write the headers
+            #mva
+            _ntrees = _MVAsettings[_MVAsettings.find('NTrees=')+7:_MVAsettings.find(':nEventsMin=')]
+            _nevntmin = _MVAsettings[_MVAsettings.find('nEventsMin=')+11:_MVAsettings.find(':MaxDepth')]
+            _header_mva = '[BDT_SCAN_NTrees_%s_nEventsMin_%s_Zmm_highVpt]' %(_ntrees, _nevntmin)
+
+            mva_appendList()
+
+            #dc
+            for r in Gr_range:
                 _range = '%d,-1,1' %r
-
-                _ntrees = _MVAsettings[_MVAsettings.find('NTrees=')+7:_MVAsettings.find(':nEventsMin=')]
-                _MVAsettings = _MVAsettings.replace(':NTrees='+_ntrees+':', ':NTrees=%d:' %n1)
-                _nevntmin = _MVAsettings[_MVAsettings.find('nEventsMin=')+11:_MVAsettings.find(':MaxDepth')]
-                _MVAsettings = _MVAsettings.replace(':nEventsMin='+_nevntmin+':', ':nEventsMin=%d:' %n2)
-
-                #Write the headers
-                #mva
-                _ntrees = _MVAsettings[_MVAsettings.find('NTrees=')+7:_MVAsettings.find(':nEventsMin=')]
-                _nevntmin = _MVAsettings[_MVAsettings.find('nEventsMin=')+11:_MVAsettings.find(':MaxDepth')]
-                _header_mva = '[BDT_SCAN_NTrees_%s_nEventsMin_%s_Zmm_highVpt]' %(_ntrees, _nevntmin)
-
-                #dc
                 _header_dc = '[dc:Scan_NTrees_%s_nEventsMin_%s_nbins_%s_dc_highpt]' %(_ntrees, _nevntmin, r)
-
-                appendList()
+                dc_appendList()
 
     g = GridMaker( dcList, mvaList, '')
     #g.WriteList()
     #g.WriteHeaders()
-    g.WriteEvalList()
+    #g.WriteEvalList()
 
 
 
