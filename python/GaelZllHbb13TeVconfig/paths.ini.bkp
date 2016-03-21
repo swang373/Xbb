@@ -23,10 +23,9 @@ Wdir: /shome/<!Configuration|user!>/Hbb/Xbb/
 
 
 ;for MC
-;samplepath = dcap://t3se01.psi.ch:22125/pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20/
+samplepath = dcap://t3se01.psi.ch:22125/pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20/
 ;for Data
-samplepath = dcap://t3se01.psi.ch:22125/pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20/BTagCSV/
-;samplepath = dcap://t3se01.psi.ch:22125/pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20/BTag/
+;samplepath = dcap://t3se01.psi.ch:22125/pnfs/psi.ch/cms/trivcat///store/t3groups/ethz-higgs/run2/VHBBHeppyV20/BTagCSV/
 
 
 #!! The directory with the code
@@ -66,7 +65,7 @@ t3userfolder = root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/us
 
 ;#!! From where to take the raw samples and where to put the prepared trees:
 PREPin: <!Directories|samplepath!>
-PREPout: root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep
+PREPout: root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/Hbb/VBFHbb13TeV_v20/prep_test
 ;PREPout: root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/gaperrin/VHbb/ZllHbb13TeV_V20/prep_TestMergedCode
 ;PREPout: root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/gaperrin/VHbb/ZllHbb13TeV_V20/prep_v3HT0to100
 ;PREPout: root://t3dcachedb03.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/gaperrin/VHbb/ZllHbb13TeV_V20/prep_v4
