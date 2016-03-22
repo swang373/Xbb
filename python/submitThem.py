@@ -5,7 +5,6 @@ import time
 import os
 import shutil
 
-
 parser = OptionParser()
 parser.add_option("-T", "--tag", dest="tag", default="8TeV",
                       help="Tag to run the analysis with, example '8TeV' uses config8TeV and pathConfig8TeV to run the analysis")
@@ -29,7 +28,8 @@ parser.add_option("-V", "--verbose", dest="verbose", action="store_true", defaul
 
 import os,shutil,pickle,subprocess,ROOT,re
 ROOT.gROOT.SetBatch(True)
-from myutils import BetterConfigParser, Sample, ParseInfo, sample_parser
+from myutils import BetterConfigParser, Sample, ParseInfo, sample_parser, copytreePSI
+from myutils.copytreePSI import filelist
 import getpass
 
 debugPrintOUts = opts.verbose
@@ -96,7 +96,7 @@ if not opts.ftag == '':
 # DEBUG PURPOSE ONLY        
 # sys.exit()
 
-print configs
+if(debugPrintOUts): print configs
 config = BetterConfigParser()
 config.read(configs)
 
@@ -110,7 +110,7 @@ if 'PSI' in config.get('Configuration','whereToLaunch'):
                 config.get('Directories','tmpSamples').replace('root://t3dcachedb03.psi.ch:1094/',''),
                 ]
   for mkdir_protocol in mkdir_list:
-    print 'checking',mkdir_protocol
+    if(debugPrintOUts): print 'checking',mkdir_protocol
     _output_folder = ''
     for _folder in mkdir_protocol.split('/'):
         _output_folder += '/'+_folder
@@ -168,7 +168,7 @@ def compile_macro(config,macro):
         
 #comment for now
 print '===============================\n'
-print 'Comiling the macros'
+print 'Compiling the macros'
 print '===============================\n'
 compile_macro(config,'BTagReshaping')
 compile_macro(config,'VHbbNameSpace')
@@ -198,6 +198,21 @@ def submit(job,repDict):
     print "the command is ", command
     dump_config(configs,"%(logpath)s/%(timestamp)s_%(job)s_%(en)s_%(task)s.config" %(repDict))
     subprocess.call([command], shell=True)
+
+def getfilelist(job):
+    print 'job',job
+    pathIN = config.get('Directories','PREPin')
+    pathOUT = config.get('Directories','PREPout')
+    samplesinfo=config.get('Directories','samplesinfo')
+
+    whereToLaunch = config.get('Configuration','whereToLaunch')
+    TreeCopierPSI = config.get('Configuration','TreeCopierPSI')
+
+    print "job.name:",job
+    samplefiles = config.get('Directories','samplefiles')
+    list = filelist(samplefiles,job)
+    # print list
+    return list
 
 if opts.task == 'train':
     train_list = (config.get('MVALists','List_for_submitscript')).split(',')
@@ -247,6 +262,20 @@ elif opts.task == 'prep':
     else:
         for sample in samplesList:
             submit(sample,repDict)
+
+elif opts.task == 'singleprep':
+    sys.exit()
+    if ( opts.samples == ""):
+        path = config.get("Directories","PREPin")
+        samplesinfo = config.get("Directories","samplesinfo")
+        info = ParseInfo(samplesinfo,path)
+        for job in info:
+            files = getfilelist(job.identifier)
+    else:
+        for sample in samplesList:
+            files = getfilelist(sample)
+    print 'files',files
+
             
 elif opts.task == 'sys' or opts.task == 'syseval':
     path = config.get("Directories","SYSin")
