@@ -105,7 +105,7 @@ if [[ $whereToLaunch != "lxplus" ]]; then
   export SCRAM_ARCH="slc5_amd64_gcc462"
   source $VO_CMS_SW_DIR/cmsset_default.sh
   eval `scramv1 runtime -sh`
-  export TMPDIR=$CMSSW_BASE/src/tmp
+  #export TMPDIR=$CMSSW_BASE/src/tmp
   if ! [ -e $TMPDIR ]; then mkdir $TMPDIR; fi
 
   cd -   #back to the working dir
@@ -185,7 +185,8 @@ if [ $task = "syseval" ]; then
 fi
 if [ $task = "train" ]; then
     echo "./train.py --training $sample --config ${energy}config/${configList} --local True"
-    ./train.py --training $sample --config ${energy}config/${configList} --local True
+    #./train.py --training $sample --config ${energy}config/${configList} --local True
+    python train.py --training $sample --config ${energy}config/${configList} --local True
 fi
 if [ $task = "plot" ]; then
     echo "./tree_stack.py --region $sample --config ${energy}config/${configList}"
@@ -194,6 +195,9 @@ fi
 if [ $task = "dc" ]; then
     echo "./workspace_datacard.py --variable $sample --config ${energy}config/${configList}  --config ${energy}config/datacards.ini"
     ./workspace_datacard.py --variable $sample --config ${energy}config/${configList}  --config ${energy}config/datacards.ini
+#> $TMPDIR/out.txt
+#cp $TMPDIR/out.txt '~/'
+
 fi
 if [ $task = "split" ]; then
     echo "./split_tree.py --samples $sample --config ${energy}config/${configList} --max-events $job_id"

@@ -2,17 +2,16 @@
 
 #GOAL:  Used to set the config to start optimizing various BDT parameters
 
-#HOW IT WORKS:  Fills the datacards.ini and cuts.ini with one datacard per point on the Grid.
+#HOW IT WORKS:
 
 #HOW TO USE IT:
 
 class GridMaker:
 
-    def __init__(self, dcList, mvaList, config):
+    def __init__(self, dcList, mvaList):
 
         self.dcList =  dcList
         self.mvaList = mvaList
-        self.config = config
 
     def WriteDic(self, dic):
 
@@ -24,17 +23,43 @@ class GridMaker:
 
     def WriteHeaders(self):
 
-        #for dc in self.dcList:
-        #    for key, value in dc.iteritems():
-        #        if not 'header' in key: continue
-        #        else: print value + '\n'
+        print '===================='
+        print 'BDT LIST'
+        print '====================\n'
 
+        _out = 'BDT_list = ['
+        first = True
         for mva in self.mvaList:
             for key, value in mva.iteritems():
                 if not 'header' in key: continue
-                else: print '\'' + value + '\','
+                if first == True:
+                    first = False
+                    _out = _out + '\'' + value[1:-1] + '\''
+                else: _out = _out + ',\'' + value[1:-1] + '\''
+        _out = _out + ']'
+        print _out
+
+        print '===================='
+        print 'DC LIST'
+        print '====================\n'
+
+        _out = 'List : '
+        first = True
+        for dc in self.dcList:
+            for key, value in dc.iteritems():
+                if not 'header' in key: continue
+                if first == True:
+                    first = False
+                    _out = _out + '\'' + value[4:-1] + '\''
+                else: _out = _out + ',\'' + value[4:-1] + '\''
+        _out = _out
+        print _out
 
     def WriteEvalList(self):
+        print '===================='
+        print 'SUBMIT LIST'
+        print '====================\n'
+
         _out = 'List_for_submitscript: '
         first = True
         for mva in self.mvaList:
@@ -48,14 +73,28 @@ class GridMaker:
 
     def WriteList(self):
 
-        #for dc in self.dcList:
-        #    self.WriteDic(dc)
+        print '===================='
+        print "The DC list is"
+        print '====================\n'
+
+        for dc in self.dcList:
+            self.WriteDic(dc)
+
+        print '===================='
+        print "The MVA list is"
+        print '====================\n'
+
         for mva in self.mvaList:
             self.WriteDic(mva)
 
 from copy import copy, deepcopy
 
 if __name__ == "__main__":
+
+    #Grid
+    Gr_range = range(20, 21)
+    Gr_MVAsettings = {'NTrees':[50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 10000],
+        'nEventsMin':[50, 100, 150, 200, 250, 300, 350, 400]}
 
     #List of dic. Each dic is one dc
     dcList = []
@@ -88,11 +127,6 @@ if __name__ == "__main__":
     _treeVarSet = 'ZllBDTVars'
     _treeCut =  'ZllBDThighVptcut'
 
-
-    #Grid
-    Gr_range = range(20, 22)
-    Gr_MVAsettings = {'NTrees':[200, 300], 'nEventsMin':[200, 300]}
-
     for n1 in Gr_MVAsettings['NTrees']:
         for n2 in Gr_MVAsettings['nEventsMin']:
 
@@ -106,6 +140,8 @@ if __name__ == "__main__":
             _ntrees = _MVAsettings[_MVAsettings.find('NTrees=')+7:_MVAsettings.find(':nEventsMin=')]
             _nevntmin = _MVAsettings[_MVAsettings.find('nEventsMin=')+11:_MVAsettings.find(':MaxDepth')]
             _header_mva = '[BDT_SCAN_NTrees_%s_nEventsMin_%s_Zmm_highVpt]' %(_ntrees, _nevntmin)
+            _var = _header_mva[1:-1] + '.nominal'
+            _dcName = 'Zmm'+_header_mva[1:-1]
 
             mva_appendList()
 
@@ -115,10 +151,10 @@ if __name__ == "__main__":
                 _header_dc = '[dc:Scan_NTrees_%s_nEventsMin_%s_nbins_%s_dc_highpt]' %(_ntrees, _nevntmin, r)
                 dc_appendList()
 
-    g = GridMaker( dcList, mvaList, '')
-    #g.WriteList()
-    #g.WriteHeaders()
-    #g.WriteEvalList()
+    g = GridMaker( dcList, mvaList)
+    g.WriteList()
+    g.WriteHeaders()
+    g.WriteEvalList()
 
 
 

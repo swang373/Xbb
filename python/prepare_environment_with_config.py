@@ -48,6 +48,7 @@ for job in info:
         utils.TreeCopier(pathIN, pathOUT, job.identifier, job.prefix, job.addtreecut)
     else:
         # copytree function
+
         copytree(pathIN,pathOUT,prefix,job.prefix,job.identifier,'',job.addtreecut, config)
 
 print 'end prepare_environment_with_config.py'

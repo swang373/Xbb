@@ -72,14 +72,16 @@ class HistoMaker:
         # print 'end self.optionsList'
 
         #! start the loop over variables (descriebed in options) 
+        First_iter = True
         for options in self.optionsList:
+            if First_iter: print 'The name of the job is', job.name
             name=job.name
             if self.GroupDict is None:
                 group=job.group
             else:
                 group=self.GroupDict[job.name]
             treeVar=options['var']
-            print("START %s"%treeVar)
+            if First_iter: print("START %s"%treeVar)
             name=options['name']
             # print 'options[\'name\']',options['name']
             if self._rebin or self.calc_rebin_flag:
@@ -111,14 +113,15 @@ class HistoMaker:
               if CuttedTree and CuttedTree.GetEntries():
                 if 'BDT' in treeVar or 'bdt' in treeVar: 
                     drawoption = '(%s)*(%s & %s)'%(weightF,BDT_add_cut,treeCut)
-                    print "I'm appling: ",BDT_add_cut
+                    if First_iter: print "I'm appling: ",BDT_add_cut
                     # drawoption = 'sign(genWeight)*(%s)*(%s & %s)'%(weightF,treeCut,BDT_add_cut)
                     #print drawoption
                 else: 
                     drawoption = '(%s)*(%s)'%(weightF,treeCut)
                 #print ('Draw: %s>>%s' %(treeVar,name), drawoption, "goff,e")
-                print 'drawoptions are', drawoption
+                if First_iter: print 'drawoptions are', drawoption
                 nevents = CuttedTree.Draw('%s>>%s' %(treeVar,name), drawoption, "goff,e")
+                if First_iter: print 'Number of events are', nevents
                 #print 'nevents:',hTree.GetEntries(),' hTree.name() 2 =',hTree.GetName()
                 full=True
                       # if 'RTight' in treeVar or 'RMed' in treeVar: 
@@ -145,25 +148,26 @@ class HistoMaker:
                         lowLimitBlindingMass =hTree.GetBinLowEdge(hTree.FindBin(lowLimitBlindingMass))
                         highLimitBlindingMass =hTree.GetBinLowEdge(hTree.FindBin(highLimitBlindingMass))+ hTree.GetBinWidth(hTree.GetBin(highLimitBlindingMass))
                         veto = ("(%s <%s || %s > %s)" %(treeVar,lowLimitBlindingMass,treeVar,highLimitBlindingMass))
-                        print "Using veto:",veto
+                        if First_iter: print "Using veto:",veto
                         CuttedTree.Draw('%s>>%s' %(treeVar,name),veto +'&'+' %(cut)s' %options, "goff,e")
                     elif 'BDT' in treeVar or 'bdt' in treeVar or 'nominal' in treeVar in treeVar:
                         lowLimitBlindingBDT = hTree.GetBinLowEdge(hTree.FindBin(lowLimitBlindingBDT))
                         veto = "(%s <%s)" %(treeVar,lowLimitBlindingBDT)
-                        print "Using veto:",veto
+                        if First_iter: print "Using veto:",veto
                         CuttedTree.Draw('%s>>%s' %(treeVar,name),veto +'&'+' %(cut)s'%options, "goff,e")
                     elif 'dR' in treeVar and 'H' in treeVar:
                         lowLimit   = hTree.GetBinLowEdge(hTree.FindBin(lowLimitBlindingDR))
                         highLimit  = hTree.GetBinLowEdge(hTree.FindBin(highLimitBlindingDR))
                         veto = ("(%s <%s || %s > %s)" %(treeVar,lowLimitBlindingMass,treeVar,highLimitBlindingMass))
-                        print "Using veto:",veto
+                        if First_iter: print "Using veto:",veto
                         CuttedTree.Draw('%s>>%s' %(treeVar,name),veto +'&'+' %(cut)s'%options, "goff,e")
                     else:
                         CuttedTree.Draw('%s>>%s' %(treeVar,name),'%s' %treeCut, "goff,e")
                 else:
-                    print 'DATA drawoptions', '%s>>%s' %(treeVar,name),'%s' %treeCut
+                    if First_iter: print 'DATA drawoptions', '%s>>%s' %(treeVar,name),'%s' %treeCut
                     CuttedTree.Draw('%s>>%s' %(treeVar,name),'%s' %treeCut, "goff,e")
                 full = True
+            first_iter = False
             # if full:
                 # hTree = ROOT.gDirectory.Get(name)
                 # print('histo1',ROOT.gDirectory.Get(name))
