@@ -208,10 +208,13 @@ def submitsinglefile(job,repDict,file):
         repDict['name'] = '"%s"' %logo[nJob].strip()
     else:
         repDict['name'] = '%(job)s_%(en)s%(task)s' %repDict
-    command = 'qsub -V -cwd -q %(queue)s -l h_vmem=6G -N %(name)s -j y -o %(logpath)s/%(timestamp)s_%(job)s_%(en)s_%(task)s.out -pe smp %(nprocesses)s runAll.sh %(job)s %(en)s ' %(repDict) + opts.task + ' ' + repDict['nprocesses']+ ' ' + repDict['job_id'] + ' ' + repDict['additional'] + ' ' + file
+    # command = 'qsub -V -cwd -q %(queue)s -l h_vmem=6G -N %(name)s -j y -o %(logpath)s/%(timestamp)s_%(job)s_%(en)s_%(task)s.out -pe smp %(nprocesses)s runAll.sh %(job)s %(en)s ' %(repDict) + opts.task + ' ' + repDict['nprocesses']+ ' ' + repDict['job_id'] + ' ' + repDict['additional']
+    command = 'sh runAll.sh %(job)s %(en)s ' %(repDict) + opts.task + ' ' + repDict['nprocesses']+ ' ' + repDict['job_id'] + ' ' + repDict['additional']
+    command = command + ' "' + str(file)+ '"'
     print "the command is ", command
     dump_config(configs,"%(logpath)s/%(timestamp)s_%(job)s_%(en)s_%(task)s.config" %(repDict))
-    # subprocess.call([command], shell=True)
+    subprocess.call([command], shell=True)
+    sys.exit()
 
 def getfilelist(job):
     pathIN = config.get('Directories','PREPin')
@@ -287,15 +290,15 @@ elif opts.task == 'singleprep':
             files = getfilelist(sample)
             # print 'sample',sample,'len(files)',len(files)
             # print 'files:',files
-            files_per_job = 3
+            files_per_job = 100
             files_split=[files[x:x+files_per_job] for x in xrange(0, len(files), files_per_job)]
             # files_split = [files[i::10] for i in range(100)]
             # files_split = [value for value in files_split if value != "[]"]
             files_split = [';'.join(sublist) for sublist in files_split]
             # print 'files_split',files_split
-            sys.exit()
-            # for files_sublist in files_split:
-                # submitsinglefile(sample,repDict,files_sublist)
+            # sys.exit()
+            for files_sublist in files_split:
+                submitsinglefile(sample,repDict,files_sublist)
 
             
 elif opts.task == 'sys' or opts.task == 'syseval':
