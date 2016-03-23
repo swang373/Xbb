@@ -1,4 +1,4 @@
-import ROOT,sys,os,subprocess,random,string
+import ROOT,sys,os,subprocess,random,string,hashlib
 from printcolor import printc
 # from copytreePSI import id_generator
 
@@ -6,27 +6,30 @@ def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
 def copySingleFile(whereToLaunch,inputFile,outputFile,Acut,remove_branches):
-        print 'inputFile',inputFile
+        # print 'inputFile',inputFile
         if ('pisa' in whereToLaunch):
           input = ROOT.TFile.Open(inputFile,'read')
         else:
           input = ROOT.TFile.Open(inputFile,'read')
 
-        output = ROOT.TFile.Open(outputFile,'create')
-        print "Writing file:",outputFile
+        if not input:
+          print 'input file NOT EXISTING:',inputFile
+          input.Close()
+          return
 
-        input.ls()
-        input.cd()
-        obj = ROOT.TObject
-        for key in ROOT.gDirectory.GetListOfKeys():
-            input.cd()
-            obj = key.ReadObj()
-            #print obj.GetName()
-            if obj.GetName() == 'tree':
-                continue
-            output.cd()
-            #print key.GetName()
-            obj.Write(key.GetName())
+        __tmpPath = os.environ["TMPDIR"]
+        outputFileName = outputFile.split('/')[len(outputFile.split('/'))-1]
+        print 'outputFileName',__tmpPath+'/'+outputFileName
+        # output = ROOT.TFile.Open(outputFile,'create')
+        output = ROOT.TFile.Open(__tmpPath+'/'+outputFileName,'recreate')
+        # print "Writing file:",outputFile
+        # if not output:
+          # del_protocol = outputFile.replace('gsidcap://t3se01.psi.ch:22128/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
+          # del_protocol = outputFile.replace('dcap://t3se01.psi.ch:22125/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
+          # del_protocol = outputFile.replace('root://t3dcachedb03.psi.ch:1094/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
+          # command = 'srmrm %s' %(del_protocol)
+          # subprocess.call([command], shell=True)
+          # output = ROOT.TFile.Open(outputFile,'create')
 
         inputTree = input.Get("tree")
         nEntries = inputTree.GetEntries()
@@ -42,13 +45,30 @@ def copySingleFile(whereToLaunch,inputFile,outputFile,Acut,remove_branches):
         printc('blue','',"\t before cuts\t %s" %nEntries)
         printc('green','',"\t survived\t %s" %kEntries)
         outputTree.AutoSave()
-        output.ls()
-        print "Writing output file"
+        # input.ls()
+        input.cd()
+        obj = ROOT.TObject
+        for key in ROOT.gDirectory.GetListOfKeys():
+            input.cd()
+            obj = key.ReadObj()
+            if obj.GetName() == 'tree':
+                continue
+            output.cd()
+            #print key.GetName()
+            obj.Write(key.GetName())
+        # output.ls()
+        # print "Writing output file"
         output.Write()
-        print "Closing output file"
+        # print "Closing output file"
         output.Close()
-        print "Closing input file"
+        # print "Closing input file"
         input.Close()
+        command = 'srmcp -2 -globus_tcp_port_range 20000,25000 file:///'+__tmpPath+'/'+outputFileName+' '+ outputFile.replace('root://t3dcachedb03.psi.ch:1094','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=/')
+        # print command
+        subprocess.call([command], shell=True)
+        command = 'rm '+__tmpPath+'/'+outputFileName
+        # print command
+        subprocess.call([command], shell=True)
 
 def copySingleFileOneInput(inputs):
     return copySingleFile(*inputs)
@@ -117,12 +137,14 @@ def copytreePSI(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config,f
           #if mkdir_protocol.split('/').index(_folder) < 3: continue
           # print 'checking and/or creating folder',_output_folder
           _output_folder += '/'+_folder
-          if os.path.exists(_output_folder): print 'exists'
+          if os.path.exists(_output_folder):
+              # print 'exists'
+              cicciobello = 1
           else:
               # print 'does not exist'
               command = 'srmmkdir srm://t3se01.psi.ch/' + _output_folder
               subprocess.call([command], shell = True)
-          if os.path.exists(_output_folder): print 'Folder', _output_folder, 'sucessfully created'
+          # if os.path.exists(_output_folder): print 'Folder', _output_folder, 'sucessfully created'
 
     ## prepare a list of input(inputFile,outputFile,Acut) for the files to be processed
     inputs=[]
@@ -133,7 +155,11 @@ def copytreePSI(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config,f
         filename = filename.split('_')[0]+'_'+subfolder+'_'+filename.split('_')[1]
         if filename in filenames: continue
         filenames.append(filename)
-        outputFile = "%s/%s/%s" %(pathOUT,folderName,filename.replace('.root','')+'_'+id_generator()+'.root')
+        # hash = filename.encode("hex")
+        hash = hashlib.sha224(filename).hexdigest()
+        # outputFile = "%s/%s/%s" %(pathOUT,folderName,filename.replace('.root','')+'_'+id_generator()+'.root')
+        # print 'hash',hash
+        outputFile = "%s/%s/%s" %(pathOUT,folderName,filename.replace('.root','')+'_'+str(hash)+'.root')
         # print 'inputFile',inputFile,'outputFile',outputFile
         if('PSI' in whereToLaunch):
           del_protocol = outputFile
@@ -145,20 +171,26 @@ def copytreePSI(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config,f
         del_protocol = del_protocol.replace('root://t3dcachedb03.psi.ch:1094/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
         # print "cutting ",inputFile," ---> ",outputFile
 
-        if ('pisa' in whereToLaunch) and os.path.isfile(outputFile):
-            command = 'rm %s' %(outputFile)
-            print(command)
-            subprocess.call([command], shell=True)
-        elif('PSI' in whereToLaunch):
-          if os.path.isfile(del_protocol.replace('srm://t3se01.psi.ch:8443/srm/managerv2?SFN=','')):
-            print 'File', del_protocol.replace('srm://t3se01.psi.ch:8443/srm/managerv2?SFN=',''), 'already exists.\n Gonna delete it.'
-            #command = 'rm %s' %(outputFile)
-            command = 'srmrm %s' %(del_protocol)
-            print(command)
-            subprocess.call([command], shell=True)
-          else: print 'FALSE'
+        # print 'del_protocol',del_protocol,'isfile',os.path.isfile(del_protocol.replace('srm://t3se01.psi.ch:8443/srm/managerv2?SFN=',''))
+        if os.path.isfile(del_protocol.replace('srm://t3se01.psi.ch:8443/srm/managerv2?SFN=','')):
+            f = ROOT.TFile.Open(outputFile,'read')
+            if not f:
+              print 'file is null, adding to input'
+              inputs.append((whereToLaunch,inputFile,outputFile,Acut,remove_branches))
+              continue
+            # f.Print()
+            if f.GetNkeys() == 0 or f.TestBit(ROOT.TFile.kRecovered) or f.IsZombie():
+                print 'f.GetNkeys()',f.GetNkeys(),'f.TestBit(ROOT.TFile.kRecovered)',f.TestBit(ROOT.TFile.kRecovered),'f.IsZombie()',f.IsZombie()
+                print 'File', del_protocol.replace('srm://t3se01.psi.ch:8443/srm/managerv2?SFN=',''), 'already exists but is buggy, gonna delete and rewrite it.'
+                #command = 'rm %s' %(outputFile)
+                command = 'srmrm %s' %(del_protocol)
+                subprocess.call([command], shell=True)
+                print(command)
+            else: continue
+        print 'added to input'
         inputs.append((whereToLaunch,inputFile,outputFile,Acut,remove_branches))
 
+    # print 'inputs',inputs
     outputs = []
     multiprocess=int(config.get('Configuration','nprocesses'))
     if multiprocess>1:

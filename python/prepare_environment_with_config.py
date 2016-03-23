@@ -44,7 +44,7 @@ info = ParseInfo(samplesinfo,pathIN)
 print "samplesinfo:",samplesinfo
 print "info:",info
 for job in info:
-    print "job.name:",job.name
+    # print "job.name:",job.name
     if not job.name in namelist and not job.identifier in namelist:
         continue
     if job.subsample:

@@ -214,7 +214,6 @@ def submitsinglefile(job,repDict,file):
     print "the command is ", command
     dump_config(configs,"%(logpath)s/%(timestamp)s_%(job)s_%(en)s_%(task)s.config" %(repDict))
     subprocess.call([command], shell=True)
-    sys.exit()
 
 def getfilelist(job):
     pathIN = config.get('Directories','PREPin')
@@ -290,7 +289,7 @@ elif opts.task == 'singleprep':
             files = getfilelist(sample)
             # print 'sample',sample,'len(files)',len(files)
             # print 'files:',files
-            files_per_job = 100
+            files_per_job = config.get("Configuration","files_per_job")
             files_split=[files[x:x+files_per_job] for x in xrange(0, len(files), files_per_job)]
             # files_split = [files[i::10] for i in range(100)]
             # files_split = [value for value in files_split if value != "[]"]
