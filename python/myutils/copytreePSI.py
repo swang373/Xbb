@@ -187,7 +187,7 @@ def copytreePSI(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config,f
                 subprocess.call([command], shell=True)
                 print(command)
             else: continue
-        print 'added to input'
+        # print 'added to input'
         inputs.append((whereToLaunch,inputFile,outputFile,Acut,remove_branches))
 
     # print 'inputs',inputs
@@ -211,6 +211,9 @@ def copytreePSI(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config,f
       print command
       os.system(command)
 
+    print "##### COPY TREE - END ######"
+
+# def copytreePSI(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config,filelist):
     # else:
       # merged = pathOUT+'/'+newprefix+folderName+".root "
 
@@ -244,7 +247,6 @@ def copytreePSI(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config,f
           # print("srmrm srm://t3se01.psi.ch:8443/srm/managerv2?SFN="+filename)
           # os.system("srmrm srm://t3se01.psi.ch:8443/srm/managerv2?SFN="+filename)
 
-    print "##### COPY TREE - END ######"
 
 def filelist(pathIN,folderName):
     '''
