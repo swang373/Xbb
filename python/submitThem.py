@@ -298,7 +298,7 @@ elif opts.task == 'singleprep':
             files_split = [';'.join(sublist) for sublist in files_split]
             # print 'files_split',files_split
             # sys.exit()
-            run_locally = int(config.get("Configuration","run_locally"))
+            run_locally = config.get("Configuration","run_locally")
             for files_sublist in files_split:
                 submitsinglefile(sample,repDict,files_sublist,run_locally)
 
