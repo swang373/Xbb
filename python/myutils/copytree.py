@@ -185,7 +185,7 @@ def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config):
       print command
       subprocess.call([command], shell = True)
       #else: print 'Does not exist'
-      t = ROOT.TFileMerger()
+      t = ROOT.TFileMerger(ROOT.kFalse)
       t.OutputFile(pathOUT+'/'+newprefix+folderName+".root ", "CREATE")
       print 'outputFolder is', outputFolder 
       for file in os.listdir(outputFolder.replace('root://t3dcachedb03.psi.ch:1094','').replace('gsidcap://t3se01.psi.ch:22128/','').replace('dcap://t3se01.psi.ch:22125/','')):
