@@ -217,7 +217,7 @@ def submitsinglefile(job,repDict,file,run_locally):
     command = command + ' "' + str(file)+ '"'
     dump_config(configs,"%(logpath)s/%(timestamp)s_%(job)s_%(en)s_%(task)s.config" %(repDict))
     subprocess.call([command], shell=True)
-    sys.exit()
+    # sys.exit()
 
 def getfilelist(job):
     pathIN = config.get('Directories','PREPin')
