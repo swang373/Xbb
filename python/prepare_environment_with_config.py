@@ -27,7 +27,7 @@ namelist=opts.names.split(',')
 filelist=opts.filelist.split(';')
 print "namelist:",namelist
 # print "opts.filelist:",opts.filelist
-# print "filelist:",filelist
+print "len(filelist)",len(filelist),"filelist[0]:",filelist[0]
 
 pathIN = config.get('Directories','PREPin')
 pathOUT = config.get('Directories','PREPout')

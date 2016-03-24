@@ -88,7 +88,7 @@ def copytreePSI(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config,f
     print (pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut)
 
     filenames = open(pathIN+'/'+folderName+'.txt').readlines() if not filelist else filelist
-    print 'len(filenames)',len(filenames),filenames[2]
+    print 'len(filenames)',len(filenames),filenames[0]
     # sys.exit()
 
     ## search the folder containing the input files

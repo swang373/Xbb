@@ -208,14 +208,16 @@ def submitsinglefile(job,repDict,file,run_locally):
         repDict['name'] = '"%s"' %logo[nJob].strip()
     else:
         repDict['name'] = '%(job)s_%(en)s%(task)s' %repDict
-    if run_locally:
+    if run_locally == 'True':
         command = 'sh runAll.sh %(job)s %(en)s ' %(repDict) + opts.task + ' ' + repDict['nprocesses']+ ' ' + repDict['job_id'] + ' ' + ('0' if not repDict['additional'] else repDict['additional'])
     else:
-        command = 'qsub -V -cwd -q %(queue)s -l h_vmem=6G -N %(name)s -j y -o %(logpath)s/%(timestamp)s_%(job)s_%(en)s_%(task)s.out -pe smp %(nprocesses)s runAll.sh %(job)s %(en)s ' %(repDict) + opts.task + ' ' + repDict['nprocesses']+ ' ' + repDict['job_id'] + ' ' + repDict['additional']
-    command = command + ' "' + str(file)+ '"'
+        command = 'qsub -V -cwd -q %(queue)s -l h_vmem=6G -N %(name)s -j y -o %(logpath)s/%(timestamp)s_%(job)s_%(en)s_%(task)s.out -pe smp %(nprocesses)s runAll.sh %(job)s %(en)s ' %(repDict) + opts.task + ' ' + repDict['nprocesses']+ ' ' + repDict['job_id'] + ' ' + + ('0' if not repDict['additional'] else repDict['additional'])
     print "the command is ", command
+    print "submitting", len(file.split(';')),'files like',file.split(';')[0]
+    command = command + ' "' + str(file)+ '"'
     dump_config(configs,"%(logpath)s/%(timestamp)s_%(job)s_%(en)s_%(task)s.config" %(repDict))
     subprocess.call([command], shell=True)
+    sys.exit()
 
 def getfilelist(job):
     pathIN = config.get('Directories','PREPin')
@@ -298,7 +300,8 @@ elif opts.task == 'singleprep':
             files_split = [';'.join(sublist) for sublist in files_split]
             # print 'files_split',files_split
             # sys.exit()
-            run_locally = config.get("Configuration","run_locally")
+            run_locally = str(config.get("Configuration","run_locally"))
+            print 'run_locally',run_locally
             for files_sublist in files_split:
                 submitsinglefile(sample,repDict,files_sublist,run_locally)
 
