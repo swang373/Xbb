@@ -3,6 +3,7 @@ import os, pickle, sys, ROOT
 ROOT.gROOT.SetBatch(True)
 from optparse import OptionParser
 from myutils import BetterConfigParser, copytree, copytreePSI, ParseInfo
+from myutils.copytreePSI import mergetreePSI
 import utils
 
 print 'start prepare_environment_with_config.py'
@@ -54,8 +55,11 @@ for job in info:
         utils.TreeCopier(pathIN, pathOUT, job.identifier, job.prefix, job.addtreecut)
     else:
         if TreeCopierPSI:
-          samplefiles = config.get('Directories','samplefiles')
-          copytreePSI(samplefiles,pathOUT,prefix,job.prefix,job.identifier,'',job.addtreecut, config, filelist)
+            samplefiles = config.get('Directories','samplefiles')
+            if 'mergeall' in filelist[0]:
+                mergetreePSI(samplefiles,pathOUT,prefix,job.prefix,job.identifier,'',job.addtreecut, config)
+            else:
+                copytreePSI(samplefiles,pathOUT,prefix,job.prefix,job.identifier,'',job.addtreecut, config, filelist)
         else:
           # copytree function
           copytree(pathIN,pathOUT,prefix,job.prefix,job.identifier,'',job.addtreecut, config)

@@ -199,7 +199,7 @@ def submit(job,repDict):
     dump_config(configs,"%(logpath)s/%(timestamp)s_%(job)s_%(en)s_%(task)s.config" %(repDict))
     subprocess.call([command], shell=True)
 
-def submitsinglefile(job,repDict,file,run_locally):
+def submitsinglefile(job,repDict,file,run_locally,counter_local):
     global counter
     repDict['job'] = job
     nJob = counter % len(logo)
@@ -212,12 +212,31 @@ def submitsinglefile(job,repDict,file,run_locally):
         command = 'sh runAll.sh %(job)s %(en)s ' %(repDict) + opts.task + ' ' + repDict['nprocesses']+ ' ' + repDict['job_id'] + ' ' + ('0' if not repDict['additional'] else repDict['additional'])
     else:
         command = 'qsub -V -cwd -q %(queue)s -l h_vmem=6G -N %(name)s -j y -o %(logpath)s/%(timestamp)s_%(job)s_%(en)s_%(task)s.out -pe smp %(nprocesses)s runAll.sh %(job)s %(en)s ' %(repDict) + opts.task + ' ' + repDict['nprocesses']+ ' ' + repDict['job_id'] + ' ' + ('0' if not repDict['additional'] else repDict['additional'])
+        command = command.replace('.out','_'+str(counter_local)+'.out')
     print "the command is ", command
     print "submitting", len(file.split(';')),'files like',file.split(';')[0]
     command = command + ' "' + str(file)+ '"'
     dump_config(configs,"%(logpath)s/%(timestamp)s_%(job)s_%(en)s_%(task)s.config" %(repDict))
     subprocess.call([command], shell=True)
     # sys.exit()
+
+def mergesubmitsinglefile(job,repDict,run_locally):
+    global counter
+    repDict['job'] = job
+    nJob = counter % len(logo)
+    counter += 1
+    if opts.philipp_love_progress_bars:
+        repDict['name'] = '"%s"' %logo[nJob].strip()
+    else:
+        repDict['name'] = '%(job)s_%(en)s%(task)s' %repDict
+    if run_locally == 'True':
+        command = 'sh runAll.sh %(job)s %(en)s ' %(repDict) + opts.task + ' ' + repDict['nprocesses']+ ' ' + repDict['job_id'] + ' ' + ('0' if not repDict['additional'] else repDict['additional'])
+    else:
+        command = 'qsub -V -cwd -q %(queue)s -l h_vmem=6G -N %(name)s -j y -o %(logpath)s/%(timestamp)s_%(job)s_%(en)s_%(task)s.out -pe smp %(nprocesses)s runAll.sh %(job)s %(en)s ' %(repDict) + opts.task + ' ' + repDict['nprocesses']+ ' ' + repDict['job_id'] + ' ' + ('0' if not repDict['additional'] else repDict['additional'])
+    command = command + ' mergeall'
+    print "the command is ", command
+    dump_config(configs,"%(logpath)s/%(timestamp)s_%(job)s_%(en)s_%(task)s.config" %(repDict))
+    subprocess.call([command], shell=True)
 
 def getfilelist(job):
     pathIN = config.get('Directories','PREPin')
@@ -289,22 +308,47 @@ elif opts.task == 'singleprep':
         for job in info:
             sample_list.append(job.identifier)
         sample_list = set(sample_list)
-        for sample in sample_list:
-            files = getfilelist(sample)
-            # print 'sample',sample,'len(files)',len(files)
-            # print 'files:',files
-            files_per_job = int(config.get("Configuration","files_per_job"))
-            files_split=[files[x:x+files_per_job] for x in xrange(0, len(files), files_per_job)]
-            # files_split = [files[i::10] for i in range(100)]
-            # files_split = [value for value in files_split if value != "[]"]
-            files_split = [';'.join(sublist) for sublist in files_split]
-            # print 'files_split',files_split
-            # sys.exit()
-            run_locally = str(config.get("Configuration","run_locally"))
-            print 'run_locally',run_locally
-            for files_sublist in files_split:
-                submitsinglefile(sample,repDict,files_sublist,run_locally)
+    else:
+      sample_list = set(samplesList)
 
+    for sample in sample_list:
+        files = getfilelist(sample)
+        # print 'sample',sample,'len(files)',len(files)
+        # print 'files:',files
+        files_per_job = int(config.get("Configuration","files_per_job"))
+        # if 'TT_' in sample:
+          # files_per_job = 1
+          # print 'CHANGING THE NUMBER OF files_per_job to',files_per_job,'for sample',sample
+        # else: continue
+        files_split=[files[x:x+files_per_job] for x in xrange(0, len(files), files_per_job)]
+        # files_split = [files[i::10] for i in range(100)]
+        # files_split = [value for value in files_split if value != "[]"]
+        files_split = [';'.join(sublist) for sublist in files_split]
+        # print 'files_split',files_split
+        # sys.exit()
+        run_locally = str(config.get("Configuration","run_locally"))
+        print 'run_locally',run_locally
+        counter_local = 0
+        for files_sublist in files_split:
+            submitsinglefile(sample,repDict,files_sublist,run_locally,counter_local)
+            counter_local = counter_local + 1
+
+elif opts.task == 'mergesingleprep':
+    if ( opts.samples == ""):
+        path = config.get("Directories","PREPin")
+        samplesinfo = config.get("Directories","samplesinfo")
+        info = ParseInfo(samplesinfo,path)
+        sample_list = []
+        for job in info:
+            sample_list.append(job.identifier)
+        sample_list = set(sample_list)
+    else:
+      sample_list = set(samplesList)
+
+    run_locally = str(config.get("Configuration","run_locally"))
+    print 'run_locally',run_locally
+    for sample in sample_list:
+        mergesubmitsinglefile(sample,repDict,run_locally)
             
 elif opts.task == 'sys' or opts.task == 'syseval':
     path = config.get("Directories","SYSin")

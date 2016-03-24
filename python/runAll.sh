@@ -168,6 +168,10 @@ if [ $task = "singleprep" ]; then
     echo './prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.ini --filelist "${optional_filelist}"' #sometime I need this add: please check --config ${energy}
     ./prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.ini --filelist "${optional_filelist}" #sometime I need this add: please check --config ${energy}config/samples_nosplit.cfg
 fi
+if [ $task = "mergesingleprep" ]; then
+    echo './prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.ini --filelist "${optional_filelist}"' #sometime I need this add: please check --config ${energy}
+    ./prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.ini --filelist "${optional_filelist}" #sometime I need this add: please check --config ${energy}config/samples_nosplit.cfg
+fi
 if [ $task = "trainReg" ]; then
     # ./trainRegression.py --config ${energy}config/${configList}
     echo "./trainRegression.py --config ${energy}config/${configList} --config ${energy}config/regression.ini"
