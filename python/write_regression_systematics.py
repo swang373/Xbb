@@ -53,10 +53,12 @@ tmpDir = os.environ["TMPDIR"]
 print 'INput samples:\t%s'%pathIN
 print 'OUTput samples:\t%s'%pathOUT
 
-applyRegression=eval(config.get('Regression','applyBTagweights'))
+applyBTagweights = applyRegression=eval(config.get('Regression','applyBTagweights'))
+print 'applyBTagweights is', applyBTagweights
 csv_rwt_hf=config.get('BTagHFweights','file')
 csv_rwt_lf=config.get('BTagLFweights','file')
 applyRegression=eval(config.get('Regression','applyRegression'))
+print 'applyRegression is', applyRegression
 print "csv_rwt_hf",csv_rwt_hf,"csv_rwt_lf",csv_rwt_lf
 bweightcalc = BTagWeightCalculator(
     csv_rwt_hf,
@@ -84,6 +86,12 @@ def deltaPhi(phi1, phi2):
     result = phi1 - phi2
     while (result > math.pi): result -= 2*math.pi
     while (result <= -math.pi): result += 2*math.pi
+    return result
+
+def deltaR(phi1, eta1, phi2, eta2):
+    deta = eta1-eta2
+    dphi = deltaPhi(phi1, phi2)
+    result = math.sqrt(deta*deta + dphi*dphi)
     return result
 
 def addAdditionalJets(H, tree):
@@ -419,7 +427,18 @@ for job in info:
         newtree.Branch('bTagWeightcErr2Down_new',bTagWeightcErr2Down_new,'bTagWeightcErr2Down_new/F')
 
     #Add muon SF
-    if channel == "Znn":
+    if channel == "Zmm":
+        vLeptons_SFweight_IdLoose = array('f',[0])
+        vLeptons_SFweight_IsoLoose = array('f',[0])
+        vLeptons_SFweight_HLT = array('f',[0])
+
+        vLeptons_SFweight_IdLoose[0] = 1
+        vLeptons_SFweight_IsoLoose[0] = 1
+        vLeptons_SFweight_HLT[0] = 1
+
+        newtree.Branch('vLeptons_SFweight_IdLoose',vLeptons_SFweight_IdLoose,'vLeptons_SFweight_IdLoose/F')
+        newtree.Branch('vLeptons_SFweight_IsoLoose',vLeptons_SFweight_IsoLoose,'vLeptons_SFweight_IsoLoose/F')
+        newtree.Branch('vLeptons_SFweight_HLT',vLeptons_SFweight_HLT,'vLeptons_SFweight_HLT/F')
 
         #Old Muon SF
         #vLeptons_SF_HLT = array('f',2*[0])
@@ -697,7 +716,7 @@ for job in info:
 #########################
 
     for entry in range(0,nEntries):
-#            if entry>1000: break
+            if entry>10000: break
             if ((entry%j_out)==0):
                 if ((entry/j_out)==9 and j_out < 1e4): j_out*=10;
                 print strftime("%Y-%m-%d %H:%M:%S", gmtime()),' - processing event',str(entry)+'/'+str(nEntries), '(cout every',j_out,'events)'
@@ -722,12 +741,14 @@ for job in info:
             if lhe_weight_map and 'DY' in job.name:
                 match_bin = None
                 for bin in lhe_weight_map:
-                    if theBinForms[bin].EvalInstance() > 0.:
-                        match_bin = bin
-                if match_bin:
-                    lheWeight[0] = lhe_weight_map[match_bin]
-                else:
-                    lheWeight[0] = 1.
+                    if applyRegression:
+                        if theBinForms[bin].EvalInstance() > 0.:
+                            match_bin = bin
+                if applyRegression:
+                    if match_bin:
+                        lheWeight[0] = lhe_weight_map[match_bin]
+                    else:
+                        lheWeight[0] = 1.
 
             #Has fat higgs
             #fatHiggsFlag=fFatHFlag.EvalInstance()*fFatHnFilterJets.EvalInstance()
@@ -856,7 +877,7 @@ for job in info:
             #Loop to fill bTag weights variables
             ##########################
 
-            if writeNewVariables:
+            if applyBTagweights:
                 if not job.type == 'DATA':
                     jetsForBtagWeight = []
                     for i in range(tree.nJet):
@@ -893,46 +914,50 @@ for job in info:
                 ##########################
                 #Adding mu SFs
                 ##########################
-                if channel == "Znn":
+            if channel == "Zmm":
 
-                    #Old muon SF
-                #jsons = {
-                #    'json/SingleMuonTrigger_Z_RunCD_Reco74X_Dec1.json' : 'runD_IsoMu20_OR_IsoTkMu20_HLTv4p3_PtEtaBins',
-                #    'json/MuonIso_Z_RunCD_Reco74X_Dec1.json' : 'NUM_LooseRelIso_DEN_LooseID_PAR_pt_spliteta_bin1',
-                #    'json/MuonID_Z_RunCD_Reco74X_Dec1.json' : 'NUM_LooseID_DEN_genTracks_PAR_pt_spliteta_bin1',
-                #    'json/SingleMuonTrigger_Z_RunCD_Reco74X_Dec1_MC.json' : 'runD_IsoMu20_OR_IsoTkMu20_HLTv4p3_PtEtaBins'
-                #    }
+                pTcut = 22;
+                vLeptons_SFweight_IdLoose = tree.vLeptons_SF_IdCutLoose[0]*tree.vLeptons_SF_IdCutLoose[1]
+                vLeptons_SFweight_IsoLoose = tree.vLeptons_SF_IsoLoose[0]*tree.vLeptons_SF_IsoLoose[1]
 
-                #for j, name in jsons.iteritems():
-                #    weight = []
-                #    muonCorr = MuonSF(j, name)
-                #    weight.append(muonCorr.get_2D( tree.vLeptons_pt[0], tree.vLeptons_eta[0]))
-                #    weight.append(muonCorr.get_2D( tree.vLeptons_pt[1], tree.vLeptons_eta[1]))
-                #    if j.find('Trigger') != -1 and not j.find('_MC') != -1:
-                #       # Eff l1 x Eff l2
-                #        vLeptons_SF_HLT[0] = weight[0][0]
-                #        vLeptons_SF_HLT[1] = weight[1][0]
-                #        vLeptons_SFerr_HLT[0] = weight[0][1]
-                #        vLeptons_SFerr_HLT[1] = weight[1][1]
-                #    elif j.find('Trigger') != -1 and j.find('_MC') != -1:
-                #       # Eff l1 x Eff l2
-                #        vLeptons_Eff_HLT[0] = weight[0][0]
-                #        vLeptons_Eff_HLT[1] = weight[1][0]
-                #        vLeptons_Efferr_HLT[0] = weight[0][1]
-                #        vLeptons_Efferr_HLT[1] = weight[1][1]
-                #    elif j.find('MuonID') != -1:
-                #        vLeptons_SF_IdLoose[0] = weight[0][0]
-                #        vLeptons_SF_IdLoose[1] = weight[1][0]
-                #        vLeptons_SFerr_IdLoose[0] = weight[0][1]
-                #        vLeptons_SFerr_IdLoose[1] = weight[1][1]
-                #    elif j.find('MuonIso') != -1:
-                #        vLeptons_SF_IsoLoose[0] = weight[0][0]
-                #        vLeptons_SF_IsoLoose[1] = weight[1][0]
-                #        vLeptons_SFerr_IsoLoose[0] = weight[0][1]
-                #        vLeptons_SFerr_IsoLoose[1] = weight[1][1]
-                #    else:
-                #        sys.exit('@ERROR: SF list doesn\'t match json files. Abort')
-            
+                DR = [999, 999]
+                #dr_list = []
+
+                #dR matching
+                for k in range(0,2):
+                    for l in range(0,len(tree.trgObjects_hltIsoMu18_eta)):
+                        dr_ = deltaR(tree.vLeptons_eta[k], tree.vLeptons_phi[k], tree.trgObjects_hltIsoMu18_eta[l], tree.trgObjects_hltIsoMu18_phi[l])
+                        #dr_list.append(dr_)
+                        #print 'k is', k
+                        #print 'dr_ is ', dr_
+                        if dr_ < DR[k] and tree.vLeptons_pt[k] > 22:
+                        #if  tree.vLeptons_pt[k] > 22:
+                            DR[k] = dr_
+
+                Mu1pass = DR[0] < 0.5
+                Mu2pass = DR[1] < 0.5
+
+                SF1 = tree.vLeptons_SF_HLT_RunD4p2[0]
+                SF2 = tree.vLeptons_SF_HLT_RunD4p2[1]
+                eff1 = tree.vLeptons_Eff_HLT_RunD4p2[0]
+                eff2 = tree.vLeptons_Eff_HLT_RunD4p2[1]
+
+                if not Mu1pass and not Mu2pass:
+                    #print 'No match was found !'
+                    #print 'dr_list is', dr_list
+                    #print 'DR 1 is', DR[0]
+                    #print 'DR 2 is', DR[1]
+                    #print 'pt 1 is', tree.vLeptons_pt[0]
+                    #print 'pt 2 is', tree.vLeptons_pt[1]
+                    vLeptons_SFweight_HLT[0] = 0
+                elif not Mu1pass and Mu2pass:
+                    vLeptons_SFweight_HLT[0] = SF2
+                elif Mu1pass and  not Mu2pass:
+                    effdata = 1 - (1-SF1*eff1)*(1-SF2*eff2);
+                    effmc = 1 - (1-eff1)*(1-eff2);
+                    vLeptons_SFweight_HLT[0] = effdata/effmc
+                #print 'vLeptons_SFweight_HLT[0] is', vLeptons_SFweight_HLT[0]
+
             if applyRegression:
                 HNoReg.HiggsFlag = 1
                 HNoReg.mass = (hJ0+hJ1).M()
