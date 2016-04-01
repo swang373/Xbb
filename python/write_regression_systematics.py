@@ -89,7 +89,8 @@ def addAdditionalJets(H, tree):
         idx = tree.hjidxaddJetsdR08[i]
         if (idx == tree.hJCidx[0]) or (idx == tree.hJCidx[1]): continue
         addjet = ROOT.TLorentzVector()
-        addjet.SetPtEtaPhiM(tree.Jet_pt[idx],tree.Jet_eta[idx],tree.Jet_phi[idx],tree.Jet_mass[idx])
+        if idx<tree.nJet:
+		addjet.SetPtEtaPhiM(tree.Jet_pt[idx],tree.Jet_eta[idx],tree.Jet_phi[idx],tree.Jet_mass[idx])
         H = H + addjet
     return H
 
@@ -349,6 +350,8 @@ for job in info:
 
     TFlag=ROOT.TTreeFormula("EventForTraining","evt%2",tree)
 
+    #Add bTag weights
+
     bTagWeight_new = array('f',[0])
     bTagWeightJESUp_new = array('f',[0])
     bTagWeightJESDown_new = array('f',[0])
@@ -382,9 +385,6 @@ for job in info:
     vLeptons_SFerr_IsoLoose = array('f',2*[0])
     vLeptons_Eff_HLT = array('f',2*[0])
     vLeptons_Efferr_HLT = array('f',2*[0])
-
-
-
 
     bTagWeight_new[0] = 1
     bTagWeightJESUp_new[0] = 1
@@ -688,6 +688,7 @@ for job in info:
 #########################
 
     for entry in range(0,nEntries):
+#            if entry>1000: break
             if ((entry%j_out)==0):
                 if ((entry/j_out)==9 and j_out < 1e4): j_out*=10;
                 print strftime("%Y-%m-%d %H:%M:%S", gmtime()),' - processing event',str(entry)+'/'+str(nEntries), '(cout every',j_out,'events)'
@@ -700,6 +701,8 @@ for job in info:
                 newVariableFormulas[variableName].GetNdata()
                 newVariables[variableName][0] = newVariableFormulas[variableName].EvalInstance()
 
+            if tree.nhJCidx<2: continue
+            # if len(tree.hJCidx) == 0: continue
             if tree.nJet<=tree.hJCidx[0] or tree.nJet<=tree.hJCidx[1]:
                 print('tree.nJet<=tree.hJCidx[0] or tree.nJet<=tree.hJCidx[1]',tree.nJet,tree.hJCidx[0],tree.hJCidx[1])
                 print('skip event')
@@ -839,10 +842,13 @@ for job in info:
                     vLeptons_overMC[i]   = isInside(NewOverQCD ,tree.vLeptons_eta[i],tree.vLeptons_phi[i])
                     vLeptons_bad[i]      = vLeptons_under[i] or vLeptons_over[i] or vLeptons_underMC[i] or vLeptons_overMC[i]
 
+            ##########################
+            #Loop to fill bTag weights variables
+            ##########################
+
             if not job.type == 'DATA':
                 jetsForBtagWeight = []
                 for i in range(tree.nJet):
-#                    if tree.Jet_mcFlavour[i]==0: print "tree.Jet_mcFlavour[i]=",tree.Jet_mcFlavour[i]
                     jetsForBtagWeight.append(Jet(tree.Jet_pt[i], tree.Jet_eta[i], tree.Jet_hadronFlavour[i], tree.Jet_btagCSV[i], bweightcalc.btag))
 
                 bTagWeight_new[0] = bweightcalc.calcEventWeight(
@@ -1087,12 +1093,12 @@ for job in info:
                 eta = float(tree.Jet_eta[tree.hJCidx[i]])
                 csv = float(tree.Jet_btagCSV[tree.hJCidx[i]])
                 ##FIXME## we have to add the CSV reshaping
-                hJet_btagCSVOld[i] = tree.Jet_btagCSV[tree.hJCidx[i]]*tree.Jet_bTagWeight[tree.hJCidx[i]]
-                hJet_btagCSV[i] = tree.Jet_btagCSV[tree.hJCidx[i]]*tree.Jet_bTagWeight[tree.hJCidx[i]]
-                hJet_btagCSVDown[i] = tree.Jet_btagCSV[tree.hJCidx[i]]*tree.Jet_bTagWeightLFDown[tree.hJCidx[i]]
-                hJet_btagCSVUp[i] = tree.Jet_btagCSV[tree.hJCidx[i]]*tree.Jet_bTagWeightHFUp[tree.hJCidx[i]]
-                hJet_btagCSVFDown[i] = tree.Jet_btagCSV[tree.hJCidx[i]]*tree.Jet_bTagWeightLFDown[tree.hJCidx[i]]
-                hJet_btagCSVFUp[i] = tree.Jet_btagCSV[tree.hJCidx[i]]*tree.Jet_bTagWeightLFUp[tree.hJCidx[i]]
+                hJet_btagCSVOld[i] = tree.Jet_btagCSV[tree.hJCidx[i]]
+                hJet_btagCSV[i] = tree.Jet_btagCSV[tree.hJCidx[i]]
+                hJet_btagCSVDown[i] = tree.Jet_btagCSV[tree.hJCidx[i]]
+                hJet_btagCSVUp[i] = tree.Jet_btagCSV[tree.hJCidx[i]]
+                hJet_btagCSVFDown[i] = tree.Jet_btagCSV[tree.hJCidx[i]]
+                hJet_btagCSVFUp[i] = tree.Jet_btagCSV[tree.hJCidx[i]]
 
 
 ############################################

@@ -24,6 +24,9 @@ energy=$2           # sqrt(s) you want to run
 task=$3             # the task 
 job_id=$4           # needed for train optimisation. @TO FIX: it does not have a unique meaning
 additional_arg=$5   # needed for train optimisation. @TO FIX: it does not have a unique meaning
+optional_filelist=$6 # needed to run the prep step with limited number of files per job
+
+# echo '1:'${1}' 2:'${2}' 3:'${3}' 4:'${4}' 5:'${5}' 6:'${6}
 echo 
 echo 'Reading ./'${energy}'config'
 echo 'task'$task
@@ -91,7 +94,6 @@ fi
 #-------------------------------------------------
 #Set the environment for the batch job execution
 #-------------------------------------------------
-
 if [[ $whereToLaunch != "lxplus" ]]; then
   cd $CMSSW_BASE/src/
   if [[ $whereToLaunch == "pisa" ]]; then
@@ -161,6 +163,14 @@ if [ $task = "prep" ]; then
 #    print "./prepare_environment_with_config.py --samples" $sample "--config "${energy}"config/"${configList}" --config "${energy}"config/samples_nosplit.cfg #sometime"
     echo "./prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.ini" #sometime I need this add: please check --config ${energy}
     ./prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.ini #sometime I need this add: please check --config ${energy}config/samples_nosplit.cfg
+fi
+if [ $task = "singleprep" ]; then
+    echo './prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.ini --filelist "${optional_filelist}"' #sometime I need this add: please check --config ${energy}
+    ./prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.ini --filelist "${optional_filelist}" #sometime I need this add: please check --config ${energy}config/samples_nosplit.cfg
+fi
+if [ $task = "mergesingleprep" ]; then
+    echo './prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.ini --filelist "${optional_filelist}"' #sometime I need this add: please check --config ${energy}
+    ./prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.ini --filelist "${optional_filelist}" #sometime I need this add: please check --config ${energy}config/samples_nosplit.cfg
 fi
 if [ $task = "trainReg" ]; then
     # ./trainRegression.py --config ${energy}config/${configList}
