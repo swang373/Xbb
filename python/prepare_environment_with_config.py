@@ -38,7 +38,8 @@ sampleconf.read(samplesinfo)
 
 whereToLaunch = config.get('Configuration','whereToLaunch')
 TreeCopierPSI = config.get('Configuration','TreeCopierPSI')
-
+if TreeCopierPSI=="False":
+    TreeCopierPSI = False
 prefix=sampleconf.get('General','prefix')
 
 info = ParseInfo(samplesinfo,pathIN)

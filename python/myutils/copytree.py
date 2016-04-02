@@ -128,7 +128,8 @@ def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config):
         filename = filename.split('_')[0]+'_'+subfolder+'_'+filename.split('_')[1]
         if filename in filenames: continue
         filenames.append(filename)
-        outputFile = "%s/%s/%s" %(pathOUT,folderName,filename.replace('.root','')+'_'+id_generator()+'.root')
+#        outputFile = "%s/%s/%s" %(pathOUT,folderName,filename.replace('.root','')+'_'+id_generator()+'.root')
+        outputFile = "%s/%s/%s" %(pathOUT,folderName,filename.replace('.root','')+'.root')
         # print 'inputFile',inputFile,'outputFile',outputFile
         if('PSI' in whereToLaunch):
           del_protocol = outputFile
