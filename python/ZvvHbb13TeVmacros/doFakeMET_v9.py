@@ -418,7 +418,7 @@ def doFile(fileName="tree_100_QCDHT700.root",outName="newTree.root",function=Non
         print "Fitting function in: ",chainN
 #        chain.Draw(" (Jet_pt-GenJet_wNuPt[Jet_mcIdx])  >> histo(1000,%d,%d)"%(-range_,range_),"Jet_mcIdx>=0 && MaxIf$((abs(Jet_pt-GenJet_wNuPt[Jet_mcIdx])),Jet_mcIdx>=0)==abs(Jet_pt-GenJet_wNuPt[Jet_mcIdx]) && (met_pt > %d) "%precut,"NORM")
 #        chain.Draw(" log(Jet_pt/GenJet_wNuPt[Jet_mcIdx])  >> histo(1000,%d,%d)"%(-range_,range_),"abs(Jet_eta)<2.6 && GenJet_wNuPt[Jet_mcIdx]>20 && Jet_id>=3 && Jet_puId==1 && (met_pt > %d) && Jet_mcIdx>=0 && abs(Jet_eta)<2.6 && Jet_pt>20 && Jet_id>=3 && Jet_puId==1 && abs(Jet_eta[1])<2.6 && Jet_id[1]>=3 && Jet_puId[1]==1 && Jet_id[hJCidx[0]]>=3 && Jet_puId[hJCidx[0]]==1 && Jet_id[hJCidx[1]]>=3  && Jet_puId[hJCidx[1]]==1 && (MaxIf$((abs(Jet_pt-GenJet_wNuPt[Jet_mcIdx])),Jet_mcIdx>=0)==abs(Jet_pt-GenJet_wNuPt[Jet_mcIdx]))"%cut,"NORM")
-        chain.Draw(" (Jet_pt-GenJet_wNuPt[Jet_mcIdx])  >> histo(1000,%d,%d)"%(-range_,range_),"(met_pt > %d) && (mhtJet30 > %d) && (met_pt < %d) && (mhtJet30 < %d) && nhJCidx>=2 && Jet_btagCSV[hJCidx[1]]>0.460 && abs(Jet_eta[hJCidx[0]])<2.4 && abs(Jet_eta[hJCidx[1]])<2.4 && abs(Jet_eta[0])<2.4 && Jet_pt[hJCidx[0]]>20 && Jet_pt[hJCidx[1]]>20 && Jet_pt[0]>20  && Jet_id[hJCidx[1]]>=4 && Jet_id[hJCidx[0]]>=4 && Jet_id[0]>=4 && Jet_puId[hJCidx[1]]>=1 && Jet_puId[hJCidx[0]]>=1 && Jet_puId[0]>=1 && (HLT_BIT_HLT_PFMET90_PFMHT90_IDTight_v||HLT_BIT_HLT_PFMET170_NoiseCleaned_v) && json && Flag_HBHENoiseIsoFilter && Flag_HBHENoiseFilter && Flag_CSCTightHalo2015Filter && Flag_EcalDeadCellTriggerPrimitiveFilter && Flag_goodVertices && Flag_eeBadScFilter && (1) && (MaxIf$((abs(Jet_pt-GenJet_wNuPt[Jet_mcIdx])),Jet_mcIdx>=0)==abs(Jet_pt-GenJet_wNuPt[Jet_mcIdx]))"%(precut,precut,cut,cut),"NORM")
+        chain.Draw(" (Jet_pt-GenJet_wNuPt[Jet_mcIdx])  >> histo(1000,%d,%d)"%(-range_,range_),"(met_pt > %d) && (mhtJet30 > %d) && nhJCidx>=2 && Jet_btagCSV[hJCidx[1]]>0.460 && abs(Jet_eta[hJCidx[0]])<2.4 && abs(Jet_eta[hJCidx[1]])<2.4 && abs(Jet_eta[0])<2.4 && Jet_pt[hJCidx[0]]>20 && Jet_pt[hJCidx[1]]>20 && Jet_pt[0]>20  && Jet_id[hJCidx[1]]>=4 && Jet_id[hJCidx[0]]>=4 && Jet_id[0]>=4 && Jet_puId[hJCidx[1]]>=1 && Jet_puId[hJCidx[0]]>=1 && Jet_puId[0]>=1 && (HLT_BIT_HLT_PFMET90_PFMHT90_IDTight_v||HLT_BIT_HLT_PFMET170_NoiseCleaned_v) && json && Flag_HBHENoiseIsoFilter && Flag_HBHENoiseFilter && Flag_CSCTightHalo2015Filter && Flag_EcalDeadCellTriggerPrimitiveFilter && Flag_goodVertices && Flag_eeBadScFilter && (1) && (MaxIf$((abs(Jet_pt-GenJet_wNuPt[Jet_mcIdx])),Jet_mcIdx>=0)==abs(Jet_pt-GenJet_wNuPt[Jet_mcIdx]))"%(cut,cut),"NORM")
 #        chain.Draw(" (Jet_pt-GenJet_wNuPt[Jet_mcIdx])  >> histo(1000,%d,%d)"%(-range_,range_),"(met_pt > %d) && (mhtJet30 > %d) && nhJCidx>=2 && Jet_btagCSV[hJCidx[1]]>0.460 && abs(Jet_eta[hJCidx[0]])<2.4 && abs(Jet_eta[hJCidx[1]])<2.4 && abs(Jet_eta[0])<2.4 && Jet_pt[hJCidx[0]]>20 && Jet_pt[hJCidx[1]]>20 && Jet_pt[0]>20  && Jet_id[hJCidx[1]]>=4 && Jet_id[hJCidx[0]]>=4 && Jet_id[0]>=4 && Jet_puId[hJCidx[1]]>=1 && Jet_puId[hJCidx[0]]>=1 && Jet_puId[0]>=1 && (HLT_BIT_HLT_PFMET90_PFMHT90_IDTight_v||HLT_BIT_HLT_PFMET170_NoiseCleaned_v) && json && Flag_HBHENoiseIsoFilter && Flag_HBHENoiseFilter && Flag_CSCTightHalo2015Filter && Flag_EcalDeadCellTriggerPrimitiveFilter && Flag_goodVertices && Flag_eeBadScFilter && (1) && (MaxIf$((abs(Jet_pt-GenJet_wNuPt[Jet_mcIdx])),Jet_mcIdx>=0)==abs(Jet_pt-GenJet_wNuPt[Jet_mcIdx]))"%(precut,precut),"NORM")
 #        && HCSV_reg_pt>90 && nhJCidx>=2 && Jet_btagCSV[hJCidx[1]]>0.460 && abs(Jet_eta[hJCidx[0]])<2.6 && abs(Jet_eta[hJCidx[1]])<2.6 && Jet_pt[hJCidx[0]]>20 && Jet_pt[hJCidx[1]]>20 && Jet_id[hJCidx[1]]>=3 && Jet_puId[hJCidx[1]]==1 && Jet_id[hJCidx[0]]>=3 && Jet_puId[hJCidx[0]]==1 && abs(Jet_eta[0])<2.6 && Jet_id[0]>=3 && Jet_puId[0]==1 && HLT_BIT_HLT_PFMET90_PFMHT90_IDTight_v && json && Flag_hbheFilterNew  &&Flag_hbheIsoFilter &&Flag_CSCTightHaloFilter &&Flag_eeBadScFilter && Flag_goodVertices && abs(TVector2::Phi_mpi_pi(HCSV_phi-met_phi))>1.57
 #        chain.Draw(" (Jet_pt-GenJet_wNuPt[Jet_mcIdx])  >> histo(1000,%d,%d)"%(-range_,range_),"(met_pt > %d) Jet_mcIdx>=0 && MaxIf$((abs(Jet_pt-GenJet_wNuPt[Jet_mcIdx])),Jet_mcIdx>=0)==abs(Jet_pt-GenJet_wNuPt[Jet_mcIdx]) &&  && (HCSV_pt>50 && Jet_btagCSV[hJCidx[1]]>0.4 && HCSV_mass<500 && HCSV_mass>0 && abs(TVector2::Phi_mpi_pi(HCSV_phi-met_phi))>0.7 && abs(Jet_eta)<2.6 && Jet_pt>20 && Jet_id>=3 && Jet_puId==1 && abs(Jet_eta[1])<2.6 && Jet_id[1]>=3 && Jet_puId[1]==1 && Jet_id[hJCidx[0]]>=3 && Jet_puId[hJCidx[0]]==1 && Jet_id[hJCidx[1]]>=3  && Jet_puId[hJCidx[1]]==1)"%precut,"NORM")
@@ -429,7 +429,7 @@ def doFile(fileName="tree_100_QCDHT700.root",outName="newTree.root",function=Non
         c1.SaveAs(outName.replace(".root","_fit.png"))
         c1.SaveAs(outName.replace(".root","_fit.C"))
 
-        chain.Draw(" lheHT >> lheHighMET(40)","(met_pt > %d) && (mhtJet30 > %d) && nhJCidx>=2 && Jet_btagCSV[hJCidx[1]]>0.460 && abs(Jet_eta[hJCidx[0]])<2.4 && abs(Jet_eta[hJCidx[1]])<2.4 && abs(Jet_eta[0])<2.4 && Jet_pt[hJCidx[0]]>20 && Jet_pt[hJCidx[1]]>20 && Jet_pt[0]>20  && Jet_id[hJCidx[1]]>=4 && Jet_id[hJCidx[0]]>=4 && Jet_id[0]>=4 && Jet_puId[hJCidx[1]]>=1 && Jet_puId[hJCidx[0]]>=1 && Jet_puId[0]>=1 && (HLT_BIT_HLT_PFMET90_PFMHT90_IDTight_v||HLT_BIT_HLT_PFMET170_NoiseCleaned_v) && json && Flag_HBHENoiseIsoFilter && Flag_HBHENoiseFilter && Flag_CSCTightHalo2015Filter && Flag_EcalDeadCellTriggerPrimitiveFilter && Flag_goodVertices && Flag_eeBadScFilter && (1) && (MaxIf$((abs(Jet_pt-GenJet_wNuPt[Jet_mcIdx])),Jet_mcIdx>=0)==abs(Jet_pt-GenJet_wNuPt[Jet_mcIdx]))"%(precut,precut),"NORM")
+        chain.Draw(" lheHT >> lheHighMET(40)","(met_pt > %d) && (mhtJet30 > %d) && nhJCidx>=2 && Jet_btagCSV[hJCidx[1]]>0.460 && abs(Jet_eta[hJCidx[0]])<2.4 && abs(Jet_eta[hJCidx[1]])<2.4 && abs(Jet_eta[0])<2.4 && Jet_pt[hJCidx[0]]>20 && Jet_pt[hJCidx[1]]>20 && Jet_pt[0]>20  && Jet_id[hJCidx[1]]>=4 && Jet_id[hJCidx[0]]>=4 && Jet_id[0]>=4 && Jet_puId[hJCidx[1]]>=1 && Jet_puId[hJCidx[0]]>=1 && Jet_puId[0]>=1 && (HLT_BIT_HLT_PFMET90_PFMHT90_IDTight_v||HLT_BIT_HLT_PFMET170_NoiseCleaned_v) && json && Flag_HBHENoiseIsoFilter && Flag_HBHENoiseFilter && Flag_CSCTightHalo2015Filter && Flag_EcalDeadCellTriggerPrimitiveFilter && Flag_goodVertices && Flag_eeBadScFilter && (1) && (MaxIf$((abs(Jet_pt-GenJet_wNuPt[Jet_mcIdx])),Jet_mcIdx>=0)==abs(Jet_pt-GenJet_wNuPt[Jet_mcIdx]))"%(cut,cut),"NORM")
         lheHighMET = gDirectory.Get("lheHighMET")
         xmin = lheHighMET.GetXaxis().GetXmin()+2*lheHighMET.GetXaxis().GetBinWidth(3)
         xmax = lheHighMET.GetXaxis().GetXmax()-2*lheHighMET.GetXaxis().GetBinWidth(3)
@@ -733,13 +733,13 @@ if __name__ == "__main__":
     outName="FakeHT500.root"
     maxEvents = 2000
 
-#    gROOT.ProcessLine(".x "+outName.replace(".root","_fit.C"))
-#    function = gPad.GetPrimitive("histo")
-#    function = copy.copy(function)
-#    gROOT.ProcessLine(".x "+outName.replace(".root","_fit4.C"))
-#    gROOT.SetBatch(0)
-#    expoRatio = gPad.GetPrimitive("expoRatio")
-#    expoRatio = copy.copy(expoRatio)
+    gROOT.ProcessLine(".x "+outName.replace(".root","_fit.C"))
+    function = gPad.GetPrimitive("histo")
+    function = copy.copy(function)
+    gROOT.ProcessLine(".x "+outName.replace(".root","_fit4.C"))
+    gROOT.SetBatch(0)
+    expoRatio = gPad.GetPrimitive("expoRatio")
+    expoRatio = copy.copy(expoRatio)
 
     doFile(fileName,outName,function,expoRatio)
 
