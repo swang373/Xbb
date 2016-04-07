@@ -102,6 +102,15 @@ Datacardbin=config.get('dc:%s'%var,'dcBin')
 anType = config.get('dc:%s'%var,'type')
 setup=eval(config.get('LimitGeneral','setup'))
 
+import os
+if os.path.exists("../interface/DrawFunctions_C.so"):
+    print 'ROOT.gROOT.LoadMacro("../interface/DrawFunctions_C.so")'
+    ROOT.gROOT.LoadMacro("../interface/DrawFunctions_C.so")
+
+if os.path.exists("../interface/VHbbNameSpace_h.so"):
+    print 'ROOT.gROOT.LoadMacro("../interface/VHbbNameSpace_h.so")'
+    ROOT.gROOT.LoadMacro("../interface/VHbbNameSpace_h.so")
+
 print "Using",('dc:%s'%var,'var')
 print name
 print title
@@ -305,6 +314,7 @@ for syst in systematics:
         if bdt == True:
             #ff[1]='%s_%s'%(sys,Q.lower())
             _treevar = treevar.replace('.nominal','.%s_%s'%(syst,Q.lower()))
+            _treevar = treevar.replace('.Nominal','.%s_%s'%(syst,Q.lower()))
             print _treevar
         elif mjj == True:
             if syst == 'JER' or syst == 'JES':
