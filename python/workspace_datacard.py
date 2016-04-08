@@ -612,14 +612,14 @@ if not ignore_stats:
                 for j in range(hist.GetNbinsX()+1):
                     if Q == 'Up':
                         if rescaleSqrtN and total:
-                            final_histos['%s_%s'%(systematicsnaming['stats'],Q)][job].SetBinContent(j,max(0,hist.GetBinContent(j)+hist.GetBinError(j)/total*errorsum))
+                            final_histos['%s_%s'%(systematicsnaming['stats'],Q)][job].SetBinContent(j,max(1.E-6,hist.GetBinContent(j)+hist.GetBinError(j)/total*errorsum))
                         else:
-                            final_histos['%s_%s'%(systematicsnaming['stats'],Q)][job].SetBinContent(j,max(0,hist.GetBinContent(j)+hist.GetBinError(j)))
+                            final_histos['%s_%s'%(systematicsnaming['stats'],Q)][job].SetBinContent(j,max(1.E-6,hist.GetBinContent(j)+hist.GetBinError(j)))
                     if Q == 'Down':
                         if rescaleSqrtN and total:
-                            final_histos['%s_%s'%(systematicsnaming['stats'],Q)][job].SetBinContent(j,max(0,hist.GetBinContent(j)-hist.GetBinError(j)/total*errorsum))
+                            final_histos['%s_%s'%(systematicsnaming['stats'],Q)][job].SetBinContent(j,max(1.E-6,hist.GetBinContent(j)-hist.GetBinError(j)/total*errorsum))
                         else:
-                            final_histos['%s_%s'%(systematicsnaming['stats'],Q)][job].SetBinContent(j,max(0,hist.GetBinContent(j)-hist.GetBinError(j)))
+                            final_histos['%s_%s'%(systematicsnaming['stats'],Q)][job].SetBinContent(j,max(1.E-6,hist.GetBinContent(j)-hist.GetBinError(j)))
     else:
         print "Running Statistical uncertainty"
         threshold =  0.5 #stat error / sqrt(value). It was 0.5
@@ -641,7 +641,7 @@ if not ignore_stats:
                 for Q in UD:
                     final_histos['%s_bin%s_%s'%(systematicsnaming['stats'],bin,Q)][job] = hist.Clone()
                     if Q == 'Up':
-                        final_histos['%s_bin%s_%s'%(systematicsnaming['stats'],bin,Q)][job].SetBinContent(bin,max(0,hist.GetBinContent(bin)+hist.GetBinError(bin)))
+                        final_histos['%s_bin%s_%s'%(systematicsnaming['stats'],bin,Q)][job].SetBinContent(bin,max(1.E-6,hist.GetBinContent(bin)+hist.GetBinError(bin)))
                     if Q == 'Down':
                         final_histos['%s_bin%s_%s'%(systematicsnaming['stats'],bin,Q)][job].SetBinContent(bin,max(1.E-6,hist.GetBinContent(bin)-hist.GetBinError(bin)))
 
