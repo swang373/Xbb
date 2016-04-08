@@ -100,8 +100,16 @@ if(debugPrintOUts): print configs
 config = BetterConfigParser()
 config.read(configs)
 
+logPath = config.get("Directories","logpath")
+logo = open('%s/data/submit.txt' %config.get('Directories','vhbbpath')).readlines()
+counter = 0
+samplesinfo = config.get("Directories","samplesinfo")
+whereToLaunch = config.get('Configuration','whereToLaunch')
+run_locally = str(config.get("Configuration","run_locally"))
+print 'whereToLaunch',whereToLaunch,'run_locally',run_locally
+
 # CREATE DIRECTORIES FOR PSI
-if 'PSI' in config.get('Configuration','whereToLaunch'):
+if 'PSI' in whereToLaunch:
   print 'Create the ouput folders PREPout, SYSout, MVAout if not existing'
   mkdir_list = [
                 config.get('Directories','PREPout').replace('root://t3dcachedb03.psi.ch:1094/',''),
@@ -173,10 +181,6 @@ print '===============================\n'
 compile_macro(config,'BTagReshaping')
 compile_macro(config,'VHbbNameSpace')
 
-logPath = config.get("Directories","logpath")
-logo = open('%s/data/submit.txt' %config.get('Directories','vhbbpath')).readlines()
-counter = 0
-
 #check if the logPath exist. If not exit
 if( not os.path.isdir(logPath) ):
     print '@ERROR : ' + logPath + ': dir not found.'
@@ -241,9 +245,7 @@ def mergesubmitsinglefile(job,repDict,run_locally):
 def getfilelist(job):
     pathIN = config.get('Directories','PREPin')
     pathOUT = config.get('Directories','PREPout')
-    samplesinfo=config.get('Directories','samplesinfo')
 
-    whereToLaunch = config.get('Configuration','whereToLaunch')
     TreeCopierPSI = config.get('Configuration','TreeCopierPSI')
 
     samplefiles = config.get('Directories','samplefiles')
@@ -267,7 +269,6 @@ if opts.task == 'plot':
 
 if not opts.task == 'prep':
     path = config.get("Directories","samplepath")
-    samplesinfo = config.get("Directories","samplesinfo")
     info = ParseInfo(samplesinfo,path)
 
 if opts.task == 'plot': 
@@ -291,7 +292,6 @@ elif opts.task == 'dc':
 elif opts.task == 'prep':
     if ( opts.samples == ""):
         path = config.get("Directories","PREPin")
-        samplesinfo = config.get("Directories","samplesinfo")
         info = ParseInfo(samplesinfo,path)
         for job in info:
             submit(job.name,repDict)
@@ -299,60 +299,36 @@ elif opts.task == 'prep':
         for sample in samplesList:
             submit(sample,repDict)
 
-elif opts.task == 'singleprep':
+elif opts.task == 'singleprep' or opts.task == 'singlesys' or opts.task == 'mergesingleprep' or opts.task == 'mergesinglesys':
     if ( opts.samples == ""):
-        path = config.get("Directories","PREPin")
-        samplesinfo = config.get("Directories","samplesinfo")
+        if opts.task == 'singleprep' or opts.task == 'mergesingleprep':
+            path = config.get("Directories","PREPin")
+        elif opts.task == 'singlesys' or opts.task == 'mergesinglesys':
+            path = config.get("Directories","SYSin")
         info = ParseInfo(samplesinfo,path)
         sample_list = []
         for job in info:
             sample_list.append(job.identifier)
         sample_list = set(sample_list)
     else:
-      sample_list = set(samplesList)
+        sample_list = set(samplesList)
 
-    for sample in sample_list:
-        files = getfilelist(sample)
-        # print 'sample',sample,'len(files)',len(files)
-        # print 'files:',files
-        files_per_job = int(config.get("Configuration","files_per_job"))
-        # if 'TT_' in sample:
-          # files_per_job = 1
-          # print 'CHANGING THE NUMBER OF files_per_job to',files_per_job,'for sample',sample
-        # else: continue
-        files_split=[files[x:x+files_per_job] for x in xrange(0, len(files), files_per_job)]
-        # files_split = [files[i::10] for i in range(100)]
-        # files_split = [value for value in files_split if value != "[]"]
-        files_split = [';'.join(sublist) for sublist in files_split]
-        # print 'files_split',files_split
-        # sys.exit()
-        run_locally = str(config.get("Configuration","run_locally"))
-        print 'run_locally',run_locally
-        counter_local = 0
-        for files_sublist in files_split:
-            submitsinglefile(sample,repDict,files_sublist,run_locally,counter_local)
-            counter_local = counter_local + 1
-
-elif opts.task == 'mergesingleprep':
-    if ( opts.samples == ""):
-        path = config.get("Directories","PREPin")
-        samplesinfo = config.get("Directories","samplesinfo")
-        info = ParseInfo(samplesinfo,path)
-        sample_list = []
-        for job in info:
-            sample_list.append(job.identifier)
-        sample_list = set(sample_list)
-    else:
-      sample_list = set(samplesList)
-
-    run_locally = str(config.get("Configuration","run_locally"))
-    print 'run_locally',run_locally
-    for sample in sample_list:
-        mergesubmitsinglefile(sample,repDict,run_locally)
+    if opts.task == 'singleprep' or opts.task == 'singlesys':
+        for sample in sample_list:
+            files = getfilelist(sample)
+            files_per_job = int(config.get("Configuration","files_per_job"))
+            files_split=[files[x:x+files_per_job] for x in xrange(0, len(files), files_per_job)]
+            files_split = [';'.join(sublist) for sublist in files_split]
+            counter_local = 0
+            for files_sublist in files_split:
+                submitsinglefile(sample,repDict,files_sublist,run_locally,counter_local)
+                counter_local = counter_local + 1
+    elif opts.task == 'mergesingleprep' or opts.task == 'mergesinglesys':
+        for sample in sample_list:
+            mergesubmitsinglefile(sample,repDict,run_locally)
             
 elif opts.task == 'sys' or opts.task == 'syseval':
     path = config.get("Directories","SYSin")
-    samplesinfo = config.get("Directories","samplesinfo")
     info = ParseInfo(samplesinfo,path)
     if opts.samples == "":
         for job in info:
@@ -367,7 +343,6 @@ elif opts.task == 'sys' or opts.task == 'syseval':
 elif opts.task == 'eval':
     repDict['queue'] = 'long.q'
     path = config.get("Directories","MVAin")
-    samplesinfo = config.get("Directories","samplesinfo")
     info = ParseInfo(samplesinfo,path)
     if opts.samples == "":
         for job in info:
@@ -385,7 +360,6 @@ elif opts.task == 'eval':
 
 elif( opts.task == 'split' ):
     path = config.get("Directories","SPLITin")
-    samplesinfo = config.get("Directories","samplesinfo")
     repDict['job_id']=opts.nevents_split
     info = ParseInfo(samplesinfo,path)
     if ( opts.samples == "" ):
