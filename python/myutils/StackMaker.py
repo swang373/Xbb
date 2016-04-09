@@ -12,7 +12,7 @@ class StackMaker:
         self.var = var
         self.SignalRegion=SignalRegion
         self.region = region
-        print "region:",region
+        #print "region:",region
         self.normalize = eval(config.get(section,'Normalize'))
         self.log = eval(config.get(section,'log'))
         if config.has_option('plotDef:%s'%var,'log') and not self.log:
@@ -39,7 +39,7 @@ class StackMaker:
             self.nBins = int(eval(config.get(section,'nBins'))/self.rebin)
         else:
             self.nBins = int(eval(config.get('plotDef:%s'%var,'nBins'))/self.rebin)
-        print self.nBins
+        #print self.nBins
         if config.has_option(section,'min'):
             self.xMin = eval(config.get(section,'min'))
         else:
@@ -48,9 +48,9 @@ class StackMaker:
             self.xMax = eval(config.get(section,'max'))
         else:
             self.xMax = eval(config.get('plotDef:%s'%var,'max'))
-        print("self.xMax",self.xMax)
+        #print("self.xMax",self.xMax)
         self.name = config.get('plotDef:%s'%var,'relPath')
-        print("self.name",self.name)
+        #print("self.name",self.name)
         # self.mass = config.get(section,'Signal')
         if SignalRegion:
             self.mass = config.get(section,'Signal')
@@ -60,12 +60,12 @@ class StackMaker:
         data = config.get(section,'Datas')
         if '<mass>' in self.name:
             self.name = self.name.replace('<mass>',self.mass)
-            print self.name
+            #print self.name
         if config.has_option('Cuts',region):
             cut = config.get('Cuts',region)
         else:
             cut = None
-            print "''Cuts' section doesn't contain any ",region
+            #print "''Cuts' section doesn't contain any ",region
         if config.has_option(section, 'Datacut'):
             cut=config.get(section, 'Datacut')
         if config.has_option(section, 'doFit'):
@@ -74,7 +74,7 @@ class StackMaker:
             self.doFit = False
 
         self.colorDict=eval(config.get('Plot_general','colorDict'))
-        print "self.colorDict:", self.colorDict
+        #print "self.colorDict:", self.colorDict
         self.typLegendDict=eval(config.get('Plot_general','typLegendDict'))
         self.anaTag = config.get("Analysis","tag")
         self.xAxis = config.get('plotDef:%s'%var,'xAxis')
@@ -94,14 +94,14 @@ class StackMaker:
         # self.hname = self.hname.replace(']','')
         # self.hname = self.hname.replace('$','')
 # >>>>>>> silviodonato/master
-        print ('self.hname',self.hname)
+        #print ('self.hname',self.hname)
         self.options = {'var': self.name,'name':self.hname,'xAxis': self.xAxis, 'nBins': self.nBins, 'xMin': self.xMin, 'xMax': self.xMax,'pdfName': '%s_%s_%s.pdf'%(region,var,self.mass),'cut':cut,'mass': self.mass, 'data': data, 'blind': self.blind}
         if config.has_option('Weights','weightF'):
             self.options['weight'] = config.get('Weights','weightF')
         else:
             self.options['weight'] = None
 
-        print "Using weightF:",self.options['weight']
+        #print "Using weightF:",self.options['weight']
         self.plotDir = config.get('Directories','plotpath')
         #self.maxRatioUncert = 1000.5
         self.maxRatioUncert = 0.5
@@ -131,7 +131,7 @@ class StackMaker:
             self.addFlag2 = 'W+udscg enriched'
         #else:
             #addFlag2 = 'pp #rightarrow VH; H #rightarrow b#bar{b}'
-        print self.setup
+        #print self.setup
 
     @staticmethod
     def myText(txt="CMS Preliminary",ndcX=0,ndcY=0,size=0.8):

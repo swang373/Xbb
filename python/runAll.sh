@@ -22,9 +22,10 @@ export TERM=""
 sample=$1           # sample you want to run on. It has to match the naming in sample.info.
 energy=$2           # sqrt(s) you want to run
 task=$3             # the task 
-job_id=$4           # needed for train optimisation. @TO FIX: it does not have a unique meaning
-additional_arg=$5   # needed for train optimisation. @TO FIX: it does not have a unique meaning
-optional_filelist=$6 # needed to run the prep step with limited number of files per job
+nprocesses=$4       # Dummy variable, used to shift the other parameters by +1
+job_id=$5           # needed for train optimisation. @TO FIX: it does not have a unique meaning
+additional_arg=$6   # needed for train optimisation. @TO FIX: it does not have a unique meaning
+optional_filelist=$7 # needed to run the prep step with limited number of files per job
 
 # echo '1:'${1}' 2:'${2}' 3:'${3}' 4:'${4}' 5:'${5}' 6:'${6}
 echo 

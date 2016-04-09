@@ -4,6 +4,7 @@ import sys
 import time
 import os
 import shutil
+import subprocess
 
 parser = OptionParser()
 parser.add_option("-T", "--tag", dest="tag", default="8TeV",
@@ -107,6 +108,7 @@ samplesinfo = config.get("Directories","samplesinfo")
 whereToLaunch = config.get('Configuration','whereToLaunch')
 run_locally = str(config.get("Configuration","run_locally"))
 print 'whereToLaunch',whereToLaunch,'run_locally',run_locally
+print 'run_locally is', run_locally
 
 # CREATE DIRECTORIES FOR PSI
 if 'PSI' in whereToLaunch:
@@ -188,7 +190,7 @@ if( not os.path.isdir(logPath) ):
     print 'Exit'
     sys.exit(-1)
     
-repDict = {'en':en,'logpath':logPath,'job':'','task':opts.task,'queue': 'all.q','timestamp':timestamp,'additional':'','job_id':'','nprocesses':str(max(int(pathconfig.get('Configuration','nprocesses')),1))}
+repDict = {'en':en,'logpath':logPath,'job':'','task':opts.task,'queue': 'all.q','timestamp':timestamp,'additional':'','job_id':'noid','nprocesses':str(max(int(pathconfig.get('Configuration','nprocesses')),1))}
 def submit(job,repDict):
     global counter
     repDict['job'] = job
@@ -198,10 +200,26 @@ def submit(job,repDict):
         repDict['name'] = '"%s"' %logo[nJob].strip()
     else:
         repDict['name'] = '%(job)s_%(en)s%(task)s' %repDict
-    command = 'qsub -V -cwd -q %(queue)s -l h_vmem=6G -N %(name)s -j y -o %(logpath)s/%(timestamp)s_%(job)s_%(en)s_%(task)s.out -pe smp %(nprocesses)s runAll.sh %(job)s %(en)s ' %(repDict) + opts.task + ' ' + repDict['nprocesses']+ ' ' + repDict['job_id'] + ' ' + repDict['additional']
-    print "the command is ", command
-    dump_config(configs,"%(logpath)s/%(timestamp)s_%(job)s_%(en)s_%(task)s.config" %(repDict))
-    subprocess.call([command], shell=True)
+    if not run_locally:
+        command = 'qsub -V -cwd -q %(queue)s -l h_vmem=6G -N %(name)s -j y -o %(logpath)s/%(timestamp)s_%(job)s_%(en)s_%(task)s.out -pe smp %(nprocesses)s runAll.sh %(job)s %(en)s ' %(repDict) + opts.task + ' ' + repDict['nprocesses']+ ' ' + repDict['job_id'] + ' ' + repDict['additional']
+        print "the command is ", command
+        dump_config(configs,"%(logpath)s/%(timestamp)s_%(job)s_%(en)s_%(task)s.config" %(repDict))
+        subprocess.call([command], shell=True)
+    else:
+        waiting_time_before_retry = 60
+        number_symultaneous_process = 4
+        counter  =  int(subprocess.check_output('ps aux | grep $USER | grep '+opts.task +' | wc -l', shell=True))-1# add 1 to remove submithem count
+        print 'counter command is', 'ps aux | grep $USER | grep '+opts.task +' | wc -l'
+        while counter > number_symultaneous_process:
+            print 'counter is', counter
+            print 'waiting',waiting_time_before_retry,'seconds before to retry'
+            os.system('sleep '+str(waiting_time_before_retry))
+            counter = int(subprocess.check_output('ps aux | grep $USER | grep '+opts.task +' | wc -l', shell=True))
+
+        command = 'sh runAll.sh %(job)s %(en)s ' %(repDict) + opts.task + ' ' + repDict['nprocesses']+ ' ' + repDict['job_id'] + ' ' + repDict['additional'] + '2>&1 > /dev/null &'
+        print "the command is ", command
+        dump_config(configs,"%(logpath)s/%(timestamp)s_%(job)s_%(en)s_%(task)s.config" %(repDict))
+        subprocess.call([command], shell=True)
 
 def submitsinglefile(job,repDict,file,run_locally,counter_local):
     global counter
