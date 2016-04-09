@@ -45,8 +45,17 @@ inputs = []
 for file_ in files_:
     inputs.append((dirpath_+'/'+ file_,outName+'/'+file_))
 
+quick = False
 function = None
-expoRatio=None
+expoRatio = None
+if quick:
+    firstFile = inputs[0][1]
+    gROOT.ProcessLine(".x "+firstFile.replace(".root","_fit.C"))
+    function = gDirectory.Get("histo")
+    function = copy.copy(function)
+    gROOT.ProcessLine(".x "+firstFile.replace(".root","_fit4.C"))
+    expoRatio = f4.Get("c1").GetPrimitive("expoRatio")
+    expoRatio = copy.copy(expoRatio)
 for (inpt,outpt) in inputs:
     function,expoRatio = doFile(inpt,outpt,function,expoRatio)
 #    print inpt,outpt

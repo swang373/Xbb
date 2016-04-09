@@ -3,7 +3,12 @@ from array import *
 from math import *
 
 gROOT.SetBatch()
-preselection = "(!Jet_over[0] && !Jet_overMC[0] && Sum$((Jet_under||Jet_underMC) * (Jet_pt>25) * (abs(TVector2::Phi_mpi_pi ( Jet_phi-met_phi ))<0.785))==0) && (Sum$(abs(TVector2::Phi_mpi_pi ( aLeptons_phi-met_phi ))<0.5 && (aLeptons_pt>5) )==0)"
+preselection = "1"
+#preselection = "(!Jet_over[0] && !Jet_overMC[0] && Sum$((Jet_under||Jet_underMC) * (Jet_pt>25) * (abs(TVector2::Phi_mpi_pi ( Jet_phi-met_phi ))<0.785))==0) && (Sum$(abs(TVector2::Phi_mpi_pi ( aLeptons_phi-met_phi ))<0.5 && (aLeptons_pt>5) )==0)"
+
+#preselection = "(!Jet_over[0] && !Jet_overMC[0] && Sum$((Jet_under||Jet_underMC) * (Jet_pt>30) * (abs(TVector2::Phi_mpi_pi ( Jet_phi-met_phi ))<0.4))==0) && (minDeltaPhiJetMetTwoLeading>0.4 && minDeltaPhiJetMetHiggs>0.4)"
+
+preselection = "1"
 
 def fixCountFile(fileName="tree_100_QCDHT700.root",outName="newTree.root"):
 
@@ -75,21 +80,23 @@ def fixCountFile(fileName="tree_100_QCDHT700.root",outName="newTree.root"):
 
 if __name__ == "__main__":
 
-#../../env/syst/ZvvHighPt_V20_FakeQCD_HT200to300_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root
+#../../env/syst/ZvvHighPt_V21_FakeQCD_HT200to300_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root
 #    dirIn       = "../../env/syst/MVAout_v0.0.0/"
 #    dirOut      = "../../env/syst/MVAout_v0.0.0/"
-    dirIn        = "../../env/syst/"
-    dirOut       = "../../env/syst/"
+#    dirIn        = "../../env/syst/"
+#    dirOut       = "../../env/syst/"
+    dirIn        = "../../env/"
+    dirOut       = "../../env/"
 
     files = [
-        'ZvvHighPt_V20_FakeQCD_HT100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root',
-        'ZvvHighPt_V20_FakeQCD_HT200to300_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root',
-        'ZvvHighPt_V20_FakeQCD_HT300to500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root',
-        'ZvvHighPt_V20_FakeQCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root',
-        'ZvvHighPt_V20_FakeQCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root',
-        'ZvvHighPt_V20_FakeQCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root',
-        'ZvvHighPt_V20_FakeQCD_HT1500to2000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root',
-        'ZvvHighPt_V20_FakeQCD_HT2000toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root',
+#        'ZvvHighPt_V21_FakeQCD_HT100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root',
+        'ZvvHighPt_V21_FakeQCD_HT200to300_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root',
+        'ZvvHighPt_V21_FakeQCD_HT300to500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root',
+        'ZvvHighPt_V21_FakeQCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root',
+        'ZvvHighPt_V21_FakeQCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root',
+        'ZvvHighPt_V21_FakeQCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root',
+        'ZvvHighPt_V21_FakeQCD_HT1500to2000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root',
+        'ZvvHighPt_V21_FakeQCD_HT2000toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8.root',
     ]
 
     import os
