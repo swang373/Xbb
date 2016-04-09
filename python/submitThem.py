@@ -111,12 +111,12 @@ counter = 0
 samplesinfo = config.get("Directories","samplesinfo")
 whereToLaunch = config.get('Configuration','whereToLaunch')
 run_locally = str(config.get("Configuration","run_locally"))
-if override_to_run_locally and override_to_run_in_batch:
+if opts.override_to_run_locally and opts.override_to_run_in_batch:
     print 'both override_to_run_locally and override_to_run_in_batch ativated, using str(config.get("Configuration","run_locally")) instead'
-elif override_to_run_locally:
+elif opts.override_to_run_locally:
     run_locally = 'True'
     print 'using override_to_run_locally to override str(config.get("Configuration","run_locally"))'
-elif override_to_run_in_batch:
+elif opts.override_to_run_in_batch:
     run_locally = 'False'
     print 'using override_to_run_in_batch to override str(config.get("Configuration","run_locally"))'
 
