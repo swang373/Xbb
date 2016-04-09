@@ -190,7 +190,7 @@ if( not os.path.isdir(logPath) ):
     print 'Exit'
     sys.exit(-1)
     
-repDict = {'en':en,'logpath':logPath,'job':'','task':opts.task,'queue': 'all.q','timestamp':timestamp,'additional':'','job_id':'','nprocesses':str(max(int(pathconfig.get('Configuration','nprocesses')),1))}
+repDict = {'en':en,'logpath':logPath,'job':'','task':opts.task,'queue': 'all.q','timestamp':timestamp,'additional':'','job_id':'noid','nprocesses':str(max(int(pathconfig.get('Configuration','nprocesses')),1))}
 def submit(job,repDict):
     global counter
     repDict['job'] = job
