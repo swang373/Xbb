@@ -23,6 +23,10 @@ parser.add_option("-P", "--philipp-love-progress-bars", dest="philipp_love_progr
                       help="If you share the love of Philipp...")
 parser.add_option("-V", "--verbose", dest="verbose", action="store_true", default=False,
                       help="Activate verbose flag for debug printouts")
+parser.add_option("-L", "--verbose", dest="override_to_run_locally", action="store_true", default=False,
+                      help="Override run_locally option to run locally")
+parser.add_option("-B", "--verbose", dest="override_to_run_in_batch", action="store_true", default=False,
+                      help="Override run_locally option to run in batch")
 
 (opts, args) = parser.parse_args(sys.argv)
 #print 'opts.mass is', opts.mass
@@ -107,8 +111,17 @@ counter = 0
 samplesinfo = config.get("Directories","samplesinfo")
 whereToLaunch = config.get('Configuration','whereToLaunch')
 run_locally = str(config.get("Configuration","run_locally"))
-print 'whereToLaunch',whereToLaunch,'run_locally',run_locally
-print 'run_locally is', run_locally
+if override_to_run_locally and override_to_run_in_batch:
+    print 'both override_to_run_locally and override_to_run_in_batch ativated, using str(config.get("Configuration","run_locally")) instead'
+elif override_to_run_locally:
+    run_locally = 'True'
+    print 'using override_to_run_locally to override str(config.get("Configuration","run_locally"))'
+elif override_to_run_in_batch:
+    run_locally = 'False'
+    print 'using override_to_run_in_batch to override str(config.get("Configuration","run_locally"))'
+
+print 'whereToLaunch',whereToLaunch
+print 'run_locally',run_locally
 
 # CREATE DIRECTORIES FOR PSI
 if 'PSI' in whereToLaunch:
