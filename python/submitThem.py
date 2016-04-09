@@ -23,9 +23,9 @@ parser.add_option("-P", "--philipp-love-progress-bars", dest="philipp_love_progr
                       help="If you share the love of Philipp...")
 parser.add_option("-V", "--verbose", dest="verbose", action="store_true", default=False,
                       help="Activate verbose flag for debug printouts")
-parser.add_option("-L", "--verbose", dest="override_to_run_locally", action="store_true", default=False,
+parser.add_option("-L", "--local", dest="override_to_run_locally", action="store_true", default=False,
                       help="Override run_locally option to run locally")
-parser.add_option("-B", "--verbose", dest="override_to_run_in_batch", action="store_true", default=False,
+parser.add_option("-B", "--batch", dest="override_to_run_in_batch", action="store_true", default=False,
                       help="Override run_locally option to run in batch")
 
 (opts, args) = parser.parse_args(sys.argv)
