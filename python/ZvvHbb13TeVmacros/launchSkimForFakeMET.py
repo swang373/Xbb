@@ -1,5 +1,5 @@
 import sys
-from doFakeMET import *
+from skimForFakeMET import *
 #from doFakeMETStupid import *
 
 try:
@@ -45,6 +45,9 @@ inputs = []
 for file_ in files_:
     inputs.append((dirpath_+'/'+ file_,outName+'/'+file_))
 
+print "First input:",   inputs[0][0]
+print "First output:",  inputs[0][1]
+
 quick = False
 function = None
 expoRatio = None
@@ -57,6 +60,6 @@ if quick:
     expoRatio = f4.Get("c1").GetPrimitive("expoRatio")
     expoRatio = copy.copy(expoRatio)
 for (inpt,outpt) in inputs:
-    function,expoRatio = doFile(inpt,outpt,function,expoRatio)
+    doFile(inpt,outpt,function,expoRatio)
 #    print inpt,outpt
 
