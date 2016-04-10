@@ -170,8 +170,8 @@ if [ $task = "singleprep" ]; then
     ./prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.ini --filelist "${optional_filelist}" #sometime I need this add: please check --config ${energy}config/samples_nosplit.cfg
 fi
 if [ $task = "mergesingleprep" ]; then
-    echo './prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.ini --filelist "${optional_filelist}"' #sometime I need this add: please check --config ${energy}
-    ./prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.ini --filelist "${optional_filelist}" #sometime I need this add: please check --config ${energy}config/samples_nosplit.cfg
+    echo './myutils/mergetreePSI.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.ini --filelist "${optional_filelist}"' #sometime I need this add: please check --config ${energy}
+    ./myutils/mergetreePSI.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.ini --filelist "${optional_filelist}" #sometime I need this add: please check --config ${energy}config/samples_nosplit.cfg
 fi
 if [ $task = "trainReg" ]; then
     # ./trainRegression.py --config ${energy}config/${configList}
@@ -185,6 +185,10 @@ fi
 if [ $task = "sys" ]; then
     echo "./write_regression_systematics.py --samples $sample --config ${energy}config/${configList}"
     ./write_regression_systematics.py --samples $sample --config ${energy}config/${configList}
+fi
+if [ $task = "mergesinglesys" ]; then
+    echo './myutils/mergetreePSI.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.ini --filelist "${optional_filelist}"' #sometime I need this add: please check --config ${energy}
+    ./myutils/mergetreePSI.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.ini --filelist "${optional_filelist}" --mergesys "True" #sometime I need this add: please check --config ${energy}config/samples_nosplit.cfg
 fi
 if [ $task = "reg" ]; then
     ./only_regression.py --samples $sample --config ${energy}config/${configList}

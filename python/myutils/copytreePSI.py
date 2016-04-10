@@ -213,64 +213,6 @@ def copytreePSI(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config,f
 
     print "##### COPY TREE - END ######"
 
-
-def mergetreePSI(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config):
-    '''
-    List of variables
-    pathIN: path of the input file containing the data
-    pathOUT: path of the output files
-    prefix: "prefix" variable from "samples_nosplit.cfg"
-    newprefix: "newprefix" variable from "samples_nosplit.cfg"
-    file: sample header (as DYJetsToLL_M-50_TuneZ2Star_8TeV-madgraph-tarball)
-    Aprefix: empty string ''
-    Acut: the sample cut as defined in "samples_nosplit.cfg"
-    '''
-    print 'start mergetreePSI.py'
-    print (pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut)
-    print "##### MERGE TREE - BEGIN ######"
-
-    merged = pathOUT+'/'+newprefix+folderName+".root "
-
-    del_merged = merged
-    del_merged = del_merged.replace('gsidcap://t3se01.psi.ch:22128/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
-    del_merged = del_merged.replace('dcap://t3se01.psi.ch:22125/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
-    del_merged = del_merged.replace('root://t3dcachedb03.psi.ch:1094/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
-    command = 'srmrm %s' %(del_merged)
-    print command
-    subprocess.call([command], shell = True)
-    t = ROOT.TFileMerger(ROOT.kFALSE)
-    __tmpPath = os.environ["TMPDIR"]
-    tmp_filename = __tmpPath+'/'+newprefix+folderName+".root "
-    print 't.OutputFile('+tmp_filename+',"RECREATE")'
-    t.OutputFile(tmp_filename, "RECREATE")
-    outputFolder = "%s/%s/" %(pathOUT,folderName)
-    print 'outputFolder is', outputFolder
-    for file in os.listdir(outputFolder.replace('root://t3dcachedb03.psi.ch:1094','').replace('gsidcap://t3se01.psi.ch:22128/','').replace('dcap://t3se01.psi.ch:22125/','')):
-        # print 'file is', outputFolder+file
-        if file.startswith('tree'):
-            print 't.AddFile('+outputFolder+file+')'
-            t.AddFile(outputFolder+file)
-    t.Merge()
-
-    srmpathOUT = pathOUT.replace('gsidcap://t3se01.psi.ch:22128/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
-    srmpathOUT = srmpathOUT.replace('dcap://t3se01.psi.ch:22125/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
-    srmpathOUT = srmpathOUT.replace('root://t3dcachedb03.psi.ch:1094/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
-    command = 'srmcp -2 -globus_tcp_port_range 20000,25000 file:///'+__tmpPath+'/'+newprefix+folderName+".root"+' '+srmpathOUT+'/'+newprefix+folderName+".root"
-    print command
-    subprocess.call([command], shell=True)
-
-    print 'checking output file',pathOUT+'/'+newprefix+folderName+".root"
-    f = ROOT.TFile.Open(pathOUT+'/'+newprefix+folderName+".root",'read')
-    if not f or f.GetNkeys() == 0 or f.TestBit(ROOT.TFile.kRecovered) or f.IsZombie():
-        print 'TERREMOTO AND TRAGEDIA: THE MERGED FILE IS CORRUPTED!!! ERROR: exiting'
-        sys.exit(1)
-
-    command = 'rm '+__tmpPath+'/'+newprefix+folderName+'.root'
-    print command
-    subprocess.call([command], shell=True)
-
-    print "##### MERGE TREE - END ######"
-
 def filelist(pathIN,folderName):
     '''
     List of variables
