@@ -110,7 +110,6 @@ if [[ $whereToLaunch != "lxplus" ]]; then
   source $VO_CMS_SW_DIR/cmsset_default.sh
   eval `scramv1 runtime -sh`
   export TMPDIR=$CMSSW_BASE/src/tmp
-  #export TMPDIR=/mnt/t3nfs01/data01/shome/gaperrin/VHbb/CMSSW_7_4_3/src/tmp
   if ! [ -e $TMPDIR ]; then mkdir $TMPDIR; fi
 
   cd -   #back to the working dir
@@ -178,6 +177,10 @@ if [ $task = "trainReg" ]; then
     # ./trainRegression.py --config ${energy}config/${configList}
     echo "./trainRegression.py --config ${energy}config/${configList} --config ${energy}config/regression.ini"
     ./trainRegression.py --config ${energy}config/${configList} --config ${energy}config/regression.ini
+fi
+if [ $task = "singlesys" ]; then
+    echo "singlesys: ./write_regression_systematics.py --samples $sample --config ${energy}config/${configList} --filelist ${optional_filelist}"
+    ./write_regression_systematics.py --samples $sample --config ${energy}config/${configList} --filelist ${optional_filelist}
 fi
 if [ $task = "sys" ]; then
     echo "./write_regression_systematics.py --samples $sample --config ${energy}config/${configList}"

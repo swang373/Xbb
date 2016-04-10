@@ -17,8 +17,8 @@ parser.add_option("-S","--samples",dest="samples",default="",
               help="samples you want to run on")
 parser.add_option("-F", "--folderTag", dest="ftag", default="",
                       help="Creats a new folder structure for outputs or uses an existing one with the given name")
-parser.add_option("-N", "--number-of-events", dest="nevents_split", default=100000,
-                      help="Number of events per file when splitting.")
+parser.add_option("-N", "--number-of-events-or-files", dest="nevents_split_nfiles_single", default=-1,
+                      help="Number of events per file when splitting or number of files when using single file workflow.")
 parser.add_option("-P", "--philipp-love-progress-bars", dest="philipp_love_progress_bars", default=False,
                       help="If you share the love of Philipp...")
 parser.add_option("-V", "--verbose", dest="verbose", action="store_true", default=False,
@@ -204,7 +204,7 @@ if( not os.path.isdir(logPath) ):
     sys.exit(-1)
     
 repDict = {'en':en,'logpath':logPath,'job':'','task':opts.task,'queue': 'all.q','timestamp':timestamp,'additional':'','job_id':'noid','nprocesses':str(max(int(pathconfig.get('Configuration','nprocesses')),1))}
-def submit(job,repDict):
+def submit(job,repDict,redirect_to_null=False):
     global counter
     repDict['job'] = job
     nJob = counter % len(logo)
@@ -213,7 +213,7 @@ def submit(job,repDict):
         repDict['name'] = '"%s"' %logo[nJob].strip()
     else:
         repDict['name'] = '%(job)s_%(en)s%(task)s' %repDict
-    if not run_locally:
+    if run_locally == 'False':
         command = 'qsub -V -cwd -q %(queue)s -l h_vmem=6G -N %(name)s -j y -o %(logpath)s/%(timestamp)s_%(job)s_%(en)s_%(task)s.out -pe smp %(nprocesses)s runAll.sh %(job)s %(en)s ' %(repDict) + opts.task + ' ' + repDict['nprocesses']+ ' ' + repDict['job_id'] + ' ' + repDict['additional']
         print "the command is ", command
         dump_config(configs,"%(logpath)s/%(timestamp)s_%(job)s_%(en)s_%(task)s.config" %(repDict))
@@ -229,7 +229,8 @@ def submit(job,repDict):
             os.system('sleep '+str(waiting_time_before_retry))
             counter = int(subprocess.check_output('ps aux | grep $USER | grep '+opts.task +' | wc -l', shell=True))
 
-        command = 'sh runAll.sh %(job)s %(en)s ' %(repDict) + opts.task + ' ' + repDict['nprocesses']+ ' ' + repDict['job_id'] + ' ' + repDict['additional'] + '2>&1 > /dev/null &'
+        command = 'sh runAll.sh %(job)s %(en)s ' %(repDict) + opts.task + ' ' + repDict['nprocesses']+ ' ' + repDict['job_id'] + ' ' + repDict['additional']
+        if redirect_to_null: command = ' 2>&1 > /dev/null &'
         print "the command is ", command
         dump_config(configs,"%(logpath)s/%(timestamp)s_%(job)s_%(en)s_%(task)s.config" %(repDict))
         subprocess.call([command], shell=True)
@@ -344,18 +345,18 @@ elif opts.task == 'singleprep' or opts.task == 'singlesys' or opts.task == 'merg
     else:
         sample_list = set(samplesList)
 
-    if opts.task == 'singleprep' or opts.task == 'singlesys':
-        for sample in sample_list:
+    for sample in sample_list:
+        if sample == '': continue
+        if opts.task == 'singleprep' or opts.task == 'singlesys':
             files = getfilelist(sample)
-            files_per_job = int(config.get("Configuration","files_per_job"))
+            files_per_job = int(opts.nevents_split_nfiles_single) if int(opts.nevents_split_nfiles_single) > 0 else int(config.get("Configuration","files_per_job"))
             files_split=[files[x:x+files_per_job] for x in xrange(0, len(files), files_per_job)]
             files_split = [';'.join(sublist) for sublist in files_split]
             counter_local = 0
             for files_sublist in files_split:
                 submitsinglefile(sample,repDict,files_sublist,run_locally,counter_local)
                 counter_local = counter_local + 1
-    elif opts.task == 'mergesingleprep' or opts.task == 'mergesinglesys':
-        for sample in sample_list:
+        elif opts.task == 'mergesingleprep' or opts.task == 'mergesinglesys':
             mergesubmitsinglefile(sample,repDict,run_locally)
             
 elif opts.task == 'sys' or opts.task == 'syseval':
@@ -391,7 +392,7 @@ elif opts.task == 'eval':
 
 elif( opts.task == 'split' ):
     path = config.get("Directories","SPLITin")
-    repDict['job_id']=opts.nevents_split
+    repDict['job_id']= int(opts.nevents_split_nfiles_single) if int(opts.nevents_split_nfiles_single) > 0 else 100000
     info = ParseInfo(samplesinfo,path)
     if ( opts.samples == "" ):
         for job in info:
@@ -414,7 +415,7 @@ elif opts.task == 'mva_opt':
     print setting
     repDict['additional']=setting
     repDict['job_id']=config.get('Optimisation','training')
-    submit('OPT_main_set',repDict)
+    submit('OPT_main_set',repDict,True)
     main_setting=setting
 
     #Scanning all the parameters found in the training config in the Optimisation sector
@@ -428,7 +429,7 @@ elif opts.task == 'mva_opt':
                 setting=re.sub(par+'.*?:',par+'='+str(value)+':',main_setting)
                 repDict['additional']=setting
 #               repDict['job_id']=config.get('Optimisation','training')
-                submit('OPT_'+par+str(value),repDict)
+                submit('OPT_'+par+str(value),repDict,True)
 #               submit(config.get('Optimisation','training'),repDict)
                 print setting
 
