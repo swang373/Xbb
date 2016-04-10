@@ -43,10 +43,7 @@ samplesinfo=config.get('Directories','samplesinfo')
 sampleconf = BetterConfigParser()
 sampleconf.read(samplesinfo)
 
-whereToLaunch = config.get('Configuration','whereToLaunch')
-TreeCopierPSI = config.get('Configuration','TreeCopierPSI')
-if TreeCopierPSI=="False":
-    TreeCopierPSI = False
+whereToLaunch = config.get('Configuration','whereToLaunch') # USEFUL IN CASE OF SITE BY SITE OPTIONS
 prefix=sampleconf.get('General','prefix')
 info = ParseInfo(samplesinfo,pathIN)
 print "samplesinfo:",samplesinfo
@@ -69,13 +66,6 @@ def mergetreePSI(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config)
 
     merged = pathOUT+'/'+newprefix+folderName+".root "
 
-    del_merged = merged
-    del_merged = del_merged.replace('gsidcap://t3se01.psi.ch:22128/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
-    del_merged = del_merged.replace('dcap://t3se01.psi.ch:22125/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
-    del_merged = del_merged.replace('root://t3dcachedb03.psi.ch:1094/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
-    command = 'srmrm %s' %(del_merged)
-    print command
-    subprocess.call([command], shell = True)
     t = ROOT.TFileMerger(ROOT.kFALSE)
     __tmpPath = os.environ["TMPDIR"]
     tmp_filename = __tmpPath+'/'+newprefix+folderName+".root "
@@ -84,15 +74,17 @@ def mergetreePSI(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config)
     outputFolder = "%s/%s/" %(pathOUT,folderName)
     print 'outputFolder is', outputFolder
     for file in os.listdir(outputFolder.replace('root://t3dcachedb03.psi.ch:1094','').replace('gsidcap://t3se01.psi.ch:22128/','').replace('dcap://t3se01.psi.ch:22125/','')):
-        # print 'file is', outputFolder+file
         if file.startswith('tree'):
             print 't.AddFile('+outputFolder+file+')'
             t.AddFile(outputFolder+file)
     t.Merge()
 
-    srmpathOUT = pathOUT.replace('gsidcap://t3se01.psi.ch:22128/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
-    srmpathOUT = srmpathOUT.replace('dcap://t3se01.psi.ch:22125/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
-    srmpathOUT = srmpathOUT.replace('root://t3dcachedb03.psi.ch:1094/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
+    # DUMMY WAYS TO COPE WITH FILE COMMAND PROTOCOLS @T2-PSI...
+    del_merged = merged.replace('gsidcap://t3se01.psi.ch:22128/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=').replace('dcap://t3se01.psi.ch:22125/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=').replace('root://t3dcachedb03.psi.ch:1094/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
+    command = 'srmrm %s' %(del_merged)
+    print command
+    subprocess.call([command], shell = True)
+    srmpathOUT = pathOUT.replace('gsidcap://t3se01.psi.ch:22128/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=').replace('dcap://t3se01.psi.ch:22125/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=').replace('root://t3dcachedb03.psi.ch:1094/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
     command = 'srmcp -2 -globus_tcp_port_range 20000,25000 file:///'+__tmpPath+'/'+newprefix+folderName+".root"+' '+srmpathOUT+'/'+newprefix+folderName+".root"
     print command
     subprocess.call([command], shell=True)
@@ -112,7 +104,6 @@ def mergetreePSI(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config)
 
 print "info:",info
 for job in info:
-    # print "job.name:",job.name
     if not job.name in namelist and not job.identifier in namelist:
         continue
     if job.subsample:

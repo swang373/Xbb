@@ -13,13 +13,8 @@ from btag_reweight import *
 from time import gmtime, strftime
 from muonSF import *
 
-#usage: ./write_regression_systematic.py path
-
-#os.mkdir(path+'/sys')
 argv = sys.argv
 parser = OptionParser()
-#parser.add_option("-P", "--path", dest="path", default="", 
-#                      help="path to samples")
 parser.add_option("-S", "--samples", dest="names", default="", 
                       help="samples you want to run on")
 parser.add_option("-C", "--config", dest="config", default=[], action="append",
@@ -39,7 +34,6 @@ if len(filelist)>0:
     print "filelist[0]:",filelist[0];
 else:
     print ''
-# sys.exit()
 
 from myutils import BetterConfigParser, ParseInfo, TreeCache
 
@@ -58,7 +52,6 @@ ROOT.gSystem.Load(VHbbNameSpace)
 AngLikeBkgs=eval(config.get('AngularLike','backgrounds'))
 ang_yield=eval(config.get('AngularLike','yields'))
 
-#path=opts.path
 pathIN = config.get('Directories','SYSin')
 pathOUT = config.get('Directories','SYSout')
 tmpDir = os.environ["TMPDIR"]
@@ -66,7 +59,7 @@ tmpDir = os.environ["TMPDIR"]
 print 'INput samples:\t%s'%pathIN
 print 'OUTput samples:\t%s'%pathOUT
 
-applyBTagweights = applyRegression=eval(config.get('Regression','applyBTagweights'))
+applyBTagweights=eval(config.get('Regression','applyBTagweights'))
 print 'applyBTagweights is', applyBTagweights
 csv_rwt_hf=config.get('BTagHFweights','file')
 csv_rwt_lf=config.get('BTagLFweights','file')
@@ -78,9 +71,6 @@ bweightcalc = BTagWeightCalculator(
     csv_rwt_lf
 )
 bweightcalc.btag = "btag"
-
-#storagesamples = config.get('Directories','storagesamples')
-
 
 namelist=opts.names.split(',')
 
@@ -127,7 +117,7 @@ def resolutionBias(eta):
 
 def corrPt(pt,eta,mcPt):
     return 1 ##FIXME
-#    return (pt+resolutionBias(math.fabs(eta))*(pt-mcPt))/pt
+    # return (pt+resolutionBias(math.fabs(eta))*(pt-mcPt))/pt
 
 def corrCSV(btag,  csv, flav):
     if(csv < 0.): return csv
@@ -247,21 +237,6 @@ for job in info:
         print ''
 
         input.cd()
-        # if lhe_weight_map and 'DY' in job.name:
-            # inclusiveJob = info.get_sample('DY')
-            # print inclusiveJob.name
-            # inclusive = ROOT.TFile.Open(pathIN+inclusiveJob.get_path,'read')
-            # inclusive.cd()
-            # obj = ROOT.TObject
-            # for key in ROOT.gDirectory.GetListOfKeys():
-                # input.cd()
-                # obj = key.ReadObj()
-                # if obj.GetName() == job.tree:
-                    # continue
-                # output.cd()
-                # obj.Write(key.GetName())
-            # inclusive.Close()
-        # else:
         obj = ROOT.TObject
         for key in ROOT.gDirectory.GetListOfKeys():
             input.cd()
@@ -300,7 +275,6 @@ for job in info:
             # regVarsFilterJets = eval(config.get("Regression","regVarsFilterJets"))
 
             # Regression branches
-            # applyRegression = True
             # hJet_pt = array('f',[0]*2)
             # hJet_mass = array('f',[0]*2)
             newtree.Branch( 'H', H , 'HiggsFlag/I:mass/F:pt/F:eta/F:phi/F:dR/F:dPhi/F:dEta/F' )
@@ -924,9 +898,9 @@ for job in info:
                         bTagWeightcErr2Up_new[0] = weights["cErr2Up"]
                         bTagWeightcErr2Down_new[0] = weights["cErr2Down"]
 
-                    ##########################
-                    # Adding mu SFs
-                    ##########################
+                ##########################
+                # Adding mu SFs
+                ##########################
                 if channel == "Zmm":
                     if job.type != 'DATA':
                         #Add isDY tag
@@ -1259,9 +1233,6 @@ for job in info:
         print 'Close'
         targetStorage = pathOUT.replace('gsidcap://t3se01.psi.ch:22128/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')+'/'+job.prefix+job.identifier+'.root'
         if('pisa' in config.get('Configuration','whereToLaunch')):
-           # command = 'lcg-del -b -D srmv2 -l %s' %(targetStorage)
-           # print(command)
-           # subprocess.call([command], shell=True)
             command = 'cp %s %s' %(tmpDir+'/'+job.prefix+job.identifier+'.root',targetStorage)
             print(command)
             subprocess.call([command], shell=True)
@@ -1277,9 +1248,7 @@ for job in info:
                 print(command)
                 os.system(command)
             else:
-                srmpathOUT = pathOUT.replace('gsidcap://t3se01.psi.ch:22128/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
-                srmpathOUT = srmpathOUT.replace('dcap://t3se01.psi.ch:22125/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
-                srmpathOUT = srmpathOUT.replace('root://t3dcachedb03.psi.ch:1094/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
+                srmpathOUT = pathOUT.replace('gsidcap://t3se01.psi.ch:22128/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=').replace('dcap://t3se01.psi.ch:22125/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=').replace('root://t3dcachedb03.psi.ch:1094/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
                 command = 'srmcp -2 -globus_tcp_port_range 20000,25000 file:///'+tmpfile+' '+outputFile.replace('root://t3dcachedb03.psi.ch:1094/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
                 print command
                 subprocess.call([command], shell=True)

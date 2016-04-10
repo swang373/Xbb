@@ -26,7 +26,6 @@ config.read(opts.config)
 namelist=opts.names.split(',')
 filelist=opts.filelist.split(';')
 print "namelist:",namelist
-# print "opts.filelist:",opts.filelist
 print "len(filelist)",len(filelist),"filelist[0]:",filelist[0]
 
 pathIN = config.get('Directories','PREPin')
@@ -37,15 +36,12 @@ sampleconf.read(samplesinfo)
 
 whereToLaunch = config.get('Configuration','whereToLaunch')
 TreeCopierPSI = config.get('Configuration','TreeCopierPSI')
-if TreeCopierPSI=="False":
-    TreeCopierPSI = False
 prefix=sampleconf.get('General','prefix')
 
 info = ParseInfo(samplesinfo,pathIN)
 print "samplesinfo:",samplesinfo
 print "info:",info
 for job in info:
-    # print "job.name:",job.name
     if not job.name in namelist and not job.identifier in namelist:
         continue
     if job.subsample:
@@ -54,7 +50,8 @@ for job in info:
         # TreeCopier class
         utils.TreeCopier(pathIN, pathOUT, job.identifier, job.prefix, job.addtreecut)
     else:
-        if TreeCopierPSI:
+        if TreeCopierPSI == 'True':
+            # copytreePSI class, allowing for single file workflow
             samplefiles = config.get('Directories','samplefiles')
             copytreePSI(samplefiles,pathOUT,prefix,job.prefix,job.identifier,'',job.addtreecut, config, filelist)
         else:

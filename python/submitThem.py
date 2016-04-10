@@ -98,13 +98,11 @@ if not opts.ftag == '':
     for item in configs:
         shutil.copyfile(item,'%s/%s/%s'%(tagDir,opts.ftag,item.strip(en)))
 
-# DEBUG PURPOSE ONLY        
-# sys.exit()
-
 if(debugPrintOUts): print configs
 config = BetterConfigParser()
 config.read(configs)
 
+# RETRIEVE RELEVANT VARIABLES FROM CONFIG FILES AND FROM COMMAND LINE OPTIONS
 logPath = config.get("Directories","logpath")
 logo = open('%s/data/submit.txt' %config.get('Directories','vhbbpath')).readlines()
 counter = 0
@@ -180,16 +178,11 @@ def compile_macro(config,macro):
         os.chdir(scratchDir)
         print os.listdir(scratchDir)
         ROOT.gROOT.ProcessLine('.L %s+'%(scratchDir+_macro)) # CRASHES WHILE COMPILING THE SECOND ONE...
-        # ROOT.gSystem.CompileMacro('%s'%(scratchDir+_macro)) # THIS AS WELL...
-        # print("gcc -shared -o "+library+" `root-config --glibs --libs --cflags` -fPIC "+scratchDir+_macro)
-        # os.system("gcc -shared -o "+library+" `root-config --glibs --libs --cflags` -fPIC "+scratchDir+_macro)
-
         shutil.copyfile('/scratch/%s/%s'%(getpass.getuser(),os.path.basename(library)),library)
         print '@INFO: macro',macro,'compiled, exiting to avoid stupid ROOT crash, please resubmit!!!'
         sys.exit(1)
     os.chdir(submitDir)
         
-#comment for now
 print '===============================\n'
 print 'Compiling the macros'
 print '===============================\n'
@@ -202,8 +195,11 @@ if( not os.path.isdir(logPath) ):
     print '@ERROR : Create it before submitting '
     print 'Exit'
     sys.exit(-1)
-    
+
+# CREATE DICTIONARY TO BE USED AT JOB SUBMISSION TIME
 repDict = {'en':en,'logpath':logPath,'job':'','task':opts.task,'queue': 'all.q','timestamp':timestamp,'additional':'','job_id':'noid','nprocesses':str(max(int(pathconfig.get('Configuration','nprocesses')),1))}
+
+# STANDARD WORKFLOW SUBMISSION FUNCTION
 def submit(job,repDict,redirect_to_null=False):
     global counter
     repDict['job'] = job
@@ -235,6 +231,7 @@ def submit(job,repDict,redirect_to_null=False):
         dump_config(configs,"%(logpath)s/%(timestamp)s_%(job)s_%(en)s_%(task)s.config" %(repDict))
         subprocess.call([command], shell=True)
 
+# SINGLE (i.e. FILE BY FILE) AND SPLITTED FILE WORKFLOW SUBMISSION FUNCTION
 def submitsinglefile(job,repDict,file,run_locally,counter_local):
     global counter
     repDict['job'] = job
@@ -254,8 +251,8 @@ def submitsinglefile(job,repDict,file,run_locally,counter_local):
     command = command + ' "' + str(file)+ '"'
     dump_config(configs,"%(logpath)s/%(timestamp)s_%(job)s_%(en)s_%(task)s.config" %(repDict))
     subprocess.call([command], shell=True)
-    # sys.exit()
 
+# MERGING FUNCTION FOR SINGLE (i.e. FILE BY FILE) AND SPLITTED FILE WORKFLOW TO BE COMPATIBLE WITH THE OLD WORKFLOW
 def mergesubmitsinglefile(job,repDict,run_locally):
     global counter
     repDict['job'] = job
@@ -274,15 +271,12 @@ def mergesubmitsinglefile(job,repDict,run_locally):
     dump_config(configs,"%(logpath)s/%(timestamp)s_%(job)s_%(en)s_%(task)s.config" %(repDict))
     subprocess.call([command], shell=True)
 
+# RETRIEVE FILELIST FOR THE TREECOPIER PSI AND SINGLE FILE SYS STEPS
 def getfilelist(job):
-    pathIN = config.get('Directories','PREPin')
-    pathOUT = config.get('Directories','PREPout')
-
-    TreeCopierPSI = config.get('Configuration','TreeCopierPSI')
-
     samplefiles = config.get('Directories','samplefiles')
     list = filelist(samplefiles,job)
     return list
+
 
 if opts.task == 'train':
     train_list = (config.get('MVALists','List_for_submitscript')).split(',')
@@ -292,21 +286,23 @@ if opts.task == 'train':
 
 
 if opts.task == 'dc':
-    #DC_vars = config.items('Limit')
     DC_vars= (config.get('LimitGeneral','List')).split(',')
     print DC_vars
 
 if opts.task == 'plot':
     Plot_vars= (config.get('Plot_general','List')).split(',')
 
+
 if not opts.task == 'prep':
     path = config.get("Directories","samplepath")
     info = ParseInfo(samplesinfo,path)
+
 
 if opts.task == 'plot': 
     repDict['queue'] = 'all.q'
     for item in Plot_vars:
         submit(item,repDict)
+
 
 if opts.task == 'trainReg':
     repDict['queue'] = 'all.q'
@@ -316,10 +312,9 @@ if opts.task == 'trainReg':
 elif opts.task == 'dc':
     repDict['queue'] = 'all.q'
     for item in DC_vars:
-        #item here contains the dc name
+        # item here contains the dc name
         submit(item,repDict)
-        #if 'ZH%s'%opts.mass in item:
-        #    submit(item,repDict)
+
 
 elif opts.task == 'prep':
     if ( opts.samples == ""):
@@ -330,6 +325,7 @@ elif opts.task == 'prep':
     else:
         for sample in samplesList:
             submit(sample,repDict)
+
 
 elif opts.task == 'singleprep' or opts.task == 'singlesys' or opts.task == 'mergesingleprep' or opts.task == 'mergesinglesys':
     if ( opts.samples == ""):
@@ -359,19 +355,23 @@ elif opts.task == 'singleprep' or opts.task == 'singlesys' or opts.task == 'merg
         elif opts.task == 'mergesingleprep' or opts.task == 'mergesinglesys':
             mergesubmitsinglefile(sample,repDict,run_locally)
             
+
+# ADD SYSTEMATIC UNCERTAINTIES AND ADDITIONAL HIGHER LEVEL VARIABLES TO THE TREES
 elif opts.task == 'sys' or opts.task == 'syseval':
     path = config.get("Directories","SYSin")
     info = ParseInfo(samplesinfo,path)
     if opts.samples == "":
         for job in info:
             if (job.subsample): 
-                continue #avoid multiple submissions form subsamples
+                continue # avoid multiple submissions form subsamples
             # TO FIX FOR SPLITTED SAMPLE
             submit(job.name,repDict)
     else:
         for sample in samplesList:
             submit(sample,repDict)
 
+
+# EVALUATION OF EVENT BY EVENT BDT SCORE
 elif opts.task == 'eval':
     repDict['queue'] = 'long.q'
     path = config.get("Directories","MVAin")
@@ -379,7 +379,7 @@ elif opts.task == 'eval':
     if opts.samples == "":
         for job in info:
             if (job.subsample): 
-                continue #avoid multiple submissions from subsamples
+                continue # avoid multiple submissions from subsamples
             if(info.checkSplittedSampleName(job.identifier)): # if multiple entries for one name  (splitted samples) use the identifier to submit
                 print '@INFO: Splitted samples: submit through identifier'
                 submit(job.identifier,repDict)
@@ -390,19 +390,22 @@ elif opts.task == 'eval':
             submit(sample,repDict)
 
 
+# POSSIBILITY TO SPLIT SINGLE MERGED FILES IN SUBFILES
+# IN PRINCIPLE USEFUL BUT NOT USED ANYMORE AS THE LOGIC CHANGED (I.E. DON'T MERGE FILES)
 elif( opts.task == 'split' ):
     path = config.get("Directories","SPLITin")
     repDict['job_id']= int(opts.nevents_split_nfiles_single) if int(opts.nevents_split_nfiles_single) > 0 else 100000
     info = ParseInfo(samplesinfo,path)
     if ( opts.samples == "" ):
         for job in info:
-            if (job.subsample): continue #avoid multiple submissions from subsamples
+            if (job.subsample): continue # avoid multiple submissions from subsamples
             submit(job.name,repDict)
     else:
         for sample in samplesList:
             submit(sample,repDict)
 
-#BDT optimisation
+
+# BDT optimisation
 elif opts.task == 'mva_opt':
     total_number_of_steps=1
     setting = ''
@@ -417,8 +420,7 @@ elif opts.task == 'mva_opt':
     repDict['job_id']=config.get('Optimisation','training')
     submit('OPT_main_set',repDict,True)
     main_setting=setting
-
-    #Scanning all the parameters found in the training config in the Optimisation sector
+    # Scanning all the parameters found in the training config in the Optimisation sector
     for par in (config.get('Optimisation','parameters').split(',')):
         scan_par=eval(config.get('Optimisation',par))
         print par
@@ -428,9 +430,9 @@ elif opts.task == 'mva_opt':
                 print value
                 setting=re.sub(par+'.*?:',par+'='+str(value)+':',main_setting)
                 repDict['additional']=setting
-#               repDict['job_id']=config.get('Optimisation','training')
+                # repDict['job_id']=config.get('Optimisation','training')
                 submit('OPT_'+par+str(value),repDict,True)
-#               submit(config.get('Optimisation','training'),repDict)
+                # submit(config.get('Optimisation','training'),repDict)
                 print setting
 
 
