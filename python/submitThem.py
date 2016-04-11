@@ -473,7 +473,6 @@ elif opts.task == 'mva_opt_eval':
     #List all the weights produced from the optimisation, read from the weight directory. return weights_list
     weights = ''
     for cw in config_weights_list:
-        print 'cw is', cw
         for w in os.listdir(MVAdir):
             w = w.replace(factoryname+'_','')
             w = w.replace('.root','')
@@ -483,7 +482,7 @@ elif opts.task == 'mva_opt_eval':
     #submit the jobs
     info = ParseInfo(samplesinfo,path)
     repDict['additional']=weights
-    print 'additional is', repDict['additional']
+    print 'The optimisation weights are', weights
     if opts.samples == "":
         for job in info:
             if (job.subsample):
@@ -498,6 +497,6 @@ elif opts.task == 'mva_opt_eval':
             submit(sample,repDict)
 
 
-#os.system('qstat')
+os.system('qstat')
 if (opts.philipp_love_progress_bars):
     os.system('./qstat.py') 
