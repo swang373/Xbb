@@ -64,20 +64,59 @@ def mergetreePSI(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config)
     print (pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut)
     print "##### MERGE TREE - BEGIN ######"
 
+    print 'checking if output file exists:',pathOUT+'/'+newprefix+folderName+".root"
+    f = ROOT.TFile.Open(pathOUT+'/'+newprefix+folderName+".root",'read')
+    if not f:
+        print "MERGED FILE DOESN'T EXIST, CREATING IT"
+    elif f.GetNkeys() == 0 or f.TestBit(ROOT.TFile.kRecovered) or f.IsZombie():
+        print "MERGED FILE EXISTS BUT IS CORRUPTED, CREATING IT"
+    else:
+        print "MERGED FILE EXISTS AND IS NOT CORRUPTED, EXITING"
+        sys.exit()
+
     merged = pathOUT+'/'+newprefix+folderName+".root "
 
     t = ROOT.TFileMerger(ROOT.kFALSE)
     __tmpPath = os.environ["TMPDIR"]
     tmp_filename = __tmpPath+'/'+newprefix+folderName+".root "
-    print 't.OutputFile('+tmp_filename+',"RECREATE")'
-    t.OutputFile(tmp_filename, "RECREATE")
+    print 'tmp_filename',tmp_filename
+    # print 't.OutputFile('+tmp_filename+',"RECREATE")'
+    # t.OutputFile(tmp_filename, "RECREATE")
     outputFolder = "%s/%s/" %(pathOUT,folderName)
     print 'outputFolder is', outputFolder
+    # command = 'hadd -f -k -O
+    # command = 'hadd -f '+tmp_filename+' '
+    allFiles = []
     for file in os.listdir(outputFolder.replace('root://t3dcachedb03.psi.ch:1094','').replace('gsidcap://t3se01.psi.ch:22128/','').replace('dcap://t3se01.psi.ch:22125/','')):
         if file.startswith('tree'):
-            print 't.AddFile('+outputFolder+file+')'
-            t.AddFile(outputFolder+file)
-    t.Merge()
+            allFiles.append(outputFolder+file)
+            # command = command+' '+outputFolder+file
+            # print 't.AddFile('+outputFolder+file+')'
+            # t.AddFile(outputFolder+file)
+    print 'len(allFiles)',len(allFiles),'allFiles[0]',allFiles[0]
+    n=50
+    allFiles_chunks = [allFiles[i:i+n] for i in range(0, len(allFiles), n)]
+    print 'len(allFiles_chunks)',len(allFiles_chunks),'allFiles_chunks[0]',allFiles_chunks[0]
+    tmpfile_chunk = __tmpPath+'/'+newprefix+folderName+'_tmpfile_chunk_'
+    print 'tmpfile_chunk',tmpfile_chunk
+    counter = 0
+    for allFiles_chunk in allFiles_chunks:
+        counter = counter + 1
+        command = 'hadd -f '+tmpfile_chunk+str(counter)+'.root '
+        for file in allFiles_chunk:
+            command = command+' '+file
+        print 'merging chunk '+str(counter)
+        subprocess.call([command], shell=True)
+    command = 'hadd -f '+tmp_filename+' '
+    for ichunk in range(1,counter+1):
+        command = command+' '+tmpfile_chunk+str(ichunk)+'.root '
+    print 'start to merge all files'
+    print 'command',command
+    subprocess.call([command], shell=True)
+    # print command
+    # os.system(command)
+    # t.Merge()
+    print 'finished merging all files'
 
     # DUMMY WAYS TO COPE WITH FILE COMMAND PROTOCOLS @T2-PSI...
     del_merged = merged.replace('gsidcap://t3se01.psi.ch:22128/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=').replace('dcap://t3se01.psi.ch:22125/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=').replace('root://t3dcachedb03.psi.ch:1094/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
@@ -94,6 +133,7 @@ def mergetreePSI(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config)
     if not f or f.GetNkeys() == 0 or f.TestBit(ROOT.TFile.kRecovered) or f.IsZombie():
         print 'TERREMOTO AND TRAGEDIA: THE MERGED FILE IS CORRUPTED!!! ERROR: exiting'
         sys.exit(1)
+    f.Close()
 
     command = 'rm '+__tmpPath+'/'+newprefix+folderName+'.root'
     print command
