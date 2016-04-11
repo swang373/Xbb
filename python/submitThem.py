@@ -226,7 +226,7 @@ def submit(job,repDict,redirect_to_null=False):
             counter = int(subprocess.check_output('ps aux | grep $USER | grep '+opts.task +' | wc -l', shell=True))
 
         command = 'sh runAll.sh %(job)s %(en)s ' %(repDict) + opts.task + ' ' + repDict['nprocesses']+ ' ' + repDict['job_id'] + ' ' + repDict['additional']
-        if redirect_to_null: command = ' 2>&1 > /dev/null &'
+        if redirect_to_null: command = command + ' 2>&1 > /dev/null &'
         print "the command is ", command
         dump_config(configs,"%(logpath)s/%(timestamp)s_%(job)s_%(en)s_%(task)s.config" %(repDict))
         subprocess.call([command], shell=True)
