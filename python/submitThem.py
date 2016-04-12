@@ -227,6 +227,7 @@ def submit(job,repDict,redirect_to_null=False):
 
         command = 'sh runAll.sh %(job)s %(en)s ' %(repDict) + opts.task + ' ' + repDict['nprocesses']+ ' ' + repDict['job_id'] + ' ' + repDict['additional']
         if redirect_to_null: command = command + ' 2>&1 > /dev/null &'
+        else: command = command + ' > %(logpath)s/%(timestamp)s_%(job)s_%(en)s_%(task)s.out'
         print "the command is ", command
         dump_config(configs,"%(logpath)s/%(timestamp)s_%(job)s_%(en)s_%(task)s.config" %(repDict))
         subprocess.call([command], shell=True)
