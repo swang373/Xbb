@@ -51,24 +51,24 @@ HT200          = "(lheHT>200&&lheHT<400)"
 HT400          = "(lheHT>400&&lheHT<600)"
 HT600          = "(lheHT>600)"
 
-print "WBjets\tHT100\t",getWeight(WjetsHT100,   WBjets, HT100+"&&"+WBJets)
-print "WBjets\tHT200\t",getWeight(WjetsHT200,   WBjets, HT200+"&&"+WBJets)
-print "WBjets\tHT400\t",getWeight(WjetsHT400,   WBjets, HT400+"&&"+WBJets)
-print "WBjets\tHT600\t",getWeight(WjetsHT600,   WBjets, HT600+"&&"+WBJets)
+print "weightWBjetsHT100=\t",getWeight(WjetsHT100,   WBjets, HT100+"&&"+WBJets)
+print "weightWBjetsHT200=\t",getWeight(WjetsHT200,   WBjets, HT200+"&&"+WBJets)
+print "weightWBjetsHT400=\t",getWeight(WjetsHT400,   WBjets, HT400+"&&"+WBJets)
+print "weightWBjetsHT600=\t",getWeight(WjetsHT600,   WBjets, HT600+"&&"+WBJets)
 print ""
-print "WjetsBgen\tHT100\t",getWeight(WjetsHT100,   WjetsBgen, HT100+"&&"+WJetsBGen)
-print "WjetsBgen\tHT200\t",getWeight(WjetsHT200,   WjetsBgen, HT200+"&&"+WJetsBGen)
-print "WjetsBgen\tHT400\t",getWeight(WjetsHT400,   WjetsBgen, HT400+"&&"+WJetsBGen)
-print "WjetsBgen\tHT600\t",getWeight(WjetsHT600,   WjetsBgen, HT600+"&&"+WJetsBGen)
+print "weightWjetsBgenHT100=\t",getWeight(WjetsHT100,   WjetsBgen, HT100+"&&"+WJetsBGen)
+print "weightWjetsBgenHT200=\t",getWeight(WjetsHT200,   WjetsBgen, HT200+"&&"+WJetsBGen)
+print "weightWjetsBgenHT400=\t",getWeight(WjetsHT400,   WjetsBgen, HT400+"&&"+WJetsBGen)
+print "weightWjetsBgenHT600=\t",getWeight(WjetsHT600,   WjetsBgen, HT600+"&&"+WJetsBGen)
 print ""
-print "ZBjets\tHT100\t",getWeight(ZjetsHT100,   ZBjets, HT100+"&&"+DYBJets)
-print "ZBjets\tHT200\t",getWeight(ZjetsHT200,   ZBjets, HT200+"&&"+DYBJets)
-print "ZBjets\tHT400\t",getWeight(ZjetsHT400,   ZBjets, HT400+"&&"+DYBJets)
-print "ZBjets\tHT600\t",getWeight(ZjetsHT600,   ZBjets, HT600+"&&"+DYBJets)
+print "weightZBjetsHT100=\t",getWeight(ZjetsHT100,   ZBjets, HT100+"&&"+DYBJets)
+print "weightZBjetsHT200=\t",getWeight(ZjetsHT200,   ZBjets, HT200+"&&"+DYBJets)
+print "weightZBjetsHT400=\t",getWeight(ZjetsHT400,   ZBjets, HT400+"&&"+DYBJets)
+print "weightZBjetsHT600=\t",getWeight(ZjetsHT600,   ZBjets, HT600+"&&"+DYBJets)
 print ""
-print "ZLLBjets\tHT100\t",getWeight(ZLLjetsHT100,   ZLLBjets, HT100+"&&"+DYBJets)
-print "ZLLBjets\tHT200\t",getWeight(ZLLjetsHT200,   ZLLBjets, HT200+"&&"+DYBJets)
-print "ZLLBjets\tHT400\t",getWeight(ZLLjetsHT400,   ZLLBjets, HT400+"&&"+DYBJets)
-print "ZLLBjets\tHT600\t",getWeight(ZLLjetsHT600,   ZLLBjets, HT600+"&&"+DYBJets)
+print "weightZLLBjetsHT100=\t",getWeight(ZLLjetsHT100,   ZLLBjets, HT100+"&&"+DYBJets)
+print "weightZLLBjetsHT200=\t",getWeight(ZLLjetsHT200,   ZLLBjets, HT200+"&&"+DYBJets)
+print "weightZLLBjetsHT400=\t",getWeight(ZLLjetsHT400,   ZLLBjets, HT400+"&&"+DYBJets)
+print "weightZLLBjetsHT600=\t",getWeight(ZLLjetsHT600,   ZLLBjets, HT600+"&&"+DYBJets)
 
 
