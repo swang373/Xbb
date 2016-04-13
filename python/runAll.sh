@@ -251,10 +251,15 @@ if [ $task = "mva_opt" ]; then
     echo "BDT factory settings"
     echo $additional_arg
     echo "Runnning"
-    ./train.py --name ${sample} --training ${job_id} --config ${energy}config/${configList} --setting ${additional_arg} --local False
+    python -u train.py --name ${sample} --training ${job_id} --config ${energy}config/${configList} --setting ${additional_arg} --local True
 fi
 if [ $task = "mva_opt_eval" ]; then
     ./evaluateMVA.py --discr $MVAList --samples $sample --config ${energy}config/${configList} --weight ${additional_arg}
 fi
+#Work in progress
+#if [ $task = "mva_opt_dc" ]; then
+#    echo "./workspace_datacard.py --variable $sample --config ${energy}config/${configList}  --config ${energy}config/datacards.ini"
+#    ./workspace_datacard.py --variable $sample --config ${energy}config/${configList}  --config ${energy}config/datacards.ini --optimisation ${additional_arg}
+#fi
 
 echo "end runAll.sh"

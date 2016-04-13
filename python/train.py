@@ -43,7 +43,6 @@ anaTag = config.get("Analysis","tag")
 run=opts.training
 gui=opts.verbose
 
-print 'opts is', opts
 
 #print "Compile external macros"
 #print "=======================\n"
@@ -75,10 +74,27 @@ factorysettings=config.get('factory','factorysettings')
 MVAtype=config.get(run,'MVAtype')
 #MVA name and settings. From local running or batch running different option
 print opts.local
+optimisation_training = False
+if not  opts.MVAsettings == '':
+    print 'This is an optimisation training'
+    opt_MVAsettings = opts.MVAsettings
+    optimisation_training = True
+
 if(eval(opts.local)):
   print 'Local run'
   MVAname=run
   MVAsettings=config.get(run,'MVAsettings')
+  if optimisation_training:
+      MVAname=opts.set_name
+      if not opt_MVAsettings == 'main_par':
+          opt_Dict = dict(item.split("=") for item in opt_MVAsettings.split(","))
+          for key in opt_Dict:
+              for par in MVAsettings.split(':'):
+                  if not key in par: continue
+                  par_new = par[:par.find('=')+1]
+                  par_new += opt_Dict[key]
+                  MVAsettings = MVAsettings.replace(par,par_new)
+
 elif(opts.set_name!='' and opts.MVAsettings!=''):
   print 'Batch run'
   MVAname=opts.set_name
@@ -92,6 +108,9 @@ print 'used : ' + MVAname
 
 fnameOutput = MVAdir+factoryname+'_'+MVAname+'.root'
 print '@DEBUG: output file name : ' + fnameOutput
+
+
+#sys.exit()
 
 #locations
 path=config.get('Directories','SYSout')

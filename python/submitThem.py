@@ -227,7 +227,7 @@ def submit(job,repDict,redirect_to_null=False):
 
         command = 'sh runAll.sh %(job)s %(en)s ' %(repDict) + opts.task + ' ' + repDict['nprocesses']+ ' ' + repDict['job_id'] + ' ' + repDict['additional']
         if redirect_to_null: command = command + ' 2>&1 > /dev/null &'
-        else: command = command + ' > %(logpath)s/%(timestamp)s_%(job)s_%(en)s_%(task)s.out'
+        else: command = command + ' 2>&1 > %(logpath)s/%(timestamp)s_%(job)s_%(en)s_%(task)s.out' %(repDict) + ' &'
         print "the command is ", command
         dump_config(configs,"%(logpath)s/%(timestamp)s_%(job)s_%(en)s_%(task)s.config" %(repDict))
         subprocess.call([command], shell=True)
@@ -415,25 +415,22 @@ elif opts.task == 'mva_opt':
         setting+=par+'='+str(scan_par[0])+':'
         if len(scan_par) > 1 and scan_par[2] != 0:
             total_number_of_steps+=scan_par[2]
-    setting=setting[:-1] # eliminate last column at the end of the setting string
-    print setting
-    repDict['additional']=setting
+    #setting=setting[:-1] # eliminate last column at the end of the setting string
+    #repDict['additional']=setting
+    repDict['additional']='main_par'
     repDict['job_id']=config.get('Optimisation','training')
-    submit('OPT_main_set',repDict,True)
+    submit('OPT_main_set',repDict,False)
     main_setting=setting
     # Scanning all the parameters found in the training config in the Optimisation sector
     for par in (config.get('Optimisation','parameters').split(',')):
         scan_par=eval(config.get('Optimisation',par))
-        print par
         if len(scan_par) > 1 and scan_par[2] != 0:
             for step in range(scan_par[2]):
                 value = (scan_par[0])+((1+step)*(scan_par[1]-scan_par[0])/scan_par[2])
-                print value
                 setting=re.sub(par+'.*?:',par+'='+str(value)+':',main_setting)
                 repDict['additional']=setting
-                submit('OPT_'+par+str(value),repDict,True)
+                submit('OPT_'+par+str(value),repDict,False)
                 # submit(config.get('Optimisation','training'),repDict)
-                print setting
 
 elif opts.task == 'mva_opt_eval':
     #
@@ -444,7 +441,6 @@ elif opts.task == 'mva_opt_eval':
     repDict['queue'] = 'long.q'
     path = config.get("Directories","MVAin")
     repDict['job_id']=config.get('Optimisation','training')
-    neval=int(config.get('Optimisation','evaluation_per_job'))
     factoryname=config.get('factory','factoryname')
     MVAdir=config.get('Directories','vhbbpath')+'/python/weights/'
     #Read weights from optimisaiton config, store the in a list (copied from mva_opt)
@@ -455,20 +451,15 @@ elif opts.task == 'mva_opt_eval':
         setting+=par+'='+str(scan_par[0])+':'
         if len(scan_par) > 1 and scan_par[2] != 0:
             total_number_of_steps+=scan_par[2]
-    setting=setting[:-1] # eliminate last column at the end of the setting string
-    print setting
     repDict['additional']=setting
     repDict['job_id']=config.get('Optimisation','training')
-    submit('OPT_main_set',repDict,True)
     main_setting=setting
-    config_weights_list = []
+    config_weights_list = ['OPT_main_set']
     for par in (config.get('Optimisation','parameters').split(',')):
         scan_par=eval(config.get('Optimisation',par))
-        print par
         if len(scan_par) > 1 and scan_par[2] != 0:
             for step in range(scan_par[2]):
                 value = (scan_par[0])+((1+step)*(scan_par[1]-scan_par[0])/scan_par[2])
-                print value
                 setting=re.sub(par+'.*?:',par+'='+str(value)+':',main_setting)
                 config_weights_list.append('OPT_'+par+str(value))
     #List all the weights produced from the optimisation, read from the weight directory. return weights_list
@@ -496,6 +487,36 @@ elif opts.task == 'mva_opt_eval':
         for sample in samplesList:
             print sample
             submit(sample,repDict)
+
+#Work in progress...
+#elif opts.task == 'mva_opt_dc':
+#    total_number_of_steps=1
+#    setting = ''
+#    for par in (config.get('Optimisation','parameters').split(',')):
+#        scan_par=eval(config.get('Optimisation',par))
+#        setting+=par+'='+str(scan_par[0])+':'
+#        if len(scan_par) > 1 and scan_par[2] != 0:
+#            total_number_of_steps+=scan_par[2]
+#    setting=setting[:-1] # eliminate last column at the end of the setting string
+#    print setting
+#    repDict['additional']=setting
+#    dc = config.get('Optimisation','dc')
+#    #repDict['job_id']=config.get('Optimisation','dc')
+#    submit('dc',repDict,True)
+#    main_setting=setting
+#    # Scanning all the parameters found in the training config in the Optimisation sector
+#    for par in (config.get('Optimisation','parameters').split(',')):
+#        scan_par=eval(config.get('Optimisation',par))
+#        print par
+#        if len(scan_par) > 1 and scan_par[2] != 0:
+#            for step in range(scan_par[2]):
+#                value = (scan_par[0])+((1+step)*(scan_par[1]-scan_par[0])/scan_par[2])
+#                print value
+#                setting=re.sub(par+'.*?:',par+'='+str(value)+':',main_setting)
+#                repDict['additional']=setting
+#                submit('OPT_'+par+str(value),repDict,True)
+#                # submit(config.get('Optimisation','training'),repDict)
+#                print setting
 
 
 os.system('qstat')
