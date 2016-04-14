@@ -489,36 +489,33 @@ elif opts.task == 'mva_opt_eval':
             submit(sample,repDict)
 
 #Work in progress...
-#elif opts.task == 'mva_opt_dc':
-#    total_number_of_steps=1
-#    setting = ''
-#    for par in (config.get('Optimisation','parameters').split(',')):
-#        scan_par=eval(config.get('Optimisation',par))
-#        setting+=par+'='+str(scan_par[0])+':'
-#        if len(scan_par) > 1 and scan_par[2] != 0:
-#            total_number_of_steps+=scan_par[2]
-#    setting=setting[:-1] # eliminate last column at the end of the setting string
-#    print setting
-#    repDict['additional']=setting
-#    dc = config.get('Optimisation','dc')
-#    #repDict['job_id']=config.get('Optimisation','dc')
-#    submit('dc',repDict,True)
-#    main_setting=setting
-#    # Scanning all the parameters found in the training config in the Optimisation sector
-#    for par in (config.get('Optimisation','parameters').split(',')):
-#        scan_par=eval(config.get('Optimisation',par))
-#        print par
-#        if len(scan_par) > 1 and scan_par[2] != 0:
-#            for step in range(scan_par[2]):
-#                value = (scan_par[0])+((1+step)*(scan_par[1]-scan_par[0])/scan_par[2])
-#                print value
-#                setting=re.sub(par+'.*?:',par+'='+str(value)+':',main_setting)
-#                repDict['additional']=setting
-#                submit('OPT_'+par+str(value),repDict,True)
-#                # submit(config.get('Optimisation','training'),repDict)
-#                print setting
+elif opts.task == 'mva_opt_dc':
+    total_number_of_steps=1
+    setting = ''
+    for par in (config.get('Optimisation','parameters').split(',')):
+        scan_par=eval(config.get('Optimisation',par))
+        setting+=par+'='+str(scan_par[0])+':'
+        if len(scan_par) > 1 and scan_par[2] != 0:
+            total_number_of_steps+=scan_par[2]
+    print setting
+    repDict['additional']='OPT_main_set'
+    dc = config.get('Optimisation','dc')
+    #Still need to launch main
+    submit(dc,repDict,False)
+    main_setting=setting
+    # Scanning all the parameters found in the training config in the Optimisation sector
+    for par in (config.get('Optimisation','parameters').split(',')):
+        scan_par=eval(config.get('Optimisation',par))
+        print par
+        if len(scan_par) > 1 and scan_par[2] != 0:
+            for step in range(scan_par[2]):
+                value = (scan_par[0])+((1+step)*(scan_par[1]-scan_par[0])/scan_par[2])
+                print value
+                repDict['additional']='OPT_'+par+str(value)
+                submit(dc,repDict,False)
+                print setting
 
 
-os.system('qstat')
+#os.system('qstat')
 if (opts.philipp_love_progress_bars):
     os.system('./qstat.py') 
