@@ -113,7 +113,7 @@ print '@DEBUG: output file name : ' + fnameOutput
 #sys.exit()
 
 #locations
-path=config.get('Directories','SYSout')
+path=config.get('Directories','MVAin')
 
 TCutname=config.get(run, 'treeCut')
 TCut=config.get('Cuts',TCutname)
@@ -141,8 +141,12 @@ info = ParseInfo(samplesinfo,path)
 workdir=ROOT.gDirectory.GetPath()
 
 
-TrainCut='%s & EventForTraining==1'%TCut
-EvalCut='%s & EventForTraining==0'%TCut
+#Remove EventForTraining in order to run the MVA directly from the PREP step
+TrainCut='%s & !((evt%s)==0 || isData)'%(TCut,'%2')
+EvalCut= '%s & ((evt%s)==0 || isData)'%(TCut,'%2')
+#TrainCut='%s & EventForTraining==1'%TCut
+#EvalCut='%s & EventForTraining==0'%TCut
+
 print "TrainCut:",TrainCut
 print "EvalCut:",EvalCut
 cuts = [TrainCut,EvalCut] 

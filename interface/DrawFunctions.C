@@ -9,7 +9,7 @@ TH2F* NewOverQCD = 0;
 
 bool Under(float phi, float eta){
     if(_file0==0){
-        _file0 = TFile::Open("/scratch/sdonato/VHbbRun2/V21/CMSSW_7_1_5/src/Xbb/python/plot.root");
+        _file0 = TFile::Open("/scratch/sdonato/VHbbRun2/V21/CMSSW_7_1_5/src/Xbb/python/plot.root","r");
     }
     if(NewUnder==0){
         NewUnder = (TH2F*)_file0->Get("NewUnder");
@@ -21,7 +21,7 @@ bool Under(float phi, float eta){
 }
 bool Over(float phi, float eta){
     if(_file0==0){
-        _file0 = TFile::Open("/scratch/sdonato/VHbbRun2/V21/CMSSW_7_1_5/src/Xbb/python/plot.root");
+        _file0 = TFile::Open("/scratch/sdonato/VHbbRun2/V21/CMSSW_7_1_5/src/Xbb/python/plot.root","r");
     }
     if(NewOver==0){
         NewOver = (TH2F*)_file0->Get("NewOver");
@@ -33,7 +33,7 @@ bool Over(float phi, float eta){
 }
 bool UnderQCD(float phi, float eta){
     if(_file0==0){
-        _file0 = TFile::Open("/scratch/sdonato/VHbbRun2/V21/CMSSW_7_1_5/src/Xbb/python/plot.root");
+        _file0 = TFile::Open("/scratch/sdonato/VHbbRun2/V21/CMSSW_7_1_5/src/Xbb/python/plot.root","r");
     }
     if(NewUnderQCD==0){
         NewUnderQCD = (TH2F*)_file0->Get("NewUnderQCD");
@@ -45,7 +45,7 @@ bool UnderQCD(float phi, float eta){
 }
 bool OverQCD(float phi, float eta){
     if(_file0==0){
-        _file0 = TFile::Open("/scratch/sdonato/VHbbRun2/V21/CMSSW_7_1_5/src/Xbb/python/plot.root");
+        _file0 = TFile::Open("/scratch/sdonato/VHbbRun2/V21/CMSSW_7_1_5/src/Xbb/python/plot.root","r");
     }
     if(NewOverQCD==0){
         NewOverQCD = (TH2F*)_file0->Get("NewOverQCD");

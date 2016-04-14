@@ -63,7 +63,10 @@ class HistoMaker:
 
         #get the conversion rate in case of BDT plots
         TrainFlag = eval(self.config.get('Analysis','TrainFlag'))
-        BDT_add_cut='EventForTraining == 0'
+
+        #Remove EventForTraining in order to run the MVA directly from the PREP step
+        BDT_add_cut='((evt%2) == 0 || isData)'
+#        BDT_add_cut='EventForTraining == 0'
 
         plot_path = self.config.get('Directories','plotpath')
         addOverFlow=eval(self.config.get('Plot_general','addOverFlow'))
@@ -195,10 +198,20 @@ class HistoMaker:
                     ScaleFactor = self.tc.get_scale(job,self.config,self.lumi)
                 if ScaleFactor != 0:
                     hTree.Scale(ScaleFactor)
-                print '\t-->import %s\t Integral: %s'%(job.name,hTree.Integral())
+                integral = hTree.Integral()
+                print '\t-->import %s\t Integral: %s'%(job.name,integral)
                 print("job:",job.name," ScaleFactor=",ScaleFactor)
                 print("END RESCALE")
                 print("START addOverFlow")
+                # !! Brute force correction for histograms with negative integral (problems with datacard) !!
+                if integral<0:
+                    hTree.Scale(-0.001)
+                    print "#"*30
+                    print "#"*30
+                    print "original integral was:",integral
+                    print "now is:", hTree.Integral()
+                    print "#"*30
+                    print "#"*30
             if addOverFlow:
                 uFlow = hTree.GetBinContent(0)+hTree.GetBinContent(1)
                 oFlow = hTree.GetBinContent(hTree.GetNbinsX()+1)+hTree.GetBinContent(hTree.GetNbinsX())
