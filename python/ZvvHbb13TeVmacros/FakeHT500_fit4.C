@@ -9,7 +9,7 @@
    c1->SetBorderSize(2);
    c1->SetFrameBorderMode(0);
    c1->SetFrameBorderMode(0);
-   
+
    TF1 *expoRatio = new TF1("expoRatio","[0]*exp([1]*x)",500,700);
    expoRatio->SetFillColor(19);
    expoRatio->SetFillStyle(0);
@@ -30,7 +30,7 @@
    expoRatio->SetParError(1,0);
    expoRatio->SetParLimits(1,0,0);
    expoRatio->Draw("");
-   
+
    TPaveText *pt = new TPaveText(0.3843966,0.9339831,0.6156034,0.995,"blNDC");
    pt->SetName("title");
    pt->SetBorderSize(0);
