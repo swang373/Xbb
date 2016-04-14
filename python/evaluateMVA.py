@@ -26,10 +26,16 @@ parser.add_option("-S", "--samples", dest="names", default="",
                       help="samples you want to run on")
 parser.add_option("-C", "--config", dest="config", default=[], action="append",
                       help="configuration file")
+parser.add_option("-W", "--weight", dest="weight", default='',
+                      help="list of weights, used when performing the optimisation")
 (opts, args) = parser.parse_args(argv)
 
 if opts.config =="":
         opts.config = "config"
+
+weight = opts.weight
+evaluate_optimisation = False
+if weight != '': evaluate_optimisation = True
 
 #Import after configure to get help message
 from myutils import BetterConfigParser, progbar, printc, ParseInfo, MvaEvaluator
@@ -51,7 +57,13 @@ OUTpath = config.get('Directories','MVAout')
 
 info = ParseInfo(samplesinfo,INpath)
 
-arglist=opts.discr #RTight_blavla,bsbsb
+arglist = ''
+
+if not evaluate_optimisation:
+    arglist=opts.discr #RTight_blavla,bsbsb
+else:
+#    print '@INFO: Evaluating bdt for optimisation'
+    arglist=weight
 
 namelistIN=opts.names
 namelist=namelistIN.split(',')

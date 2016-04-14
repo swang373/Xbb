@@ -7,7 +7,7 @@
     tree->Draw("min(met_pt,mhtJet30) >> h2(100,90,290)","puWeight * sign(genWeight) * bTagWeight * (HLT_BIT_HLT_PFMET90_PFMHT90_IDTight_v||HLT_BIT_HLT_PFMET170_NoiseCleaned_v)","ERR,goff");
     h2->Scale(1./total);
 
-//    TCanvas* c1 = new TCanvas(""); 
+//    TCanvas* c1 = new TCanvas("");
     h1->SetLineWidth(2);
     h2->SetLineWidth(2);
 
@@ -20,12 +20,12 @@
 
     h1->Draw();
     h2->Draw("same");
-    
+
     c1->SetGridx();
     c1->SetGridy();
     c1->SaveAs("METSignalPlot.png");
     c1->SaveAs("METSignalPlot.pdf");
-        
+
 }
 
 

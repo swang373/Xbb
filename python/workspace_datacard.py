@@ -9,6 +9,7 @@ warnings.filterwarnings( action='ignore', category=RuntimeWarning, message='crea
 from optparse import OptionParser
 from myutils import BetterConfigParser, Sample, progbar, printc, ParseInfo, Rebinner, HistoMaker
 
+
 def useSpacesInDC(fileName):
     file_ = open(fileName,"r+")
 
@@ -55,6 +56,8 @@ parser.add_option("-V", "--variable", dest="variable", default="",
                       help="variable for shape analysis")
 parser.add_option("-C", "--config", dest="config", default=[], action="append",
                       help="configuration file")
+parser.add_option("-O", "--optimisation", dest="optimisation", default="",#not used for the moment
+                      help="variable for shape when optimising the BDT")
 (opts, args) = parser.parse_args(argv)
 config = BetterConfigParser()
 config.read(opts.config)
@@ -82,6 +85,12 @@ vhbbpath=config.get('Directories','vhbbpath')
 samplesinfo=config.get('Directories','samplesinfo')
 path = config.get('Directories','dcSamples')
 outpath=config.get('Directories','limits')
+optimisation=opts.optimisation
+optimisation_training = False
+if not optimisation == '':
+    print 'Preparing DC for BDT optimisaiton'
+    optimisation_training = True
+print 'optimisation is', optimisation
 try:
     os.stat(outpath)
 except:
@@ -89,6 +98,9 @@ except:
 # parse histogram config:
 treevar = config.get('dc:%s'%var,'var')
 name = config.get('dc:%s'%var,'wsVarName')
+if optimisation_training:
+    treevar = optimisation+'.nominal'
+    name += '_'+ optimisation
 title = name
 # set binning
 nBins = int(config.get('dc:%s'%var,'range').split(',')[0])
@@ -101,6 +113,19 @@ datas = config.get('dc:%s'%var,'dcBin')
 Datacardbin=config.get('dc:%s'%var,'dcBin')
 anType = config.get('dc:%s'%var,'type')
 setup=eval(config.get('LimitGeneral','setup'))
+
+if optimisation_training:
+   ROOToutname += optimisation
+
+
+import os
+if os.path.exists("../interface/DrawFunctions_C.so"):
+    print 'ROOT.gROOT.LoadMacro("../interface/DrawFunctions_C.so")'
+    ROOT.gROOT.LoadMacro("../interface/DrawFunctions_C.so")
+
+if os.path.exists("../interface/VHbbNameSpace_h.so"):
+    print 'ROOT.gROOT.LoadMacro("../interface/VHbbNameSpace_h.so")'
+    ROOT.gROOT.LoadMacro("../interface/VHbbNameSpace_h.so")
 
 print "Using",('dc:%s'%var,'var')
 print name
@@ -305,6 +330,7 @@ for syst in systematics:
         if bdt == True:
             #ff[1]='%s_%s'%(sys,Q.lower())
             _treevar = treevar.replace('.nominal','.%s_%s'%(syst,Q.lower()))
+            _treevar = treevar.replace('.Nominal','.%s_%s'%(syst,Q.lower()))
             print _treevar
         elif mjj == True:
             if syst == 'JER' or syst == 'JES':

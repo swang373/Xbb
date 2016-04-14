@@ -22,9 +22,10 @@ export TERM=""
 sample=$1           # sample you want to run on. It has to match the naming in sample.info.
 energy=$2           # sqrt(s) you want to run
 task=$3             # the task 
-job_id=$4           # needed for train optimisation. @TO FIX: it does not have a unique meaning
-additional_arg=$5   # needed for train optimisation. @TO FIX: it does not have a unique meaning
-optional_filelist=$6 # needed to run the prep step with limited number of files per job
+nprocesses=$4       # Dummy variable, used to shift the other parameters by +1
+job_id=$5           # needed for split step and train optimisation. @TO FIX: it does not have a unique meaning
+additional_arg=$6   # needed for train optimisation
+optional_filelist=$7 # needed to run the prep and sys step with limited number of files per job
 
 # echo '1:'${1}' 2:'${2}' 3:'${3}' 4:'${4}' 5:'${5}' 6:'${6}
 echo 
@@ -98,6 +99,8 @@ if [[ $whereToLaunch != "lxplus" ]]; then
   cd $CMSSW_BASE/src/
   if [[ $whereToLaunch == "pisa" ]]; then
     source /afs/pi.infn.it/grid_exp_sw/cms/scripts/setcms.sh
+    export TMPDIR=$CMSSW_BASE/src/tmp
+    if ! [ -e $TMPDIR ]; then mkdir $TMPDIR; fi
   else
     source /swshare/psit3/etc/profile.d/cms_ui_env.sh
     export LD_PRELOAD="libglobus_gssapi_gsi_gcc64pthr.so.0":${LD_PRELOAD}
@@ -108,8 +111,6 @@ if [[ $whereToLaunch != "lxplus" ]]; then
   export SCRAM_ARCH="slc5_amd64_gcc462"
   source $VO_CMS_SW_DIR/cmsset_default.sh
   eval `scramv1 runtime -sh`
-  export TMPDIR=$CMSSW_BASE/src/tmp
-  if ! [ -e $TMPDIR ]; then mkdir $TMPDIR; fi
 
   cd -   #back to the working dir
 fi
@@ -159,61 +160,81 @@ echo "============================"
 echo "The command is"
 
 if [ $task = "prep" ]; then
-    # ./prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList}
-#    print "./prepare_environment_with_config.py --samples" $sample "--config "${energy}"config/"${configList}" --config "${energy}"config/samples_nosplit.cfg #sometime"
-    echo "./prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.ini" #sometime I need this add: please check --config ${energy}
-    ./prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.ini #sometime I need this add: please check --config ${energy}config/samples_nosplit.cfg
+    echo "./prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.ini"
+    ./prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.ini
 fi
+
 if [ $task = "singleprep" ]; then
-    echo './prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.ini --filelist "${optional_filelist}"' #sometime I need this add: please check --config ${energy}
-    ./prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.ini --filelist "${optional_filelist}" #sometime I need this add: please check --config ${energy}config/samples_nosplit.cfg
+    echo './prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.ini --filelist "${optional_filelist}"'
+    ./prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.ini --filelist "${optional_filelist}"
 fi
+
 if [ $task = "mergesingleprep" ]; then
-    echo './prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.ini --filelist "${optional_filelist}"' #sometime I need this add: please check --config ${energy}
-    ./prepare_environment_with_config.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.ini --filelist "${optional_filelist}" #sometime I need this add: please check --config ${energy}config/samples_nosplit.cfg
+    echo './myutils/mergetreePSI.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.ini --filelist "${optional_filelist}"'
+    ./myutils/mergetreePSI.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.ini --filelist "${optional_filelist}"
 fi
+
 if [ $task = "trainReg" ]; then
-    # ./trainRegression.py --config ${energy}config/${configList}
     echo "./trainRegression.py --config ${energy}config/${configList} --config ${energy}config/regression.ini"
     ./trainRegression.py --config ${energy}config/${configList} --config ${energy}config/regression.ini
 fi
+
+if [ $task = "singlesys" ]; then
+    echo "singlesys: ./write_regression_systematics.py --samples $sample --config ${energy}config/${configList} --filelist ${optional_filelist}"
+    ./write_regression_systematics.py --samples $sample --config ${energy}config/${configList} --filelist ${optional_filelist}
+fi
+
 if [ $task = "sys" ]; then
     echo "./write_regression_systematics.py --samples $sample --config ${energy}config/${configList}"
     ./write_regression_systematics.py --samples $sample --config ${energy}config/${configList}
 fi
+
+if [ $task = "mergesinglesys" ]; then
+    echo './myutils/mergetreePSI.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.ini --filelist "${optional_filelist}"'
+    ./myutils/mergetreePSI.py --samples $sample --config ${energy}config/${configList} --config ${energy}config/samples_nosplit.ini --filelist "${optional_filelist}" --mergesys "True"
+fi
+
 if [ $task = "reg" ]; then
     ./only_regression.py --samples $sample --config ${energy}config/${configList}
 fi
+
 if [ $task = "eval" ]; then
     echo "./evaluateMVA.py --discr $MVAList --samples $sample --config ${energy}config/${configList}"
     ./evaluateMVA.py --discr $MVAList --samples $sample --config ${energy}config/${configList}
 fi
+
 if [ $task = "syseval" ]; then
     echo "./write_regression_systematics.py --samples $sample --config ${energy}config/${configList}"
     ./write_regression_systematics.py --samples $sample --config ${energy}config/${configList}
     echo "./evaluateMVA.py --discr $MVAList --samples $sample --config ${energy}config/${configList}"
     ./evaluateMVA.py --discr $MVAList --samples $sample --config ${energy}config/${configList}
 fi
+
 if [ $task = "train" ]; then
     echo "./train.py --training $sample --config ${energy}config/${configList} --local True"
-    ./train.py --training $sample --config ${energy}config/${configList} --local True
+    python train.py --training $sample --config ${energy}config/${configList} --local True
 fi
+
 if [ $task = "plot" ]; then
     echo "./tree_stack.py --region $sample --config ${energy}config/${configList}"
     ./tree_stack.py --region $sample --config ${energy}config/${configList}
 fi
+
 if [ $task = "dc" ]; then
     echo "./workspace_datacard.py --variable $sample --config ${energy}config/${configList}  --config ${energy}config/datacards.ini"
     ./workspace_datacard.py --variable $sample --config ${energy}config/${configList}  --config ${energy}config/datacards.ini
 fi
+
 if [ $task = "split" ]; then
     echo "./split_tree.py --samples $sample --config ${energy}config/${configList} --max-events $job_id"
     ./split_tree.py --samples $sample --config ${energy}config/${configList} --max-events $job_id
 fi
+
 if [ $task = "stack" ]; then
     echo "./manualStack.py --config ${energy}config/${configList}"
     ./manualStack.py --config ${energy}config/${configList}
 fi
+
 if [ $task = "plot_sys" ]; then
     ./plot_systematics.py --config ${energy}config/${configList}
 fi
@@ -230,9 +251,15 @@ if [ $task = "mva_opt" ]; then
     echo "BDT factory settings"
     echo $additional_arg
     echo "Runnning"
-    ./train.py --name ${sample} --training ${job_id} --config ${energy}config/${configList} --setting ${additional_arg} --local False
+    python -u train.py --name ${sample} --training ${job_id} --config ${energy}config/${configList} --setting ${additional_arg} --local True
+fi
+if [ $task = "mva_opt_eval" ]; then
+    ./evaluateMVA.py --discr $MVAList --samples $sample --config ${energy}config/${configList} --weight ${additional_arg}
+fi
+#Work in progress
+if [ $task = "mva_opt_dc" ]; then
+    echo "python -u workspace_datacard.py --variable $sample --config ${energy}config/${configList}  --config ${energy}config/datacards.ini --optimisation ${additional_arg}"
+    python -u workspace_datacard.py --variable $sample --config ${energy}config/${configList}  --config ${energy}config/datacards.ini --optimisation ${additional_arg}
 fi
 
 echo "end runAll.sh"
-
-# rm -rf $TMPDIR
