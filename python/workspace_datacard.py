@@ -155,12 +155,15 @@ cr = False
 if str(anType) == 'BDT':
     bdt = True
     systematics = eval(config.get('LimitGeneral','sys_BDT'))
+    lhe = eval(config.get('LimitGeneral','sys_lhe_BDT'))    
 elif str(anType) == 'Mjj':
     mjj = True
     systematics = eval(config.get('LimitGeneral','sys_Mjj'))
+    lhe = eval(config.get('LimitGeneral','sys_lhe_Mjj'))    
 elif str(anType) == 'cr':
     cr = True
     systematics = eval(config.get('LimitGeneral','sys_cr'))
+    lhe = eval(config.get('LimitGeneral','sys_lhe_cr'))    
 else:
     print 'EXIT: please specify if your datacards are BDT, Mjj or cr.'
     sys.exit()
@@ -173,6 +176,7 @@ if config.has_option('LimitGeneral','sys_cut_include'):
 systematicsnaming = eval(config.get('LimitGeneral','systematicsnaming'))
 sys_factor_dict = eval(config.get('LimitGeneral','sys_factor'))
 sys_affecting = eval(config.get('LimitGeneral','sys_affecting'))
+sys_lhe_affecting = eval(config.get('LimitGeneral','sys_lhe_affecting'))
 # weightF:
 weightF = config.get('Weights','weightF')
 if str(anType) == 'cr': weightF_systematics = eval(config.get('LimitGeneral','weightF_sys_CR'))
@@ -292,13 +296,16 @@ for samp in data_samples:
 
 optionsList=[]
 
-def appendList(): optionsList.append({'cut':copy(_cut),'var':copy(_treevar),'name':copy(_name),'nBins':nBins,'xMin':xMin,'xMax':xMax,'weight':copy(_weight),'blind':blind})
+def appendList(): optionsList.append({'cut':copy(_cut),'var':copy(_treevar),'name':copy(_name),'nBins':nBins,'xMin':xMin,'xMax':xMax,'weight':copy(_weight),'countHisto':copy(_countHisto),'countbin':copy(_countbin),'blind':blind})
 
 #nominal
 _cut = treecut
 _treevar = treevar
 _name = title
 _weight = weightF
+_countHisto = "CountWeighted"
+_countbin = 0
+#ie. take count from 'CountWeighted->GetBinContent(1)'
 appendList()
 
 print "Using weightF:",weightF
@@ -338,11 +345,6 @@ for syst in systematics:
             else:
                 _treevar = treevar
         elif cr == True:
-            #commented out, since shape sys are done using weights
-            #if syst == 'beff' or syst == 'bmis' or syst == 'beff1':
-            #    _treevar = treevar.replace(old_str,new_str.replace('?',Q))
-            #else:
-            #    _treevar = treevar
             _treevar = treevar
         #append
         appendList()
@@ -355,6 +357,21 @@ for weightF_sys in weightF_systematics:
         _treevar = treevar
         _name = title
         appendList()
+
+#LHE
+#Appends options for each weight (up/down -> len =2 )
+if len(lhe)==2:
+    for lhe_num in lhe:
+        _weight = weightF + "*LHE_weights_scale_wgt[%s]"%lhe_num
+        _cut = treecut
+        _treevar = treevar
+        _name = title
+        _countHisto = "CountWeightedLHEWeightScale"
+        _countbin = lhe_num
+        appendList()
+
+_countHisto = "CountWeighted"
+_countbin = 0
 
 #print '===================\n'
 #print 'The option list is', optionsList
@@ -444,29 +461,6 @@ else:
 for i,job in enumerate(all_samples):
     all_histos[job.name] = outputs[i]
 
-#for job in all_samples:
-#    print '\t- %s'%job
-#    if not GroupDict[job.name] in sys_cut_include:
-#        # manual overwrite
-#        if addBlindingCut:
-#            all_histos[job.name] = mc_hMaker.get_histos_from_tree(job,treecut+'& %s'%addBlindingCut)
-#        else:
-#            all_histos[job.name] = mc_hMaker.get_histos_from_tree(job,treecut)
-#    else:
-#        all_histos[job.name] = mc_hMaker.get_histos_from_tree(job)
-
-
-
-#for job in all_samples:
-#    print '\t- %s'%job
-#    if not GroupDict[job.name] in sys_cut_include:
-#        # manual overwrite
-#        if addBlindingCut:
-#            all_histos[job.name] = mc_hMaker.get_histos_from_tree(job,treecut+'& %s'%addBlindingCut)
-#        else:
-#            all_histos[job.name] = mc_hMaker.get_histos_from_tree(job,treecut)
-#    else:
-#        all_histos[job.name] = mc_hMaker.get_histos_from_tree(job)
 
 for job in data_samples:
     print '\t- %s'%job
@@ -514,15 +508,6 @@ for job in data_histos:
         nData = 1
     else:
         theData.Add(data_histos[job])
-
-#print 'theData is', theData
-#theData.Print()
-#print 'First theData element'
-#theData['data_SM_2015C'].Print()
-#print 'Second theData element'
-#theData['data_SM_2015D_topup'].Print()
-#print 'Third theData element'
-#theData['data_SM_2015D_1280'].Print()
 
 
 print 'END DEBUG'
@@ -577,7 +562,22 @@ for weightF_sys in weightF_systematics:
     for Q in UD:
         final_histos['%s_%s'%(systematicsnaming[weightF_sys],Q)]= HistoMaker.orderandadd([all_histos[job.name][ind] for job in all_samples],setup)
         ind+=1
-#?
+print 'add lhe sys'
+print '==============\n'
+if len(lhe)==2: 
+    for Q in UD:
+        for group in sys_lhe_affecting.keys():
+            histos = []
+            for job in all_samples:
+                if Dict[GroupDict[job.name]] in sys_lhe_affecting[group]:
+                    print "XXX"
+                    histos.append(all_histos[job.name][ind])
+            final_histos['%s_%s_%s'%(systematicsnaming['lhe'],group,Q)]= HistoMaker.orderandadd(histos,setup)
+        ind+=1
+
+#f.write('%s_%s\tshape' %(systematicsnaming['lhe'],group))
+
+
 if change_shapes:
     for key in change_shapes:
         syst,val=change_shapes[key].split('*')
@@ -675,6 +675,7 @@ if not ignore_stats:
 #print "binsBelowThreshold:",binsBelowThreshold
 print 'Start writing shapes in WS'
 print '==========================\n'
+print 'final_histos:',final_histos
 #write shapes in WS:
 for key in final_histos:
     for job, hist in final_histos[key].items():
@@ -812,6 +813,17 @@ for DCtype in ['WS','TH']:
         f.write('%s\tshape' %(systematicsnaming[weightF_sys]))
         for it in range(0,columns): f.write('\t1.0')
         f.write('\n')
+    # LHE systematics
+    if len(lhe)==2:
+        for group in sys_lhe_affecting.keys():
+            f.write('%s_%s\tshape' %(systematicsnaming['lhe'],group))
+            samples = sys_lhe_affecting[group]
+            for c in setup:
+                if Dict[c] in samples:
+                    f.write('\t1.0')
+                else:
+                    f.write('\t-')
+            f.write('\n')
     # additional sample systematics
     if addSample_sys:
         alreadyAdded = []
