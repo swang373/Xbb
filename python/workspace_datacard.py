@@ -152,18 +152,19 @@ else:
 bdt = False
 mjj = False
 cr = False
+lhe = []
 if str(anType) == 'BDT':
     bdt = True
     systematics = eval(config.get('LimitGeneral','sys_BDT'))
-    lhe = eval(config.get('LimitGeneral','sys_lhe_BDT'))    
+    if config.has_option('LimitGeneral','sys_lhe_BDT'): lhe = eval(config.get('LimitGeneral','sys_lhe_BDT'))    
 elif str(anType) == 'Mjj':
     mjj = True
     systematics = eval(config.get('LimitGeneral','sys_Mjj'))
-    lhe = eval(config.get('LimitGeneral','sys_lhe_Mjj'))    
+    if config.has_option('LimitGeneral','sys_lhe_BDT'): lhe = eval(config.get('LimitGeneral','sys_lhe_BDT'))    
 elif str(anType) == 'cr':
     cr = True
     systematics = eval(config.get('LimitGeneral','sys_cr'))
-    lhe = eval(config.get('LimitGeneral','sys_lhe_cr'))    
+    if config.has_option('LimitGeneral','sys_lhe_BDT'): lhe = eval(config.get('LimitGeneral','sys_lhe_BDT'))    
 else:
     print 'EXIT: please specify if your datacards are BDT, Mjj or cr.'
     sys.exit()
@@ -176,7 +177,9 @@ if config.has_option('LimitGeneral','sys_cut_include'):
 systematicsnaming = eval(config.get('LimitGeneral','systematicsnaming'))
 sys_factor_dict = eval(config.get('LimitGeneral','sys_factor'))
 sys_affecting = eval(config.get('LimitGeneral','sys_affecting'))
-sys_lhe_affecting = eval(config.get('LimitGeneral','sys_lhe_affecting'))
+sys_lhe_affecting = {}
+if config.has_option('LimitGeneral','sys_lhe_affecting'): sys_lhe_affecting = eval(config.get('LimitGeneral','sys_lhe_affecting'))    
+
 # weightF:
 weightF = config.get('Weights','weightF')
 if str(anType) == 'cr': weightF_systematics = eval(config.get('LimitGeneral','weightF_sys_CR'))
