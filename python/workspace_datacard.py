@@ -437,14 +437,7 @@ print '\n\t...fetching histos...\n'
 
 inputs=[]
 for job in all_samples:
-#   print 'job.name'
-    cutOverWrite = None
-    if not GroupDict[job.name] in sys_cut_include:
-        if addBlindingCut:
-            cutOverWrite = treecut +' & ' + addBlindingCut
-        else:
-            cutOverWrite = treecut
-    inputs.append((mc_hMaker,"get_histos_from_tree",(job,cutOverWrite)))
+    inputs.append((mc_hMaker,"get_histos_from_tree",(job,True)))
 
 # multiprocess=0
 # if('pisa' in config.get('Configuration','whereToLaunch')):
@@ -459,7 +452,7 @@ if multiprocess>1:
 else:
     print 'launching get_histos_from_tree with ',multiprocess,' processes'
     for input_ in inputs:
-        outputs.append(getattr(input_[0],input_[1])(*input_[2])) #ie. mc_hMaker.get_histos_from_tree(job,cutOverWrite)
+        outputs.append(getattr(input_[0],input_[1])(*input_[2])) #ie. mc_hMaker.get_histos_from_tree(job)
 
 for i,job in enumerate(all_samples):
     all_histos[job.name] = outputs[i]
