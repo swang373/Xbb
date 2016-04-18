@@ -64,9 +64,13 @@ class HistoMaker:
         #get the conversion rate in case of BDT plots
         TrainFlag = eval(self.config.get('Analysis','TrainFlag'))
 
-        #Remove EventForTraining in order to run the MVA directly from the PREP step
-        BDT_add_cut='((evt%2) == 0 || isData)'
-#        BDT_add_cut='EventForTraining == 0'
+        # #Remove EventForTraining in order to run the MVA directly from the PREP step
+        # BDT_add_cut='((evt%2) == 0 || isData)'
+        UseTrainSample = eval(self.config.get('Analysis','UseTrainSample'))
+        if UseTrainSample:
+            BDT_add_cut='EventForTraining == 1'
+        else:
+            BDT_add_cut='EventForTraining == 0'
 
         plot_path = self.config.get('Directories','plotpath')
         addOverFlow=eval(self.config.get('Plot_general','addOverFlow'))
@@ -118,9 +122,10 @@ class HistoMaker:
 #            print("START DRAWING")
             if job.type != 'DATA':
               if CuttedTree and CuttedTree.GetEntries():
-                if 'BDT' in treeVar or 'bdt' in treeVar: 
+                if 'BDT' in treeVar or 'bdt' in treeVar or 'OPT' in treeVar:#added OPT for BDT optimisation
                     drawoption = '(%s)*(%s & %s)'%(weightF,BDT_add_cut,treeCut)
-                    if First_iter: print "I'm appling: ",BDT_add_cut
+                    #if First_iter: print "I'm appling: ",BDT_add_cut
+                    print "I'm appling: ",BDT_add_cut
                     # drawoption = 'sign(genWeight)*(%s)*(%s & %s)'%(weightF,treeCut,BDT_add_cut)
                     #print drawoption
                 else: 

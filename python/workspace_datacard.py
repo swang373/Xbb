@@ -87,6 +87,9 @@ path = config.get('Directories','dcSamples')
 outpath=config.get('Directories','limits')
 optimisation=opts.optimisation
 optimisation_training = False
+UseTrainSample = eval(config.get('Analysis','UseTrainSample'))
+if UseTrainSample:
+    print 'Training events will be used'
 if not optimisation == '':
     print 'Preparing DC for BDT optimisaiton'
     optimisation_training = True
@@ -101,6 +104,8 @@ name = config.get('dc:%s'%var,'wsVarName')
 if optimisation_training:
     treevar = optimisation+'.nominal'
     name += '_'+ optimisation
+    if UseTrainSample:
+        name += '_Train'
 title = name
 # set binning
 nBins = int(config.get('dc:%s'%var,'range').split(',')[0])
@@ -116,6 +121,8 @@ setup=eval(config.get('LimitGeneral','setup'))
 
 if optimisation_training:
    ROOToutname += optimisation
+   if UseTrainSample:
+       ROOToutname += '_Train'
 
 
 import os
