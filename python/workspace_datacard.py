@@ -102,7 +102,7 @@ except:
 treevar = config.get('dc:%s'%var,'var')
 name = config.get('dc:%s'%var,'wsVarName')
 if optimisation_training:
-    treevar = optimisation+'.nominal'
+    treevar = optimisation+'.Nominal'
     name += '_'+ optimisation
     if UseTrainSample:
         name += '_Train'
