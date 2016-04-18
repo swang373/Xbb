@@ -189,7 +189,7 @@ class HistoMaker:
             # if full: print 'hTree',hTree.GetName()
               
             if job.type != 'DATA':
-                if 'BDT' in treeVar or 'bdt' in treeVar:
+                if 'BDT' in treeVar or 'bdt' in treeVar or 'OPT' in treeVar:
                     if TrainFlag:
                         MC_rescale_factor=2. ##FIXME## only dataset used for training must be rescaled!!
                         print 'I RESCALE BY 2.0'
