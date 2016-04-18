@@ -190,10 +190,10 @@ def doPlot():
     inputs=[]
     for job in mcsamples:
 #        print 'job.name'
-        cutOverWrite = None
-        if addBlindingCut:
-            cutOverWrite = config.get('Cuts',region)+' & ' + addBlindingCut
-        inputs.append((Plotter,"get_histos_from_tree",(job,cutOverWrite)))
+#        cutOverWrite = None
+#        if addBlindingCut:
+#            cutOverWrite = config.get('Cuts',region)+' & ' + addBlindingCut
+        inputs.append((Plotter,"get_histos_from_tree",(job,True)))
 
     print 'inputs are', inputs
     
@@ -210,7 +210,7 @@ def doPlot():
     else:
         print 'launching get_histos_from_tree with ',multiprocess,' processes'
         for input_ in  inputs:
-            outputs.append(getattr(input_[0],input_[1])(*input_[2])) #ie. Plotter.get_histos_from_tree(job,cutOverWrite)
+            outputs.append(getattr(input_[0],input_[1])(*input_[2])) #ie. Plotter.get_histos_from_tree(job)
     print 'get_histos_from_tree DONE'
     Overlaylist = []
     for i,job in enumerate(mcsamples):

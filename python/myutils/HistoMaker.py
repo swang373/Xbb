@@ -104,6 +104,12 @@ class HistoMaker:
             xMin=float(options['xMin'])
             xMax=float(options['xMax'])
             weightF=options['weight']
+
+            if 'countHisto' in options.keys() and 'countbin' in options.keys():
+                count=getattr(self.tc,options['countHisto'])[options['countbin']]
+            else:
+                count=getattr(self.tc,"CountWeighted")[0]
+
             if cutOverWrite:
                 treeCut=cutOverWrite
             else:
@@ -138,19 +144,6 @@ class HistoMaker:
                 if First_iter: print 'Number of events are', nevents
                 #print 'nevents:',hTree.GetEntries(),' hTree.name() 2 =',hTree.GetName()
                 full=True
-                      # if 'RTight' in treeVar or 'RMed' in treeVar: 
-                          # drawoption = '(%s)*(%s & %s)'%(weightF,treeCut,BDT_add_cut)
-                          # print drawoption
-                      # else: 
-                          # drawoption = '(%s)*(%s)'%(weightF,treeCut)
-                      # print ('Draw: %s>>%s' %(treeVar,name), drawoption, "goff,e")
-                      # print
-                      # nevent = CuttedTree.Draw('%s>>%s' %(treeVar,name), drawoption, "goff,e")
-                      # print name
-                      # print('hTree.name() 2 =',hTree.GetName()," nevent=",nevent)
-                      # full=True
-                # else:
-                    # full=False
             elif job.type == 'DATA':
                 if options['blind']:
                     lowLimitBlindingMass    = 90
@@ -200,9 +193,9 @@ class HistoMaker:
                         print 'I RESCALE BY 2.0'
                     else: 
                         MC_rescale_factor = 1.
-                    ScaleFactor = self.tc.get_scale(job,self.config,self.lumi)*MC_rescale_factor
+                    ScaleFactor = self.tc.get_scale(job,self.config,self.lumi, count)*MC_rescale_factor
                 else: 
-                    ScaleFactor = self.tc.get_scale(job,self.config,self.lumi)
+                    ScaleFactor = self.tc.get_scale(job,self.config,self.lumi, count)
                 if ScaleFactor != 0:
                     hTree.Scale(ScaleFactor)
                 integral = hTree.Integral()
