@@ -119,7 +119,7 @@ class ParseInfo:
                 specialweight = config.get(sample, 'specialweight')
             else:
                 specialweight = ""
-            
+
 
       #fill the sample
             newsample = Sample(sampleName,sampleType)

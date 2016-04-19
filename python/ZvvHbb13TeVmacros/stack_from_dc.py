@@ -142,9 +142,9 @@ def drawFromDC():
     print opts.var
     if(opts.var == ''):
         var = 'BDT'
-        if dataname == 'Zmm' or dataname == 'Zee': var = 'BDT_Zll' 
-        elif dataname == 'Wmn' or dataname == 'Wen': var = 'BDT_Wln' 
-        elif dataname == 'Znn': 
+        if dataname == 'Zmm' or dataname == 'Zee': var = 'BDT_Zll'
+        elif dataname == 'Wmn' or dataname == 'Wen': var = 'BDT_Wln'
+        elif dataname == 'Znn':
             if 'HighPt' in opts.bin: var = 'BDT_ZnnHighPt'
             elif 'LowPt' in opts.bin: var = 'BDT_ZnnLowPt'
             elif 'LowCSV' in opts.bin: var = 'BDT_ZnnLowCSV'
@@ -152,7 +152,7 @@ def drawFromDC():
         if dataname == '' or var == 'BDT': raise RuntimeError, "Did not recognise mode or var from %s" % opts.bin
     else:
         var = opts.var
-        
+
     region = 'BDT'
     ws_var = config.get('plotDef:%s'%var,'relPath')
     ws_var = ROOT.RooRealVar(ws_var,ws_var,-1.,1.)
@@ -180,7 +180,7 @@ def drawFromDC():
     log = eval(config.get('Plot:%s'%region,'log'))
 
     setup = config.get('Plot_general','setup').split(',')
-    if dataname == 'Zmm' or dataname == 'Zee': 
+    if dataname == 'Zmm' or dataname == 'Zee':
         try:
             setup.remove('W1b')
             setup.remove('W2b')
@@ -188,13 +188,13 @@ def drawFromDC():
             setup.remove('WH')
         except:
             print '@INFO: Wb / Wligh / WH not present in the datacard'
-#    if not dataname == 'Znn' and 'QCD' in setup: 
+#    if not dataname == 'Znn' and 'QCD' in setup:
 #        setup.remove('QCD')
     Stack.setup = setup
 
     Dict = eval(config.get('LimitGeneral','Dict'))
     lumi = eval(config.get('Plot_general','lumi'))
-    
+
     options = copy(opts)
     options.dataname = "data_obs"
     options.mass = 0
@@ -240,7 +240,7 @@ def drawFromDC():
             # begin skip systematics
             skipme = False
             for xs in options.excludeSyst:
-                if re.search(xs, lsyst): 
+                if re.search(xs, lsyst):
                     skipme = True
             if skipme: continue
             # end skip systematics
@@ -252,7 +252,7 @@ def drawFromDC():
                     exps[p][1].append(1/sqrt(pdfargs[0]+1));
                 elif pdf == 'gmM':
                     exps[p][1].append(errline[b][p]);
-                elif type(errline[b][p]) == list: 
+                elif type(errline[b][p]) == list:
                     kmax = max(errline[b][p][0], errline[b][p][1], 1.0/errline[b][p][0], 1.0/errline[b][p][1]);
                     exps[p][1].append(kmax-1.);
                 elif pdf == 'lnN':
@@ -289,13 +289,13 @@ def drawFromDC():
                     reducedShapeNui[lsyst] = reducedNui
                     if not 'CMS_vhbb_stat' in lsyst:
                         if counter == 0:
-                            theSyst[lsyst] = s0.Clone() 
-                            theSyst[lsyst+'Up'] = sUp.Clone() 
-                            theSyst[lsyst+'Down'] = sDown.Clone() 
+                            theSyst[lsyst] = s0.Clone()
+                            theSyst[lsyst+'Up'] = sUp.Clone()
+                            theSyst[lsyst+'Down'] = sDown.Clone()
                         else:
                             theSyst[lsyst].Add(s0)
                             theSyst[lsyst+'Up'].Add(sUp.Clone())
-                            theSyst[lsyst+'Down'].Add(sDown.Clone()) 
+                            theSyst[lsyst+'Down'].Add(sDown.Clone())
                         counter += 1
 
     procs = DC.exp[b].keys(); procs.sort()
@@ -316,7 +316,7 @@ def drawFromDC():
         theNormUncert[p] = relunc
         absBestFit = sum([x for x in expNui[p][1]])
         theBestFit[p] = 1.+absBestFit
-    
+
     histos = []
     typs = []
 
@@ -324,7 +324,7 @@ def drawFromDC():
 
     shapesUp = [[] for _ in range(0,len(setup2))]
     shapesDown = [[] for _ in range(0,len(setup2))]
-    
+
     sigCount = 0
     signalList = ['ZH','WH']
     #signalList = ['VVb']
@@ -371,12 +371,12 @@ def drawFromDC():
                 theAbsSystUp.Add(theSystUp.Clone())
                 theAbsSystDown.Add(theSystDown.Clone())
             counter +=1
-    
+
     #-------------
     #Best fit for shapes
     if not preFit:
         histos, Overlay, typs = getBestFitShapes(procs,theShapes,shapeNui,theBestFit,DC,setup,opts,Dict)
-    
+
     counter = 0
     errUp=[]
     total=[]
@@ -387,7 +387,7 @@ def drawFromDC():
     theTotalMC = histos[0].Clone()
     for h in range(1,len(histos)):
         theTotalMC.Add(histos[h])
-    
+
     total = [[]]*nBins
     errUp = [[]]*nBins
     errDown = [[]]*nBins
@@ -413,7 +413,7 @@ def drawFromDC():
         #print sqrt(theSystUp.GetBinContent(bin))
         errUp[bin-1].append(sqrt(theAbsSystUp.GetBinContent(bin)))
         errDown[bin-1].append(sqrt(theAbsSystDown.GetBinContent(bin)))
-    
+
 
     #Add all in quadrature
     totErrUp=[sqrt(sum([x**2 for x in bin])) for bin in errUp]
@@ -437,7 +437,7 @@ def drawFromDC():
         data0.SetName('data_obs')
     datas=[data0]
     datatyps = [None]
-    datanames=[dataname] 
+    datanames=[dataname]
 
     print "blind:",blind
     print "'BDT' in var:",'BDT' in var
@@ -467,7 +467,7 @@ def drawFromDC():
     Stack.datanames= datanames
     Stack.overlay = [Overlay]
     Stack.AddErrors=Error
-    if dataname == 'Wtn': 
+    if dataname == 'Wtn':
         lumi = 18300.
     Stack.lumi = lumi
     Stack.doPlot()

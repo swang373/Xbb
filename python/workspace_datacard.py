@@ -102,7 +102,7 @@ except:
 treevar = config.get('dc:%s'%var,'var')
 name = config.get('dc:%s'%var,'wsVarName')
 if optimisation_training:
-    treevar = optimisation+'.nominal'
+    treevar = optimisation+'.Nominal'
     name += '_'+ optimisation
     if UseTrainSample:
         name += '_Train'
@@ -163,15 +163,15 @@ lhe = []
 if str(anType) == 'BDT':
     bdt = True
     systematics = eval(config.get('LimitGeneral','sys_BDT'))
-    if config.has_option('LimitGeneral','sys_lhe_BDT'): lhe = eval(config.get('LimitGeneral','sys_lhe_BDT'))    
+    if config.has_option('LimitGeneral','sys_lhe_BDT'): lhe = eval(config.get('LimitGeneral','sys_lhe_BDT'))
 elif str(anType) == 'Mjj':
     mjj = True
     systematics = eval(config.get('LimitGeneral','sys_Mjj'))
-    if config.has_option('LimitGeneral','sys_lhe_BDT'): lhe = eval(config.get('LimitGeneral','sys_lhe_BDT'))    
+    if config.has_option('LimitGeneral','sys_lhe_BDT'): lhe = eval(config.get('LimitGeneral','sys_lhe_BDT'))
 elif str(anType) == 'cr':
     cr = True
     systematics = eval(config.get('LimitGeneral','sys_cr'))
-    if config.has_option('LimitGeneral','sys_lhe_BDT'): lhe = eval(config.get('LimitGeneral','sys_lhe_BDT'))    
+    if config.has_option('LimitGeneral','sys_lhe_BDT'): lhe = eval(config.get('LimitGeneral','sys_lhe_BDT'))
 else:
     print 'EXIT: please specify if your datacards are BDT, Mjj or cr.'
     sys.exit()
@@ -185,7 +185,7 @@ systematicsnaming = eval(config.get('LimitGeneral','systematicsnaming'))
 sys_factor_dict = eval(config.get('LimitGeneral','sys_factor'))
 sys_affecting = eval(config.get('LimitGeneral','sys_affecting'))
 sys_lhe_affecting = {}
-if config.has_option('LimitGeneral','sys_lhe_affecting'): sys_lhe_affecting = eval(config.get('LimitGeneral','sys_lhe_affecting'))    
+if config.has_option('LimitGeneral','sys_lhe_affecting'): sys_lhe_affecting = eval(config.get('LimitGeneral','sys_lhe_affecting'))
 
 # weightF:
 weightF = config.get('Weights','weightF')
@@ -567,7 +567,7 @@ for weightF_sys in weightF_systematics:
         ind+=1
 print 'add lhe sys'
 print '==============\n'
-if len(lhe)==2: 
+if len(lhe)==2:
     for Q in UD:
         for group in sys_lhe_affecting.keys():
             histos = []

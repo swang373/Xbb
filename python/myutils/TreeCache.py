@@ -192,8 +192,8 @@ class TreeCache:
             input = ROOT.TFile.Open('%s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name]),'read')
             tree = input.Get(sample.tree)
             print("Type of sample.tree ROOT.TTree? (again) ", type(tree) is ROOT.TTree)
-        
-        
+
+
         #fill all Count* histos as lists, like self.CountWeighted = [123.23]
         for obj in input.GetListOfKeys():
             name = obj.GetName()
@@ -207,7 +207,7 @@ class TreeCache:
                         print("WARNING: bin ",i+1," of ",name," is ",value,". I'm forcing it to be 1.")
                         value=1
                     counts.append(value)
-                
+
                 setattr(self,name,counts)
 
         if sample.subsample:

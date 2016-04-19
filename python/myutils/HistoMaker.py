@@ -65,7 +65,7 @@ class HistoMaker:
         TrainFlag = eval(self.config.get('Analysis','TrainFlag'))
 
         # #Remove EventForTraining in order to run the MVA directly from the PREP step
-        if not 'PSI' in self.config.get('Configuration','whereToLaunch')):
+        if not 'PSI' in self.config.get('Configuration','whereToLaunch'):
             BDT_add_cut='((evt%2) == 0 || isData)'
         else:
             UseTrainSample = eval(self.config.get('Analysis','UseTrainSample'))
@@ -110,10 +110,13 @@ class HistoMaker:
             else:
                 count=getattr(self.tc,"CountWeighted")[0]
 
-            treeCut='%s'%(options['cut'])
+            if cutOverWrite:
+                treeCut= str(1)
+            else:
+                treeCut='%s'%(options['cut'])
 
             treeCut = "("+treeCut+")&&"+job.addtreecut 
-#            print 'job.addtreecut ',job.addtreecut 
+            #print 'job.addtreecut ',job.addtreecut
             #options
             #print 'treeCut',treeCut
             #print 'weightF',weightF
@@ -183,7 +186,7 @@ class HistoMaker:
             # if full: print 'hTree',hTree.GetName()
               
             if job.type != 'DATA':
-                if 'BDT' in treeVar or 'bdt' in treeVar:
+                if 'BDT' in treeVar or 'bdt' in treeVar or 'OPT' in treeVar:
                     if TrainFlag:
                         MC_rescale_factor=2. ##FIXME## only dataset used for training must be rescaled!!
                         print 'I RESCALE BY 2.0'
