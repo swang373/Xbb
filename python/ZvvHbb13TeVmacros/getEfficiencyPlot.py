@@ -77,7 +77,7 @@ for i,cut in enumerate(cuts.keys()):
     histoBkg.SetBinContent(i+1,effBkg)
     histoBkg.SetBinError(i+1,sqrt(effBkg*(1-effBkg)/normBkg))
     histoBkg.GetXaxis().SetBinLabel(i+1,cut)
-    
+
     print cut
     print cuts[cut]
 
