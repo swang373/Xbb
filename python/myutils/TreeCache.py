@@ -124,21 +124,7 @@ class TreeCache:
         print ("I read")
         tree = input.Get(sample.tree)
         assert type(tree) is ROOT.TTree
-        try:
-            CountPos = input.Get("CountPosWeight")
-            CountNeg = input.Get("CountNegWeight")
-            CountWeighted = input.Get("CountWeighted")
-#            sample.count = CountPos.GetBinContent(1) - CountNeg.GetBinContent(1)
-            sample.count = CountWeighted.GetBinContent(1)
-            # CountWithPU = input.Get("CountWithPU")
-            # CountWithPU2011B = input.Get("CountWithPU2011B")
-            # sample.count_with_PU = CountWithPU.GetBinContent(1) 
-            # sample.count_with_PU2011B = CountWithPU2011B.GetBinContent(1)
-        except:
-            print('WARNING: No Count histograms available. Using 1.')
-            sample.count = 1.
-            # sample.count_with_PU = 1.
-            # sample.count_with_PU2011B = 1.
+
         print ("debug1")
         input.cd()
         obj = ROOT.TObject
@@ -187,7 +173,6 @@ class TreeCache:
         else:
             for input_ in inputs:
                 outputs.append(getattr(input_[0],input_[1])(input_[2])) #ie. self._trim_tree(job)
-#                outputs.append(self._trim_tree(input_[2])) #ie. self._trim_tree(job)
         
         for output in outputs:
             (theName,theHash) = output
@@ -208,26 +193,23 @@ class TreeCache:
             tree = input.Get(sample.tree)
             print("Type of sample.tree ROOT.TTree? (again) ", type(tree) is ROOT.TTree)
 
-        # CountWithPU = input.Get("CountWithPU")
-        # CountWithPU2011B = input.Get("CountWithPU2011B")
-        # sample.count_with_PU = CountWithPU.GetBinContent(1) 
-        # sample.count_with_PU2011B = CountWithPU2011B.GetBinContent(1) 
-        try:
-            CountPos = input.Get("CountPosWeight")
-            CountNeg = input.Get("CountNegWeight")
-            CountWeighted = input.Get("CountWeighted")
-#            sample.count = CountPos.GetBinContent(1) - CountNeg.GetBinContent(1)
-            sample.count = CountWeighted.GetBinContent(1)
-            print('CountPos',CountPos.GetBinContent(1),'CountNeg',CountNeg.GetBinContent(1),'sample.count',sample.count,' CountWeighted',CountWeighted.GetBinContent(1))
-            # CountWithPU = input.Get("CountWithPU")
-            # CountWithPU2011B = input.Get("CountWithPU2011B")
-            # sample.count_with_PU = CountWithPU.GetBinContent(1) 
-            # sample.count_with_PU2011B = CountWithPU2011B.GetBinContent(1)
-        except:
-            print('WARNING: No Count histograms available. Using 1.')
-            sample.count = 1.
-            # sample.count_with_PU = 1.
-            # sample.count_with_PU2011B = 1.
+
+        #fill all Count* histos as lists, like self.CountWeighted = [123.23]
+        for obj in input.GetListOfKeys():
+            name = obj.GetName()
+            if "Count" in name:
+                obj = obj.ReadObj()
+                assert(type(obj) is ROOT.TH1F)
+                counts = []
+                for i in range(obj.GetNbinsX()):
+                    value = obj.GetBinContent(i+1)
+                    if value<=0:
+                        print("WARNING: bin ",i+1," of ",name," is ",value,". I'm forcing it to be 1.")
+                        value=1
+                    counts.append(value)
+
+                setattr(self,name,counts)
+
         if sample.subsample:
             cut += '& (%s)' %(sample.subcut)
         print('cut is', cut)
@@ -254,15 +236,15 @@ class TreeCache:
             sys.exit(-1)
 
     @staticmethod
-    def get_scale(sample, config, lumi = None):
+    def get_scale(sample, config, lumi = None, count=1):
 #        print float(sample.lumi)
         try: sample.xsec = sample.xsec[0]
         except: pass
         anaTag=config.get('Analysis','tag')
         theScale = 1.
         lumi = float(sample.lumi)
-        theScale = lumi*sample.xsec*sample.sf/(sample.count)
-        print("sample: ",sample,"lumi: ",lumi,"xsec: ",sample.xsec,"sample.sf: ",sample.sf,"sample.count: ",sample.count," ---> using scale: ", theScale)
+        theScale = lumi*sample.xsec*sample.sf/(count)
+        print("sample: ",sample,"lumi: ",lumi,"xsec: ",sample.xsec,"sample.sf: ",sample.sf,"count: ",count," ---> using scale: ", theScale)
         return theScale
 
     @staticmethod

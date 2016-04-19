@@ -7,6 +7,11 @@ import utils
 
 print 'start prepare_environment_with_config.py'
 
+import os
+if os.path.exists("../interface/DrawFunctions_C.so"):
+    print 'ROOT.gROOT.LoadMacro("../interface/DrawFunctions_C.so")'
+    ROOT.gROOT.LoadMacro("../interface/DrawFunctions_C.so")
+
 argv = sys.argv
 
 #get files info from config

@@ -8,6 +8,10 @@ import math
 from HiggsAnalysis.CombinedLimit.DatacardParser import *
 from HiggsAnalysis.CombinedLimit.ShapeTools     import *
 
+#blind = True
+
+ROOT.gSystem.Load('./myutils/Ratio_C.so')
+
 # import ROOT with a fix to get batch mode (http://root.cern.ch/phpBB3/viewtopic.php?t=3198)
 hasHelp = False
 argv = sys.argv
@@ -103,10 +107,11 @@ def getBestFitShapes(procs,theShapes,shapeNui,theBestFit,DC,setup,opts,Dict):
         for bin in range(1,nBins+1):
             nom.SetBinError(bin,theShapes[p].GetBinError(bin))
         theShapes['%s_%s'%(opts.fit,p)] = nom.Clone()
+        theShapes['%s_%s'%(opts.fit,p)].SetName(p)
     histos = []
     typs = []
     sigCount = 0
-    signalList = ['ZH','WH','ggZH']
+    signalList = ['ZH','WH']
     #signalList = ['VVb']
     for s in setup:
         if s in signalList:
@@ -131,7 +136,6 @@ def drawFromDC():
     elif 'Wmunu' in opts.bin: dataname = 'Wmn'
     elif 'Wenu' in opts.bin: dataname = 'Wen'
     elif 'Znunu' in opts.bin: dataname = 'Znn'
-    elif 'Znn' in opts.bin: dataname = 'Znn'
     elif 'Wtn' in opts.bin: dataname = 'Wtn'
 
     print 'Variable printing'
@@ -141,9 +145,10 @@ def drawFromDC():
         if dataname == 'Zmm' or dataname == 'Zee': var = 'BDT_Zll'
         elif dataname == 'Wmn' or dataname == 'Wen': var = 'BDT_Wln'
         elif dataname == 'Znn':
-            if 'HighPt' in opts.bin: var = 'ZnnHighPt_13TeV'
-            if 'LowPt' in opts.bin: var = 'ZnnLowPt_13TeV'
-            if 'LowCSV' in opts.bin: var = 'ZnnLowCSV_13TeV'
+            if 'HighPt' in opts.bin: var = 'BDT_ZnnHighPt'
+            elif 'LowPt' in opts.bin: var = 'BDT_ZnnLowPt'
+            elif 'LowCSV' in opts.bin: var = 'BDT_ZnnLowCSV'
+            else: var = 'BDT_Znn'
         if dataname == '' or var == 'BDT': raise RuntimeError, "Did not recognise mode or var from %s" % opts.bin
     else:
         var = opts.var
@@ -161,6 +166,8 @@ def drawFromDC():
         Stack.addFlag2 = 'Intermediate p_{T}(V)'
     elif 'HighPt' in opts.bin or 'ch1_Wenu3' == opts.bin or 'ch2_Wmunu3' == opts.bin:
         Stack.addFlag2 = 'High p_{T}(V)'
+    else:
+        Stack.addFlag2 = ''
 
     preFit = False
     addName = 'PostFit_%s' %(opts.fit)
@@ -182,16 +189,11 @@ def drawFromDC():
         except:
             print '@INFO: Wb / Wligh / WH not present in the datacard'
 #    if not dataname == 'Znn' and 'QCD' in setup:
-    if True:
-        setup.remove('QCD')
+#        setup.remove('QCD')
     Stack.setup = setup
 
     Dict = eval(config.get('LimitGeneral','Dict'))
     lumi = eval(config.get('Plot_general','lumi'))
-
-    DictAnti = {}
-    for i in Dict:
-        DictAnti[Dict[i]]=i
 
     options = copy(opts)
     options.dataname = "data_obs"
@@ -214,8 +216,6 @@ def drawFromDC():
     theBinning = ROOT.RooFit.Binning(Stack.nBins,Stack.xMin,Stack.xMax)
 
     file = open(opts.dc, "r")
-    import os
-    pwd = os.getcwd()
     os.chdir(os.path.dirname(opts.dc))
     DC = parseCard(file, options)
     if not DC.hasShapes: DC.hasShapes = True
@@ -247,7 +247,7 @@ def drawFromDC():
             counter = 0
             for p in DC.exp[b].keys(): # so that we get only self.DC.processes contributing to this bin
                 if errline[b][p] == 0: continue
-                if p == 'QCD' and not 'QCD' in setup: continue
+#                if p == 'QCD' and not 'QCD' in setup: continue
                 if pdf == 'gmN':
                     exps[p][1].append(1/sqrt(pdfargs[0]+1));
                 elif pdf == 'gmM':
@@ -299,8 +299,9 @@ def drawFromDC():
                         counter += 1
 
     procs = DC.exp[b].keys(); procs.sort()
-    if not 'QCD' in setup and 'QCD' in procs:
-        procs.remove('QCD')
+    print "Original procs:",procs
+#    if not 'QCD' in setup and 'QCD' in procs:
+#        procs.remove('QCD')
     if not 'W2b' in setup and 'WjHF' in procs:
         procs.remove('WjHF')
     if not 'Wlight' in setup and 'WjLF' in procs:
@@ -316,7 +317,6 @@ def drawFromDC():
         absBestFit = sum([x for x in expNui[p][1]])
         theBestFit[p] = 1.+absBestFit
 
-    print "theShapes:",theShapes
     histos = []
     typs = []
 
@@ -326,7 +326,7 @@ def drawFromDC():
     shapesDown = [[] for _ in range(0,len(setup2))]
 
     sigCount = 0
-    signalList = ['ZH','WH','ggZH']
+    signalList = ['ZH','WH']
     #signalList = ['VVb']
     for p in procs:
         b = opts.bin
@@ -377,34 +377,6 @@ def drawFromDC():
     if not preFit:
         histos, Overlay, typs = getBestFitShapes(procs,theShapes,shapeNui,theBestFit,DC,setup,opts,Dict)
 
-    ##Set name using only proc "shapeBkg_ZH_ZnnHighPt_13TeV" -> "ZH"
-    for histo in histos:
-        found = False
-        for p in procs:
-            name = "shapeBkg_"+p+"_ZnnHighPt_13TeV"
-            if p in signalList: name.replace("shapeBkg_","shapeSig_")
-            if histo.GetName()==name:
-                histo.SetName(p)
-                found=True
-                break
-
-    print procs
-    print Dict
-    print DictAnti
-    print "="*30
-    print "Histo names:"
-    for histo in histos:
-        print histo.GetName()
-    print
-    print "procs names:"
-    for proc in procs:
-        print proc
-
-    print "Debug1 - ",procs
-    print "Debug1 - ",histos, Overlay, typs
-    print "Debug1 - ",theNormUncert, theBestFit
-    print "Debug1 - ",histos[0].GetName()
-
     counter = 0
     errUp=[]
     total=[]
@@ -429,6 +401,11 @@ def drawFromDC():
         errDown[bin-1] = [binError]
         #Relative norm uncertainty of the individual MC
         for h in range(0,len(histos)):
+            print "h:",h
+            print "bin:",bin
+            print "histos:",histos
+            print "theNormUncert:",theNormUncert
+            print "histos[h]:",histos[h]
             errUp[bin-1].append(histos[h].GetBinContent(bin)*theNormUncert[histos[h].GetName()])
             errDown[bin-1].append(histos[h].GetBinContent(bin)*theNormUncert[histos[h].GetName()])
     #Shape uncertainty of the MC
@@ -458,30 +435,19 @@ def drawFromDC():
     if (data0.InheritsFrom("RooDataHist")):
         data0 = ROOT.RooAbsData.createHistogram(data0,'data_obs',ws_var,theBinning)
         data0.SetName('data_obs')
-        data0.SetTitle('data_obs')
-    data0.SetName('data_obs')
-    data0.SetTitle('data_obs')
     datas=[data0]
     datatyps = [None]
     datanames=[dataname]
 
-    print "data:",data0
-    print datas
-
-
+    print "blind:",blind
+    print "'BDT' in var:",'BDT' in var
     if blind and 'BDT' in var:
-        print "I'm blinding"
-        for bin in range(10,datas[0].GetNbinsX()+1):
+        print "I'm blinding..."
+        for bin in range(datas[0].GetNbinsX()/2,datas[0].GetNbinsX()+1):
             datas[0].SetBinContent(bin,0)
 
     histos.append(copy(Overlay))
-    if 'ZH' in signalList and 'WH' in signalList and 'ggZH' in signalList:
-        typs.append('VH')
-        if 'ZH' in Stack.setup: Stack.setup.remove('ZH')
-        if 'WH' in Stack.setup: Stack.setup.remove('WH')
-        if 'ggZH' in Stack.setup: Stack.setup.remove('ggZH')
-        Stack.setup.insert(0,'VH')
-    elif 'ZH' in signalList and 'WH' in signalList:
+    if 'ZH' in signalList and 'WH' in signalList:
         typs.append('VH')
         if 'ZH' in Stack.setup: Stack.setup.remove('ZH')
         if 'WH' in Stack.setup: Stack.setup.remove('WH')
@@ -490,22 +456,9 @@ def drawFromDC():
         typs.append('ZH')
     elif 'WH' in signalList:
         typs.append('WH')
-    elif 'ggZH' in signalList:
-        typs.append('ggZH')
     elif 'VVb' in signalList:
         typs.append('VVb')
     print Stack.setup
-    print histos
-
-    print datas
-    print datatyps
-    print datanames
-    print datas[0].GetXaxis().GetNbins()
-    print histos[0].GetXaxis().GetNbins()
-    print datas[0].GetXaxis().GetXmin()
-    print histos[0].GetXaxis().GetXmin()
-    print datas[0].GetXaxis().GetXmax()
-    print histos[0].GetXaxis().GetXmax()
 
     Stack.histos = histos
     Stack.typs = typs
@@ -517,8 +470,6 @@ def drawFromDC():
     if dataname == 'Wtn':
         lumi = 18300.
     Stack.lumi = lumi
-    print "Launching doPlot()"
-    os.chdir(pwd)
     Stack.doPlot()
 
     print 'i am done!\n'

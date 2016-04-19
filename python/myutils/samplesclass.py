@@ -10,6 +10,7 @@ class Sample:
         self.sf=1.
         self.xsec=0.
         self.weightexpression=1.0
+        self.specialweight=""
         self.tree='tree'
         self.treecut=''
         self.count=1.

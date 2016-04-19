@@ -1,0 +1,11 @@
+--- python/myutils/copytree.py
++++ python/myutils/copytree.py
+@@ -7,7 +7,7 @@
+           input = ROOT.TFile.Open(inputFile,'read')
+         else:
+           input = ROOT.TFile.Open('root://t3dcachedb03.psi.ch:1094/'+inputFile,'read')
+-
++
+         output = ROOT.TFile.Open(outputFile,'create')
+         print "Writing file:",outputFile
+

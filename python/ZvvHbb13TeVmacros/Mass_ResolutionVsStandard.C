@@ -10,15 +10,16 @@ gROOT->ForceStyle();
 
 TChain* tree = new TChain("tree");
 //tree->Add("/scratch/sdonato/VHbbRun2/V14_forPreApproval/CMSSW_7_4_7_patch1/src/Xbb/env/syst/ZvvHighPt_V15_ZH_HToBB_ZToNuNu_M125_13TeV_amcatnloFXFX_madspin_pythia8.root");
-tree->Add("../env/syst/ZvvHighPt_V21_ZH_HToBB_ZToNuNu_M125_13TeV_amcatnloFXFX_madspin_pythia8.root");
+//tree->Add("../env/syst/ZvvHighPt_V21_ZH_HToBB_ZToNuNu_M125_13TeV_amcatnloFXFX_madspin_pythia8.root");
+tree->Add("../../env/ZvvHighPt_V21_ZH_HToBB_ZToNuNu_M125_13TeV_amcatnloFXFX_madspin_pythia8.root");
 
 TCanvas* c1 = new TCanvas("c1","c1",1280,768);
 
 const char* preselection = "Sum$(Jet_mcMatchId[hJCidx]==25)==2";
 //const char* preselection = "1";
-tree->Draw("HNoReg.mass >> Hmass(40,80,160)",preselection,"prof");
-tree->Draw("H.mass >> HmassReg(40,80,160)",preselection,"prof");
-tree->Draw("HaddJetsdR08.mass >> HFSRmassReg(40,80,160)",preselection,"prof");
+tree->Draw("HCSV_mass >> Hmass(40,80,160)",preselection,"prof");
+tree->Draw("1 >> HmassReg(40,80,160)",preselection,"prof");
+tree->Draw("1 >> HFSRmassReg(40,80,160)",preselection,"prof");
 tree->Draw("HCSV_reg_mass >> HmassStdReg(40,80,160)",preselection,"prof");
 
 Hmass = (TH1F*) gDirectory->Get("Hmass");
