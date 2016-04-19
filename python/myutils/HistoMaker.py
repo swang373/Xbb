@@ -111,12 +111,12 @@ class HistoMaker:
                 count=getattr(self.tc,"CountWeighted")[0]
 
             if cutOverWrite:
-                treeCut=cutOverWrite
+                treeCut= str(1)
             else:
                 treeCut='%s'%(options['cut'])
 
             treeCut = "("+treeCut+")&&"+job.addtreecut 
-#            print 'job.addtreecut ',job.addtreecut 
+            #print 'job.addtreecut ',job.addtreecut
             #options
             #print 'treeCut',treeCut
             #print 'weightF',weightF
