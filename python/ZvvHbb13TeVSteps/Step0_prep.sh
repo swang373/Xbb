@@ -1,11 +1,11 @@
 bash runAll.sh	ZH		 ZvvHbb13TeV  prep >& log/logPrepZH	&
 bash runAll.sh	ZH_mini		 ZvvHbb13TeV  prep >& log/logPrepZH_mini	&
-#bash runAll.sh	ZHpow		 ZvvHbb13TeV prep >& log/logPrepZHpow	&
 bash runAll.sh	ggZH		 ZvvHbb13TeV prep >& log/logPrepggZH	&
-#bash runAll.sh	ggZHpow		 ZvvHbb13TeV prep >& log/logPrepggZHpow	&
 bash runAll.sh	WH		 ZvvHbb13TeV prep >& log/logPrepWH	&
-#bash runAll.sh	WplusHpow		 ZvvHbb13TeV prep >& log/logPrepWplusHpow	&
-#bash runAll.sh	WminusHpow		 ZvvHbb13TeV prep >& log/logPrepWminusHpow	&
+bash runAll.sh	ZHpow		 ZvvHbb13TeV prep >& log/logPrepZHpow	&
+bash runAll.sh	ggZHpow		 ZvvHbb13TeV prep >& log/logPrepggZHpow	&
+bash runAll.sh	WplusHpow		 ZvvHbb13TeV prep >& log/logPrepWplusHpow	&
+bash runAll.sh	WminusHpow		 ZvvHbb13TeV prep >& log/logPrepWminusHpow	&
 bash runAll.sh	WJetsHT0		 ZvvHbb13TeV prep >& log/logPrepWJetsHT0	&
 bash runAll.sh	WJetsMadHT100		 ZvvHbb13TeV prep >& log/logPrepWJetsMadHT100	&
 bash runAll.sh	WJetsMadHT200		 ZvvHbb13TeV prep >& log/logPrepWJetsMadHT200	&
