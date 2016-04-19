@@ -65,7 +65,7 @@ class HistoMaker:
         TrainFlag = eval(self.config.get('Analysis','TrainFlag'))
 
         # #Remove EventForTraining in order to run the MVA directly from the PREP step
-        if not 'PSI' in self.config.get('Configuration','whereToLaunch')):
+        if not 'PSI' in self.config.get('Configuration','whereToLaunch'):
             BDT_add_cut='((evt%2) == 0 || isData)'
         else:
             UseTrainSample = eval(self.config.get('Analysis','UseTrainSample'))
