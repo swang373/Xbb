@@ -42,7 +42,7 @@ class HistoMaker:
         print "Done Creating HistoMaker"
         print "========================\n"
 
-    def get_histos_from_tree(self,job,cutOverWrite=None,quick=True):
+    def get_histos_from_tree(self,job,quick=True):
         start_time = time.time()
 
         print "=============================================================\n"
@@ -174,7 +174,6 @@ class HistoMaker:
                     if First_iter: print 'DATA drawoptions', '%s>>%s' %(treeVar,name),'%s' %treeCut
                     CuttedTree.Draw('%s>>%s' %(treeVar,name),'%s' %treeCut, "goff,e")
                 full = True
-            first_iter = False
             # if full:
                 # hTree = ROOT.gDirectory.Get(name)
                 # print('histo1',ROOT.gDirectory.Get(name))
