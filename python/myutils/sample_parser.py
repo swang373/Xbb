@@ -115,12 +115,18 @@ class ParseInfo:
             #Initialize samplecalss element
             sampleType = config.get(sample,'sampleType')
             cut = config.get(sample, 'cut')
+            if config.has_option(sample, 'specialweight'):
+                specialweight = config.get(sample, 'specialweight')
+            else:
+                specialweight = ""
+            
 
       #fill the sample
             newsample = Sample(sampleName,sampleType)
             newsample.addtreecut = cut
             newsample.identifier=infile
             newsample.weightexpression=weightexpression
+            newsample.specialweight=specialweight
             newsample.lumi=lumi
             newsample.prefix=newprefix
             

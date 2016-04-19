@@ -113,7 +113,7 @@ print '@DEBUG: output file name : ' + fnameOutput
 #sys.exit()
 
 #locations
-path=config.get('Directories','SYSout')
+path=config.get('Directories','MVAin')
 
 TCutname=config.get(run, 'treeCut')
 TCut=config.get('Cuts',TCutname)
@@ -141,8 +141,12 @@ info = ParseInfo(samplesinfo,path)
 workdir=ROOT.gDirectory.GetPath()
 
 
-TrainCut='%s & EventForTraining==1'%TCut
-EvalCut='%s & EventForTraining==0'%TCut
+#Remove EventForTraining in order to run the MVA directly from the PREP step
+TrainCut='%s & !((evt%s)==0 || isData)'%(TCut,'%2')
+EvalCut= '%s & ((evt%s)==0 || isData)'%(TCut,'%2')
+#TrainCut='%s & EventForTraining==1'%TCut
+#EvalCut='%s & EventForTraining==0'%TCut
+
 print "TrainCut:",TrainCut
 print "EvalCut:",EvalCut
 cuts = [TrainCut,EvalCut] 
@@ -200,15 +204,18 @@ for job in background_samples:
     EbScales.append(TbScale)
     print '\t\t\tTraining %s events'%Tbackground.GetEntries()
     print '\t\t\tEval %s events'%Ebackground.GetEntries()
-            
 
+
+# print 'creating TMVA.Factory object'
 factory = ROOT.TMVA.Factory(factoryname, output, factorysettings)
 
 #set input trees
+# print 'set signal input trees'
 for i in range(len(Tsignals)):
     factory.AddSignalTree(Tsignals[i], TsScales[i], ROOT.TMVA.Types.kTraining)
     factory.AddSignalTree(Esignals[i], EsScales[i], ROOT.TMVA.Types.kTesting)
 
+# print 'set background input trees'
 for i in range(len(Tbackgrounds)):
     if (Tbackgrounds[i].GetEntries()>0):
         factory.AddBackgroundTree(Tbackgrounds[i], TbScales[i], ROOT.TMVA.Types.kTraining)
@@ -216,18 +223,26 @@ for i in range(len(Tbackgrounds)):
     if (Ebackgrounds[i].GetEntries()>0):
         factory.AddBackgroundTree(Ebackgrounds[i], EbScales[i], ROOT.TMVA.Types.kTesting)
         
+# print 'add the variables'
 for var in MVA_Vars['Nominal']:
     factory.AddVariable(var,'D') # add the variables
 
 #Execute TMVA
+# print 'Execute TMVA: SetSignalWeightExpression'
 factory.SetSignalWeightExpression(weightF)
+# print 'Execute TMVA: SetBackgroundWeightExpression'
 factory.SetBackgroundWeightExpression(weightF)
 factory.Verbose()
+# print 'Execute TMVA: factory.BookMethod'
 my_methodBase_bdt = factory.BookMethod(MVAtype,MVAname,MVAsettings)
+# print 'Execute TMVA: TrainMethod'
 my_methodBase_bdt.TrainMethod()
 #factory.TrainAllMethods()
+# print 'Execute TMVA: TestAllMethods'
 factory.TestAllMethods()
+# print 'Execute TMVA: EvaluateAllMethods'
 factory.EvaluateAllMethods()
+# print 'Execute TMVA: output.Write'
 output.Write()
 
 
@@ -238,9 +253,11 @@ output.cd('Method_%s'%MVAtype)
 #ROOT.gDirectory.ls()
 ROOT.gDirectory.cd(MVAname)
 
+# print 'Get ROCs'
 rocIntegral_default=my_methodBase_bdt.GetROCIntegral()
 roc_integral_test = my_methodBase_bdt.GetROCIntegral(ROOT.gDirectory.Get(factoryname+'_'+MVAname+'_S'),ROOT.gDirectory.Get(factoryname+'_'+MVAname+'_B'))
 roc_integral_train = my_methodBase_bdt.GetROCIntegral(ROOT.gDirectory.Get(factoryname+'_'+MVAname+'_Train_S'),ROOT.gDirectory.Get(factoryname+'_'+MVAname+'_Train_B'))
+# print 'Get significances'
 significance = my_methodBase_bdt.GetSignificance()
 separation_test = my_methodBase_bdt.GetSeparation(ROOT.gDirectory.Get(factoryname+'_'+MVAname+'_S'),ROOT.gDirectory.Get(factoryname+'_'+MVAname+'_B'))
 separation_train = my_methodBase_bdt.GetSeparation(ROOT.gDirectory.Get(factoryname+'_'+MVAname+'_Train_S'),ROOT.gDirectory.Get(factoryname+'_'+MVAname+'_Train_B'))

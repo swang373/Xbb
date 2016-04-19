@@ -63,11 +63,16 @@ class HistoMaker:
 
         #get the conversion rate in case of BDT plots
         TrainFlag = eval(self.config.get('Analysis','TrainFlag'))
-        UseTrainSample = eval(self.config.get('Analysis','UseTrainSample'))
-        if UseTrainSample:
-            BDT_add_cut='EventForTraining == 1'
+
+        # #Remove EventForTraining in order to run the MVA directly from the PREP step
+        if not 'PSI' in self.config.get('Configuration','whereToLaunch')):
+            BDT_add_cut='((evt%2) == 0 || isData)'
         else:
-            BDT_add_cut='EventForTraining == 0'
+            UseTrainSample = eval(self.config.get('Analysis','UseTrainSample'))
+            if UseTrainSample:
+                BDT_add_cut='EventForTraining == 1'
+            else:
+                BDT_add_cut='EventForTraining == 0'
 
         plot_path = self.config.get('Directories','plotpath')
         addOverFlow=eval(self.config.get('Plot_general','addOverFlow'))
@@ -99,6 +104,12 @@ class HistoMaker:
             xMin=float(options['xMin'])
             xMax=float(options['xMax'])
             weightF=options['weight']
+
+            if 'countHisto' in options.keys() and 'countbin' in options.keys():
+                count=getattr(self.tc,options['countHisto'])[options['countbin']]
+            else:
+                count=getattr(self.tc,"CountWeighted")[0]
+
             if cutOverWrite:
                 treeCut=cutOverWrite
             else:
@@ -133,19 +144,6 @@ class HistoMaker:
                 if First_iter: print 'Number of events are', nevents
                 #print 'nevents:',hTree.GetEntries(),' hTree.name() 2 =',hTree.GetName()
                 full=True
-                      # if 'RTight' in treeVar or 'RMed' in treeVar: 
-                          # drawoption = '(%s)*(%s & %s)'%(weightF,treeCut,BDT_add_cut)
-                          # print drawoption
-                      # else: 
-                          # drawoption = '(%s)*(%s)'%(weightF,treeCut)
-                      # print ('Draw: %s>>%s' %(treeVar,name), drawoption, "goff,e")
-                      # print
-                      # nevent = CuttedTree.Draw('%s>>%s' %(treeVar,name), drawoption, "goff,e")
-                      # print name
-                      # print('hTree.name() 2 =',hTree.GetName()," nevent=",nevent)
-                      # full=True
-                # else:
-                    # full=False
             elif job.type == 'DATA':
                 if options['blind']:
                     lowLimitBlindingMass    = 90
@@ -195,15 +193,25 @@ class HistoMaker:
                         print 'I RESCALE BY 2.0'
                     else: 
                         MC_rescale_factor = 1.
-                    ScaleFactor = self.tc.get_scale(job,self.config,self.lumi)*MC_rescale_factor
+                    ScaleFactor = self.tc.get_scale(job,self.config,self.lumi, count)*MC_rescale_factor
                 else: 
-                    ScaleFactor = self.tc.get_scale(job,self.config,self.lumi)
+                    ScaleFactor = self.tc.get_scale(job,self.config,self.lumi, count)
                 if ScaleFactor != 0:
                     hTree.Scale(ScaleFactor)
-                print '\t-->import %s\t Integral: %s'%(job.name,hTree.Integral())
+                integral = hTree.Integral()
+                print '\t-->import %s\t Integral: %s'%(job.name,integral)
                 print("job:",job.name," ScaleFactor=",ScaleFactor)
                 print("END RESCALE")
                 print("START addOverFlow")
+                # !! Brute force correction for histograms with negative integral (problems with datacard) !!
+                if integral<0:
+                    hTree.Scale(-0.001)
+                    print "#"*30
+                    print "#"*30
+                    print "original integral was:",integral
+                    print "now is:", hTree.Integral()
+                    print "#"*30
+                    print "#"*30
             if addOverFlow:
                 uFlow = hTree.GetBinContent(0)+hTree.GetBinContent(1)
                 oFlow = hTree.GetBinContent(hTree.GetNbinsX()+1)+hTree.GetBinContent(hTree.GetNbinsX())

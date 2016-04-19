@@ -156,28 +156,6 @@ for job in info:
         float         dEta;\
         } ;"
     )
-    if applyBTagweights:
-        if anaTag == '7TeV':
-            ROOT.gSystem.Load(btagLibrary)
-            from ROOT import BTagShape
-            btagNom = BTagShape("../data/csvdiscr.root")
-            btagNom.computeFunctions()
-            btagUp = BTagShape("../data/csvdiscr.root")
-            btagUp.computeFunctions(+1.,0.)
-            btagDown = BTagShape("../data/csvdiscr.root")
-            btagDown.computeFunctions(-1.,0.)
-            btagFUp = BTagShape("../data/csvdiscr.root")
-            btagFUp.computeFunctions(0.,+1.)
-            btagFDown = BTagShape("../data/csvdiscr.root")
-            btagFDown.computeFunctions(0.,-1.)
-        else:
-            ROOT.gSystem.Load(btagLibrary)
-            from ROOT import BTagShapeInterface
-            btagNom = BTagShapeInterface("../data/csvdiscr.root",0,0)
-            btagUp = BTagShapeInterface("../data/csvdiscr.root",+1,0)
-            btagDown = BTagShapeInterface("../data/csvdiscr.root",-1,0)
-            btagFUp = BTagShapeInterface("../data/csvdiscr.root",0,+1.)
-            btagFDown = BTagShapeInterface("../data/csvdiscr.root",0,-1.)
     
     lhe_weight_map = False if not config.has_option('LHEWeights', 'weights_per_bin') else eval(config.get('LHEWeights', 'weights_per_bin'))
     
