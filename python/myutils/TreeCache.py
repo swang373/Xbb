@@ -291,27 +291,32 @@ class TreeCache:
         print ('Will now check if the file exists')
         print ('=================================\n')
 
+        file_exists = False
+
         file_dummy = file
-        srmPath = 'srm://t3se01.psi.ch:8443/srm/managerv2?SFN='
+        #srmPath = 'srm://t3se01.psi.ch:8443/srm/managerv2?SFN='
         file_dummy = file_dummy.replace('root://t3dcachedb03.psi.ch:1094/','')
         file_dummy = file_dummy.replace('srm://t3se01.psi.ch:8443/srm/managerv2?SFN=','')
-#        print('trying to check if exists:',file_dummy)
-        # if 'gsidcap' or 'srm' in file_dummy:
-            # if TreeCache.get_slc_version() == 'SLC5':
-              # command = 'lcg-ls %s' %file_dummy.replace('gsidcap://t3se01.psi.ch:22128/','%s/'%srmPath)
-              # error_msg = 'No such file or directory'
-            # elif TreeCache.get_slc_version() == 'SLC6':
-              # command = 'lcg-ls %s' %file_dummy.replace('gsidcap://t3se01.psi.ch:22128/','%s/'%srmPath)
-              # # print ('using command',command)
-              # error_msg = 'does not exists'
-              
-            # p = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,shell=True)
-            # line = p.stdout.readline()
-            # return not error_msg in line
-              
-        # else:
-        exist = os.path.exists(file_dummy)
-        print('os.path.exists(',file_dummy,')',exist)
-        return os.path.exists(file_dummy)
+
+        print ('The command is', 'os.path.isfile(',file_dummy,')', os.path.isfile(file_dummy))
+        if os.path.isfile(file_dummy):
+            print(file_dummy, 'exists.')
+            f = ROOT.TFile.Open(file,'read')
+            if not f:
+                print ('File is null. Gonna redo it.')
+            elif f.GetNkeys() == 0 or f.TestBit(ROOT.TFile.kRecovered) or f.IsZombie():
+                print ('f.GetNkeys()',f.GetNkeys(),'f.TestBit(ROOT.TFile.kRecovered)',f.TestBit(ROOT.TFile.kRecovered),'f.IsZombie()',f.IsZombie())
+                print ('File', file_dummy, 'already exists but is buggy, gonna delete and rewrite it.')
+                del_protocol = file.replace('gsidcap://t3se01.psi.ch:22128/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=').replace('dcap://t3se01.psi.ch:22125/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=').replace('root://t3dcachedb03.psi.ch:1094/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
+                command = 'srmrm %s' %(del_protocol)
+                subprocess.call([command], shell=True)
+                print(command)
+            else:
+                file_exists = True
+
+        #exist = os.path.exists(file_dummy)
+        #print('os.path.exists(',file_dummy,')',exist)
+        #return os.path.exists(file_dummy)
+        return file_exists
 
 
