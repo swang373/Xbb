@@ -1,11 +1,11 @@
 bash runAll.sh  ZH    ZvvHbb13TeV  eval >& log/logEvalZH  &
 bash runAll.sh  ZH_mini    ZvvHbb13TeV  eval >& log/logEvalZH_mini  &
-#bash runAll.sh  ZHpow     ZvvHbb13TeV eval >& log/logEvalZHpow  &
 bash runAll.sh  ggZH     ZvvHbb13TeV eval >& log/logEvalggZH  &
-#bash runAll.sh  ggZHpow     ZvvHbb13TeV eval >& log/logEvalggZHpow  &
 bash runAll.sh  WH     ZvvHbb13TeV eval >& log/logEvalWH  &
-#bash runAll.sh  WplusHpow     ZvvHbb13TeV eval >& log/logEvalWplusHpow  &
-#bash runAll.sh  WminusHpow     ZvvHbb13TeV eval >& log/logEvalWminusHpow  &
+bash runAll.sh  ZHpow     ZvvHbb13TeV eval >& log/logEvalZHpow  &
+bash runAll.sh  ggZHpow     ZvvHbb13TeV eval >& log/logEvalggZHpow  &
+bash runAll.sh  WplusHpow     ZvvHbb13TeV eval >& log/logEvalWplusHpow  &
+bash runAll.sh  WminusHpow     ZvvHbb13TeV eval >& log/logEvalWminusHpow  &
 #bash runAll.sh  WJets     ZvvHbb13TeV eval >& log/logEvalWJets  &
 bash runAll.sh  WJetsHT0     ZvvHbb13TeV eval >& log/logEvalWJetsHT0  &
 bash runAll.sh  WJetsMadHT100     ZvvHbb13TeV eval >& log/logEvalWJetsMadHT100  &
