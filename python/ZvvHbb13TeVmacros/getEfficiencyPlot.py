@@ -29,7 +29,7 @@ addCut(cuts,    "MET flags",   "Flag_HBHENoiseIsoFilter && Flag_HBHENoiseFilter 
 addCut(cuts,    "#Higgs jets#geq2",  "nhJCidx>=2")
 addCut(cuts,    "CSV_{min}>CSVL",   "Jet_btagCSV[hJCidx[1]]>0.460")
 addCut(cuts,    "CSV_{max}>CSVM",   "Jet_btagCSV[hJCidx[0]]>0.800")
-addCut(cuts,    "50<m(jj)<500",   "HCSV_reg_mass<500 && HCSV_reg_mass>50")
+addCut(cuts,    "m(jj)<500",   "HCSV_reg_mass<500")
 addCut(cuts,    "MHT>120",   "mhtJet30>120")
 addCut(cuts,    "MET>120",   "met_pt>120")
 addCut(cuts,    "H p_{T}>120",   "H_reg_pt>120")
