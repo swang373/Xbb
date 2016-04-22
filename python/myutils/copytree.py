@@ -171,7 +171,7 @@ def copytree(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config):
     if ('pisa' in whereToLaunch):
       fileToMerge = outputFile[:outputFile.rfind("tree_")+5]+"*"+outputFile[outputFile.rfind(".root"):]
       # command = "hadd -f "+pathOUT+'/'+newprefix+vhbbfolder+".root "+fileToMerge
-      command = "hadd -f -k -O "+pathOUT+'/'+newprefix+folderName+".root "+fileToMerge
+      command = "hadd -f -k "+pathOUT+'/'+newprefix+folderName+".root "+fileToMerge
       print command
       os.system(command)
 
