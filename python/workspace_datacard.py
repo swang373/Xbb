@@ -160,11 +160,11 @@ if str(anType) == 'BDT':
 elif str(anType) == 'Mjj':
     mjj = True
     systematics = eval(config.get('LimitGeneral','sys_Mjj'))
-    if config.has_option('LimitGeneral','sys_lhe_BDT'): lhe = eval(config.get('LimitGeneral','sys_lhe_BDT'))    
+    if config.has_option('LimitGeneral','sys_lhe_Mjj'): lhe = eval(config.get('LimitGeneral','sys_lhe_Mjj'))    
 elif str(anType) == 'cr':
     cr = True
     systematics = eval(config.get('LimitGeneral','sys_cr'))
-    if config.has_option('LimitGeneral','sys_lhe_BDT'): lhe = eval(config.get('LimitGeneral','sys_lhe_BDT'))    
+    if config.has_option('LimitGeneral','sys_lhe_cr'): lhe = eval(config.get('LimitGeneral','sys_lhe_cr'))    
 else:
     print 'EXIT: please specify if your datacards are BDT, Mjj or cr.'
     sys.exit()
@@ -454,6 +454,7 @@ else:
     for input_ in inputs:
         outputs.append(getattr(input_[0],input_[1])(*input_[2])) #ie. mc_hMaker.get_histos_from_tree(job)
 
+print "job.name and all_histos[job.name]:"
 for i,job in enumerate(all_samples):
     all_histos[job.name] = outputs[i]
 
