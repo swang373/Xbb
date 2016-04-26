@@ -1,27 +1,37 @@
 import os
 from ROOT import *
 
-oldLumi = 2.32
+#WARNING: changed value to 2.29. Was 2.32 presiously
+oldLumi = 2.29
+#oldLumi = 2.32
 newLumi = 5.0
 dirName = "5fb"
+#channel = "Znn"
+channel = "Zll"
 
-oldFileNames = [
-    "vhbb_TH_Znn_13TeVTightLowPt_Wbb.root",
-    "vhbb_TH_Znn_13TeVTightHighPt_QCD.root",
-    "vhbb_TH_Znn_13TeVTightHighPt_Signal.root",
-    "vhbb_TH_Znn_13TeVTightHighPt_TTbarTight.root",
-    "vhbb_TH_Znn_13TeVTightHighPt_WLight.root",
-    "vhbb_TH_Znn_13TeVTightHighPt_Wbb.root",
-    "vhbb_TH_Znn_13TeVTightHighPt_ZLight.root",
-    "vhbb_TH_Znn_13TeVTightHighPt_Zbb.root",
-    "vhbb_TH_Znn_13TeVTightLowPt_QCD.root",
-    "vhbb_TH_Znn_13TeVTightLowPt_Signal.root",
-    "vhbb_TH_Znn_13TeVTightLowPt_TTbarTight.root",
-    "vhbb_TH_Znn_13TeVTightLowPt_WLight.root",
-    "vhbb_TH_Znn_13TeVTightLowPt_Wbb.root",
-    "vhbb_TH_Znn_13TeVTightLowPt_ZLight.root",
-    "vhbb_TH_Znn_13TeVTightLowPt_Zbb.root"
-]
+if channel == "Zvv":
+    oldFileNames = [
+        "vhbb_TH_Znn_13TeVTightLowPt_Wbb.root",
+        "vhbb_TH_Znn_13TeVTightHighPt_QCD.root",
+        "vhbb_TH_Znn_13TeVTightHighPt_Signal.root",
+        "vhbb_TH_Znn_13TeVTightHighPt_TTbarTight.root",
+        "vhbb_TH_Znn_13TeVTightHighPt_WLight.root",
+        "vhbb_TH_Znn_13TeVTightHighPt_Wbb.root",
+        "vhbb_TH_Znn_13TeVTightHighPt_ZLight.root",
+        "vhbb_TH_Znn_13TeVTightHighPt_Zbb.root",
+        "vhbb_TH_Znn_13TeVTightLowPt_QCD.root",
+        "vhbb_TH_Znn_13TeVTightLowPt_Signal.root",
+        "vhbb_TH_Znn_13TeVTightLowPt_TTbarTight.root",
+        "vhbb_TH_Znn_13TeVTightLowPt_WLight.root",
+        "vhbb_TH_Znn_13TeVTightLowPt_Wbb.root",
+        "vhbb_TH_Znn_13TeVTightLowPt_ZLight.root",
+        "vhbb_TH_Znn_13TeVTightLowPt_Zbb.root"
+    ]
+elif channel == "Zll":
+    oldFileNames = [
+        "vhbb_TH_First_dc_highpt.root",
+        "vhbb_TH_First_dc_lowpt.root",
+    ]
 
 
 def scaleDC(oldFileName, newFileName, scale):
@@ -50,10 +60,12 @@ def scaleHistos(oldFileName, newFileName, scale):
     print "Opening: ",oldFileName+" . Writing:",newFileName
     fileOld = TFile(oldFileName)
     fileOld.ls()
-    Dir = fileOld.Get("Znn_13TeV")
+    if channel == "Zvv": Dir = fileOld.Get(channel+"_13TeV")
+    elif channel == "Zll": Dir = fileOld.Get("Vpt1")
     assert(type(Dir)==TDirectoryFile)
     fileNew = TFile(newFileName,"recreate")
-    newDir = fileNew.mkdir("Znn_13TeV")
+    if channel == "Zvv": newDir = fileNew.mkdir(channel+"_13TeV")
+    elif channel == "Zll": newDir = fileNew.mkdir("Vpt1")
     newDir.cd()
     for i in Dir.GetListOfKeys():
         obj = i.ReadObj()
