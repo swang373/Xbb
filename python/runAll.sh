@@ -33,6 +33,12 @@ echo 'Reading ./'${energy}'config'
 echo 'task'$task
 echo 
 
+# needed on lxbatch otherwise starting directory will not be correct
+if [ ! -z "$LS_EXECCWD" ]; then
+  echo 'cd $LS_EXECCWD'
+  cd $LS_EXECCWD
+fi
+
 whereToLaunch=`python << EOF 
 import os
 from myutils import BetterConfigParser
