@@ -21,8 +21,8 @@ def parse_command_line(argv):
         argv = sys.argv[1:]
 
     tasks = [
-        'prep', 'singleprep', 'mergesingleprep', 'trainReg', 'reg', 'eval', 'syseval', 'sys', 'singlesys', 'mergesinglesys',
-        'train', 'plot', 'dc', 'split', 'stack', 'plot_sys', 'mva_opt', 'mva_opt_eval', 'mva_opt_dc'
+        'prep', 'singleprep', 'mergesingleprep', 'trainReg', 'reg', 'eval', 'singleeval', 'mergesingleeval', 'sys', 'singlesys',
+        'mergesinglesys', 'syseval', 'train', 'plot', 'dc', 'split', 'stack', 'plot_sys', 'mva_opt', 'mva_opt_eval', 'mva_opt_dc'
     ]
 
     parser = argparse.ArgumentParser()
@@ -371,12 +371,14 @@ def main(argv=None):
                 submit(sample, job_options)
 
 
-    elif args.task == 'singleprep' or args.task == 'singlesys' or args.task == 'mergesingleprep' or args.task == 'mergesinglesys':
+    elif args.task in ['singleprep', 'singlesys', 'singleeval', 'mergesingleprep', 'mergesinglesys', 'mergesingleeval']:
         if not args.samples:
             if args.task == 'singleprep' or args.task == 'mergesingleprep':
                 path = parser.get('Directories', 'PREPin')
             elif args.task == 'singlesys' or args.task == 'mergesinglesys':
                 path = parser.get('Directories', 'SYSin')
+            elif args.task == 'singleeval' or args.task == 'mergesingleeval':
+   +            path = parser.get('Directories', 'MVAin')
             info = myutils.ParseInfo(samplesinfo, path)
             sample_list = []
             for job in info:
@@ -388,7 +390,7 @@ def main(argv=None):
         for sample in sample_list:
             if sample == '':
                 continue
-            if args.task == 'singleprep' or args.task == 'singlesys':
+            if args.task == 'singleprep' or args.task == 'singlesys' or args.task == 'singleeval':
                 files = getfilelist(sample)
                 files_per_job = args.nsplit if args.nsplit > 0 else parser.getint('Configuration', 'files_per_job')
                 files_split=[files[x:x+files_per_job] for x in xrange(0, len(files), files_per_job)]
@@ -397,7 +399,7 @@ def main(argv=None):
                 for files_sublist in files_split:
                     submitsinglefile(sample, job_options, files_sublist, run_locally, counter_local)
                     counter_local = counter_local + 1
-            elif args.task == 'mergesingleprep' or args.task == 'mergesinglesys':
+            elif args.task == 'mergesingleprep' or args.task == 'mergesinglesys' or args.task == 'mergesingleeval':
                 mergesubmitsinglefile(sample, job_options, run_locally)
 
 
@@ -569,3 +571,4 @@ if __name__ == '__main__':
 
     status = main()
     sys.exit(status)
+

@@ -123,8 +123,8 @@ elif [ $task = "singleprep" ]; then
     ./prepare_environment_with_config.py --samples $sample ${config_filenames[@]} --filelist $filelist
 
 elif [ $task = "mergesingleprep" ]; then
-    echo "./myutils/mergetreePSI.py --samples $sample ${config_filenames[@]} --filelist $filelist"
-    ./myutils/mergetreePSI.py --samples $sample --config ${config_filenames[@]} --filelist $filelist
+    echo "./myutils/mergetreePSI.py --samples $sample ${config_filenames[@]}"
+    ./myutils/mergetreePSI.py --samples $sample --config ${config_filenames[@]}
 
 elif [ $task = "trainReg" ]; then
     echo "./trainRegression.py --config ${tag}config/regression.ini ${config_filenames[@]}"
@@ -139,8 +139,8 @@ elif [ $task = "singlesys" ]; then
     ./write_regression_systematics.py --samples $sample ${config_filenames[@]} --filelist $filelist
 
 elif [ $task = "mergesinglesys" ]; then
-    echo "./myutils/mergetreePSI.py --samples $sample ${config_filenames[@]} --filelist $filelist --mergesys True"
-    ./myutils/mergetreePSI.py --samples $sample ${config_filenames[@]} --filelist $filelist --mergesys True
+    echo "./myutils/mergetreePSI.py --samples $sample ${config_filenames[@]}  --mergesys True"
+    ./myutils/mergetreePSI.py --samples $sample ${config_filenames[@]} --mergesys True
 
 elif [ $task = "reg" ]; then
     echo "./only_regression.py --samples $sample ${config_filenames[@]}"
@@ -149,6 +149,14 @@ elif [ $task = "reg" ]; then
 elif [ $task = "eval" ]; then
     echo "./evaluateMVA.py --discr $MVAList --samples $sample ${config_filenames[@]}"
     ./evaluateMVA.py --discr $MVAList --samples $sample ${config_filenames[@]}
+
+elif [ $task = "singleeval" ]; then
+    echo "./evaluateMVA.py --discr $MVAList --samples $sample ${config_filenames[@]} --filelist $filelist"
+    ./evaluateMVA.py --discr $MVAList --samples $sample ${config_filenames[@]} --filelist $filelist
+
+elif [ $task = "mergesingleeval" ]; then
+    echo "./myutils/mergetreePSI.py --samples $sample ${config_filenames[@]}  --mergeeval True"
+    ./myutils/mergetreePSI.py --samples $sample ${config_filenames[@]} --mergeeval True
 
 elif [ $task = "syseval" ]; then
     echo "./write_regression_systematics.py --samples $sample ${config_filenames[@]}"
