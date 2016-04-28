@@ -186,7 +186,7 @@ def compile_macro(config,macro):
 print '===============================\n'
 print 'Compiling the macros'
 print '===============================\n'
-compile_macro(config,'BTagReshaping')
+# compile_macro(config,'BTagReshaping')
 compile_macro(config,'VHbbNameSpace')
 
 #check if the logPath exist. If not exit
