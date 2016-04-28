@@ -136,8 +136,6 @@ def main(argv=None):
 
     # RETRIEVE RELEVANT VARIABLES FROM CONFIG FILES AND FROM COMMAND LINE OPTIONS
     logPath = parser.get('Directories', 'logpath')
-    logo = open('%s/data/submit.txt' % parser.get('Directories', 'vhbbpath')).readlines()
-    counter = 0
     samplesinfo = parser.get('Directories', 'samplesinfo')
     whereToLaunch = parser.get('Configuration', 'whereToLaunch')
     run_locally = parser.getboolean('Configuration', 'run_locally')
@@ -245,14 +243,11 @@ def main(argv=None):
 
     # STANDARD WORKFLOW SUBMISSION FUNCTION
     def submit(job, job_options, redirect_to_null=False):
-        global counter
         job_options['job'] = job
-        nJob = counter % len(logo)
+        global counter
+        counter = 0
         counter += 1
-        if args.philipp_love_progress_bars:
-            job_options['name'] = '"%s"' % logo[nJob].strip()
-        else:
-            job_options['name'] = '%(job)s_%(tag)s%(task)s' % job_options
+        job_options['name'] = '%(job)s_%(tag)s%(task)s' % job_options
         if not run_locally:
             command = 'qsub -V -cwd -q %(queue)s -l h_vmem=6G -N %(name)s -j y -o %(logpath)s/%(timestamp)s_%(job)s_%(tag)s_%(task)s.out -pe smp %(nprocesses)s runAll.sh %(job)s %(tag)s ' %(job_options) + args.task + ' ' + job_options['nprocesses']+ ' ' + job_options['job_id'] + ' ' + job_options['bdt_params']
             print 'the command is ', command
@@ -280,14 +275,11 @@ def main(argv=None):
 
     # SINGLE (i.e. FILE BY FILE) AND SPLITTED FILE WORKFLOW SUBMISSION FUNCTION
     def submitsinglefile(job, job_options, file, run_locally, counter_local):
-        global counter
         job_options['job'] = job
-        nJob = counter % len(logo)
+        global counter
+        counter = 0
         counter += 1
-        if args.philipp_love_progress_bars:
-            job_options['name'] = '"%s"' % logo[nJob].strip()
-        else:
-            job_options['name'] = '%(job)s_%(tag)s%(task)s' % job_options
+        job_options['name'] = '%(job)s_%(tag)s%(task)s' % job_options
         if run_locally:
             command = 'sh runAll.sh %(job)s %(tag)s ' % (job_options) + args.task + ' ' + job_options['nprocesses']+ ' ' + job_options['job_id'] + ' ' + ('0' if not job_options['bdt_params'] else job_options['bdt_params'])
         else:
@@ -301,14 +293,11 @@ def main(argv=None):
 
     # MERGING FUNCTION FOR SINGLE (i.e. FILE BY FILE) AND SPLITTED FILE WORKFLOW TO BE COMPATIBLE WITH THE OLD WORKFLOW
     def mergesubmitsinglefile(job, job_options, run_locally):
-        global counter
         job_options['job'] = job
-        nJob = counter % len(logo)
+        global counter
+        counter = 0
         counter += 1
-        if args.philipp_love_progress_bars:
-            job_options['name'] = '"%s"' % logo[nJob].strip()
-        else:
-            job_options['name'] = '%(job)s_%(tag)s%(task)s' % job_options
+        job_options['name'] = '%(job)s_%(tag)s%(task)s' % job_options
         if run_locally:
             command = 'sh runAll.sh %(job)s %(tag)s ' % (job_options) + args.task + ' ' + job_options['nprocesses']+ ' ' + job_options['job_id'] + ' ' + ('0' if not job_options['bdt_params'] else job_options['bdt_params'])
         else:
@@ -378,7 +367,7 @@ def main(argv=None):
             elif args.task == 'singlesys' or args.task == 'mergesinglesys':
                 path = parser.get('Directories', 'SYSin')
             elif args.task == 'singleeval' or args.task == 'mergesingleeval':
-   +            path = parser.get('Directories', 'MVAin')
+                path = parser.get('Directories', 'MVAin')
             info = myutils.ParseInfo(samplesinfo, path)
             sample_list = []
             for job in info:
