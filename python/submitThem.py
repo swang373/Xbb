@@ -328,12 +328,14 @@ elif opts.task == 'prep':
             submit(sample,repDict)
 
 
-elif opts.task == 'singleprep' or opts.task == 'singlesys' or opts.task == 'mergesingleprep' or opts.task == 'mergesinglesys':
+elif opts.task == 'singleprep' or opts.task == 'singlesys' or opts.task == 'singleeval' or opts.task == 'mergesingleprep' or opts.task == 'mergesinglesys' or opts.task == 'mergesingleeval':
     if ( opts.samples == ""):
         if opts.task == 'singleprep' or opts.task == 'mergesingleprep':
             path = config.get("Directories","PREPin")
         elif opts.task == 'singlesys' or opts.task == 'mergesinglesys':
             path = config.get("Directories","SYSin")
+        elif opts.task == 'singleeval' or opts.task == 'mergesingleeval':
+            path = config.get("Directories","MVAin")
         info = ParseInfo(samplesinfo,path)
         sample_list = []
         for job in info:
@@ -344,7 +346,7 @@ elif opts.task == 'singleprep' or opts.task == 'singlesys' or opts.task == 'merg
 
     for sample in sample_list:
         if sample == '': continue
-        if opts.task == 'singleprep' or opts.task == 'singlesys':
+        if opts.task == 'singleprep' or opts.task == 'singlesys' or opts.task == 'singleeval':
             files = getfilelist(sample)
             files_per_job = int(opts.nevents_split_nfiles_single) if int(opts.nevents_split_nfiles_single) > 0 else int(config.get("Configuration","files_per_job"))
             files_split=[files[x:x+files_per_job] for x in xrange(0, len(files), files_per_job)]
@@ -353,7 +355,7 @@ elif opts.task == 'singleprep' or opts.task == 'singlesys' or opts.task == 'merg
             for files_sublist in files_split:
                 submitsinglefile(sample,repDict,files_sublist,run_locally,counter_local)
                 counter_local = counter_local + 1
-        elif opts.task == 'mergesingleprep' or opts.task == 'mergesinglesys':
+        elif opts.task == 'mergesingleprep' or opts.task == 'mergesinglesys' or opts.task == 'mergesingleeval':
             mergesubmitsinglefile(sample,repDict,run_locally)
             
 
