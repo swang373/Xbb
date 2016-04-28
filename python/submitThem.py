@@ -169,7 +169,7 @@ def main(argv=None):
             _output_folder += '/' + _folder
             if not os.path.exists(_output_folder):
                 command = 'srmmkdir srm://t3se01.psi.ch/' + _output_folder
-                subprocess.call([command], shell = True)
+                subprocess.check_call([command], shell = True)
 
     def dump_config(configs, output_file):
         """
@@ -249,10 +249,13 @@ def main(argv=None):
         counter += 1
         job_options['name'] = '%(job)s_%(tag)s%(task)s' % job_options
         if not run_locally:
-            command = 'qsub -V -cwd -q %(queue)s -l h_vmem=6G -N %(name)s -j y -o %(logpath)s/%(timestamp)s_%(job)s_%(tag)s_%(task)s.out -pe smp %(nprocesses)s runAll.sh %(job)s %(tag)s ' %(job_options) + args.task + ' ' + job_options['nprocesses']+ ' ' + job_options['job_id'] + ' ' + job_options['bdt_params']
+            if whereToLaunch == 'lxplus':
+                command = 'bsub -q 1nh -J {name} -o {logpath}/{timestamp}_{job}_{tag}_{task}.out runAll.sh {job} {tag} {task} {nprocesses} {job_id}'.format(**job_options)
+            else:
+                command = 'qsub -V -cwd -q %(queue)s -l h_vmem=6G -N %(name)s -j y -o %(logpath)s/%(timestamp)s_%(job)s_%(tag)s_%(task)s.out -pe smp %(nprocesses)s runAll.sh %(job)s %(tag)s ' %(job_options) + args.task + ' ' + job_options['nprocesses']+ ' ' + job_options['job_id'] + ' ' + job_options['bdt_params']
             print 'the command is ', command
             dump_config(configs, '%(logpath)s/%(timestamp)s_%(job)s_%(tag)s_%(task)s.config' % job_options)
-            subprocess.call([command], shell=True)
+            subprocess.check_call([command], shell=True)
         else:
             waiting_time_before_retry = 60
             number_symultaneous_process = 4
@@ -271,7 +274,7 @@ def main(argv=None):
                 command = command + ' 2>&1 > %(logpath)s/%(timestamp)s_%(job)s_%(tag)s_%(task)s.out' %(job_options) + ' &'
             print 'the command is ', command
             dump_config(configs, '%(logpath)s/%(timestamp)s_%(job)s_%(tag)s_%(task)s.config' % job_options)
-            subprocess.call([command], shell=True)
+            subprocess.check_call([command], shell=True)
 
     # SINGLE (i.e. FILE BY FILE) AND SPLITTED FILE WORKFLOW SUBMISSION FUNCTION
     def submitsinglefile(job, job_options, file, run_locally, counter_local):
@@ -282,6 +285,8 @@ def main(argv=None):
         job_options['name'] = '%(job)s_%(tag)s%(task)s' % job_options
         if run_locally:
             command = 'sh runAll.sh %(job)s %(tag)s ' % (job_options) + args.task + ' ' + job_options['nprocesses']+ ' ' + job_options['job_id'] + ' ' + ('0' if not job_options['bdt_params'] else job_options['bdt_params'])
+        elif whereToLaunch == 'lxplus':
+            command = 'bsub -q 1nh -J {name} -o {logpath}/{timestamp}_{job}_{tag}_{task}.out runAll.sh {job} {tag} {task} {nprocesses} {job_id}'.format(**job_options)
         else:
             command = 'qsub -V -cwd -q %(queue)s -l h_vmem=6G -N %(name)s -j y -o %(logpath)s/%(timestamp)s_%(job)s_%(tag)s_%(task)s.out -pe smp %(nprocesses)s runAll.sh %(job)s %(tag)s ' %(job_options) + args.task + ' ' + job_options['nprocesses']+ ' ' + job_options['job_id'] + ' ' + ('0' if not job_options['bdt_params'] else job_options['bdt_params'])
             command = command.replace('.out', '_' + str(counter_local) + '.out')
@@ -289,7 +294,7 @@ def main(argv=None):
         print 'submitting', len(file.split(';')), 'files like', file.split(';')[0]
         command = command + ' "' + str(file)+ '"'
         dump_config(configs, '%(logpath)s/%(timestamp)s_%(job)s_%(tag)s_%(task)s.config' % (job_options))
-        subprocess.call([command], shell=True)
+        subprocess.check_call([command], shell=True)
 
     # MERGING FUNCTION FOR SINGLE (i.e. FILE BY FILE) AND SPLITTED FILE WORKFLOW TO BE COMPATIBLE WITH THE OLD WORKFLOW
     def mergesubmitsinglefile(job, job_options, run_locally):
@@ -300,12 +305,14 @@ def main(argv=None):
         job_options['name'] = '%(job)s_%(tag)s%(task)s' % job_options
         if run_locally:
             command = 'sh runAll.sh %(job)s %(tag)s ' % (job_options) + args.task + ' ' + job_options['nprocesses']+ ' ' + job_options['job_id'] + ' ' + ('0' if not job_options['bdt_params'] else job_options['bdt_params'])
+        elif whereToLaunch == 'lxplus':
+            command = 'bsub -q 1nh -J {name} -o {logpath}/{timestamp}_{job}_{tag}_{task}.out runAll.sh {job} {tag} {task} {nprocesses} {job_id}'.format(**job_options)
         else:
             command = 'qsub -V -cwd -q %(queue)s -l h_vmem=6G -N %(name)s -j y -o %(logpath)s/%(timestamp)s_%(job)s_%(tag)s_%(task)s.out -pe smp %(nprocesses)s runAll.sh %(job)s %(tag)s ' %(job_options) + args.task + ' ' + job_options['nprocesses']+ ' ' + job_options['job_id'] + ' ' + ('0' if not job_options['bdt_params'] else job_options['bdt_params'])
         command = command + ' mergeall'
         print 'the command is ', command
         dump_config(configs, '%(logpath)s/%(timestamp)s_%(job)s_%(tag)s_%(task)s.config' % (job_options))
-        subprocess.call([command], shell=True)
+        subprocess.check_call([command], shell=True)
 
     # RETRIEVE FILELIST FOR THE TREECOPIER PSI AND SINGLE FILE SYS STEPS
     def getfilelist(job):
