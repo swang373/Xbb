@@ -1,0 +1,3 @@
+# Ignore ROOT macro shared objects.
+*.so
+*.d
