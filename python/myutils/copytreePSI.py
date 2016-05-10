@@ -82,7 +82,7 @@ def copytreePSI(pathIN,pathOUT,prefix,newprefix,folderName,Aprefix,Acut,config,f
     for filename_ in filenames:
         if '.root' in filename_ :
             if hasattr('Configuration','use_ntuples_from_CERN') and config.get('Configuration','use_ntuples_from_CERN'):
-                filename_.replace('/store/user/arizzi','/store/group/phys_higgs/hbb/ntuples/V21/user/arizzi')
+                filename_ = filename_.replace('/store/user/arizzi','/store/group/phys_higgs/hbb/ntuples/V21/user/arizzi')
             inputFiles.append('root://xrootd-cms.infn.it//'+filename_.rstrip('\n'))
 
     if len(inputFiles) == 0 :
