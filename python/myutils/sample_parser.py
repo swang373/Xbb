@@ -118,7 +118,7 @@ class ParseInfo:
             if config.has_option(sample, 'specialweight'):
                 specialweight = config.get(sample, 'specialweight')
             else:
-                specialweight = ""
+                specialweight = "1"
 
 
       #fill the sample
