@@ -66,6 +66,7 @@ class HistoMaker:
 
         # #Remove EventForTraining in order to run the MVA directly from the PREP step
         if not 'PSI' in self.config.get('Configuration','whereToLaunch'):
+#            BDT_add_cut='((evt%2) == 0 || Alt$(isData,0))'
             BDT_add_cut='((evt%2) == 0 || isData)'
         else:
             UseTrainSample = eval(self.config.get('Analysis','UseTrainSample'))
@@ -106,7 +107,6 @@ class HistoMaker:
             weightF=options['weight']
             #Include weight per sample (specialweight)
             weightF="("+weightF+")*(" + job.specialweight +")"
-
             if 'countHisto' in options.keys() and 'countbin' in options.keys():
                 count=getattr(self.tc,options['countHisto'])[options['countbin']]
             else:
@@ -118,7 +118,8 @@ class HistoMaker:
             #    treeCut='%s'%(options['cut'])
             treeCut='%s'%(options['cut'])
 
-            treeCut = "("+treeCut+")&&"+job.addtreecut 
+#            treeCut = "("+treeCut+")&&"+job.addtreecut 
+ 
             #print 'job.addtreecut ',job.addtreecut
             #options
             #print 'treeCut',treeCut
@@ -130,6 +131,11 @@ class HistoMaker:
             #print('hTree.name() 1 =',hTree.GetName())
             #print('treeVar 1 =',treeVar)
             drawoption = ''
+            print 'treeVar: %s'%(treeVar)
+            print 'weightF: %s'%(weightF)
+            print 'treeVar: %s'%(treeVar)
+            print 'treeCut: %s'%(treeCut)
+            
 #            print("START DRAWING")
             if job.type != 'DATA':
               if CuttedTree and CuttedTree.GetEntries():
@@ -142,7 +148,7 @@ class HistoMaker:
                 else: 
                     drawoption = '(%s)*(%s)'%(weightF,treeCut)
                 #print ('Draw: %s>>%s' %(treeVar,name), drawoption, "goff,e")
-                if First_iter: print 'drawoptions are', drawoption
+                print 'drawoptions are', drawoption
                 nevents = CuttedTree.Draw('%s>>%s' %(treeVar,name), drawoption, "goff,e")
                 if First_iter: print 'Number of events are', nevents
                 #print 'nevents:',hTree.GetEntries(),' hTree.name() 2 =',hTree.GetName()
@@ -151,7 +157,7 @@ class HistoMaker:
                 if options['blind']:
                     lowLimitBlindingMass    = 90
                     highLimitBlindingMass   = 140
-                    lowLimitBlindingBDT     = 0
+                    lowLimitBlindingBDT     = 0.3
                     lowLimitBlindingDR      = 0.8
                     highLimitBlindingDR     = 1.6
                     if 'H' in treeVar and 'mass' in treeVar:
