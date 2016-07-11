@@ -291,7 +291,7 @@ class StackMaker:
             addFlag = 'W(#tau#nu)H(b#bar{b})'
 
         for i in range(0,len(self.datas)):
-            print "Adding data ",self.datas[i]," with integral:",self.datas[i].Integral()," and entries:",self.datas[i].GetEntries()
+            print "Adding data ",self.datas[i]," with integral:",self.datas[i].Integral()," and entries:",self.datas[i].GetEntries()," and bins:",self.datas[i].GetNbinsX()
             d1.Add(self.datas[i],1)
         print "\033[1;32m\n\tDATA integral = %s\033[1;m"%d1.Integral()
         flow = d1.GetEntries()-d1.Integral()
@@ -414,7 +414,7 @@ class StackMaker:
             # tLumi = self.myText("#sqrt{s} =  %s, L = %.1f fb^{-1}"%(self.anaTag,(float(self.lumi)/1000.)),0.17,0.78)
         # else:
             # tLumi = self.myText("#sqrt{s} =  %s, L = %.1f fb^{-1}"%(self.anaTag,(float(self.lumi)/1000.)),0.17,0.83)
-        tLumi = self.myText("#sqrt{s} =  %s, L = %.3f fb^{-1}"%(self.anaTag,(float(self.lumi/1000.0))),0.17,0.83)
+        tLumi = self.myText("#sqrt{s} =  %s, L = %.2f fb^{-1}"%(self.anaTag,(float(self.lumi/1000.0))),0.17,0.83)
         tAddFlag = self.myText(addFlag,0.17,0.78)
         print 'Add Flag %s' %self.addFlag2
         if self.addFlag2:
@@ -615,7 +615,7 @@ class StackMaker:
         else:
             addFlag = 'pp #rightarrow VH; H #rightarrow b#bar{b}'
         for i in range(0,len(self.datas)):
-            print "Adding data ",self.datas[i]," with integral:",self.datas[i].Integral()," and entries:",self.datas[i].GetEntries()
+            print "Adding data ",self.datas[i]," with integral:",self.datas[i].Integral()," and entries:",self.datas[i].GetEntries()," and bins:",self.datas[i].GetNbins()
             d1.Add(self.datas[i],1)
         print "\033[1;32m\n\tDATA integral = %s\033[1;m"%d1.Integral()
         flow = d1.GetEntries()-d1.Integral()
