@@ -302,6 +302,24 @@ namespace VHbb {
   return uncert;
   }*/
 
+
+  double triggerMET (double minMHTMET) 
+  {
+
+     if (minMHTMET<120.) return 0.;
+          //          "exponential", "[2]*(1e0-exp(-[0]*(x-[1])))",120,500);
+            /*   1  p0           7.01739e-02   2.23672e-02   1.37846e-05   3.78871e-03
+                 2  p1           1.08435e+02   1.36340e+01   8.71722e-03  -1.14146e-05
+                 3  p2           9.66260e-01   3.07669e-03   4.89505e-06   1.19826e-01
+           */
+          if (minMHTMET>=120 &&  minMHTMET<500.) return  (9.6626e-01 * (1e0-exp(-7.01739e-02*(minMHTMET-1.08435e+02))));
+          if (minMHTMET>=500.) return 9.6626e-01;
+          return 0.;
+
+
+   }
+
+
   double ptWeightDY( double lheV_pt, double sign = 1.)
   {
     double SF = 1.;
