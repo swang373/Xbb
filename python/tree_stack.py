@@ -123,7 +123,7 @@ def doPlot():
             cutOverWrite = config.get('Cuts',region)+' & ' + addBlindingCut
         inputs.append((Plotter,"get_histos_from_tree",(job,cutOverWrite)))
     
-    multiprocess=64
+    multiprocess=0#64
     outputs = []
     if multiprocess>0:
         from multiprocessing import Pool
@@ -235,8 +235,9 @@ def doPlot():
         Stacks[v].datatyps = Ldatatyps[v]
         Stacks[v].datanames= Ldatanames[v]
         #if SignalRegion:
-        Stacks[v].overlay = Overlaylist[v] ## from 
+        #Stacks[v].overlay = Overlaylist[v] ## from 
         Stacks[v].lumi = lumi
+        Stacks[v].normalize = eval(config.get(section,'Normalize'))
         Stacks[v].jobnames= Ljobnames[v]
         Stacks[v].doPlot()
         ##FIXME##

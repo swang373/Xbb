@@ -40,7 +40,8 @@ class HistoMaker:
 
         #get the conversion rate in case of BDT plots
         TrainFlag = eval(self.config.get('Analysis','TrainFlag'))
-        BDT_add_cut='EventForTraining == 0'
+        #BDT_add_cut='EventForTraining == 0'
+        BDT_add_cut='1'
 
 
         plot_path = self.config.get('Directories','plotpath')
