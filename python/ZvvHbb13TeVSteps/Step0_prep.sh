@@ -13,18 +13,31 @@ bash runAll.sh	WJetsMadHT400		 ZvvHbb13TeV prep >& log/logPrepWJetsMadHT400	&
 bash runAll.sh	WJetsMadHT600		 ZvvHbb13TeV prep >& log/logPrepWJetsMadHT600	&
 bash runAll.sh	WBJetsMad		 ZvvHbb13TeV prep >& log/logPrepWBJetsMad	&
 bash runAll.sh	WJetsBGenMad		 ZvvHbb13TeV prep >& log/logPrepWJetsBGenMad	&
-
+bash runAll.sh  WJetsMadHT800            ZvvHbb13TeV prep >& log/logPrepWJetsMadHT800   &
+bash runAll.sh  WJetsMadHT1200            ZvvHbb13TeV prep >& log/logPrepWJetsMadHT1200   &
+bash runAll.sh  WJetsMadHT2500            ZvvHbb13TeV prep >& log/logPrepWJetsMadHT2500   &
+bash runAll.sh MET_Run2016B3   ZvvHbb13TeV prep >& log/logPrepMET__Run2016B-PromptReco-v2part3 &
+bash runAll.sh MET_Run2016B2   ZvvHbb13TeV prep >& log/logPrepMET__Run2016B-PromptReco-v2part2 &
+bash runAll.sh MET_Run2016B   ZvvHbb13TeV prep >& log/logPrepMET__Run2016B-PromptReco-v2 &
+bash runAll.sh MET_Run2016C  ZvvHbb13TeV prep >& log/logPrepMET__Run2016C-PromptReco-v2 &
+bash runAll.sh MET_Run2016D  ZvvHbb13TeV prep >& log/logPrepMET__Run2016D-PromptReco-v2 &
 
 bash runAll.sh	ZJetsHT0		 ZvvHbb13TeV prep >& log/logPrepZJetsHT0	&
 bash runAll.sh	ZJetsMadHT100		 ZvvHbb13TeV prep >& log/logPrepZJetsMadHT100	&
 bash runAll.sh	ZJetsMadHT200		 ZvvHbb13TeV prep >& log/logPrepZJetsMadHT200	&
 bash runAll.sh	ZJetsMadHT400		 ZvvHbb13TeV prep >& log/logPrepZJetsMadHT400	&
 bash runAll.sh	ZJetsMadHT600		 ZvvHbb13TeV prep >& log/logPrepZJetsMadHT600	&
+bash runAll.sh  ZJetsMadHT800            ZvvHbb13TeV prep >& log/logPrepZJetsMadHT800   &
+bash runAll.sh  ZJetsMadHT1200            ZvvHbb13TeV prep >& log/logPrepZJetsMadHT1200   &
+bash runAll.sh  ZJetsMadHT2500            ZvvHbb13TeV prep >& log/logPrepZJetsMadHT2500   &
+
 bash runAll.sh	ZBJetsMad		 ZvvHbb13TeV prep >& log/logPrepZBJetsMad	&
 bash runAll.sh	TT		 ZvvHbb13TeV prep >& log/logPrepTT	&
 bash runAll.sh	TTPow		 ZvvHbb13TeV prep >& log/logPrepTTPow	&
 bash runAll.sh	ST_s		 ZvvHbb13TeV prep >& log/logPrepST_s	&
-bash runAll.sh	ST_t		 ZvvHbb13TeV prep >& log/logPrepST_t	&
+bash runAll.sh	ST_t_top		 ZvvHbb13TeV prep >& log/logPrepST_t_top	&
+bash runAll.sh  ST_t_antitop                 ZvvHbb13TeV prep >& log/logPrepST_t_antitop        &
+
 bash runAll.sh	ST_tW_antitop		 ZvvHbb13TeV prep >& log/logPrepST_tW_antitop	&
 bash runAll.sh	ST_tW_top		 ZvvHbb13TeV prep >& log/logPrepST_tW_top	&
 

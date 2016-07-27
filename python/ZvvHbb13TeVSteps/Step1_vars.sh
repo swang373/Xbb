@@ -16,6 +16,9 @@ bash runAll.sh  ZJetsMadHT100     ZvvHbb13TeV vars >& log/logVarsZJetsMadHT100  
 bash runAll.sh  ZJetsMadHT200     ZvvHbb13TeV vars >& log/logVarsZJetsMadHT200  &
 bash runAll.sh  ZJetsMadHT400     ZvvHbb13TeV vars >& log/logVarsZJetsMadHT400  &
 bash runAll.sh  ZJetsMadHT600     ZvvHbb13TeV vars >& log/logVarsZJetsMadHT600  &
+bash runAll.sh  ZJetsMadHT800            ZvvHbb13TeV vars >& log/logPrepZJetsMadHT800   &
+bash runAll.sh  ZJetsMadHT1200            ZvvHbb13TeV vars >& log/logPrepZJetsMadHT1200   &
+bash runAll.sh  ZJetsMadHT2500            ZvvHbb13TeV vars >& log/logPrepZJetsMadHT2500   &
 bash runAll.sh  TT     ZvvHbb13TeV vars >& log/logVarsTT  &
 bash runAll.sh  TTPow     ZvvHbb13TeV vars >& log/logVarsTTPow  &
 bash runAll.sh  ST_s     ZvvHbb13TeV vars >& log/logVarsST_s  &

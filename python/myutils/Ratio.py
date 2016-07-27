@@ -27,10 +27,10 @@ def renewHist(hist,reference,min,max):
 def getRatio(hist,reference,min,max,yTitle="",maxUncertainty = 1000.000,restrict=True):
     from ROOT import gROOT,gSystem
     theHist, theReference = renewHist(hist,reference,min,max)
-    gROOT.ProcessLine('.L $CMSSW_BASE/src/Xbb/python/myutils/Ratio.C+') 
     print "AAAAa"
 #    gROOT.Load('$CMSSW_BASE/src/Xbb/python/myutils/Ratio_C.so') 
     print "AAAA"
+    ROOT.gSystem.Load('./myutils/Ratio_C.so')
     from ROOT import coolRatio
     print "BBB"
     thePlotter = coolRatio()
