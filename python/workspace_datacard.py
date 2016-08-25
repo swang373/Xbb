@@ -906,13 +906,9 @@ for DCtype in ['WS','TH']:
         dictProcs=eval(config.get('Datacard',rateParam))
         for proc in dictProcs.keys():
             f.write(rateParam+'\trateParam\t'+Datacardbin+'\t'+proc+'\t'+str(dictProcs[proc])+' ['+str(rateParamRange[0])+','+str(rateParamRange[1])+']\n')
-
     f.close()
     useSpacesInDC(fileName)
 
 # --------------------------------------------------------------------------
-
-
-
 
 outfile.Close()
