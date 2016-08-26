@@ -437,5 +437,18 @@ return 1.;
       return 1.;
   }
 
+  double ptWeightQCD(int nGenVbosons, double lheHT, int GenVbosons_pdgId) {
+    double SF = 1.;
+    if (lheHT>100 && nGenVbosons==1) {
+      if (GenVbosons_pdgId == 23) { // Z
+        SF = (lheHT>100 && lheHT<200)*(1.588/1.23) + (lheHT>200 && lheHT<400)*(1.438/1.23) + (lheHT>400 && lheHT<600)*(1.494/1.23) + (lheHT>600)*(1.139/1.23);
+      } else if (abs(GenVbosons_pdgId) == 24) { // W
+        SF = (lheHT>100 && lheHT<200)*(1.459/1.21) + (lheHT>200 && lheHT<400)*(1.434/1.21) + (lheHT>400 && lheHT<600)*(1.532/1.21) + (lheHT>600)*(1.004/1.21);
+      }
+    }
+    return SF > 0 ? SF : 0;
+  }
+
 }
+
 
