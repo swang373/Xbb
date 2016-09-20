@@ -139,7 +139,7 @@ for job in info:
             os.mkdir(OUTpath)
         except:
             pass
-        outputfiles.append("%s/%s/%s" %(OUTpath,job.prefix,job.identifier+'.root'))
+        outputfiles.append("%s/%s%s" %(OUTpath,job.prefix,job.identifier+'.root'))
     else:
         for inputFile in filelist:
             subfolder = inputFile.split('/')[-4]
@@ -229,7 +229,7 @@ for job in info:
 
         # targetStorage = OUTpath.replace('gsidcap://t3se01.psi.ch:22128/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')+'/'+job.prefix+job.identifier+'.root'
         targetStorage = outputFile.replace('gsidcap://t3se01.psi.ch:22128/','srm://t3se01.psi.ch:8443/srm/managerv2?SFN=')
-        if('pisa' in config.get('Configuration','whereToLaunch')):
+        if config.get('Configuration','whereToLaunch') in ['pisa', 'null']:
           command = 'rm %s' %(targetStorage)
           print(command)
           subprocess.call([command], shell=True)
