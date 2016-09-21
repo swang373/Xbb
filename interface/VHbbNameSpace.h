@@ -302,24 +302,20 @@ namespace VHbb {
   return uncert;
   }*/
 
-
-   double triggerMET(double minMHTMET) {
-    /* 
- *       "exponential", "[2]*(1e0-exp(-[0]*(x-[1])))",120,500);
- *             1  p0           7.01739e-02   2.23672e-02   1.37846e-05   3.78871e-03
- *                   2  p1           1.08435e+02   1.36340e+01   8.71722e-03  -1.14146e-05
- *                         3  p2           9.66260e-01   3.07669e-03   4.89505e-06   1.19826e-01
- *                             */
+  float triggerMET(float minMHTMET) {
+    /* "exponential", "[2]*(1e0-exp(-[0]*(x-[1])))",120,500);
+       1  p0           5.27300e-02   1.26236e-02   1.24859e-05  -1.53523e-03
+       2  p1           1.04024e+02   1.02448e+01   1.05355e-02  -4.18185e-05
+       3  p2           9.76189e-01   1.48333e-03   2.67820e-06  -1.33843e-01
+    */
     if (minMHTMET < 120) {
       return 0.;
     } else if (minMHTMET >= 120 && minMHTMET < 500) {
-      return 9.6626e-01 * (1. - exp(-7.01739e-02 * (minMHTMET-1.08435e+02)));
+      return 9.76189e-01 * (1e0 - exp(-5.27300e-02 * (minMHTMET-1.04024e+02)));
     } else {
-      return 9.6626e-01;
+      return 9.76189e-01;
     }
   }
-
-	
 
   double ptWeightDY( double lheV_pt, double sign = 1.)
   {
