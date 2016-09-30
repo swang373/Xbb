@@ -6,7 +6,7 @@
 #bash runAll.sh ZvvBDTNoMjjOnlyPositiveWeights ZvvHbb13TeV train >& log/logTrainZHNoMjjOnlyPositiveWeights;
 
 bash runAll.sh ZvvBDTHighPt SeanZvvHbb13TeV train >& log/Train_HighPt;
-bash runAll.sh ZvvBDTLowPt SeanZvvHbb13TeV train >& log/Train_LowPt;
-bash runAll.sh ZvvBDTTightHighPt SeanZvvHbb13TeV train >& log/Train_HighPt_Tight;
-bash runAll.sh ZvvBDTTightLowPt SeanZvvHbb13TeV train >& log/Train_LowPt_Tight;
+#bash runAll.sh ZvvBDTLowPt SeanZvvHbb13TeV train >& log/Train_LowPt;
+bash runAll.sh ZvvBDTHighPtTight SeanZvvHbb13TeV train >& log/Train_HighPt_Tight;
+#bash runAll.sh ZvvBDTLowPtTight SeanZvvHbb13TeV train >& log/Train_LowPt_Tight;
 
