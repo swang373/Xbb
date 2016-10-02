@@ -117,9 +117,9 @@ class StackMaker:
         self.AddErrors = None
         self.jobnames = None
         self.addFlag2 = ''
-        if 'TTbar' in self.region:
+        if 'TT' in self.region:
             self.addFlag2 = 't#bar{t} enriched'
-        elif 'ZLight' in self.region:
+        elif 'Zlight' in self.region:
             self.addFlag2 = 'Z+udscg enriched'
             #addFlag2 = 'Z+LF enriched'
         elif 'Zbb' in self.region:
@@ -127,7 +127,7 @@ class StackMaker:
             #addFlag2 = 'Z+HF enriched'
         elif 'Wbb' in self.region:
             self.addFlag2 = 'W+b#bar{b} enriched'
-        elif 'WLight' in self.region:
+        elif 'Wlight' in self.region:
             self.addFlag2 = 'W+udscg enriched'
         #else:
             #addFlag2 = 'pp #rightarrow VH; H #rightarrow b#bar{b}'
@@ -233,14 +233,14 @@ class StackMaker:
 
         oben.cd()
         allStack = ROOT.THStack(self.var,'')     
-        l = ROOT.TLegend(0.45, 0.6,0.75,0.92)
+        l = ROOT.TLegend(0.5, 0.6, 0.75, 0.92)
         l.SetLineWidth(2)
         l.SetBorderSize(0)
         l.SetFillColor(0)
         l.SetFillStyle(4000)
         l.SetTextFont(62)
         l.SetTextSize(0.035)
-        l_2 = ROOT.TLegend(0.68, 0.6,0.92,0.92)
+        l_2 = ROOT.TLegend(0.68, 0.6, 0.92, 0.92)
         l_2.SetLineWidth(2)
         l_2.SetBorderSize(0)
         l_2.SetFillColor(0)
@@ -289,6 +289,9 @@ class StackMaker:
             addFlag = 'W(e#nu)H(b#bar{b})'
         elif 'Wtn' in self.datanames:
             addFlag = 'W(#tau#nu)H(b#bar{b})'
+
+        # HACK
+        addFlag = 'Z(#nu#nu)H(b#bar{b})'
 
         for i in range(0,len(self.datas)):
             print "Adding data ",self.datas[i]," with integral:",self.datas[i].Integral()," and entries:",self.datas[i].GetEntries()," and bins:",self.datas[i].GetNbinsX()
@@ -345,7 +348,7 @@ class StackMaker:
                 else: overScale=1
             for _overlay in self.overlay:
                 _overlay.Scale(overScale)
-                l_2.AddEntry(_overlay,self.typLegendDict[_overlay.GetTitle()]+" X"+str(overScale),'L')
+                l_2.AddEntry(_overlay,self.typLegendDict[_overlay.GetTitle()]+" x"+str(overScale),'L')
 #                l_2.AddEntry(_overlay,self.typLegendDict[_overlay.GetTitle()],'L')
     
         if self.normalize:
