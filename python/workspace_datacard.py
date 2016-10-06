@@ -793,7 +793,7 @@ for DCtype in ['WS','TH']:
     for c in setup: f.write('\t%s'%Dict[c])
     f.write('\n')
     f.write('process\t')
-    for c in range(0,columns): f.write('\t%s'%(c-len(signals)+1))
+    for c in range(0,columns): f.write('\t%s'%(c-len(signals)+2))
     f.write('\n')
     # datacard yields
     f.write('rate\t')
