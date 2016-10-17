@@ -47,7 +47,7 @@ region = opts.region
 addBlindingCut = None
 if config.has_option('Plot_general','addBlindingCut'):#contained in plots, cut on the event number
     addBlindingCut = config.get('Plot_general','addBlindingCut')
-    print 'adding add. blinding cut'
+    print 'adding add. blinding cut', addBlindingCut
 
 print "Compile external macros"
 print "=======================\n"
@@ -288,9 +288,9 @@ def doPlot():
     #! Get the data histograms
     for job in datasamples:
         if addBlindingCut:
-            dDictList = Plotter.get_histos_from_tree(job,config.get('Cuts',region)+' & ' + addBlindingCut)
-        else:
-            dDictList = Plotter.get_histos_from_tree(job)
+            for _option in Plotter.optionsList:
+                _option['cut'] += '&&{}'.format(addBlindingCut)
+        dDictList = Plotter.get_histos_from_tree(job)
         #! add the variables list for each job (Samples)
         for v in range(0,len(vars)):
             Ldatas[v].append(dDictList[v].values()[0])
