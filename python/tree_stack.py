@@ -193,7 +193,7 @@ def doPlot():
 #        cutOverWrite = None
 #        if addBlindingCut:
 #            cutOverWrite = config.get('Cuts',region)+' & ' + addBlindingCut
-        inputs.append((Plotter,"get_histos_from_tree",(job,True)))
+        inputs.append((Plotter,"get_histos_from_tree",job))
 
     print 'inputs are', inputs
     
