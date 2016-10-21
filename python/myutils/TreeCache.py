@@ -235,13 +235,16 @@ class TreeCache:
         else:
             sys.exit(-1)
 
-    @staticmethod
-    def get_scale(sample, config, lumi = None, count=1):
-#        print float(sample.lumi)
-        try: sample.xsec = sample.xsec[0]
-        except: pass
-        anaTag=config.get('Analysis','tag')
-        theScale = 1.
+    def get_scale(self, sample, config, lumi = None, count=1):
+        try:
+            sample.xsec = sample.xsec[0]
+        except:
+            pass
+        tmpCache = '%s/tmp_%s.root'%(self.__tmpPath,self.__hashDict[sample.name])
+        input = ROOT.TFile.Open(tmpCache, 'read')
+        posWeight = input.Get('CountPosWeight').GetBinContent(1)
+        negWeight = input.Get('CountNegWeight').GetBinContent(1)
+        count = posWeight - negWeight
         lumi = float(sample.lumi)
         theScale = lumi*sample.xsec*sample.sf/(count)
         print("sample: ",sample,"lumi: ",lumi,"xsec: ",sample.xsec,"sample.sf: ",sample.sf,"count: ",count," ---> using scale: ", theScale)

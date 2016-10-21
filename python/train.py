@@ -232,9 +232,10 @@ for var in MVA_Vars['Nominal']:
 factory.SetSignalWeightExpression(weightF)
 # print 'Execute TMVA: SetBackgroundWeightExpression'
 factory.SetBackgroundWeightExpression(weightF)
-factory.Verbose()
+sigCut, bkgCut = ROOT.TCut(''), ROOT.TCut('')
+factory.PrepareTrainingAndTestTree(sigCut, bkgCut, 'NormMode=None')
 # print 'Execute TMVA: factory.BookMethod'
-my_methodBase_bdt = factory.BookMethod(MVAtype,MVAname,MVAsettings)
+my_methodBase_bdt = factory.BookMethod(ROOT.TMVA.Types.kBDT,MVAname,MVAsettings)
 # print 'Execute TMVA: TrainMethod'
 my_methodBase_bdt.TrainMethod()
 #factory.TrainAllMethods()

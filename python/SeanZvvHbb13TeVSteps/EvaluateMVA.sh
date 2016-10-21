@@ -40,6 +40,7 @@ bash runAll.sh QCDHT2000 SeanZvvHbb13TeV eval >& log/Evaluate_QCDHT2000;
 bash runAll.sh WW SeanZvvHbb13TeV eval >& log/Evaluate_WW;
 bash runAll.sh WZ SeanZvvHbb13TeV eval >& log/Evaluate_WZ;
 bash runAll.sh ZZ SeanZvvHbb13TeV eval >& log/Evaluate_ZZ;
+bash runAll.sh ZZ2Q2Nu SeanZvvHbb13TeV eval >& log/Evaluate_ZZ2Q2Nu;
 
 bash runAll.sh MET_Run2016B SeanZvvHbb13TeV eval >& log/Evaluate_MET2016B;
 bash runAll.sh MET_Run2016C SeanZvvHbb13TeV eval >& log/Evaluate_MET2016C;
