@@ -248,7 +248,47 @@ class TreeCache:
         count = posWeight - negWeight
         lumi = float(sample.lumi)
         theScale = lumi*sample.xsec*sample.sf/(count)
-        print("sample: ",sample,"lumi: ",lumi,"xsec: ",sample.xsec,"sample.sf: ",sample.sf,"count: ",count," ---> using scale: ", theScale)
+        print(
+            'sample: ', sample,
+            'lumi: ', lumi,
+            'xsec: ', sample.xsec,
+            'sample.sf: ', sample.sf,
+            'count: ', count,
+            '---> using scale: ', theScale
+        )
+        return theScale
+
+    def get_scale_LHEscale(self, sample, config, lhe_scale):
+        tmpCache = '%s/tmp_%s.root' % (self.__tmpPath, self.__hashDict[sample.name])
+        input = ROOT.TFile.Open(tmpCache, 'read')
+        posWeight = input.Get('CountPosWeight').GetBinContent(1)
+        negWeight = input.Get('CountNegWeight').GetBinContent(1)
+        # Get the LHE weight.
+        countWeightedLHEWeightScale = input.Get('CountWeightedLHEWeightScale')
+        if lhe_scale == 0:
+            scaled_count = countWeightedLHEWeightScale.GetBinContent(0+1)
+        elif lhe_scale == 1:
+            scaled_count = countWeightedLHEWeightScale.GetBinContent(1+1)
+        elif lhe_scale == 2:
+            scaled_count = countWeightedLHEWeightScale.GetBinContent(2+1)
+        elif lhe_scale == 3:
+            scaled_count = countWeightedLHEWeightScale.GetBinContent(3+1)
+        input.Close()
+        count = posWeight - negWeight
+        lumi = float(sample.lumi)
+        if scaled_count <= 0:
+           theScale = lumi*sample.xsec*sample.sf/count
+        else:
+           theScale = lumi*sample.xsec*sample.sf/scaled_count
+        print(
+            'sample: ', sample,
+            'lumi: ', lumi,
+            'xsec: ', sample.xsec,
+            'sample.sf: ', sample.sf,
+            'count: ', count,
+            'scaled count: ', scaled_count,
+            '---> using scale: ', theScale
+        )
         return theScale
 
     @staticmethod

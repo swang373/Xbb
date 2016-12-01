@@ -436,10 +436,13 @@ return 1.;
   double ptWeightQCD(int nGenVbosons, double lheHT, int GenVbosons_pdgId) {
     double SF = 1.;
     if (lheHT>100 && nGenVbosons==1) {
-      if (GenVbosons_pdgId == 23) { // Z
+      // With the inclusion of DY LO to NLO weights, do not apply the QCD reweighting the the DY samples.
+      /*if (GenVbosons_pdgId == 23) { // Z
         SF = (lheHT>100 && lheHT<200)*(1.588/1.23) + (lheHT>200 && lheHT<400)*(1.438/1.23) + (lheHT>400 && lheHT<600)*(1.494/1.23) + (lheHT>600)*(1.139/1.23);
       } else if (abs(GenVbosons_pdgId) == 24) { // W
-        SF = (lheHT>100 && lheHT<200)*(1.459/1.21) + (lheHT>200 && lheHT<400)*(1.434/1.21) + (lheHT>400 && lheHT<600)*(1.532/1.21) + (lheHT>600)*(1.004/1.21);
+        SF = (lheHT>100 && lheHT<200)*(1.459/1.21) + (lheHT>200 && lheHT<400)*(1.434/1.21) + (lheHT>400 && lheHT<600)*(1.532/1.21) + (lheHT>600)*(1.004/1.21);*/
+      if (abs(GenVbosons_pdgId) == 24) { // W
+	    SF = (lheHT>100 && lheHT<200)*(1.459/1.21) + (lheHT>200 && lheHT<400)*(1.434/1.21) + (lheHT>400 && lheHT<600)*(1.532/1.21) + (lheHT>600)*(1.004/1.21);
       }
     }
     return SF > 0 ? SF : 0;
@@ -459,6 +462,72 @@ return 1.;
       }
     }
     return SF > 0 ? SF : 0;
+  }
+
+  double LOtoNLOWeightBjetSplitEtabb(double etabb, int njets, int nGenVbosons, int GenVbosons_pdgId) {
+    double SF = 1.;
+	if (nGenVbosons == 1 && GenVbosons_pdgId == 23 && etabb < 5) {
+      if (njets < 1) {
+        SF = 0.935422 + 0.0403162*etabb - 0.0089026*etabb*etabb + 0.0064324*etabb*etabb*etabb - 0.000212443*etabb*etabb*etabb*etabb;
+      } else if (njets == 1) {
+        // 1b jet
+        SF = 0.962415 + 0.0329463*etabb - 0.0414479*etabb*etabb + 0.0240993*etabb*etabb*etabb - 0.00278271*etabb*etabb*etabb*etabb;
+      } else if (njets >= 2) {
+        // 2b jets
+        SF = (0.721265 - 0.105643*etabb - 0.0206835*etabb*etabb + 0.00558626*etabb*etabb*etabb)*TMath::Exp(0.450244*etabb);
+      }
+    }
+    return SF;
+  }
+
+  float puWeight_ichep(int i) {
+    double puw[38] = {
+      0.00026954692859,
+	  0.00834201570744,
+      0.0146551644559,
+      0.0267593718187,
+      0.045546866213,
+      0.0351739785649,
+      0.0389242914756,
+      0.131305445658,
+      0.337172065156,
+      0.645651266938,
+      0.908493559723,
+      1.09739459449,
+      1.26533979742,
+      1.41586705341,
+      1.53524109717,
+      1.49032150282,
+      1.39123249386,
+      1.45737145535,
+      1.38588035333,
+      1.4464676134,
+      1.23282560995,
+      1.08387439504,
+      1.02663484504,
+      0.97464906611,
+      0.829692105572,
+      0.758597838706,
+      0.554540190093,
+      0.442016886186,
+      0.291492210196,
+      0.203297812168,
+      0.131804681706,
+      0.0834846669777,
+      0.0680713812995,
+      0.0497105409204,
+      0.0496692836227,
+      0.0581182475108,
+      0.089209326104,
+      0.0941178579122,
+	};
+	if (i < 0) {
+      return 1.;
+    } else if (i > 37) {
+      return puw[37];
+    } else {
+      return puw[i];
+    }
   }
 
 }
