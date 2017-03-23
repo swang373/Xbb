@@ -3,7 +3,7 @@ bash runAll.sh ggZH SeanZvvHbb13TeV eval >& log/Evaluate_ggZH;
 bash runAll.sh WminusH SeanZvvHbb13TeV eval >& log/Evaluate_WminusH;
 bash runAll.sh WplusH SeanZvvHbb13TeV eval >& log/Evaluate_WplusH;
 
-bash runAll.sh WJetsHT0 SeanZvvHbb13TeV eval >& log/Evaluate_WJetsHT0;
+#bash runAll.sh WJetsHT0 SeanZvvHbb13TeV eval >& log/Evaluate_WJetsHT0;
 bash runAll.sh WJetsHT100 SeanZvvHbb13TeV eval >& log/Evaluate_WJetsHT100;
 bash runAll.sh WJetsHT200 SeanZvvHbb13TeV eval >& log/Evaluate_WJetsHT200;
 bash runAll.sh WJetsHT400 SeanZvvHbb13TeV eval >& log/Evaluate_WJetsHT400;
@@ -44,4 +44,9 @@ bash runAll.sh ZZ SeanZvvHbb13TeV eval >& log/Evaluate_ZZ;
 bash runAll.sh MET_Run2016B SeanZvvHbb13TeV eval >& log/Evaluate_MET2016B;
 bash runAll.sh MET_Run2016C SeanZvvHbb13TeV eval >& log/Evaluate_MET2016C;
 bash runAll.sh MET_Run2016D SeanZvvHbb13TeV eval >& log/Evaluate_MET2016D;
+bash runAll.sh MET_Run2016E SeanZvvHbb13TeV eval >& log/Evaluate_MET2016E;
+bash runAll.sh MET_Run2016F SeanZvvHbb13TeV eval >& log/Evaluate_MET2016F;
+bash runAll.sh MET_Run2016G SeanZvvHbb13TeV eval >& log/Evaluate_MET2016G;
+bash runAll.sh MET_Run2016H2 SeanZvvHbb13TeV eval >& log/Evaluate_MET2016H2;
+bash runAll.sh MET_Run2016H3 SeanZvvHbb13TeV eval >& log/Evaluate_MET2016H3;
 

@@ -480,6 +480,72 @@ return 1.;
     return SF;
   }
 
+  double weights_TTbar_QCD_EWK_LOtoNLO(
+    int nGenHiggsBoson, 
+    int nGenTop,
+	double GenTop_pt1,
+	double GenTop_pt2,
+	int nGenVbosons,
+    int GenVbosons_pdgId,
+	double GenVbosons_pt,
+	int VtypeSim,
+	double lheHT,
+	double hj1_eta,
+	double hj2_eta,
+	int nGenBJets,
+	int nJetsCentral) {
+	if (nGenHiggsBoson > 0) {
+      // No corrections applied to signal samples.
+      return 1.;
+    } else if (nGenTop == 2) {
+      // Top pT reweighting applied to TTbar sample.
+	  double sf_top1 = exp(0.0615 - 0.0005*GenTop_pt1);
+	  double sf_top2 = exp(0.0615 - 0.0005*GenTop_pt2);
+      double sf_njets = 1.2217 * (0.924769 - 0.021249*nJetsCentral);
+      return sqrt(sf_top1 * sf_top2) * sf_njets;
+    } else if (nGenTop > 0) {
+      return 1.;
+    } else {
+      // QCD reweighting applied to W+Jets samples.
+	  double sf_qcd = 1.;
+	  if (nGenVbosons == 1 && lheHT > 100 && abs(GenVbosons_pdgId) == 24) {
+        sf_qcd = (lheHT > 100 && lheHT < 200)*(1.459/1.21) + (lheHT > 200 && lheHT < 400)*(1.434/1.21) + (lheHT > 400 && lheHT < 600)*(1.532/1.21) + (lheHT > 600)*(1.004/1.21);
+      }
+      // EWK reweighting applied to W+Jets and Z+Jets samples.
+	  double sf_ewk = 1.;
+	  if (nGenVbosons == 1 && GenVbosons_pt > 100 && GenVbosons_pt < 3000) {
+        if ((VtypeSim == 0 || VtypeSim == 1 || VtypeSim == 4 || VtypeSim == 5) && GenVbosons_pdgId == 23) {
+		  sf_ewk = -0.1808051 + 6.04146*TMath::Power(GenVbosons_pt + 759.098, -0.242556);
+		} else if ((VtypeSim == 2 || VtypeSim == 3) && GenVbosons_pdgId == 24) {
+		  sf_ewk = -0.830041 + 7.93714*TMath::Power(GenVbosons_pt + 877.978, -0.213831);
+		}
+      }
+	  // LO to NLO weights applied to Z+Jets samples.
+      double sf_nlo = 1.;
+	  if (nGenVbosons == 1 && GenVbosons_pdgId == 23) {
+        double deta_jj = abs(hj1_eta - hj2_eta);
+		if (deta_jj < 5) {
+		  if (nGenBJets < 1) {
+		    sf_nlo = 0.935422 + 0.0403162*deta_jj - 0.0089026*deta_jj*deta_jj + 0.0064324*deta_jj*deta_jj*deta_jj - 0.000212443*deta_jj*deta_jj*deta_jj*deta_jj;
+		  } else if (nGenBJets == 1) {
+		    sf_nlo = 0.962415 + 0.0329463*deta_jj - 0.0414479*deta_jj*deta_jj + 0.0240993*deta_jj*deta_jj*deta_jj - 0.00278271*deta_jj*deta_jj*deta_jj*deta_jj;
+		  } else if (nGenBJets >= 2) {
+		    sf_nlo = (0.721265 - 0.105643*deta_jj - 0.0206835*deta_jj*deta_jj + 0.00558626*deta_jj*deta_jj*deta_jj)*TMath::Exp(0.450244*deta_jj);
+		  }
+		}
+      }
+      return sf_qcd * sf_ewk * sf_nlo;
+    }
+  }
+
+  double reweight_ttbar_njets_central(int nGenTop, int nJetsCentral) {
+    if (nGenTop == 2) {
+      return 1.2217 * (0.924769 - 0.021249 * nJetsCentral);
+    } else {
+      return 1.;
+	}
+  }
+
   float puWeight_ichep(int i) {
     double puw[38] = {
       0.00026954692859,

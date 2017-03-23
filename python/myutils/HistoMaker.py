@@ -120,7 +120,7 @@ class HistoMaker:
             treeCut='%s'%(options['cut'])
 
             if 'JER' in treeVar or 'JEC' in treeVar:
-                treeCut = ''.format(options['sys_cut'])
+                treeCut = '{}'.format(options['sys_cut'])
 
 #            treeCut = "("+treeCut+")&&"+job.addtreecut 
  

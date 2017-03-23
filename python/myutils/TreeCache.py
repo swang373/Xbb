@@ -138,7 +138,7 @@ class TreeCache:
         output.cd()
         theCut = self.minCut
         if sample.subsample:
-            theCut += '& (%s)' %(sample.subcut)
+            theCut += '&& (%s)' %(sample.subcut)
         print ("the cut is", theCut)
         #Problem here: not working when empty tree
         cuttedTree=tree.CopyTree(theCut)

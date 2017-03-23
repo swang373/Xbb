@@ -378,84 +378,93 @@ for syst in systematics:
             if Q is 'Down':
                 _weight = _weight + '*(LHE_weights_scale_wgt[3])'
 
-        # for NEW 2016 weights
-        if 'bTagWeightICHEP' in syst:            
+        # Moriond2017 bTag Weights
+        if 'bTagWeight' in syst:
+            if 'JES' in syst:
+                if 'HighCentral' in syst:
+                    _weight = _weight.replace('*bTagWeightCMVAv2_Moriond', '*bTagWeightCMVAV2_Moriond_JESHighCentral{}'.format(Q))
+                if 'LowCentral' in syst:
+                    _weight = _weight.replace('*bTagWeightCMVAv2_Moriond', '*bTagWeightCMVAV2_Moriond_JESLowCentral{}'.format(Q))
+                if 'HighForward' in syst:
+                    _weight = _weight.replace('*bTagWeightCMVAv2_Moriond', '*bTagWeightCMVAV2_Moriond_JESHighForward{}'.format(Q))
+                if 'LowForward' in syst:
+                    _weight = _weight.replace('*bTagWeightCMVAv2_Moriond', '*bTagWeightCMVAV2_Moriond_JESLowForward{}'.format(Q))
             if 'LF' in syst and 'Stats' not in syst:
                 if 'HighCentral' in syst:
-                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_LFHighCentral{}'.format(Q))
+                    _weight = _weight.replace('*bTagWeightCMVAv2_Moriond', '*bTagWeightCMVAV2_Moriond_LFHighCentral{}'.format(Q))
                 if 'LowCentral' in syst:
-                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_LFLowCentral{}'.format(Q))
+                    _weight = _weight.replace('*bTagWeightCMVAv2_Moriond', '*bTagWeightCMVAV2_Moriond_LFLowCentral{}'.format(Q))
                 if 'HighForward' in syst:
-                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_LFHighForward{}'.format(Q))
+                    _weight = _weight.replace('*bTagWeightCMVAv2_Moriond', '*bTagWeightCMVAV2_Moriond_LFHighForward{}'.format(Q))
                 if 'LowForward' in syst:
-                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_LFLowForward{}'.format(Q))
+                    _weight = _weight.replace('*bTagWeightCMVAv2_Moriond', '*bTagWeightCMVAV2_Moriond_LFLowForward{}'.format(Q))
             if 'HF' in syst and 'Stats' not in syst:
                 if 'HighCentral' in syst:
-                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_HFHighCentral{}'.format(Q))
+                    _weight = _weight.replace('*bTagWeightCMVAv2_Moriond', '*bTagWeightCMVAV2_Moriond_HFHighCentral{}'.format(Q))
                 if 'LowCentral' in syst:
-                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_HFLowCentral{}'.format(Q))
+                    _weight = _weight.replace('*bTagWeightCMVAv2_Moriond', '*bTagWeightCMVAV2_Moriond_HFLowCentral{}'.format(Q))
                 if 'HighForward' in syst:
-                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_HFHighForward{}'.format(Q))
+                    _weight = _weight.replace('*bTagWeightCMVAv2_Moriond', '*bTagWeightCMVAV2_Moriond_HFHighForward{}'.format(Q))
                 if 'LowForward' in syst:
-                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_HFLowForward{}'.format(Q))
+                    _weight = _weight.replace('*bTagWeightCMVAv2_Moriond', '*bTagWeightCMVAV2_Moriond_HFLowForward{}'.format(Q))
             if 'LFStats1' in syst:
                 if 'HighCentral' in syst:
-                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_LFStats1HighCentral{}'.format(Q))
+                    _weight = _weight.replace('*bTagWeightCMVAv2_Moriond', '*bTagWeightCMVAV2_Moriond_LFStats1HighCentral{}'.format(Q))
                 if 'LowCentral' in syst:
-                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_LFStats1LowCentral{}'.format(Q))
+                    _weight = _weight.replace('*bTagWeightCMVAv2_Moriond', '*bTagWeightCMVAV2_Moriond_LFStats1LowCentral{}'.format(Q))
                 if 'HighForward' in syst:
-                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_LFStats1HighForward{}'.format(Q))
+                    _weight = _weight.replace('*bTagWeightCMVAv2_Moriond', '*bTagWeightCMVAV2_Moriond_LFStats1HighForward{}'.format(Q))
                 if 'LowForward' in syst:
-                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_LFStats1LowForward{}'.format(Q))
+                    _weight = _weight.replace('*bTagWeightCMVAv2_Moriond', '*bTagWeightCMVAV2_Moriond_LFStats1LowForward{}'.format(Q))
             if 'LFStats2' in syst:
                 if 'HighCentral' in syst:
-                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_LFStats2HighCentral{}'.format(Q))
+                    _weight = _weight.replace('*bTagWeightCMVAv2_Moriond', '*bTagWeightCMVAV2_Moriond_LFStats2HighCentral{}'.format(Q))
                 if 'LowCentral' in syst:
-                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_LFStats2LowCentral{}'.format(Q))
+                    _weight = _weight.replace('*bTagWeightCMVAv2_Moriond', '*bTagWeightCMVAV2_Moriond_LFStats2LowCentral{}'.format(Q))
                 if 'HighForward' in syst:
-                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_LFStats2HighForward{}'.format(Q))
+                    _weight = _weight.replace('*bTagWeightCMVAv2_Moriond', '*bTagWeightCMVAV2_Moriond_LFStats2HighForward{}'.format(Q))
                 if 'LowForward' in syst:
-                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_LFStats2LowForward{}'.format(Q))
+                    _weight = _weight.replace('*bTagWeightCMVAv2_Moriond', '*bTagWeightCMVAV2_Moriond_LFStats2LowForward{}'.format(Q))
             if 'HFStats1' in syst:
                 if 'HighCentral' in syst:
-                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_HFStats1HighCentral{}'.format(Q))
+                    _weight = _weight.replace('*bTagWeightCMVAv2_Moriond', '*bTagWeightCMVAV2_Moriond_HFStats1HighCentral{}'.format(Q))
                 if 'LowCentral' in syst:
-                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_HFStats1LowCentral{}'.format(Q))
+                    _weight = _weight.replace('*bTagWeightCMVAv2_Moriond', '*bTagWeightCMVAV2_Moriond_HFStats1LowCentral{}'.format(Q))
                 if 'HighForward' in syst:
-                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_HFStats1HighForward{}'.format(Q))
+                    _weight = _weight.replace('*bTagWeightCMVAv2_Moriond', '*bTagWeightCMVAV2_Moriond_HFStats1HighForward{}'.format(Q))
                 if 'LowForward' in syst:
-                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_HFStats1LowForward{}'.format(Q))
+                    _weight = _weight.replace('*bTagWeightCMVAv2_Moriond', '*bTagWeightCMVAV2_Moriond_HFStats1LowForward{}'.format(Q))
             if 'HFStats2' in syst:
                 if 'HighCentral' in syst:
-                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_HFStats2HighCentral{}'.format(Q))
+                    _weight = _weight.replace('*bTagWeightCMVAv2_Moriond', '*bTagWeightCMVAV2_Moriond_HFStats2HighCentral{}'.format(Q))
                 if 'LowCentral' in syst:
-                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_HFStats2LowCentral{}'.format(Q))
+                    _weight = _weight.replace('*bTagWeightCMVAv2_Moriond', '*bTagWeightCMVAV2_Moriond_HFStats2LowCentral{}'.format(Q))
                 if 'HighForward' in syst:
-                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_HFStats2HighForward{}'.format(Q))
+                    _weight = _weight.replace('*bTagWeightCMVAv2_Moriond', '*bTagWeightCMVAV2_Moriond_HFStats2HighForward{}'.format(Q))
                 if 'LowForward' in syst:
-                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_HFStats2LowForward{}'.format(Q))
+                    _weight = _weight.replace('*bTagWeightCMVAv2_Moriond', '*bTagWeightCMVAV2_Moriond_HFStats2LowForward{}'.format(Q))
             if 'cErr1' in syst:
                 if 'HighCentral' in syst:
-                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_cErr1HighCentral{}'.format(Q))
+                    _weight = _weight.replace('*bTagWeightCMVAv2_Moriond', '*bTagWeightCMVAV2_Moriond_cErr1HighCentral{}'.format(Q))
                 if 'LowCentral' in syst:
-                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_cErr1LowCentral{}'.format(Q))
+                    _weight = _weight.replace('*bTagWeightCMVAv2_Moriond', '*bTagWeightCMVAV2_Moriond_cErr1LowCentral{}'.format(Q))
                 if 'HighForward' in syst:
-                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_cErr1HighForward{}'.format(Q))
+                    _weight = _weight.replace('*bTagWeightCMVAv2_Moriond', '*bTagWeightCMVAV2_Moriond_cErr1HighForward{}'.format(Q))
                 if 'LowForward' in syst:
-                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_cErr1LowForward{}'.format(Q))
+                    _weight = _weight.replace('*bTagWeightCMVAv2_Moriond', '*bTagWeightCMVAV2_Moriond_cErr1LowForward{}'.format(Q))
             if 'cErr2' in syst:
                 if 'HighCentral' in syst:
-                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_cErr2HighCentral{}'.format(Q))
+                    _weight = _weight.replace('*bTagWeightCMVAv2_Moriond', '*bTagWeightCMVAV2_Moriond_cErr2HighCentral{}'.format(Q))
                 if 'LowCentral' in syst:
-                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_cErr2LowCentral{}'.format(Q))
+                    _weight = _weight.replace('*bTagWeightCMVAv2_Moriond', '*bTagWeightCMVAV2_Moriond_cErr2LowCentral{}'.format(Q))
                 if 'HighForward' in syst:
-                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_cErr2HighForward{}'.format(Q))
+                    _weight = _weight.replace('*bTagWeightCMVAv2_Moriond', '*bTagWeightCMVAV2_Moriond_cErr2HighForward{}'.format(Q))
                 if 'LowForward' in syst:
-                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_cErr2LowForward{}'.format(Q))
+                    _weight = _weight.replace('*bTagWeightCMVAv2_Moriond', '*bTagWeightCMVAV2_Moriond_cErr2LowForward{}'.format(Q))
 
         if bdt:
-            _cut = _cut.replace('HCSV_reg_mass<170', '(HCSV_reg_mass<170||HCSV_reg_corrJERUp_mass_HighCentral<170||HCSV_reg_corrJERDown_mass_HighCentral<170||HCSV_reg_corrJECUp_mass_HighCentral<170||HCSV_reg_corrJECDown_mass_HighCentral<170||HCSV_reg_corrJERUp_mass_HighForward<170||HCSV_reg_corrJERDown_mass_HighForward<170||HCSV_reg_corrJECUp_mass_HighForward<170||HCSV_reg_corrJECDown_mass_HighForward<170||HCSV_reg_corrJERUp_mass_LowCentral<170||HCSV_reg_corrJERDown_mass_LowCentral<170||HCSV_reg_corrJECUp_mass_LowCentral<170||HCSV_reg_corrJECDown_mass_LowCentral<170||HCSV_reg_corrJERUp_mass_LowForward<170||HCSV_reg_corrJERDown_mass_LowForward<170||HCSV_reg_corrJECUp_mass_LowForward<170||HCSV_reg_corrJECDown_mass_LowForward<170)')
-            _cut = _cut.replace('HCSV_reg_mass>50', '(HCSV_reg_mass>50||HCSV_reg_corrJERUp_mass_HighCentral>50||HCSV_reg_corrJERDown_mass_HighCentral>50||HCSV_reg_corrJECUp_mass_HighCentral>50||HCSV_reg_corrJECDown_mass_HighCentral>50||HCSV_reg_corrJERUp_mass_HighForward>50||HCSV_reg_corrJERDown_mass_HighForward>50||HCSV_reg_corrJECUp_mass_HighForward>50||HCSV_reg_corrJECDown_mass_HighForward>50||HCSV_reg_corrJERUp_mass_LowCentral>50||HCSV_reg_corrJERDown_mass_LowCentral>50||HCSV_reg_corrJECUp_mass_LowCentral>50||HCSV_reg_corrJECDown_mass_LowCentral>50||HCSV_reg_corrJERUp_mass_LowForward>50||HCSV_reg_corrJERDown_mass_LowForward>50||HCSV_reg_corrJECUp_mass_LowForward>50||HCSV_reg_corrJECDown_mass_LowForward>50)')
+            _cut = _cut.replace('HCMVAV2_reg_mass<160', '(HCMVAV2_reg_mass<160||HCMVAV2_reg_mass_corrJERUp<160||HCMVAV2_reg_mass_corrJERDown<160||HCMVAV2_reg_mass_corrPileUpDataMCUp<160||HCMVAV2_reg_mass_corrPileUpDataMCDown<160||HCMVAV2_reg_mass_corrPileUpPtRefUp<160||HCMVAV2_reg_mass_corrPileUpPtRefDown<160||HCMVAV2_reg_mass_corrPileUpPtBBUp<160||HCMVAV2_reg_mass_corrPileUpPtBBDown<160||HCMVAV2_reg_mass_corrPileUpPtEC1Up<160||HCMVAV2_reg_mass_corrPileUpPtEC1Down<160||HCMVAV2_reg_mass_corrRelativeJEREC1Up<160||HCMVAV2_reg_mass_corrRelativeJEREC1Down<160||HCMVAV2_reg_mass_corrRelativeFSRUp<160||HCMVAV2_reg_mass_corrRelativeFSRDown<160||HCMVAV2_reg_mass_corrRelativeStatFSRUp<160||HCMVAV2_reg_mass_corrRelativeStatFSRDown<160||HCMVAV2_reg_mass_corrRelativeStatECUp<160||HCMVAV2_reg_mass_corrRelativeStatECDown<160||HCMVAV2_reg_mass_corrRelativePtBBUp<160||HCMVAV2_reg_mass_corrRelativePtBBDown<160||HCMVAV2_reg_mass_corrRelativePtEC1Up<160||HCMVAV2_reg_mass_corrRelativePtEC1Down<160||HCMVAV2_reg_mass_corrAbsoluteScaleUp<160||HCMVAV2_reg_mass_corrAbsoluteScaleDown<160||HCMVAV2_reg_mass_corrAbsoluteMPFBiasUp<160||HCMVAV2_reg_mass_corrAbsoluteMPFBiasDown<160||HCMVAV2_reg_mass_corrAbsoluteStatUp<160||HCMVAV2_reg_mass_corrAbsoluteStatDown<160||HCMVAV2_reg_mass_corrSinglePionECALUp<160||HCMVAV2_reg_mass_corrSinglePionECALDown<160||HCMVAV2_reg_mass_corrSinglePionHCALUp<160||HCMVAV2_reg_mass_corrSinglePionHCALDown<160||HCMVAV2_reg_mass_corrFragmentationUp<160||HCMVAV2_reg_mass_corrFragmentationDown<160||HCMVAV2_reg_mass_corrTimePtEtaUp<160||HCMVAV2_reg_mass_corrTimePtEtaDown<160||HCMVAV2_reg_mass_corrFlavorQCDUp<160||HCMVAV2_reg_mass_corrFlavorQCDDown<160)')
+            _cut = _cut.replace('HCMVAV2_reg_mass>60', '(HCMVAV2_reg_mass>60||HCMVAV2_reg_mass_corrJERUp>60||HCMVAV2_reg_mass_corrJERDown>60||HCMVAV2_reg_mass_corrPileUpDataMCUp>60||HCMVAV2_reg_mass_corrPileUpDataMCDown>60||HCMVAV2_reg_mass_corrPileUpPtRefUp>60||HCMVAV2_reg_mass_corrPileUpPtRefDown>60||HCMVAV2_reg_mass_corrPileUpPtBBUp>60||HCMVAV2_reg_mass_corrPileUpPtBBDown>60||HCMVAV2_reg_mass_corrPileUpPtEC1Up>60||HCMVAV2_reg_mass_corrPileUpPtEC1Down>60||HCMVAV2_reg_mass_corrRelativeJEREC1Up>60||HCMVAV2_reg_mass_corrRelativeJEREC1Down>60||HCMVAV2_reg_mass_corrRelativeFSRUp>60||HCMVAV2_reg_mass_corrRelativeFSRDown>60||HCMVAV2_reg_mass_corrRelativeStatFSRUp>60||HCMVAV2_reg_mass_corrRelativeStatFSRDown>60||HCMVAV2_reg_mass_corrRelativeStatECUp>60||HCMVAV2_reg_mass_corrRelativeStatECDown>60||HCMVAV2_reg_mass_corrRelativePtBBUp>60||HCMVAV2_reg_mass_corrRelativePtBBDown>60||HCMVAV2_reg_mass_corrRelativePtEC1Up>60||HCMVAV2_reg_mass_corrRelativePtEC1Down>60||HCMVAV2_reg_mass_corrAbsoluteScaleUp>60||HCMVAV2_reg_mass_corrAbsoluteScaleDown>60||HCMVAV2_reg_mass_corrAbsoluteMPFBiasUp>60||HCMVAV2_reg_mass_corrAbsoluteMPFBiasDown>60||HCMVAV2_reg_mass_corrAbsoluteStatUp>60||HCMVAV2_reg_mass_corrAbsoluteStatDown>60||HCMVAV2_reg_mass_corrSinglePionECALUp>60||HCMVAV2_reg_mass_corrSinglePionECALDown>60||HCMVAV2_reg_mass_corrSinglePionHCALUp>60||HCMVAV2_reg_mass_corrSinglePionHCALDown>60||HCMVAV2_reg_mass_corrFragmentationUp>60||HCMVAV2_reg_mass_corrFragmentationDown>60||HCMVAV2_reg_mass_corrTimePtEtaUp>60||HCMVAV2_reg_mass_corrTimePtEtaDown>60||HCMVAV2_reg_mass_corrFlavorQCDUp>60||HCMVAV2_reg_mass_corrFlavorQCDDown>60)')
             if 'JER' in syst and 'HighCentral' in syst:
                 _treevar = treevar.replace('.nominal', '.JER_{}_HighCentral'.format(Q))
                 _sys_cut = _sys_cut.replace('HCSV_reg_mass', 'HCSV_reg_corrJER{}_mass_HighCentral'.format(Q))
