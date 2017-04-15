@@ -366,6 +366,14 @@ for syst in systematics:
         #    _weight = config.get('Weights',sys_weight_corr[syst]+'_%s' %(Q.upper()))
         #replace tree variable
 
+        # Pileup Weight Variations
+        if 'weight_pileUp' in syst:
+            _weight = _weight.replace('puWeight', 'puWeight{}'.format(Q))
+
+        # TTbar nCentralJet Weight Variations
+        if 'weight_TT_nJetCentral' in syst:
+            _weight = _weight.replace('VHbb::weight_TTbar_nJetCentral', 'VHbb::weight_TTbar_nJetCentral_{}'.format(Q))
+
         # LHE Scale Variations(muF, muR)
         if 'CMS_vhbb_LHE_weights_scale_MuF' in syst:
             if Q is 'Up':

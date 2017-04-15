@@ -196,6 +196,8 @@ for job in info:
             #print key.GetName()
             obj.Write(key.GetName())
         tree = input.Get(job.tree)
+        if tree.GetBranch(MVAlist[0]):
+            tree.SetBranchStatus(MVAlist[0], 0)
         nEntries = tree.GetEntries()
         output.cd()
         newtree = tree.CloneTree(0)
