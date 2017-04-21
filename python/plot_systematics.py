@@ -5,6 +5,7 @@ from ROOT import TFile
 from optparse import OptionParser
 import sys
 from myutils import BetterConfigParser, TdrStyles, getRatio
+import os
 
 
 argv = sys.argv
@@ -15,29 +16,39 @@ parser.add_option("-C", "--config", dest="config", default=[], action="append",
 config = BetterConfigParser()
 config.read(opts.config)
 
+print config
+
 
 #---------- yes, this is not in the config yet---------
+ 
 mode = 'BDT'
 xMin=-1
 xMax=1
 masses = ['125']
-#Abins = ['HighPt','LowPt']
-Abins = ['HighPt']
-#Abins = ['LowPt']
-#channels= ['Zee','Zmm']
-channels= ['Zmm']
+Abins = ['Signal']#,'HighPt']
+channels = ['Znn_13TeV']#, 'Zee']
+
 #------------------------------------------------------
-#---------- Mjj ---------------------------------------
-#mode = 'Mjj'
-#xMin=0
-#xMax=255
-#masses = ['125']
-#Abins = ['highPt','lowPt','medPt']
-#channels= ['Zee','Zmm']
+
+#---------- Control Regions ---------------------------------------
+'''
+mode = 'CR'
+xMin=0
+xMax=1
+masses = ['125']
+Abins = ['ttbar', 'Zlf', 'Zhf']
+channels= ['Zll']
+'''
 #------------------------------------------------------
 
 path = config.get('Directories','limits')
 outpath = config.get('Directories','plotpath')
+
+# Make the dir and copy the website ini files
+try:
+    os.system('mkdir '+outpath)
+except:
+     print outpath+' already exists...'
 
 setup = eval(config.get('LimitGeneral','setup'))
 Dict = eval(config.get('LimitGeneral','Dict'))
@@ -45,12 +56,9 @@ MCs = [Dict[s] for s in setup]
 
 sys_BDT= eval(config.get('LimitGeneral','sys_BDT'))
 systematicsnaming = eval(config.get('LimitGeneral','systematicsnaming'))
+print systematicsnaming
 systs=[systematicsnaming[s] for s in sys_BDT]
-sys_weight = eval(config.get('LimitGeneral','weightF_sys'))
 
-for sw in  sys_weight: systs.append(systematicsnaming[sw])
-
-#What are those ?
 #if eval(config.get('LimitGeneral','weightF_sys')): systs.append('UEPS')
 
 def myText(txt="CMS Preliminary",ndcX=0,ndcY=0,size=0.8):
@@ -63,30 +71,41 @@ def myText(txt="CMS Preliminary",ndcX=0,ndcY=0,size=0.8):
     return text
 
 
-#for mass in ['110','115','120','125','130','135']:
+print '\n\n\t\tMaking Plots for Systematics: ', systs
+
+print '\n\t ---> Output: ', outpath
+
 for mass in masses:
     for Abin in Abins:
+
+        systematicsnaming = eval(config.get('LimitGeneral','systematicsnaming'))
+        systs=[systematicsnaming[s] for s in sys_BDT]
+
         for channel in channels:
 
             if mode == 'BDT':
-                #input = TFile.Open(path+'/vhbb_TH_BDT_M'+mass+'_'+channel+Abin+'_8TeV.root','read')
-                #input = TFile.Open()
+                input = TFile.Open(path+'/vhbb_TH_'+channel+'_'+Abin+'.root','read')
 
-                #input = TFile.Open(path+'vhbb_TH_ZmmLowPt_13TeV.root','read')
-                #input = TFile.Open(path+'vhbb_TH_ZmmHighPt_13TeV.root','read')
-                input = TFile.Open(path+'vhbb_TH_ZmmBDT_SCAN_NTrees_100_nEventsMin_400_Zmm_highVpt.root','read')
-            if mode == 'Mjj':
-                input = TFile.Open(path+'/vhbb_TH_Mjj_'+Abin+'_M'+mass+'_'+channel+'.root','read')
+            if mode == 'CR':
+                input = TFile.Open(path+'/vhbb_TH_'+Abin+'.root','read')
 
-            print 'The MCs are'
+
+            print '\n-----> Input: ', input     
+
             for MC in MCs:
-                print MC
-                print 'The systs are'
+
+                print 'MC sample: ',MC
+
+                if MC == 's_Top': continue
+
                 for syst in systs:
-                    print syst
+                    print '\n\t Plotting Systematic: ', syst
                 #['CMS_res_j','CMS_scale_j','CMS_eff_b','CMS_fake_b_8TeV','UEPS']:
                 #for syst in ['CMS_vhbb_stats_']:
 
+                    if '_eff_' in syst:
+                        if 'Zuu' in channels and '_e_' in syst: continue
+                        if 'Zee' in channels and '_m_' in syst:continue
 
                     TdrStyles.tdrStyle()
 
@@ -110,18 +129,27 @@ for mass in masses:
                     oben.cd()
 
                     ROOT.gPad.SetTicks(1,1)
+                    
+                    if mode == 'BDT':
+                        input.cd(channel+Abin+'_13TeV')
+                    if mode == 'CR':
+                        input.cd(Abin)
 
-
-                    #input.cd("Vpt1")
-                    input.cd("Vpt2")
-                    print 'Ntotal is', MC
-                    print 'Utotal is', MC+syst+'Up'
-                    print 'Dtotal is', MC+syst+'Down'
                     Ntotal=ROOT.gDirectory.Get(MC)
+
                     Utotal=ROOT.gDirectory.Get(MC+syst+'Up')
-                    #Utotal=input.Get(MC+syst+MC+'_'+channel+'Up')
                     Dtotal=ROOT.gDirectory.Get(MC+syst+'Down')
-                    #Dtotal=input.Get(MC+syst+MC+'_'+channel+'Down')
+
+                    print '\n\t Input: ', channel+Abin+'_13TeV'
+                    print input
+                    print '\n\t NOM : ', MC
+                    print Ntotal
+                    print '\n\t UP  : ', MC+syst+'Up'
+                    print Utotal
+                    print '\n\t DOWN: ', MC+syst+'Down'
+                    print Dtotal
+
+
                     l = ROOT.TLegend(0.17, 0.8, 0.37, 0.65)
                     
                     l.SetLineWidth(2)
@@ -130,11 +158,10 @@ for mass in masses:
                     l.SetFillStyle(4000)
                     l.SetTextFont(62)
                     l.SetTextSize(0.035)
-
                     
-                    l.AddEntry(Ntotal,'nominal','PL')
-                    l.AddEntry(Utotal,'up','PL')
-                    l.AddEntry(Dtotal,'down','PL')
+                    l.AddEntry(Ntotal,'nominal(%s)'%round(Ntotal.Integral(),3),'PL')
+                    l.AddEntry(Utotal,'up(%s)'%round(Utotal.Integral(),3),'PL')
+                    l.AddEntry(Dtotal,'down(%s)'%round(Dtotal.Integral(),3),'PL')
                     Ntotal.GetYaxis().SetRangeUser(0,1.5*Ntotal.GetBinContent(Ntotal.GetMaximumBin()))
                     Ntotal.SetMarkerStyle(8)
                     Ntotal.SetLineColor(1)
@@ -154,8 +181,12 @@ for mass in masses:
                     l.SetBorderSize(0)
                     l.Draw()
                     
-                    title=myText('Shape Systematic %s in %s'%(syst,MC),0.17,0.85)
-                    
+                    if 'High' in Abin:
+                        title=myText('%s in %s'%(syst,MC+'_'+channel+'_highZpt'),0.17,0.85)
+                    if 'Low' in Abin:
+                        title=myText('%s in %s'%(syst,MC+'_'+channel+'_lowZpt'),0.17,0.85)
+                        
+
                     print 'Shape Systematic %s in %s'%(syst,MC)
                     print 'Up:     \t%s'%Utotal.Integral()
                     print 'Nominal:\t%s'%Ntotal.Integral()
@@ -172,18 +203,21 @@ for mass in masses:
                     ksScoreD = Ntotal.KolmogorovTest( Dtotal )
                     chiScoreD = Ntotal.Chi2Test( Dtotal , "WWCHI2/NDF")
 
+                    yUp   = 1.1
+                    yDown = 0.9
+
 
                     ratioU.SetStats(0)
-                    ratioU.GetYaxis().SetRangeUser(0.5,1.5)
+                    ratioU.GetYaxis().SetRangeUser(yDown, yUp)
                     ratioU.GetYaxis().SetNdivisions(502,0)
                     ratioD.SetStats(0)
-                    ratioD.GetYaxis().SetRangeUser(0.5,1.5)
+                    ratioD.GetYaxis().SetRangeUser(yDown, yUp)
                     ratioD.GetYaxis().SetNdivisions(502,0)
                     ratioD.GetYaxis().SetLabelSize(0.05)
                     ratioD.SetLineColor(2)
                     ratioD.SetLineStyle(3)
-                    ratioD.SetLineWidth(2)
-                    ratioU.SetLineColor(4)
+                    ratioD.SetLineWidth(2)  
+                    ratioU.SetLineColor(4)    
                     ratioU.SetLineStyle(4)
                     ratioU.SetLineWidth(2)
 
@@ -197,14 +231,25 @@ for mass in masses:
                     ratioD.GetYaxis().SetTitleOffset(0.2)
                     fitRatioU.Draw("SAME")
                     fitRatioD.Draw("SAME")
-
+                    
                     ratioD.Draw("SAME")
 
-                    #name = outpath+Abin+'_M'+mass+'_'+channel+'_'+MC+syst+'.png'
-                    #c.Print(name)
-                    name = outpath+'systPlot_'+Abin+'_M'+mass+'_'+channel+'_'+MC+syst+'.pdf'
-                    c.Print(name)
-                    c.Print(name.replace('.pdf','.png'))
+                    m_one_line = ROOT.TLine(xMin,1,xMax,1)
+                    m_one_line.SetLineStyle(7)
+                    m_one_line.SetLineColor(1)
+                    m_one_line.Draw("Same")
+
+                    if mode == 'CR':
+                        name = outpath+'systPlot_'+Abin+'_'+channel+'_'+MC+'_'+syst+'.pdf'
+                        c.Print(name)
+                        name2 = outpath+'systPlot_'+Abin+'_'+channel+'_'+MC+'_'+syst+'.png'
+                        c.Print(name2)
+                        
+                    else:
+                        name = outpath+'systPlot_'+Abin+'_M'+mass+'_'+channel+'_'+MC+syst+'.pdf'
+                        c.Print(name)
+                        name2 = outpath+'systPlot_'+Abin+'_M'+mass+'_'+channel+'_'+MC+syst+'.png'
+                        c.Print(name2)
 
 
             input.Close()
