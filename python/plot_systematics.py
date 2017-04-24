@@ -41,14 +41,20 @@ channels= ['Zll']
 '''
 #------------------------------------------------------
 
-path = config.get('Directories','limits')
-outpath = config.get('Directories','plotpath')
+#path = '/afs/cern.ch/work/s/swang373/private/CMSSW_7_4_7/src/V25/Apr20/ZnnHbb_Datacards_Apr20/'
+path = '/afs/cern.ch/work/s/swang373/private/Xbb_ICHEP/src/Xbb/ZnnHbb_Datacards_test/'
+
+outpath = '/afs/cern.ch/user/s/swang373/www/V25_Systematics_Apr24b/'
 
 # Make the dir and copy the website ini files
 try:
     os.system('mkdir '+outpath)
 except:
      print outpath+' already exists...'
+
+temp_string2 = 'cp /afs/cern.ch/user/s/swang373/www/index.php '+outpath
+
+os.system(temp_string2)
 
 setup = eval(config.get('LimitGeneral','setup'))
 Dict = eval(config.get('LimitGeneral','Dict'))
@@ -75,6 +81,7 @@ print '\n\n\t\tMaking Plots for Systematics: ', systs
 
 print '\n\t ---> Output: ', outpath
 
+#for mass in ['110','115','120','125','130','135']:
 for mass in masses:
     for Abin in Abins:
 
@@ -96,7 +103,10 @@ for mass in masses:
 
                 print 'MC sample: ',MC
 
-                if MC == 's_Top': continue
+                if MC == 's_Top':
+                    continue
+                if MC == 'QCD':
+                    continue
 
                 for syst in systs:
                     print '\n\t Plotting Systematic: ', syst
@@ -131,16 +141,26 @@ for mass in masses:
                     ROOT.gPad.SetTicks(1,1)
                     
                     if mode == 'BDT':
-                        input.cd(channel+Abin+'_13TeV')
+                        input.cd(channel+'_'+Abin)
                     if mode == 'CR':
                         input.cd(Abin)
 
                     Ntotal=ROOT.gDirectory.Get(MC)
 
+                    #if 'pu' not in syst and '_eff_' not in syst:
+                    #if '_j_' in syst:
+                    #    if 'High' in Abin:
+                    #        Utotal=ROOT.gDirectory.Get(MC+syst+'_highVptUp')
+                    #        Dtotal=ROOT.gDirectory.Get(MC+syst+'_highVptDown')
+                    #    if 'Low' in Abin:
+                    #        Utotal=ROOT.gDirectory.Get(MC+syst+'_lowVptUp')
+                    #        Dtotal=ROOT.gDirectory.Get(MC+syst+'_lowVptDown')
+
+                    #else:
                     Utotal=ROOT.gDirectory.Get(MC+syst+'Up')
                     Dtotal=ROOT.gDirectory.Get(MC+syst+'Down')
 
-                    print '\n\t Input: ', channel+Abin+'_13TeV'
+                    print '\n\t Input: ', channel+'_'+Abin
                     print input
                     print '\n\t NOM : ', MC
                     print Ntotal
@@ -234,10 +254,28 @@ for mass in masses:
                     
                     ratioD.Draw("SAME")
 
+                    #ratioU.GetYaxis().SetTitleSize(0.2)
+                    #ratioU.GetYaxis().SetTitleOffset(0.2)
+                    #ratioU.GetXaxis().SetLabelColor(10)
+                    
+                    #fitRatioU = ratioU.Fit("pol2","S")
+                    #fitRatioU.Draw("SAME")
+
+                    #ratioD.GetYaxis().SetTitleSize(0.2)
+                    #ratioD.GetYaxis().SetTitleOffset(0.2)
+                    #ratioD.GetXaxis().SetLabelColor(10)
+                    
+                    #fitRatioD = ratioD.Fit("pol2","S")
+                    #fitRatioD.Draw("SAME")
+
                     m_one_line = ROOT.TLine(xMin,1,xMax,1)
                     m_one_line.SetLineStyle(7)
                     m_one_line.SetLineColor(1)
                     m_one_line.Draw("Same")
+
+
+                    #name = outpath+Abin+'_M'+mass+'_'+channel+'_'+MC+syst+'.png'
+                    #c.Print(name)
 
                     if mode == 'CR':
                         name = outpath+'systPlot_'+Abin+'_'+channel+'_'+MC+'_'+syst+'.pdf'

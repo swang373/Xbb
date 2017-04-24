@@ -263,6 +263,7 @@ class TreeCache:
         input = ROOT.TFile.Open(tmpCache, 'read')
         posWeight = input.Get('CountPosWeight').GetBinContent(1)
         negWeight = input.Get('CountNegWeight').GetBinContent(1)
+        count_PU = input.Get('CountWeighted').GetBinContent(1)
         # Get the LHE weight.
         countWeightedLHEWeightScale = input.Get('CountWeightedLHEWeightScale')
         if lhe_scale == 0:
@@ -275,11 +276,12 @@ class TreeCache:
             scaled_count = countWeightedLHEWeightScale.GetBinContent(3+1)
         input.Close()
         count = posWeight - negWeight
+        count_NoPU = posWeight + negWeight
         lumi = float(sample.lumi)
-        if scaled_count <= 0:
-           theScale = lumi*sample.xsec*sample.sf/count
+        if scaled_count == 0:
+           theScale = 0.
         else:
-           theScale = lumi*sample.xsec*sample.sf/scaled_count
+           theScale = (count_NoPU/count)*lumi*sample.xsec*sample.sf/(scaled_count*(count_NoPU/count_PU))
         print(
             'sample: ', sample,
             'lumi: ', lumi,
