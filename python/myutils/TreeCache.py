@@ -235,7 +235,7 @@ class TreeCache:
         else:
             sys.exit(-1)
 
-    def get_scale(self, sample, config, lumi = None, count=1):
+    def get_scale(self, sample, config):
         try:
             sample.xsec = sample.xsec[0]
         except:

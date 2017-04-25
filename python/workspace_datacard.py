@@ -1,14 +1,20 @@
 #!/usr/bin/env python
-import os, sys, ROOT, warnings, pickle
-ROOT.gROOT.SetBatch(True)
-from array import array
-from math import sqrt
 from copy import copy, deepcopy
+from math import sqrt
+from multiprocessing import Pool
+from optparse import OptionParser
+import os
+import sys
+import warnings
+
+import ROOT
+
+from myutils import BetterConfigParser, GlobalFunction, HistoMaker, ParseInfo, printc
+
+ROOT.gROOT.SetBatch(True)
+
 #suppres the EvalInstace conversion warning bug
 warnings.filterwarnings( action='ignore', category=RuntimeWarning, message='creating converter.*' )
-from optparse import OptionParser
-from myutils import BetterConfigParser, Sample, progbar, printc, ParseInfo, Rebinner, HistoMaker
-
 
 def useSpacesInDC(fileName):
     file_ = open(fileName,"r+")
@@ -56,8 +62,6 @@ parser.add_option("-V", "--variable", dest="variable", default="",
                       help="variable for shape analysis")
 parser.add_option("-C", "--config", dest="config", default=[], action="append",
                       help="configuration file")
-parser.add_option("-O", "--optimisation", dest="optimisation", default="",#not used for the moment
-                      help="variable for shape when optimising the BDT")
 (opts, args) = parser.parse_args(argv)
 config = BetterConfigParser()
 config.read(opts.config)
@@ -85,15 +89,9 @@ vhbbpath=config.get('Directories','vhbbpath')
 samplesinfo=config.get('Directories','samplesinfo')
 path = config.get('Directories','dcSamples')
 outpath=config.get('Directories','limits')
-optimisation=opts.optimisation
-optimisation_training = False
 UseTrainSample = eval(config.get('Analysis','UseTrainSample'))
 if UseTrainSample:
     print 'Training events will be used'
-if not optimisation == '':
-    print 'Preparing DC for BDT optimisaiton'
-    optimisation_training = True
-print 'optimisation is', optimisation
 try:
     os.stat(outpath)
 except:
@@ -101,11 +99,6 @@ except:
 # parse histogram config:
 treevar = config.get('dc:%s'%var,'var')
 name = config.get('dc:%s'%var,'wsVarName')
-if optimisation_training:
-    treevar = optimisation+'.Nominal'
-    name += '_'+ optimisation
-    if UseTrainSample:
-        name += '_Train'
 title = name
 # set binning
 nBins = int(config.get('dc:%s'%var,'range').split(',')[0])
@@ -119,13 +112,6 @@ Datacardbin=config.get('dc:%s'%var,'dcBin')
 anType = config.get('dc:%s'%var,'type')
 setup=eval(config.get('LimitGeneral','setup'))
 
-if optimisation_training:
-   ROOToutname += optimisation
-   if UseTrainSample:
-       ROOToutname += '_Train'
-
-
-import os
 if os.path.exists("$CMSSW_BASE/src/Xbb/interface/DrawFunctions_C.so"):
     print 'ROOT.gROOT.LoadMacro("$CMSSW_BASE/src/Xbb/interface/DrawFunctions_C.so")'
     ROOT.gROOT.LoadMacro("$CMSSW_BASE/src/Xbb/interface/DrawFunctions_C.so")
@@ -150,52 +136,29 @@ print anType
 print setup
 
 #Systematics:
-if config.has_option('LimitGeneral','addSample_sys'):
-    addSample_sys = eval(config.get('LimitGeneral','addSample_sys'))
-    additionals = [addSample_sys[key] for key in addSample_sys]
-else:
-    addSample_sys = None
-    additionals = []
 #find out if BDT or MJJ:
 bdt = False
 mjj = False
 cr = False
-lhe_muF = []
-lhe_muR = []
 if str(anType) == 'BDT':
     bdt = True
     systematics = eval(config.get('LimitGeneral','sys_BDT'))
-    if config.has_option('LimitGeneral','sys_lhe_muF_BDT'): lhe_muF = eval(config.get('LimitGeneral','sys_lhe_muF_BDT'))
-    if config.has_option('LimitGeneral','sys_lhe_muR_BDT'): lhe_muR = eval(config.get('LimitGeneral','sys_lhe_muR_BDT'))
 elif str(anType) == 'Mjj':
     mjj = True
     systematics = eval(config.get('LimitGeneral','sys_Mjj'))
-    if config.has_option('LimitGeneral','sys_lhe_muF_Mjj'): lhe_muF = eval(config.get('LimitGeneral','sys_lhe_muF_Mjj'))    
-    if config.has_option('LimitGeneral','sys_lhe_muR_Mjj'): lhe_muR = eval(config.get('LimitGeneral','sys_lhe_muR_Mjj'))    
 elif str(anType) == 'cr':
     cr = True
     systematics = eval(config.get('LimitGeneral','sys_cr'))
-    if config.has_option('LimitGeneral','sys_lhe_muF_cr'): lhe_muF = eval(config.get('LimitGeneral','sys_lhe_muF_cr'))    
-    if config.has_option('LimitGeneral','sys_lhe_muR_cr'): lhe_muR = eval(config.get('LimitGeneral','sys_lhe_muR_cr'))    
 else:
     print 'EXIT: please specify if your datacards are BDT, Mjj or cr.'
     sys.exit()
 
-sys_cut_suffix=eval(config.get('LimitGeneral','sys_cut_suffix'))
-sys_weight_corr=eval(config.get('LimitGeneral','sys_weight_corr'))
-sys_cut_include=[]
-if config.has_option('LimitGeneral','sys_cut_include'):
-    sys_cut_include=eval(config.get('LimitGeneral','sys_cut_include'))
 systematicsnaming = eval(config.get('LimitGeneral','systematicsnaming'))
 sys_factor_dict = eval(config.get('LimitGeneral','sys_factor'))
 sys_affecting = eval(config.get('LimitGeneral','sys_affecting'))
-sys_lhe_affecting = {}
-if config.has_option('LimitGeneral','sys_lhe_affecting'): sys_lhe_affecting = eval(config.get('LimitGeneral','sys_lhe_affecting'))
 
 # weightF:
 weightF = config.get('Weights','weightF')
-if str(anType) == 'cr': weightF_systematics = eval(config.get('LimitGeneral','weightF_sys_CR'))
-else: weightF_systematics = eval(config.get('LimitGeneral','weightF_sys'))
 # rescale stat shapes by sqrtN
 rescaleSqrtN=eval(config.get('LimitGeneral','rescaleSqrtN'))
 # get nominal cutstring:
@@ -211,18 +174,13 @@ addBlindingCut = None
 if config.has_option('LimitGeneral','addBlindingCut'):
     addBlindingCut = config.get('LimitGeneral','addBlindingCut')
     print 'adding add. blinding cut'
-#change nominal shapes by syst
-change_shapes = None
-if config.has_option('LimitGeneral','change_shapes'):
-    change_shapes = eval(config.get('LimitGeneral','change_shapes'))
-    print 'changing the shapes'
 #on control region cr never blind. Overwrite whatever is in the config
 if str(anType) == 'cr':
     if blind:
         print '@WARNING: Changing blind to false since you are running for control region.'
     blind = False
-if blind: 
-    printc('red','', 'I AM BLINDED!')    
+if blind:
+    printc('red','', 'I AM BLINDED!')
 #get List of backgrounds in use:
 backgrounds = eval(config.get('LimitGeneral','BKG'))
 #Groups for adding samples together
@@ -242,10 +200,6 @@ if not bdt:
 ignore_stats = eval(config.get('LimitGeneral','ignore_stats'))
 #max_rel = float(config.get('LimitGeneral','rebin_max_rel'))
 signal_inject=config.get('LimitGeneral','signal_inject')
-# add signal as background
-add_signal_as_bkg=config.get('LimitGeneral','add_signal_as_bkg')
-if not add_signal_as_bkg == 'None':
-    setup.append(add_signal_as_bkg)
 #----------------------------------------------------------------------------
 
 #--Setup--------------------------------------------------------------------
@@ -264,7 +218,7 @@ elif 'LowPt' in ROOToutname or 'lowPt' in ROOToutname or 'lowpt' in ROOToutname:
 elif 'ATLAS' in ROOToutname:
     pt_region = 'HighPt'
 elif 'MJJ' in ROOToutname:
-    pt_region = 'HighPt' 
+    pt_region = 'HighPt'
 else:
     print "Unknown Pt region"
     pt_region = 'NoSysRegion'
@@ -286,28 +240,25 @@ info = ParseInfo(samplesinfo,path)
 
 print 'Get the sample list'
 print '===================\n'
-all_samples = info.get_samples(signals+backgrounds+additionals)
+all_samples = info.get_samples(signals+backgrounds)
 print 'workspace_datacard-all_samples:',[job.name for job in all_samples]
 
-signal_samples = info.get_samples(signals) 
+signal_samples = info.get_samples(signals)
 print 'signal samples:',[job.name for job in signal_samples]
 
-background_samples = info.get_samples(backgrounds) 
+background_samples = info.get_samples(backgrounds)
 data_sample_names = config.get('dc:%s'%var,'data').split(' ')
 data_samples = info.get_samples(data_sample_names)
 
 print 'The signal sample list is\n'
 for samp in signal_samples:
     print samp
-    print ''
 print 'The background sample list is\n'
 for samp in background_samples:
     print samp
-    print ''
-print 'The data samples are' 
+print 'The data samples are'
 for samp in data_samples:
     print samp
-    print '' 
 #-------------------------------------------------------------------------------------------------
 
 optionsList=[]
@@ -321,8 +272,6 @@ def appendList():
         'xMin': xMin,
         'xMax': xMax,
         'weight': copy(_weight),
-        'countHisto': copy(_countHisto),
-        'countbin': copy(_countbin),
         'blind': blind,
         'sys_cut': copy(_sys_cut),
     })
@@ -332,8 +281,6 @@ _cut = treecut
 _treevar = treevar
 _name = title
 _weight = weightF
-_countHisto = "CountWeighted"
-_countbin = 0
 #ie. take count from 'CountWeighted->GetBinContent(1)'
 _sys_cut = treecut
 appendList()
@@ -342,246 +289,183 @@ print "Using weightF:",weightF
 print 'Assign the systematics'
 print '======================\n'
 
-import os
-if os.path.exists("$CMSSW_BASE/src/Xbb/interface/DrawFunctions_C.so"):
-    print 'ROOT.gROOT.LoadMacro("$CMSSW_BASE/src/Xbb/interface/DrawFunctions_C.so")'
-    ROOT.gROOT.LoadMacro("$CMSSW_BASE/src/Xbb/interface/DrawFunctions_C.so")
+# Shape Systematics
 
-#the 4 sys
+JER_or_JES = {
+    'JER',
+    'PileUpDataMC',
+    'PileUpPtRef',
+    'PileUpPtBB',
+    'PileUpPtEC1',
+    'RelativeJEREC1',
+    'RelativeFSR',
+    'RelativeStatFSR',
+    'RelativeStatEC',
+    'RelativePtBB',
+    'RelativePtEC1',
+    'AbsoluteScale',
+    'AbsoluteMPFBias',
+    'AbsoluteStat',
+    'SinglePionECAL',
+    'SinglePionHCAL',
+    'Fragmentation',
+    'TimePtEta',
+    'FlavorQCD',
+}
+
 for syst in systematics:
     for Q in UD:
-        #default:
+
         _cut = treecut
         _name = title
         _weight = weightF
+        _treevar = treevar
         _sys_cut = treecut
-        #replace cut string
-        #new_cut=sys_cut_suffix[syst]
-        #if not new_cut == 'nominal':
-        #    old_str,new_str=new_cut.split('>')
-        #    _cut = treecut.replace(old_str,new_str.replace('?',Q))
-        #    _name = title
-        #    _weight = weightF
-        #if syst in sys_weight_corr:
-        #    _weight = config.get('Weights',sys_weight_corr[syst]+'_%s' %(Q.upper()))
-        #replace tree variable
 
         # Pileup Weight Variations
-        if 'weight_pileUp' in syst:
+        if 'pileUp' in syst:
             _weight = _weight.replace('puWeight', 'puWeight{}'.format(Q))
-
         # TTbar nCentralJet Weight Variations
-        if 'weight_TT_nJetCentral' in syst:
+        elif 'TT_nJetCentral' in syst:
             _weight = _weight.replace('VHbb::weight_TTbar_nJetCentral', 'VHbb::weight_TTbar_nJetCentral_{}'.format(Q))
-
         # LHE Scale Variations(muF, muR)
-        if 'CMS_vhbb_LHE_weights_scale_muF' in syst:
+        elif 'muF' in syst:
             if Q is 'Up':
-                _weight = _weight + '*(LHE_weights_scale_wgt[0])'
+                _weight += '*(LHE_weights_scale_wgt[0])'
             if Q is 'Down':
-                _weight = _weight + '*(LHE_weights_scale_wgt[1])'    
-        if 'CMS_vhbb_LHE_weights_scale_muR' in syst:
+                _weight += '*(LHE_weights_scale_wgt[1])'
+        elif 'muR' in syst:
             if Q is 'Up':
-                _weight = _weight + '*(LHE_weights_scale_wgt[2])'
+                _weight += '*(LHE_weights_scale_wgt[2])'
             if Q is 'Down':
-                _weight = _weight + '*(LHE_weights_scale_wgt[3])'
-
+                _weight += '*(LHE_weights_scale_wgt[3])'
         # Moriond2017 bTag Weights
-        if 'bTagWeight' in syst:
+        elif 'bTagWeight' in syst:
             if 'JES' in syst:
                 if 'HighCentral' in syst:
                     _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_JESHighCentral{}'.format(Q))
-                if 'LowCentral' in syst:
+                elif 'LowCentral' in syst:
                     _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_JESLowCentral{}'.format(Q))
-                if 'HighForward' in syst:
+                elif 'HighForward' in syst:
                     _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_JESHighForward{}'.format(Q))
-                if 'LowForward' in syst:
+                elif 'LowForward' in syst:
                     _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_JESLowForward{}'.format(Q))
-            if 'LF' in syst and 'Stats' not in syst:
+            elif 'LF' in syst and 'Stats' not in syst:
                 if 'HighCentral' in syst:
                     _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_LFHighCentral{}'.format(Q))
-                if 'LowCentral' in syst:
+                elif 'LowCentral' in syst:
                     _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_LFLowCentral{}'.format(Q))
-                if 'HighForward' in syst:
+                elif 'HighForward' in syst:
                     _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_LFHighForward{}'.format(Q))
-                if 'LowForward' in syst:
+                elif 'LowForward' in syst:
                     _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_LFLowForward{}'.format(Q))
-            if 'HF' in syst and 'Stats' not in syst:
+            elif 'HF' in syst and 'Stats' not in syst:
                 if 'HighCentral' in syst:
                     _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_HFHighCentral{}'.format(Q))
-                if 'LowCentral' in syst:
+                elif 'LowCentral' in syst:
                     _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_HFLowCentral{}'.format(Q))
-                if 'HighForward' in syst:
+                elif 'HighForward' in syst:
                     _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_HFHighForward{}'.format(Q))
-                if 'LowForward' in syst:
+                elif 'LowForward' in syst:
                     _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_HFLowForward{}'.format(Q))
-            if 'LFStats1' in syst:
+            elif 'LFStats1' in syst:
                 if 'HighCentral' in syst:
                     _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_LFStats1HighCentral{}'.format(Q))
-                if 'LowCentral' in syst:
+                elif 'LowCentral' in syst:
                     _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_LFStats1LowCentral{}'.format(Q))
-                if 'HighForward' in syst:
+                elif 'HighForward' in syst:
                     _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_LFStats1HighForward{}'.format(Q))
-                if 'LowForward' in syst:
+                elif 'LowForward' in syst:
                     _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_LFStats1LowForward{}'.format(Q))
-            if 'LFStats2' in syst:
+            elif 'LFStats2' in syst:
                 if 'HighCentral' in syst:
                     _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_LFStats2HighCentral{}'.format(Q))
-                if 'LowCentral' in syst:
+                elif 'LowCentral' in syst:
                     _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_LFStats2LowCentral{}'.format(Q))
-                if 'HighForward' in syst:
+                elif 'HighForward' in syst:
                     _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_LFStats2HighForward{}'.format(Q))
-                if 'LowForward' in syst:
+                elif 'LowForward' in syst:
                     _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_LFStats2LowForward{}'.format(Q))
-            if 'HFStats1' in syst:
+            elif 'HFStats1' in syst:
                 if 'HighCentral' in syst:
                     _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_HFStats1HighCentral{}'.format(Q))
-                if 'LowCentral' in syst:
+                elif 'LowCentral' in syst:
                     _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_HFStats1LowCentral{}'.format(Q))
-                if 'HighForward' in syst:
+                elif 'HighForward' in syst:
                     _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_HFStats1HighForward{}'.format(Q))
-                if 'LowForward' in syst:
+                elif 'LowForward' in syst:
                     _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_HFStats1LowForward{}'.format(Q))
-            if 'HFStats2' in syst:
+            elif 'HFStats2' in syst:
                 if 'HighCentral' in syst:
                     _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_HFStats2HighCentral{}'.format(Q))
-                if 'LowCentral' in syst:
+                elif 'LowCentral' in syst:
                     _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_HFStats2LowCentral{}'.format(Q))
-                if 'HighForward' in syst:
+                elif 'HighForward' in syst:
                     _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_HFStats2HighForward{}'.format(Q))
-                if 'LowForward' in syst:
+                elif 'LowForward' in syst:
                     _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_HFStats2LowForward{}'.format(Q))
-            if 'cErr1' in syst:
+            elif 'cErr1' in syst:
                 if 'HighCentral' in syst:
                     _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_cErr1HighCentral{}'.format(Q))
-                if 'LowCentral' in syst:
+                elif 'LowCentral' in syst:
                     _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_cErr1LowCentral{}'.format(Q))
-                if 'HighForward' in syst:
+                elif 'HighForward' in syst:
                     _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_cErr1HighForward{}'.format(Q))
-                if 'LowForward' in syst:
+                elif 'LowForward' in syst:
                     _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_cErr1LowForward{}'.format(Q))
-            if 'cErr2' in syst:
+            elif 'cErr2' in syst:
                 if 'HighCentral' in syst:
                     _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_cErr2HighCentral{}'.format(Q))
-                if 'LowCentral' in syst:
+                elif 'LowCentral' in syst:
                     _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_cErr2LowCentral{}'.format(Q))
-                if 'HighForward' in syst:
+                elif 'HighForward' in syst:
                     _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_cErr2HighForward{}'.format(Q))
-                if 'LowForward' in syst:
+                elif 'LowForward' in syst:
                     _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_cErr2LowForward{}'.format(Q))
+        # JER and Factorized JEC Systematics
+        elif syst in JER_or_JES:
+            mass_cut = (
+                '(HCMVAV2_reg_mass{0}'
+                '||HCMVAV2_reg_mass_corrJERUp{0}||HCMVAV2_reg_mass_corrJERDown{0}'
+                '||HCMVAV2_reg_mass_corrPileUpDataMCUp{0}||HCMVAV2_reg_mass_corrPileUpDataMCDown{0}'
+                '||HCMVAV2_reg_mass_corrPileUpPtRefUp{0}||HCMVAV2_reg_mass_corrPileUpPtRefDown{0}'
+                '||HCMVAV2_reg_mass_corrPileUpPtBBUp{0}||HCMVAV2_reg_mass_corrPileUpPtBBDown{0}'
+                '||HCMVAV2_reg_mass_corrPileUpPtEC1Up{0}||HCMVAV2_reg_mass_corrPileUpPtEC1Down{0}'
+                '||HCMVAV2_reg_mass_corrRelativeJEREC1Up{0}||HCMVAV2_reg_mass_corrRelativeJEREC1Down{0}'
+                '||HCMVAV2_reg_mass_corrRelativeFSRUp{0}||HCMVAV2_reg_mass_corrRelativeFSRDown{0}'
+                '||HCMVAV2_reg_mass_corrRelativeStatFSRUp{0}||HCMVAV2_reg_mass_corrRelativeStatFSRDown{0}'
+                '||HCMVAV2_reg_mass_corrRelativeStatECUp{0}||HCMVAV2_reg_mass_corrRelativeStatECDown{0}'
+                '||HCMVAV2_reg_mass_corrRelativePtBBUp{0}||HCMVAV2_reg_mass_corrRelativePtBBDown{0}'
+                '||HCMVAV2_reg_mass_corrRelativePtEC1Up{0}||HCMVAV2_reg_mass_corrRelativePtEC1Down{0}'
+                '||HCMVAV2_reg_mass_corrAbsoluteScaleUp{0}||HCMVAV2_reg_mass_corrAbsoluteScaleDown{0}'
+                '||HCMVAV2_reg_mass_corrAbsoluteMPFBiasUp{0}||HCMVAV2_reg_mass_corrAbsoluteMPFBiasDown{0}'
+                '||HCMVAV2_reg_mass_corrAbsoluteStatUp{0}||HCMVAV2_reg_mass_corrAbsoluteStatDown{0}'
+                '||HCMVAV2_reg_mass_corrSinglePionECALUp{0}||HCMVAV2_reg_mass_corrSinglePionECALDown{0}'
+                '||HCMVAV2_reg_mass_corrSinglePionHCALUp{0}||HCMVAV2_reg_mass_corrSinglePionHCALDown{0}'
+                '||HCMVAV2_reg_mass_corrFragmentationUp{0}||HCMVAV2_reg_mass_corrFragmentationDown{0}'
+                '||HCMVAV2_reg_mass_corrTimePtEtaUp{0}||HCMVAV2_reg_mass_corrTimePtEtaDown{0}'
+                '||HCMVAV2_reg_mass_corrFlavorQCDUp{0}||HCMVAV2_reg_mass_corrFlavorQCDDown{0})'
+            )
 
-        if bdt:
-            _cut = _cut.replace('HCMVAV2_reg_mass<160', '(HCMVAV2_reg_mass<160||HCMVAV2_reg_mass_corrJERUp<160||HCMVAV2_reg_mass_corrJERDown<160||HCMVAV2_reg_mass_corrPileUpDataMCUp<160||HCMVAV2_reg_mass_corrPileUpDataMCDown<160||HCMVAV2_reg_mass_corrPileUpPtRefUp<160||HCMVAV2_reg_mass_corrPileUpPtRefDown<160||HCMVAV2_reg_mass_corrPileUpPtBBUp<160||HCMVAV2_reg_mass_corrPileUpPtBBDown<160||HCMVAV2_reg_mass_corrPileUpPtEC1Up<160||HCMVAV2_reg_mass_corrPileUpPtEC1Down<160||HCMVAV2_reg_mass_corrRelativeJEREC1Up<160||HCMVAV2_reg_mass_corrRelativeJEREC1Down<160||HCMVAV2_reg_mass_corrRelativeFSRUp<160||HCMVAV2_reg_mass_corrRelativeFSRDown<160||HCMVAV2_reg_mass_corrRelativeStatFSRUp<160||HCMVAV2_reg_mass_corrRelativeStatFSRDown<160||HCMVAV2_reg_mass_corrRelativeStatECUp<160||HCMVAV2_reg_mass_corrRelativeStatECDown<160||HCMVAV2_reg_mass_corrRelativePtBBUp<160||HCMVAV2_reg_mass_corrRelativePtBBDown<160||HCMVAV2_reg_mass_corrRelativePtEC1Up<160||HCMVAV2_reg_mass_corrRelativePtEC1Down<160||HCMVAV2_reg_mass_corrAbsoluteScaleUp<160||HCMVAV2_reg_mass_corrAbsoluteScaleDown<160||HCMVAV2_reg_mass_corrAbsoluteMPFBiasUp<160||HCMVAV2_reg_mass_corrAbsoluteMPFBiasDown<160||HCMVAV2_reg_mass_corrAbsoluteStatUp<160||HCMVAV2_reg_mass_corrAbsoluteStatDown<160||HCMVAV2_reg_mass_corrSinglePionECALUp<160||HCMVAV2_reg_mass_corrSinglePionECALDown<160||HCMVAV2_reg_mass_corrSinglePionHCALUp<160||HCMVAV2_reg_mass_corrSinglePionHCALDown<160||HCMVAV2_reg_mass_corrFragmentationUp<160||HCMVAV2_reg_mass_corrFragmentationDown<160||HCMVAV2_reg_mass_corrTimePtEtaUp<160||HCMVAV2_reg_mass_corrTimePtEtaDown<160||HCMVAV2_reg_mass_corrFlavorQCDUp<160||HCMVAV2_reg_mass_corrFlavorQCDDown<160)')
-            _cut = _cut.replace('HCMVAV2_reg_mass>60', '(HCMVAV2_reg_mass>60||HCMVAV2_reg_mass_corrJERUp>60||HCMVAV2_reg_mass_corrJERDown>60||HCMVAV2_reg_mass_corrPileUpDataMCUp>60||HCMVAV2_reg_mass_corrPileUpDataMCDown>60||HCMVAV2_reg_mass_corrPileUpPtRefUp>60||HCMVAV2_reg_mass_corrPileUpPtRefDown>60||HCMVAV2_reg_mass_corrPileUpPtBBUp>60||HCMVAV2_reg_mass_corrPileUpPtBBDown>60||HCMVAV2_reg_mass_corrPileUpPtEC1Up>60||HCMVAV2_reg_mass_corrPileUpPtEC1Down>60||HCMVAV2_reg_mass_corrRelativeJEREC1Up>60||HCMVAV2_reg_mass_corrRelativeJEREC1Down>60||HCMVAV2_reg_mass_corrRelativeFSRUp>60||HCMVAV2_reg_mass_corrRelativeFSRDown>60||HCMVAV2_reg_mass_corrRelativeStatFSRUp>60||HCMVAV2_reg_mass_corrRelativeStatFSRDown>60||HCMVAV2_reg_mass_corrRelativeStatECUp>60||HCMVAV2_reg_mass_corrRelativeStatECDown>60||HCMVAV2_reg_mass_corrRelativePtBBUp>60||HCMVAV2_reg_mass_corrRelativePtBBDown>60||HCMVAV2_reg_mass_corrRelativePtEC1Up>60||HCMVAV2_reg_mass_corrRelativePtEC1Down>60||HCMVAV2_reg_mass_corrAbsoluteScaleUp>60||HCMVAV2_reg_mass_corrAbsoluteScaleDown>60||HCMVAV2_reg_mass_corrAbsoluteMPFBiasUp>60||HCMVAV2_reg_mass_corrAbsoluteMPFBiasDown>60||HCMVAV2_reg_mass_corrAbsoluteStatUp>60||HCMVAV2_reg_mass_corrAbsoluteStatDown>60||HCMVAV2_reg_mass_corrSinglePionECALUp>60||HCMVAV2_reg_mass_corrSinglePionECALDown>60||HCMVAV2_reg_mass_corrSinglePionHCALUp>60||HCMVAV2_reg_mass_corrSinglePionHCALDown>60||HCMVAV2_reg_mass_corrFragmentationUp>60||HCMVAV2_reg_mass_corrFragmentationDown>60||HCMVAV2_reg_mass_corrTimePtEtaUp>60||HCMVAV2_reg_mass_corrTimePtEtaDown>60||HCMVAV2_reg_mass_corrFlavorQCDUp>60||HCMVAV2_reg_mass_corrFlavorQCDDown>60)')
-
-            if 'JER' in syst and 'Relative' not in syst:
-                _treevar = treevar.replace('.nominal', '.JER_{}'.format(Q))
-                _sys_cut = _sys_cut.replace('HCMVAV2_reg_mass', 'HCMVAV2_reg_mass_corrJER{}'.format(Q))
-            if 'PileUpDataMC' in syst:
-                _treevar = treevar.replace('.nominal', '.PileUpDataMC_{}'.format(Q))
-                _sys_cut = _sys_cut.replace('HCMVAV2_reg_mass', 'HCMVAV2_reg_mass_corrPileUpDataMC{}'.format(Q))
-            if 'PileUpPtRef' in syst:
-                _treevar = treevar.replace('.nominal', '.PileUpPtRef_{}'.format(Q))
-                _sys_cut = _sys_cut.replace('HCMVAV2_reg_mass', 'HCMVAV2_reg_mass_corrPileUpPtRef{}'.format(Q))
-            if 'PileUpPtBB' in syst:
-                _treevar = treevar.replace('.nominal', '.PileUpPtBB_{}'.format(Q))
-                _sys_cut = _sys_cut.replace('HCMVAV2_reg_mass', 'HCMVAV2_reg_mass_corrPileUpPtBB{}'.format(Q))
-            if 'PileUpPtEC1' in syst:
-                _treevar = treevar.replace('.nominal', '.PileUpPtEC1_{}'.format(Q))
-                _sys_cut = _sys_cut.replace('HCMVAV2_reg_mass', 'HCMVAV2_reg_mass_corrPileUpPtEC1{}'.format(Q))
-            if 'RelativeJEREC1' in syst:
-                _treevar = treevar.replace('.nominal', '.RelativeJEREC1_{}'.format(Q))
-                _sys_cut = _sys_cut.replace('HCMVAV2_reg_mass', 'HCMVAV2_reg_mass_corrRelativeJEREC1{}'.format(Q))
-            if 'RelativeFSR' in syst:
-                _treevar = treevar.replace('.nominal', '.RelativeFSR_{}'.format(Q))
-                _sys_cut = _sys_cut.replace('HCMVAV2_reg_mass', 'HCMVAV2_reg_mass_corrRelativeFSR{}'.format(Q))
-            if 'RelativeStatFSR' in syst:
-                _treevar = treevar.replace('.nominal', '.RelativeStatFSR_{}'.format(Q))
-                _sys_cut = _sys_cut.replace('HCMVAV2_reg_mass', 'HCMVAV2_reg_mass_corrRelativeStatFSR{}'.format(Q))
-            if 'RelativeStatEC' in syst:
-                _treevar = treevar.replace('.nominal', '.RelativeStatEC_{}'.format(Q))
-                _sys_cut = _sys_cut.replace('HCMVAV2_reg_mass', 'HCMVAV2_reg_mass_corrRelativeStatEC{}'.format(Q))
-            if 'RelativePtBB' in syst:
-                _treevar = treevar.replace('.nominal', '.RelativePtBB_{}'.format(Q))
-                _sys_cut = _sys_cut.replace('HCMVAV2_reg_mass', 'HCMVAV2_reg_mass_corrRelativePtBB{}'.format(Q))
-            if 'RelativePtEC1' in syst:
-                _treevar = treevar.replace('.nominal', '.RelativePtEC1_{}'.format(Q))
-                _sys_cut = _sys_cut.replace('HCMVAV2_reg_mass', 'HCMVAV2_reg_mass_corrRelativePtEC1{}'.format(Q))
-            if 'AbsoluteScale' in syst:
-                _treevar = treevar.replace('.nominal', '.AbsoluteScale_{}'.format(Q))
-                _sys_cut = _sys_cut.replace('HCMVAV2_reg_mass', 'HCMVAV2_reg_mass_corrAbsoluteScale{}'.format(Q))
-            if 'AbsoluteMPFBias' in syst:
-                _treevar = treevar.replace('.nominal', '.AbsoluteMPFBias_{}'.format(Q))
-                _sys_cut = _sys_cut.replace('HCMVAV2_reg_mass', 'HCMVAV2_reg_mass_corrAbsoluteMPFBias{}'.format(Q))
-            if 'AbsoluteStat' in syst:
-                _treevar = treevar.replace('.nominal', '.AbsoluteStat_{}'.format(Q))
-                _sys_cut = _sys_cut.replace('HCMVAV2_reg_mass', 'HCMVAV2_reg_mass_corrAbsoluteStat{}'.format(Q))
-            if 'SinglePionECAL' in syst:
-                _treevar = treevar.replace('.nominal', '.SinglePionECAL_{}'.format(Q))
-                _sys_cut = _sys_cut.replace('HCMVAV2_reg_mass', 'HCMVAV2_reg_mass_corrSinglePionECAL{}'.format(Q))
-            if 'SinglePionHCAL' in syst:
-                _treevar = treevar.replace('.nominal', '.SinglePionHCAL_{}'.format(Q))
-                _sys_cut = _sys_cut.replace('HCMVAV2_reg_mass', 'HCMVAV2_reg_mass_corrSinglePionHCAL{}'.format(Q))
-            if 'Fragmentation' in syst:
-                _treevar = treevar.replace('.nominal', '.Fragmentation_{}'.format(Q))
-                _sys_cut = _sys_cut.replace('HCMVAV2_reg_mass', 'HCMVAV2_reg_mass_corrFragmentation{}'.format(Q))
-            if 'TimePtEta' in syst:
-                _treevar = treevar.replace('.nominal', '.TimePtEta_{}'.format(Q))
-                _sys_cut = _sys_cut.replace('HCMVAV2_reg_mass', 'HCMVAV2_reg_mass_corrTimePtEta{}'.format(Q))
-            if 'FlavorQCD' in syst:
-                _treevar = treevar.replace('.nominal', '.FlavorQCD_{}'.format(Q))
-                _sys_cut = _sys_cut.replace('HCMVAV2_reg_mass', 'HCMVAV2_reg_mass_corrFlavorQCD{}'.format(Q))
-
-        elif mjj == True:
-            if syst == 'JER':
-                _treevar = treevar.replace('_reg_mass','_reg_corrJER%s_mass'%Q)
-            elif syst == 'JES':
-                _treevar = treevar.replace('_reg_mass','_reg_corrJEC%s_mass'%Q)
+            if bdt:
+                _cut = _cut.replace('HCMVAV2_reg_mass>60', mass_cut.format('>60'))
+                _cut = _cut.replace('HCMVAV2_reg_mass<160', mass_cut.format('<160'))
+                _treevar = treevar.replace('.nominal', '.{0}_{1}'.format(syst, Q))
+                _sys_cut = _sys_cut.replace('HCMVAV2_reg_mass', 'HCMVAV2_reg_mass_corr{0}{1}'.format(syst, Q))
             else:
-                _treevar = treevar
-        elif cr == True:
+                if 'Zbb' in name or 'Wbb' in name:
+                    _cut = _cut.replace('HCMVAV2_reg_mass<60', mass_cut.format('<60'))
+                    _cut = _cut.replace('HCMVAV2_reg_mass>160', mass_cut.format('>160'))
+                _sys_cut = _sys_cut.replace('HCMVAV2_reg_mass', 'HCMVAV2_reg_mass_corr{0}{1}'.format(syst, Q))
+        else:
             _treevar = treevar
 
-        print '----> New Weights       :',syst, ' : ', _weight            
+        print '----> New Weights       :',syst, ' : ', _weight
         print '--->  New tree variable : ', _treevar
         print '----> New tree cut      : ', _cut
         print '----> New SYS cut      : ', _sys_cut
         #append
         appendList()
-
-#UEPS
-#Appends options for each weight 
-#for weightF_sys in weightF_systematics:
-#    for _weight in [config.get('Weights','%s_UP' %(weightF_sys)),config.get('Weights','%s_DOWN' %(weightF_sys))]:
-#        _cut = treecut
-#        _treevar = treevar
-#        _name = title
-#        appendList()
-
-#lhe_muF
-#Appends options for each weight (up/down -> len =2 )
-#if len(lhe_muF)==2:
-#    for lhe_muF_num in lhe_muF:
-#        _weight = weightF + "*LHE_weights_scale_wgt[%s]"%lhe_muF_num
-#        _cut = treecut
-#        _treevar = treevar
-#        _name = title
-#        _countHisto = "CountWeightedLHEWeightScale"
-#        _countbin = lhe_muF_num
-#        appendList()
-#
-#if len(lhe_muR)==2:
-#    for lhe_muR_num in lhe_muR:
-#        _weight = weightF + "*LHE_weights_scale_wgt[%s]"%lhe_muR_num
-#        _cut = treecut
-#        _treevar = treevar
-#        _name = title
-#        _countHisto = "CountWeightedLHEWeightScale"
-#        _countbin = lhe_muR_num
-#        appendList()
-
-_countHisto = "CountWeighted"
-_countbin = 0
 
 #print '===================\n'
 #print 'The option list is', optionsList
@@ -630,29 +514,14 @@ data_histos = {}
 
 print '\n\t...fetching histos...\n'
 
-### ORIGINAL ###
-#for job in all_samples:
-#    print '\t- %s'%job
-#    if not GroupDict[job.name] in sys_cut_include:
-#        # manual overwrite
-#        if addBlindingCut:
-#            all_histos[job.name] = mc_hMaker.get_histos_from_tree(job,treecut+'& %s'%addBlindingCut)
-#        else:
-#            all_histos[job.name] = mc_hMaker.get_histos_from_tree(job,treecut)
-#    else:
-#        all_histos[job.name] = mc_hMaker.get_histos_from_tree(job)
 
 inputs=[]
 for job in all_samples:
     inputs.append((mc_hMaker,"get_histos_from_tree",(job,True)))
 
-# multiprocess=0
-# if('pisa' in config.get('Configuration','whereToLaunch')):
 multiprocess=int(config.get('Configuration','nprocesses'))
 outputs = []
 if multiprocess>1:
-    from multiprocessing import Pool
-    from myutils import GlobalFunction
     p = Pool(multiprocess)
     print 'launching get_histos_from_tree with ',multiprocess,' processes'
     outputs = p.map(GlobalFunction, inputs)
@@ -675,14 +544,14 @@ print '\t> done <\n'
 print 'Get the bkg histo'
 print '=================\n'
 i=0
-for job in background_samples: 
+for job in background_samples:
     print job.name
     htree = all_histos[job.name][0].values()[0]
-    if not i: 
-        hDummy = copy(htree) 
-    else: 
-        hDummy.Add(htree,1) 
-    del htree 
+    if not i:
+        hDummy = copy(htree)
+    else:
+        hDummy.Add(htree,1)
+    del htree
     i+=1
 #?
 if signal_inject:
@@ -698,10 +567,10 @@ if signal_inject:
 
 print 'Get the signal histo'
 print '====================\n'
-for job in signal_inject: 
+for job in signal_inject:
     htree = sig_hMaker.get_histos_from_tree(job)
-    hDummy.Add(htree[0].values()[0],1) 
-    del htree 
+    hDummy.Add(htree[0].values()[0],1)
+    del htree
 
 print 'Get the data histo'
 print '==================\n'
@@ -760,81 +629,6 @@ for syst in systematics:
     for Q in UD:
         final_histos['%s_%s'%(systematicsnaming[syst],Q)] = HistoMaker.orderandadd([all_histos[job.name][ind] for job in all_samples],setup)
         ind+=1
-print 'add weight sys'
-print '==============\n'
-for weightF_sys in weightF_systematics: 
-    for Q in UD:
-        final_histos['%s_%s'%(systematicsnaming[weightF_sys],Q)]= HistoMaker.orderandadd([all_histos[job.name][ind] for job in all_samples],setup)
-        ind+=1
-print 'add lhe sys'
-print '==============\n'
-if len(lhe_muF)==2:
-    for Q in UD:
-        for group in sys_lhe_affecting.keys():
-            histos = []
-            for job in all_samples:
-                if Dict[GroupDict[job.name]] in sys_lhe_affecting[group]:
-                    print "XXX"
-                    histos.append(all_histos[job.name][ind])
-            final_histos['%s_%s_%s'%(systematicsnaming['lhe_muF'],group,Q)]= HistoMaker.orderandadd(histos,setup)
-        ind+=1
-
-if len(lhe_muR)==2:
-    for Q in UD:
-        for group in sys_lhe_affecting.keys():
-            histos = []
-            for job in all_samples:
-                if Dict[GroupDict[job.name]] in sys_lhe_affecting[group]:
-                    print "XXX"
-                    histos.append(all_histos[job.name][ind])
-            final_histos['%s_%s_%s'%(systematicsnaming['lhe_muR'],group,Q)]= HistoMaker.orderandadd(histos,setup)
-        ind+=1
-
-
-
-if change_shapes:
-    for key in change_shapes:
-        syst,val=change_shapes[key].split('*')
-        final_histos[syst][key].Scale(float(val))
-        print 'scaled %s times %s val'%(syst,val)
-
-
-def get_alternate_shape(hNominal,hAlternate):
-    hVar = hAlternate.Clone()
-    hNom = hNominal.Clone()
-    hAlt = hNom.Clone()
-    hNom.Add(hVar,-1.)
-    hAlt.Add(hNom)
-    for bin in range(0,hNominal.GetNbinsX()+1):
-        if hAlt.GetBinContent(bin) < 0.: hAlt.SetBinContent(bin,0.)
-    return hVar,hAlt
-
-def get_alternate_shapes(all_histos,asample_dict,all_samples):
-    alternate_shapes_up = []
-    alternate_shapes_down = []
-    for job in all_samples:
-        nominal = all_histos[job.name][0]
-        if job.name in asample_dict:
-            print "EEE"
-            alternate = copy(all_histos[asample_dict[job.name]][0])
-            hUp, hDown = get_alternate_shape(nominal[nominal.keys()[0]],alternate[alternate.keys()[0]])
-            alternate_shapes_up.append({nominal.keys()[0]:hUp})
-            alternate_shapes_down.append({nominal.keys()[0]:hDown})
-        else:
-            print "RRR"
-            newh=nominal[nominal.keys()[0]].Clone('%s_%s_Up'%(nominal[nominal.keys()[0]].GetName(),'model'))
-            alternate_shapes_up.append({nominal.keys()[0]:nominal[nominal.keys()[0]].Clone()})
-            alternate_shapes_down.append({nominal.keys()[0]:nominal[nominal.keys()[0]].Clone()})
-    return alternate_shapes_up, alternate_shapes_down
-        
-if addSample_sys: 
-    print 'Adding the samples systematics'
-    print '==============================\n'
-    aUp, aDown = get_alternate_shapes(all_histos,addSample_sys,all_samples)
-    final_histos['%s_Up'%(systematicsnaming['model'])]= HistoMaker.orderandadd(aUp,setup)
-    del aUp
-    final_histos['%s_Down'%(systematicsnaming['model'])]= HistoMaker.orderandadd(aDown,setup)
-
 
 if not ignore_stats:
     #make statistical shapes:
@@ -916,7 +710,7 @@ for key in final_histos:
             rooDataHist = ROOT.RooDataHist('%s%s%s' %(Dict[job],nameSyst,Q),'%s%s%s'%(Dict[job],nameSyst,Q),obs, hist)
             getattr(WS,'import')(rooDataHist)
 
-if toy or signal_inject: 
+if toy or signal_inject:
     hDummy.SetName('data_obs')
     hDummy.Write()
     rooDataHist = ROOT.RooDataHist('data_obs','data_obs',obs, hDummy)
@@ -981,7 +775,7 @@ for DCtype in ['WS','TH']:
     f.write('rate\t')
     print "workspace_datacard-setup: ", setup
     print "workspace_datacard-final_histos: ", final_histos
-    for c in setup: 
+    for c in setup:
         f.write('\t%s'%final_histos['nominal'][c].Integral())
     f.write('\n')
     # get list of systematics in use
@@ -1024,48 +818,6 @@ for DCtype in ['WS','TH']:
                     else:
                         f.write('\t-')
                 f.write('\n')
-    # UEPS systematics
-    for weightF_sys in weightF_systematics:
-        f.write('%s\tshape' %(systematicsnaming[weightF_sys]))
-        for it in range(0,columns): f.write('\t1.0')
-        f.write('\n')
-    # LHE systematics
-    if len(lhe_muF)==2:
-        for group in sys_lhe_affecting.keys():
-            f.write('%s_%s\tshape' %(systematicsnaming['lhe_muF'],group))
-            samples = sys_lhe_affecting[group]
-            for c in setup:
-                if Dict[c] in samples:
-                    f.write('\t1.0')
-                else:
-                    f.write('\t-')
-            f.write('\n')
-    if len(lhe_muR)==2:
-        for group in sys_lhe_affecting.keys():
-            f.write('%s_%s\tshape' %(systematicsnaming['lhe_muR'],group))
-            samples = sys_lhe_affecting[group]
-            for c in setup:
-                if Dict[c] in samples:
-                    f.write('\t1.0')
-                else:
-                    f.write('\t-')
-            f.write('\n')
-    # additional sample systematics
-    if addSample_sys:
-        alreadyAdded = []
-        for newSample in addSample_sys.iterkeys():
-            for c in setup:
-                if not c == GroupDict[newSample]: continue
-                if Dict[c] in alreadyAdded: continue
-                if final_histos['nominal'][c].Integral()<0.1: continue #skip model syst for negligible samples (eg. ggZH in W+Light CR)
-                f.write('%s_%s\tshape'%(systematicsnaming['model'],Dict[c]))
-                for it in range(0,columns):
-                    if it == setup.index(c):
-                         f.write('\t1.0')
-                    else:
-                         f.write('\t-')
-                f.write('\n')
-                alreadyAdded.append(Dict[c])
     # regular systematics
     for sys in systematics:
         sys_factor=sys_factor_dict[sys]
@@ -1076,8 +828,8 @@ for DCtype in ['WS','TH']:
             else:
                 f.write('\t-')
         f.write('\n')
-    # write rateParams systematics (free parameters)
 
+    # write rateParams systematics (free parameters)
     rateParams=eval(config.get('Datacard','rateParams_%s_%s'%(str(anType), pt_region)))
     try:
         rateParamRange=eval(config.get('Datacard','rateParamRange'))
@@ -1093,4 +845,5 @@ for DCtype in ['WS','TH']:
 
 # --------------------------------------------------------------------------
 
+WS.IsA().Destructor(WS)
 outfile.Close()
