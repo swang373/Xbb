@@ -341,87 +341,7 @@ for syst in systematics:
                 _weight += '*(LHE_weights_scale_wgt[3])'
         # Moriond2017 bTag Weights
         elif 'bTagWeight' in syst:
-            if 'JES' in syst:
-                if 'HighCentral' in syst:
-                    _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_JESHighCentral{}'.format(Q))
-                elif 'LowCentral' in syst:
-                    _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_JESLowCentral{}'.format(Q))
-                elif 'HighForward' in syst:
-                    _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_JESHighForward{}'.format(Q))
-                elif 'LowForward' in syst:
-                    _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_JESLowForward{}'.format(Q))
-            elif 'LF' in syst and 'Stats' not in syst:
-                if 'HighCentral' in syst:
-                    _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_LFHighCentral{}'.format(Q))
-                elif 'LowCentral' in syst:
-                    _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_LFLowCentral{}'.format(Q))
-                elif 'HighForward' in syst:
-                    _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_LFHighForward{}'.format(Q))
-                elif 'LowForward' in syst:
-                    _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_LFLowForward{}'.format(Q))
-            elif 'HF' in syst and 'Stats' not in syst:
-                if 'HighCentral' in syst:
-                    _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_HFHighCentral{}'.format(Q))
-                elif 'LowCentral' in syst:
-                    _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_HFLowCentral{}'.format(Q))
-                elif 'HighForward' in syst:
-                    _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_HFHighForward{}'.format(Q))
-                elif 'LowForward' in syst:
-                    _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_HFLowForward{}'.format(Q))
-            elif 'LFStats1' in syst:
-                if 'HighCentral' in syst:
-                    _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_LFStats1HighCentral{}'.format(Q))
-                elif 'LowCentral' in syst:
-                    _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_LFStats1LowCentral{}'.format(Q))
-                elif 'HighForward' in syst:
-                    _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_LFStats1HighForward{}'.format(Q))
-                elif 'LowForward' in syst:
-                    _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_LFStats1LowForward{}'.format(Q))
-            elif 'LFStats2' in syst:
-                if 'HighCentral' in syst:
-                    _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_LFStats2HighCentral{}'.format(Q))
-                elif 'LowCentral' in syst:
-                    _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_LFStats2LowCentral{}'.format(Q))
-                elif 'HighForward' in syst:
-                    _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_LFStats2HighForward{}'.format(Q))
-                elif 'LowForward' in syst:
-                    _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_LFStats2LowForward{}'.format(Q))
-            elif 'HFStats1' in syst:
-                if 'HighCentral' in syst:
-                    _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_HFStats1HighCentral{}'.format(Q))
-                elif 'LowCentral' in syst:
-                    _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_HFStats1LowCentral{}'.format(Q))
-                elif 'HighForward' in syst:
-                    _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_HFStats1HighForward{}'.format(Q))
-                elif 'LowForward' in syst:
-                    _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_HFStats1LowForward{}'.format(Q))
-            elif 'HFStats2' in syst:
-                if 'HighCentral' in syst:
-                    _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_HFStats2HighCentral{}'.format(Q))
-                elif 'LowCentral' in syst:
-                    _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_HFStats2LowCentral{}'.format(Q))
-                elif 'HighForward' in syst:
-                    _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_HFStats2HighForward{}'.format(Q))
-                elif 'LowForward' in syst:
-                    _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_HFStats2LowForward{}'.format(Q))
-            elif 'cErr1' in syst:
-                if 'HighCentral' in syst:
-                    _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_cErr1HighCentral{}'.format(Q))
-                elif 'LowCentral' in syst:
-                    _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_cErr1LowCentral{}'.format(Q))
-                elif 'HighForward' in syst:
-                    _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_cErr1HighForward{}'.format(Q))
-                elif 'LowForward' in syst:
-                    _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_cErr1LowForward{}'.format(Q))
-            elif 'cErr2' in syst:
-                if 'HighCentral' in syst:
-                    _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_cErr2HighCentral{}'.format(Q))
-                elif 'LowCentral' in syst:
-                    _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_cErr2LowCentral{}'.format(Q))
-                elif 'HighForward' in syst:
-                    _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_cErr2HighForward{}'.format(Q))
-                elif 'LowForward' in syst:
-                    _weight = _weight.replace('bTagWeightCMVAv2_Moriond', 'bTagWeightCMVAV2_Moriond_cErr2LowForward{}'.format(Q))
+            _weight = _weight.replace('bTagWeightMoriondCMVA', ''.join([syst, Q]))
         # JER and Factorized JEC Systematics
         elif syst in JER_or_JES:
             mass_cut = (
@@ -615,6 +535,13 @@ jobnames = [job.name for job in all_samples]
 
 #NOMINAL:
 final_histos['nominal'] = HistoMaker.orderandadd([all_histos['%s'%job][0] for job in all_samples],setup)
+#DEBUG
+#nominal_shapes = ROOT.TFile.Open(os.path.join(outpath, 'nominal_shapes.root'), 'RECREATE')
+#for _nominal_name, _nominal_hist in final_histos['nominal'].iteritems():
+#    _nominal_hist.SetName(_nominal_name)
+#    _nominal_hist.Write()
+#nominal_shapes.Close()
+#outfile.cd(Datacardbin)
 
 #SYSTEMATICS:
 ind = 1
@@ -747,7 +674,7 @@ for key in final_histos:
 # -------------------- write DATAcard: ----------------------------------------------------------------------
 DCprocessseparatordict = {'WS':':','TH':'/'}
 # create two datacards: for TH an WS
-for DCtype in ['WS','TH']:
+for DCtype in ['TH']:
     columns=len(setup)
     fileName = outpath+'vhbb_DC_%s_%s.txt'%(DCtype,ROOToutname)
     f = open(fileName,'w')

@@ -41,10 +41,9 @@ channels= ['Zll']
 '''
 #------------------------------------------------------
 
-#path = '/afs/cern.ch/work/s/swang373/private/CMSSW_7_4_7/src/V25/Apr20/ZnnHbb_Datacards_Apr20/'
-path = '/afs/cern.ch/work/s/swang373/private/Xbb_ICHEP/src/Xbb/ZnnHbb_Datacards_test/'
+path = '/afs/cern.ch/work/s/swang373/private/Xbb_ICHEP/src/Xbb/ZnnHbb_Datacards_May11/'
 
-outpath = '/afs/cern.ch/user/s/swang373/www/V25_Systematics_Apr24e/'
+outpath = '/afs/cern.ch/user/s/swang373/www/V25_ZnnHbb_Systematics_May11/'
 
 # Make the dir and copy the website ini files
 try:

@@ -111,6 +111,9 @@ class HistoMaker:
             if 'BDT' in treeVar:
                 if '_Up' in treeVar or '_Down' in treeVar:
                     treeCut = '{}'.format(options['sys_cut'])
+            elif 'CMVAV2' in treeVar:
+                if options.get('sys_cut'):
+                    treeCut = '{}'.format(options['sys_cut'])
             
             hTree = ROOT.TH1F('%s'%name,'%s'%name,nBins,xMin,xMax)
             hTree.Sumw2()
