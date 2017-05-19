@@ -1,2 +1,2 @@
-bash runAll.sh BDT_Znn_HighPt SeanZvvHbb13TeV train >& log/Train_BDT_Znn_HighPt;
+bash runAll.sh BDT_Diboson_HighPt SeanZvvHbb13TeV train >& log/Train_BDT_Diboson_HighPt;
 

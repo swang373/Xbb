@@ -23,14 +23,11 @@ class HistoMaker:
         self.config = config
         self.optionsList = optionsList
         self.nBins = optionsList[0]['nBins']
-        self.lumi=0.
+        self.lumi = 0.
         self.cuts = []
         for options in optionsList:
             self.cuts.append(options['cut'])
-
-        #print "Cuts:",self.cuts
-        self.tc = TreeCache(self.cuts,samples,path,config)# created cached tree i.e. create new skimmed trees using the list of cuts
-        #print self.cuts
+        # created cached tree i.e. create new skimmed trees using the list of cuts
         self.tc = TreeCache(self.cuts,samples,path,config)
         self._rebin = False
         self.mybinning = None
@@ -107,27 +104,16 @@ class HistoMaker:
             xMax=float(options['xMax'])
             weightF=options['weight']
             #Include weight per sample (specialweight)
-            weightF="("+weightF+")*(" + job.specialweight +")"
-            if 'countHisto' in options.keys() and 'countbin' in options.keys():
-                count=getattr(self.tc,options['countHisto'])[options['countbin']]
-            else:
-                count=getattr(self.tc,"CountWeighted")[0]
+            #weightF="("+weightF+")*(" + job.specialweight +")"
 
-            #if cutOverWrite:
-            #    treeCut= str(1)
-            #else:
-            #    treeCut='%s'%(options['cut'])
             treeCut='%s'%(options['cut'])
 
-            if 'JER' in treeVar or 'JEC' in treeVar:
-                treeCut = '{}'.format(options['sys_cut'])
-
-#            treeCut = "("+treeCut+")&&"+job.addtreecut 
- 
-            #print 'job.addtreecut ',job.addtreecut
-            #options
-            #print 'treeCut',treeCut
-            #print 'weightF',weightF
+            if 'BDT' in treeVar:
+                if '_Up' in treeVar or '_Down' in treeVar:
+                    treeCut = '{}'.format(options['sys_cut'])
+            elif 'CMVAV2' in treeVar:
+                if options.get('sys_cut'):
+                    treeCut = '{}'.format(options['sys_cut'])
             
             hTree = ROOT.TH1F('%s'%name,'%s'%name,nBins,xMin,xMax)
             hTree.Sumw2()
@@ -135,16 +121,15 @@ class HistoMaker:
             #print('hTree.name() 1 =',hTree.GetName())
             #print('treeVar 1 =',treeVar)
             drawoption = ''
-            print 'treeVar: %s'%(treeVar)
             print 'weightF: %s'%(weightF)
             print 'treeVar: %s'%(treeVar)
             print 'treeCut: %s'%(treeCut)
             
-#            print("START DRAWING")
+            #print("START DRAWING")
             if job.type != 'DATA':
               if CuttedTree and CuttedTree.GetEntries():
                 if 'BDT' in treeVar or 'bdt' in treeVar or 'OPT' in treeVar:#added OPT for BDT optimisation
-                    drawoption = '(%s)*(%s & %s)'%(weightF,BDT_add_cut,treeCut)
+                    drawoption = '(%s)*(%s && %s)'%(weightF,BDT_add_cut,treeCut)
                     #if First_iter: print "I'm appling: ",BDT_add_cut
                     print "I'm appling: ",BDT_add_cut
                     # drawoption = 'sign(genWeight)*(%s)*(%s & %s)'%(weightF,treeCut,BDT_add_cut)
@@ -187,16 +172,6 @@ class HistoMaker:
                     if First_iter: print 'DATA drawoptions', '%s>>%s' %(treeVar,name),'%s' %treeCut
                     CuttedTree.Draw('%s>>%s' %(treeVar,name),'%s' %treeCut, "goff,e")
                 full = True
-            # if full:
-                # hTree = ROOT.gDirectory.Get(name)
-                # print('histo1',ROOT.gDirectory.Get(name))
-            # else:
-                # hTree = ROOT.TH1F('%s'%name,'%s'%name,nBins,xMin,xMax)
-                # hTree.Sumw2()
-                # print('histo2',ROOT.gDirectory.Get(name))
-#            print("END DRAWING")
-#            print("START RESCALE")
-            # if full: print 'hTree',hTree.GetName()
               
             if job.type != 'DATA':
                 if 'BDT' in treeVar or 'bdt' in treeVar or 'OPT' in treeVar:
@@ -216,7 +191,7 @@ class HistoMaker:
                     elif 'LHE_weights_scale_wgt[3]' in weightF:
                         ScaleFactor = self.tc.get_scale_LHEscale(job, self.config, 3)*MC_rescale_factor
                     else:
-                        ScaleFactor = self.tc.get_scale(job, self.config, self.lumi, count)*MC_rescale_factor
+                        ScaleFactor = self.tc.get_scale(job, self.config)*MC_rescale_factor
                 else:
                     # For LHE scale shapes we need a different norm
                     if 'LHE_weights_scale_wgt[0]' in weightF:
@@ -228,7 +203,7 @@ class HistoMaker:
                     elif 'LHE_weights_scale_wgt[3]' in weightF:
                         ScaleFactor = self.tc.get_scale_LHEscale(job, self.config, 3)
                     else:
-                        ScaleFactor = self.tc.get_scale(job, self.config, self.lumi, count)
+                        ScaleFactor = self.tc.get_scale(job, self.config)
 
                 if ScaleFactor != 0:
                     hTree.Scale(ScaleFactor)
