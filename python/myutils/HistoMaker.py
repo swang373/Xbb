@@ -23,6 +23,7 @@ class HistoMaker:
         self.config = config
         self.optionsList = optionsList
         self.nBins = optionsList[0]['nBins']
+        self.xMin = optionsList[0]['xMin']
         self.lumi = 0.
         self.cuts = []
         for options in optionsList:
@@ -343,7 +344,10 @@ class HistoMaker:
         binlist.append(self.rebin_nBins+1)
         #print 'binning set to %s'%binlist
         #print "START REBINNER"
-        self.mybinning = Rebinner(int(self.norebin_nBins),array('d',[-1.0]+[totalBG.GetBinLowEdge(i) for i in binlist]),True)
+        self.mybinning = Rebinner(int(self.norebin_nBins),array('d',[self.xMin]+[totalBG.GetBinLowEdge(i) for i in binlist]),True)
+        # Uncomment for custom bins
+        #custom_BDT_bins = [-1, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0]
+        #self.mybinning = Rebinner(len(custom_BDT_bins)-1, array('d', custom_BDT_bins), True)
         self._rebin = True
         print '\t > rebinning is set <\n'
 
@@ -390,19 +394,22 @@ class Rebinner:
         self.active=active
     def rebin(self, histo):
         if not self.active: return histo
-        #print histo.Integral()
+        print histo.Integral()
         ROOT.gDirectory.Delete('hnew')
         histo.Rebin(self.nBins,'hnew',self.lowedgearray)
         binhisto=ROOT.gDirectory.Get('hnew')
-        #print binhisto.Integral()
+        print binhisto.Integral()
         newhisto=ROOT.TH1F('new','new',self.nBins,self.lowedgearray[0],self.lowedgearray[-1])
+        # For regular rebinning
         newhisto.Sumw2()
         for bin in range(1,self.nBins+1):
             newhisto.SetBinContent(bin,binhisto.GetBinContent(bin))
             newhisto.SetBinError(bin,binhisto.GetBinError(bin))
         newhisto.SetName(binhisto.GetName())
         newhisto.SetTitle(binhisto.GetTitle())
-        #print newhisto.Integral()
+        print newhisto.Integral()
         del histo
         del binhisto
         return copy(newhisto)
+        # For custom bins
+        #return copy(binhisto)

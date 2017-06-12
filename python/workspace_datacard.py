@@ -326,8 +326,8 @@ for syst in systematics:
         if 'pileUp' in syst:
             _weight = _weight.replace('puWeight', 'puWeight{}'.format(Q))
         # TTbar nCentralJet Weight Variations
-        elif 'TT_nJetCentral' in syst:
-            _weight = _weight.replace('VHbb::weight_TTbar_nJetCentral', 'VHbb::weight_TTbar_nJetCentral_{}'.format(Q))
+        #elif 'TT_nJetCentral' in syst:
+        #    _weight = _weight.replace('VHbb::weight_TTbar_nJetCentral', 'VHbb::weight_TTbar_nJetCentral_{}'.format(Q))
         # LHE Scale Variations(muF, muR)
         elif 'muF' in syst:
             if Q is 'Up':
@@ -341,7 +341,8 @@ for syst in systematics:
                 _weight += '*(LHE_weights_scale_wgt[3])'
         # Moriond2017 bTag Weights
         elif 'bTagWeight' in syst:
-            _weight = _weight.replace('bTagWeightMoriondCMVA', ''.join([syst, Q]))
+            identifiers = syst.split('_')
+            _weight = _weight.replace('bTagWeightMoriondCMVA', '{1}_{2}{0}_{3}_{4}'.format(Q, *identifiers))
         # JER and Factorized JEC Systematics
         elif syst in JER_or_JES:
             mass_cut = (

@@ -41,9 +41,9 @@ channels= ['Zll']
 '''
 #------------------------------------------------------
 
-path = '/afs/cern.ch/work/s/swang373/private/Xbb_ICHEP/src/Xbb/ZnnHbb_Datacards_May11/'
+path = '/afs/cern.ch/work/s/swang373/private/Xbb_ICHEP/src/Xbb/Nominal_nBins40/'
 
-outpath = '/afs/cern.ch/user/s/swang373/www/V25_ZnnHbb_Systematics_May11/'
+outpath = '/afs/cern.ch/user/s/swang373/www/V25_ZnnHbb_ShapeSystematics_Nominal_nBins40/'
 
 # Make the dir and copy the website ini files
 try:
@@ -102,8 +102,8 @@ for mass in masses:
 
                 print 'MC sample: ',MC
 
-                if MC == 's_Top':
-                    continue
+                #if MC == 's_Top':
+                #    continue
                 if MC == 'QCD':
                     continue
 
