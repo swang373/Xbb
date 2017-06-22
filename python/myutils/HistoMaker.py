@@ -281,9 +281,14 @@ class HistoMaker:
         i=0
         #add all together:
         print '\n\t...calculating rebinning...'
+        sdfagagrar = ROOT.TFile.Open('calc_rebin_hists.root', 'recreate')
         for job in bg_list:
             #print "job",job
             htree = self.get_histos_from_tree(job)[0].values()[0]
+            old = ROOT.gDirectory.pwd()
+            sdfagagrar.cd()
+            htree.Write()
+            old.cd()
             print "Integral",job,htree.Integral()
             if not i:
                 totalBG = copy(htree)
@@ -291,6 +296,8 @@ class HistoMaker:
                 totalBG.Add(htree,1)
             del htree
             i+=1
+        sdfagagrar.Close()
+        sys.exit()
         ErrorR=0
         ErrorL=0
         TotR=0
@@ -305,11 +312,12 @@ class HistoMaker:
             TotR+=totalBG.GetBinContent(binR)
             ErrorR=sqrt(ErrorR**2+totalBG.GetBinError(binR)**2)
             binR-=1
-            # print 'is this loop infinite ?'
+            if binR < 0: break
+            if TotR < 1.: continue
             # print "TotR",TotR
             # print "ErrorR",ErrorR
             # print "rel",rel
-            if not TotR == 0 and not ErrorR == 0:
+            if not TotR <= 0 and not ErrorR == 0:
                 rel=ErrorR/TotR
                 print rel
         #print 'upper bin is %s'%binR
@@ -322,7 +330,9 @@ class HistoMaker:
             TotL+=totalBG.GetBinContent(binL)
             ErrorL=sqrt(ErrorL**2+totalBG.GetBinError(binL)**2)
             binL+=1
-            if not TotL == 0 and not ErrorL == 0:
+            if binL > nBins_start: break
+            if TotL < 1.: continue
+            if not TotL <= 0 and not ErrorL == 0:
                 rel=ErrorL/TotL
                 #print rel
         #it's the lower edge
@@ -334,17 +344,17 @@ class HistoMaker:
         stepsize=int(inbetween)/(int(self.norebin_nBins)-2)
         modulo = int(inbetween)%(int(self.norebin_nBins)-2)
 
-        #print 'stepsize %s'% stepsize
-        #print 'modulo %s'%modulo
+        print 'stepsize %s'% stepsize
+        print 'modulo %s'%modulo
         binlist=[binL]
-        for i in range(0,int(self.norebin_nBins)-3):
+        for i in xrange(0,int(self.norebin_nBins)-3):
             binlist.append(binlist[-1]+stepsize)
         binlist[-1]+=modulo
         binlist.append(binR)
         binlist.append(self.rebin_nBins+1)
-        #print 'binning set to %s'%binlist
+        print 'binning set to %s'%binlist
         #print "START REBINNER"
-        self.mybinning = Rebinner(int(self.norebin_nBins),array('d',[self.xMin]+[totalBG.GetBinLowEdge(i) for i in binlist]),True)
+        self.mybinning = Rebinner(int(self.norebin_nBins),array('d',[totalBG.GetBinLowEdge(i) for i in binlist]),True)
         # Uncomment for custom bins
         #custom_BDT_bins = [-1, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0]
         #self.mybinning = Rebinner(len(custom_BDT_bins)-1, array('d', custom_BDT_bins), True)
