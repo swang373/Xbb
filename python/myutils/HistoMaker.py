@@ -281,14 +281,9 @@ class HistoMaker:
         i=0
         #add all together:
         print '\n\t...calculating rebinning...'
-        sdfagagrar = ROOT.TFile.Open('calc_rebin_hists.root', 'recreate')
         for job in bg_list:
             #print "job",job
             htree = self.get_histos_from_tree(job)[0].values()[0]
-            old = ROOT.gDirectory.pwd()
-            sdfagagrar.cd()
-            htree.Write()
-            old.cd()
             print "Integral",job,htree.Integral()
             if not i:
                 totalBG = copy(htree)
@@ -296,8 +291,6 @@ class HistoMaker:
                 totalBG.Add(htree,1)
             del htree
             i+=1
-        sdfagagrar.Close()
-        sys.exit()
         ErrorR=0
         ErrorL=0
         TotR=0
