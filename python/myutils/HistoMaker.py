@@ -272,82 +272,72 @@ class HistoMaker:
         elif not self._rebin and not self.value:
             return False
 
-    def calc_rebin(self, bg_list, nBins_start=1000, tolerance=0.25):
-        #print "START calc_rebin"
+    def calc_rebin(self, bg_list, nBins_start=1000, tolerance=0.35):
         self.calc_rebin_flag = True
         self.norebin_nBins = copy(self.nBins)
         self.rebin_nBins = nBins_start
         self.nBins = nBins_start
-        i=0
-        #add all together:
-        print '\n\t...calculating rebinning...'
-        for job in bg_list:
-            #print "job",job
+        for i, job in enumerate(bg_list):
             htree = self.get_histos_from_tree(job)[0].values()[0]
-            print "Integral",job,htree.Integral()
-            if not i:
+            if i == 0:
                 totalBG = copy(htree)
             else:
-                totalBG.Add(htree,1)
+                totalBG.Add(htree, 1)
             del htree
-            i+=1
-        ErrorR=0
-        ErrorL=0
-        TotR=0
-        TotL=0
-        binR=self.rebin_nBins
-        binL=1
-        rel=1.0
-        #print "START loop from right"
-        #print "totalBG.Draw("","")",totalBG.Integral()
-        #---- from right
-        while rel > tolerance:
-            TotR+=totalBG.GetBinContent(binR)
-            ErrorR=sqrt(ErrorR**2+totalBG.GetBinError(binR)**2)
-            binR-=1
-            if binR < 0: break
-            if TotR < 1.: continue
-            # print "TotR",TotR
-            # print "ErrorR",ErrorR
-            # print "rel",rel
-            if not TotR <= 0 and not ErrorR == 0:
-                rel=ErrorR/TotR
-                print rel
-        #print 'upper bin is %s'%binR
-        print "END loop from right"
-
-        #---- from left
-        rel=1.0
-        print "START loop from left"
-        while rel > tolerance:
-            TotL+=totalBG.GetBinContent(binL)
-            ErrorL=sqrt(ErrorL**2+totalBG.GetBinError(binL)**2)
-            binL+=1
-            if binL > nBins_start: break
-            if TotL < 1.: continue
-            if not TotL <= 0 and not ErrorL == 0:
-                rel=ErrorL/TotL
-                #print rel
-        #it's the lower edge
-        print "STOP loop from left"
-        binL+=1
-        #print 'lower bin is %s'%binL
-
-        inbetween=binR-binL
-        stepsize=int(inbetween)/(int(self.norebin_nBins)-2)
-        modulo = int(inbetween)%(int(self.norebin_nBins)-2)
-
-        print 'stepsize %s'% stepsize
-        print 'modulo %s'%modulo
-        binlist=[binL]
-        for i in xrange(0,int(self.norebin_nBins)-3):
-            binlist.append(binlist[-1]+stepsize)
-        binlist[-1]+=modulo
-        binlist.append(binR)
-        binlist.append(self.rebin_nBins+1)
-        print 'binning set to %s'%binlist
-        #print "START REBINNER"
-        self.mybinning = Rebinner(int(self.norebin_nBins),array('d',[totalBG.GetBinLowEdge(i) for i in binlist]),True)
+        # Merge last (right-most) bin.
+        index, count, error, stat_unc = nBins_start, 0, 0, 1
+        while index > 0:
+            count += totalBG.GetBinContent(index)
+            error = sqrt(error**2 + totalBG.GetBinError(index)**2)
+            if count and error:
+                stat_unc = error / count
+            if stat_unc < tolerance:
+                break
+            index -= 1
+        start_last_bin = index
+        # Merge first (left-most) bin.
+        index, count, error, stat_unc = 1, 0, 0, 1
+        while index <= nBins_start:
+            count += totalBG.GetBinContent(index)
+            error = sqrt(error**2 + totalBG.GetBinError(index)**2)
+            if count and error:
+                stat_unc = error / count
+            if stat_unc < tolerance:
+                break
+            index += 1
+        stop_first_bin = index
+        # Partition the remaining bins evenly.
+        if stop_first_bin > 5:
+            index_remaining = range(stop_first_bin + 1, start_last_bin)
+            n_bins_remaining = len(index_remaining)
+            stepsize = n_bins_remaining // (self.norebin_nBins - 2)
+            index_rebinned = [index_remaining[i] for i in xrange(0, n_bins_remaining, stepsize)]
+            # Insert the starting index of the first bin.
+            index_rebinned.insert(0, 1)
+            # If last two bins are closer than the stepsize, remove the second to last bin.
+            # Otherwise, append the starting index of the last bin.
+            if start_last_bin - index_rebinned[-1] < stepsize:
+                index_rebinned[-1] = start_last_bin
+            else:
+                index_rebinned.append(start_last_bin)
+            # Append the index of the overflow bin, whose low edge determines the maximum x-value.
+            index_rebinned.append(self.rebin_nBins + 1)
+        else:
+            # Remove rebinning from the left.
+            index_remaining = range(1, start_last_bin)
+            n_bins_remaining = len(index_remaining)
+            stepsize = n_bins_remaining // (self.norebin_nBins - 1)
+            index_rebinned = [index_remaining[i] for i in xrange(0, n_bins_remaining, stepsize)]
+            if start_last_bin - index_rebinned[-1] < stepsize:
+                index_rebinned[-1] = start_last_bin
+            else:
+                index_rebinned.append(start_last_bin)
+            index_rebinned.append(self.rebin_nBins + 1)
+        print 'Rebinned Indices: %s' % index_rebinned
+        # Use the rebinned indices to create an array of low edges for the rebinned histogram.
+        low_edges = array('d', [totalBG.GetXaxis().GetBinLowEdge(i) for i in index_rebinned])
+        print 'Rebinned Low Edges: %s' % low_edges
+        self.mybinning = Rebinner(self.norebin_nBins, low_edges, True)
         # Uncomment for custom bins
         #custom_BDT_bins = [-1, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1.0]
         #self.mybinning = Rebinner(len(custom_BDT_bins)-1, array('d', custom_BDT_bins), True)

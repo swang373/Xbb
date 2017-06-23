@@ -41,9 +41,9 @@ channels= ['Zll']
 '''
 #------------------------------------------------------
 
-path = '/afs/cern.ch/work/s/swang373/private/Xbb_ICHEP/src/Xbb/Nominal_nBins40/'
+path = '/afs/cern.ch/work/s/swang373/private/Xbb_ICHEP/src/Xbb/ZnnHbb_Datacards_Jun18_OldishApril25BDT_Minus0p8_to_Plus1/'
 
-outpath = '/afs/cern.ch/user/s/swang373/www/V25_ZnnHbb_ShapeSystematics_Nominal_nBins40/'
+outpath = '/afs/cern.ch/user/s/swang373/www/ZnnHbb_Datacards_Jun18_Minus0p8_to_Plus1_NoLowStatShapes/shapes/'
 
 # Make the dir and copy the website ini files
 try:
