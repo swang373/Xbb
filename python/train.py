@@ -237,8 +237,8 @@ factory.PrepareTrainingAndTestTree(sigCut, bkgCut, 'NormMode=None')
 # print 'Execute TMVA: factory.BookMethod'
 my_methodBase_bdt = factory.BookMethod(ROOT.TMVA.Types.kBDT,MVAname,MVAsettings)
 # print 'Execute TMVA: TrainMethod'
-#factory.TrainAllMethods()
-my_methodBase_bdt.TrainMethod()
+factory.TrainAllMethods()
+#my_methodBase_bdt.TrainMethod()
 # print 'Execute TMVA: TestAllMethods'
 factory.TestAllMethods()
 # print 'Execute TMVA: EvaluateAllMethods'

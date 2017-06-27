@@ -312,7 +312,20 @@ for samp in data_samples:
 
 optionsList=[]
 
-def appendList(): optionsList.append({'cut':copy(_cut),'var':copy(_treevar),'name':copy(_name),'nBins':nBins,'xMin':xMin,'xMax':xMax,'weight':copy(_weight),'countHisto':copy(_countHisto),'countbin':copy(_countbin),'blind':blind})
+def appendList():
+    optionsList.append({
+        'cut': copy(_cut),
+        'var': copy(_treevar),
+        'name': copy(_name),
+        'nBins': nBins,
+        'xMin': xMin,
+        'xMax': xMax,
+        'weight': copy(_weight),
+        'countHisto': copy(_countHisto),
+        'countbin': copy(_countbin),
+        'blind': blind,
+        'sys_cut': copy(_sys_cut),
+    })
 
 #nominal
 _cut = treecut
@@ -322,6 +335,7 @@ _weight = weightF
 _countHisto = "CountWeighted"
 _countbin = 0
 #ie. take count from 'CountWeighted->GetBinContent(1)'
+_sys_cut = treecut
 appendList()
 
 print "Using weightF:",weightF
@@ -340,20 +354,132 @@ for syst in systematics:
         _cut = treecut
         _name = title
         _weight = weightF
+        _sys_cut = treecut
         #replace cut string
-        new_cut=sys_cut_suffix[syst]
-        if not new_cut == 'nominal':
-            old_str,new_str=new_cut.split('>')
-            _cut = treecut.replace(old_str,new_str.replace('?',Q))
-            _name = title
-            _weight = weightF
-        if syst in sys_weight_corr:
-            _weight = config.get('Weights',sys_weight_corr[syst]+'_%s' %(Q.upper()))
+        #new_cut=sys_cut_suffix[syst]
+        #if not new_cut == 'nominal':
+        #    old_str,new_str=new_cut.split('>')
+        #    _cut = treecut.replace(old_str,new_str.replace('?',Q))
+        #    _name = title
+        #    _weight = weightF
+        #if syst in sys_weight_corr:
+        #    _weight = config.get('Weights',sys_weight_corr[syst]+'_%s' %(Q.upper()))
         #replace tree variable
-        if bdt == True:
-            #ff[1]='%s_%s'%(sys,Q.lower())
-            _treevar = treevar.replace('.nominal','.%s_%s'%(syst,Q.lower()))
-            _treevar = treevar.replace('.Nominal','.%s_%s'%(syst,Q.lower()))
+
+        # LHE Scale Variations(muF, muR)
+        if 'CMS_vhbb_LHE_weights_scale_MuF' in syst:
+            if Q is 'Up':
+                _weight = _weight + '*(LHE_weights_scale_wgt[0])'
+            if Q is 'Down':
+                _weight = _weight + '*(LHE_weights_scale_wgt[1])'    
+        if 'CMS_vhbb_LHE_weights_scale_MuR' in syst:
+            if Q is 'Up':
+                _weight = _weight + '*(LHE_weights_scale_wgt[2])'
+            if Q is 'Down':
+                _weight = _weight + '*(LHE_weights_scale_wgt[3])'
+
+        # for NEW 2016 weights
+        if 'bTagWeightICHEP' in syst:            
+            if 'LF' in syst and 'Stats' not in syst:
+                if 'HighCentral' in syst:
+                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_LFHighCentral{}'.format(Q))
+                if 'LowCentral' in syst:
+                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_LFLowCentral{}'.format(Q))
+                if 'HighForward' in syst:
+                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_LFHighForward{}'.format(Q))
+                if 'LowForward' in syst:
+                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_LFLowForward{}'.format(Q))
+            if 'HF' in syst and 'Stats' not in syst:
+                if 'HighCentral' in syst:
+                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_HFHighCentral{}'.format(Q))
+                if 'LowCentral' in syst:
+                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_HFLowCentral{}'.format(Q))
+                if 'HighForward' in syst:
+                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_HFHighForward{}'.format(Q))
+                if 'LowForward' in syst:
+                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_HFLowForward{}'.format(Q))
+            if 'LFStats1' in syst:
+                if 'HighCentral' in syst:
+                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_LFStats1HighCentral{}'.format(Q))
+                if 'LowCentral' in syst:
+                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_LFStats1LowCentral{}'.format(Q))
+                if 'HighForward' in syst:
+                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_LFStats1HighForward{}'.format(Q))
+                if 'LowForward' in syst:
+                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_LFStats1LowForward{}'.format(Q))
+            if 'LFStats2' in syst:
+                if 'HighCentral' in syst:
+                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_LFStats2HighCentral{}'.format(Q))
+                if 'LowCentral' in syst:
+                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_LFStats2LowCentral{}'.format(Q))
+                if 'HighForward' in syst:
+                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_LFStats2HighForward{}'.format(Q))
+                if 'LowForward' in syst:
+                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_LFStats2LowForward{}'.format(Q))
+            if 'HFStats1' in syst:
+                if 'HighCentral' in syst:
+                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_HFStats1HighCentral{}'.format(Q))
+                if 'LowCentral' in syst:
+                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_HFStats1LowCentral{}'.format(Q))
+                if 'HighForward' in syst:
+                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_HFStats1HighForward{}'.format(Q))
+                if 'LowForward' in syst:
+                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_HFStats1LowForward{}'.format(Q))
+            if 'HFStats2' in syst:
+                if 'HighCentral' in syst:
+                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_HFStats2HighCentral{}'.format(Q))
+                if 'LowCentral' in syst:
+                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_HFStats2LowCentral{}'.format(Q))
+                if 'HighForward' in syst:
+                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_HFStats2HighForward{}'.format(Q))
+                if 'LowForward' in syst:
+                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_HFStats2LowForward{}'.format(Q))
+            if 'cErr1' in syst:
+                if 'HighCentral' in syst:
+                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_cErr1HighCentral{}'.format(Q))
+                if 'LowCentral' in syst:
+                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_cErr1LowCentral{}'.format(Q))
+                if 'HighForward' in syst:
+                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_cErr1HighForward{}'.format(Q))
+                if 'LowForward' in syst:
+                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_cErr1LowForward{}'.format(Q))
+            if 'cErr2' in syst:
+                if 'HighCentral' in syst:
+                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_cErr2HighCentral{}'.format(Q))
+                if 'LowCentral' in syst:
+                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_cErr2LowCentral{}'.format(Q))
+                if 'HighForward' in syst:
+                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_cErr2HighForward{}'.format(Q))
+                if 'LowForward' in syst:
+                    _weight = _weight.replace('*btagWeightCSV', '*bTagWeightICHEP_cErr2LowForward{}'.format(Q))
+
+        if bdt:
+            _cut = _cut.replace('HCSV_reg_mass<170', '(HCSV_reg_mass<170||HCSV_reg_corrJERUp_mass_HighCentral<170||HCSV_reg_corrJERDown_mass_HighCentral<170||HCSV_reg_corrJECUp_mass_HighCentral<170||HCSV_reg_corrJECDown_mass_HighCentral<170||HCSV_reg_corrJERUp_mass_HighForward<170||HCSV_reg_corrJERDown_mass_HighForward<170||HCSV_reg_corrJECUp_mass_HighForward<170||HCSV_reg_corrJECDown_mass_HighForward<170||HCSV_reg_corrJERUp_mass_LowCentral<170||HCSV_reg_corrJERDown_mass_LowCentral<170||HCSV_reg_corrJECUp_mass_LowCentral<170||HCSV_reg_corrJECDown_mass_LowCentral<170||HCSV_reg_corrJERUp_mass_LowForward<170||HCSV_reg_corrJERDown_mass_LowForward<170||HCSV_reg_corrJECUp_mass_LowForward<170||HCSV_reg_corrJECDown_mass_LowForward<170)')
+            _cut = _cut.replace('HCSV_reg_mass>50', '(HCSV_reg_mass>50||HCSV_reg_corrJERUp_mass_HighCentral>50||HCSV_reg_corrJERDown_mass_HighCentral>50||HCSV_reg_corrJECUp_mass_HighCentral>50||HCSV_reg_corrJECDown_mass_HighCentral>50||HCSV_reg_corrJERUp_mass_HighForward>50||HCSV_reg_corrJERDown_mass_HighForward>50||HCSV_reg_corrJECUp_mass_HighForward>50||HCSV_reg_corrJECDown_mass_HighForward>50||HCSV_reg_corrJERUp_mass_LowCentral>50||HCSV_reg_corrJERDown_mass_LowCentral>50||HCSV_reg_corrJECUp_mass_LowCentral>50||HCSV_reg_corrJECDown_mass_LowCentral>50||HCSV_reg_corrJERUp_mass_LowForward>50||HCSV_reg_corrJERDown_mass_LowForward>50||HCSV_reg_corrJECUp_mass_LowForward>50||HCSV_reg_corrJECDown_mass_LowForward>50)')
+            if 'JER' in syst and 'HighCentral' in syst:
+                _treevar = treevar.replace('.nominal', '.JER_{}_HighCentral'.format(Q))
+                _sys_cut = _sys_cut.replace('HCSV_reg_mass', 'HCSV_reg_corrJER{}_mass_HighCentral'.format(Q))
+            if 'JEC' in syst and 'HighCentral' in syst:
+                _treevar = treevar.replace('.nominal', '.JEC_{}_HighCentral'.format(Q))
+                _sys_cut = _sys_cut.replace('HCSV_reg_mass', 'HCSV_reg_corrJEC{}_mass_HighCentral'.format(Q))
+            if 'JER' in syst and 'HighForward' in syst:
+                _treevar = treevar.replace('.nominal', '.JER_{}_HighForward'.format(Q))
+                _sys_cut = _sys_cut.replace('HCSV_reg_mass', 'HCSV_reg_corrJER{}_mass_HighForward'.format(Q))
+            if 'JEC' in syst and 'HighForward' in syst:
+                _treevar = treevar.replace('.nominal', '.JEC_{}_HighForward'.format(Q))
+                _sys_cut = _sys_cut.replace('HCSV_reg_mass', 'HCSV_reg_corrJEC{}_mass_HighForward'.format(Q))
+            if 'JER' in syst and 'LowCentral' in syst:
+                _treevar = treevar.replace('.nominal', '.JER_{}_LowCentral'.format(Q))
+                _sys_cut = _sys_cut.replace('HCSV_reg_mass', 'HCSV_reg_corrJER{}_mass_LowCentral'.format(Q))
+            if 'JEC' in syst and 'LowCentral' in syst:
+                _treevar = treevar.replace('.nominal', '.JEC_{}_LowCentral'.format(Q))
+                _sys_cut = _sys_cut.replace('HCSV_reg_mass', 'HCSV_reg_corrJEC{}_mass_LowCentral'.format(Q))
+            if 'JER' in syst and 'LowForward' in syst:
+                _treevar = treevar.replace('.nominal', '.JER_{}_LowForward'.format(Q))
+                _sys_cut = _sys_cut.replace('HCSV_reg_mass', 'HCSV_reg_corrJER{}_mass_LowForward'.format(Q))
+            if 'JEC' in syst and 'LowForward' in syst:
+                _treevar = treevar.replace('.nominal', '.JEC_{}_LowForward'.format(Q))
+                _sys_cut = _sys_cut.replace('HCSV_reg_mass', 'HCSV_reg_corrJEC{}_mass_LowForward'.format(Q))
             print _treevar
         elif mjj == True:
             if syst == 'JER':

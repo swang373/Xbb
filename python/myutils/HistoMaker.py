@@ -27,6 +27,7 @@ class HistoMaker:
         self.cuts = []
         for options in optionsList:
             self.cuts.append(options['cut'])
+
         #print "Cuts:",self.cuts
         self.tc = TreeCache(self.cuts,samples,path,config)# created cached tree i.e. create new skimmed trees using the list of cuts
         #print self.cuts
@@ -118,6 +119,9 @@ class HistoMaker:
             #    treeCut='%s'%(options['cut'])
             treeCut='%s'%(options['cut'])
 
+            if 'JER' in treeVar or 'JEC' in treeVar:
+                treeCut = ''.format(options['sys_cut'])
+
 #            treeCut = "("+treeCut+")&&"+job.addtreecut 
  
             #print 'job.addtreecut ',job.addtreecut
@@ -201,9 +205,31 @@ class HistoMaker:
                         print 'I RESCALE BY 2.0'
                     else: 
                         MC_rescale_factor = 1.
-                    ScaleFactor = self.tc.get_scale(job,self.config,self.lumi, count)*MC_rescale_factor
-                else: 
-                    ScaleFactor = self.tc.get_scale(job,self.config,self.lumi, count)
+
+                    # For LHE scale shapes we need a different norm
+                    if 'LHE_weights_scale_wgt[0]' in weightF:
+                        ScaleFactor = self.tc.get_scale_LHEscale(job, self.config, 0)*MC_rescale_factor
+                    elif 'LHE_weights_scale_wgt[1]' in weightF:
+                        ScaleFactor = self.tc.get_scale_LHEscale(job, self.config, 1)*MC_rescale_factor
+                    elif 'LHE_weights_scale_wgt[2]' in weightF:
+                        ScaleFactor = self.tc.get_scale_LHEscale(job, self.config, 2)*MC_rescale_factor
+                    elif 'LHE_weights_scale_wgt[3]' in weightF:
+                        ScaleFactor = self.tc.get_scale_LHEscale(job, self.config, 3)*MC_rescale_factor
+                    else:
+                        ScaleFactor = self.tc.get_scale(job, self.config, self.lumi, count)*MC_rescale_factor
+                else:
+                    # For LHE scale shapes we need a different norm
+                    if 'LHE_weights_scale_wgt[0]' in weightF:
+                        ScaleFactor = self.tc.get_scale_LHEscale(job, self.config, 0)
+                    elif 'LHE_weights_scale_wgt[1]' in weightF:
+                        ScaleFactor = self.tc.get_scale_LHEscale(job, self.config, 1)
+                    elif 'LHE_weights_scale_wgt[2]' in weightF:
+                        ScaleFactor = self.tc.get_scale_LHEscale(job, self.config, 2)
+                    elif 'LHE_weights_scale_wgt[3]' in weightF:
+                        ScaleFactor = self.tc.get_scale_LHEscale(job, self.config, 3)
+                    else:
+                        ScaleFactor = self.tc.get_scale(job, self.config, self.lumi, count)
+
                 if ScaleFactor != 0:
                     hTree.Scale(ScaleFactor)
                 integral = hTree.Integral()
