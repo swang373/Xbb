@@ -22,8 +22,8 @@ print config
 #---------- yes, this is not in the config yet---------
  
 mode = 'BDT'
-xMin=-1
-xMax=1
+xMin=60
+xMax=160
 masses = ['125']
 Abins = ['Signal']#,'HighPt']
 channels = ['Znn_13TeV']#, 'Zee']
@@ -41,9 +41,9 @@ channels= ['Zll']
 '''
 #------------------------------------------------------
 
-path = '/afs/cern.ch/work/s/swang373/private/Xbb_ICHEP/src/Xbb/ZnnHbb_Datacards_Jun18_OldishApril25BDT_Minus0p8_to_Plus1/'
+path = '/afs/cern.ch/work/s/swang373/private/Xbb_ICHEP/src/Xbb/ZnnHbb_Aug5_DEBUG_Mjj'
 
-outpath = '/afs/cern.ch/user/s/swang373/www/ZnnHbb_Datacards_Jun18_Minus0p8_to_Plus1_NoLowStatShapes/shapes/'
+outpath = '/afs/cern.ch/user/s/swang373/www/DEBUG_Aug5_MjjShapes/'
 
 # Make the dir and copy the website ini files
 try:

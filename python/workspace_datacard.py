@@ -372,6 +372,9 @@ for syst in systematics:
                 _cut = _cut.replace('HCMVAV2_reg_mass>60', mass_cut.format('>60'))
                 _cut = _cut.replace('HCMVAV2_reg_mass<160', mass_cut.format('<160'))
                 _treevar = treevar.replace('.nominal', '.{0}_{1}'.format(syst, Q))
+                #_treevar = treevar.replace('HCMVAV2_reg_mass', 'HCMVAV2_reg_mass_corr{0}{1}'.format(syst, Q))
+                #_treevar = treevar.replace('hJetCMVAV2_pt_reg_0', 'hJetCMVAV2_pt_reg_0{0}{1}'.format(syst, Q))
+                #_treevar = treevar.replace('hJetCMVAV2_pt_reg_1', 'hJetCMVAV2_pt_reg_1{0}{1}'.format(syst, Q))
                 _sys_cut = _sys_cut.replace('HCMVAV2_reg_mass', 'HCMVAV2_reg_mass_corr{0}{1}'.format(syst, Q))
             else:
                 if 'Zbb' in name or 'Wbb' in name:
@@ -422,6 +425,8 @@ if addBlindingCut:
 
 if rebin_active:
     print "background_samples: ",background_samples
+    # change me
+    #data_hMaker.calc_rebin(data_samples)
     mc_hMaker.calc_rebin(background_samples)
     #transfer rebinning info to data maker
     data_hMaker.norebin_nBins = copy(mc_hMaker.norebin_nBins)

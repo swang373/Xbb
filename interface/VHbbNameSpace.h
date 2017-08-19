@@ -435,6 +435,13 @@ return 1.;
 
   double weight_QCD(int nGenHiggsBoson, int nGenTop, int nGenVbosons, double lheHT, int GenVbosons_pdgId) {
     // QCD reweighting applied to W+Jets samples.
+	//if (nGenHiggsBoson==0 && nGenTop==0 && nGenVbosons==1 && lheHT>100) {
+    //  if (abs(GenVbosons_pdgId)==24) {
+    //    return (lheHT>100 && lheHT<200)*(1.459/1.21) + (lheHT>200 && lheHT<400)*(1.434/1.21) + (lheHT>400 && lheHT<600)*(1.532/1.21) + (lheHT>600)*(1.004/1.21);
+    //  } else if (GenVbosons_pdgId==23) {
+	//	return (lheHT>100 && lheHT<200)*(1.588/1.23) + (lheHT>200 && lheHT<400)*(1.438/1.23) + (lheHT>400 && lheHT<600)*(1.494/1.23) + (lheHT>600)*(1.139/1.23);
+    //  }
+    //}
     if (nGenHiggsBoson==0 && nGenTop==0 && nGenVbosons==1 && lheHT>100 && abs(GenVbosons_pdgId)==24) {
       return (lheHT>100 && lheHT<200)*(1.459/1.21) + (lheHT>200 && lheHT<400)*(1.434/1.21) + (lheHT>400 && lheHT<600)*(1.532/1.21) + (lheHT>600)*(1.004/1.21);
     }

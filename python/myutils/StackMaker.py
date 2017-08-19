@@ -352,7 +352,7 @@ class StackMaker:
             if 'GeV' in self.xAxis:
                 yAppend = '%.0f' %(allStack.GetXaxis().GetBinWidth(1)) 
             else:
-                yAppend = '%.2f' %(allStack.GetXaxis().GetBinWidth(1)) 
+                yAppend = '%.1f' %(allStack.GetXaxis().GetBinWidth(1)) 
             yTitle = '%s / %s' %(yTitle, yAppend)
             if 'GeV' in self.xAxis:
                 yTitle += ' GeV'
