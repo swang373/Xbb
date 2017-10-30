@@ -282,7 +282,7 @@ class HistoMaker:
             return False
 
     # Reverted rebinner version taken from V25_Diboson17 branch
-    def calc_rebin(self, bg_list, nBins_start=1000, tolerance=0.25):
+    def calc_rebin(self, bg_list, nBins_start=1000, tolerance=0.35):
         #print "START calc_rebin"
         self.calc_rebin_flag = True
         self.norebin_nBins = copy(self.nBins)
